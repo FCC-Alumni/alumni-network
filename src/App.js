@@ -1,18 +1,27 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import { Route, NavLink } from 'react-router-dom';
+import LoginComponent from './components/nav/Login';
+import HomePage from './components/navbar/HomePage';
 import './styles/App.css';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-          <img src="https://goo.gl/fYycp1" className="App-logo" alt="penguin-logo" />
-          <h2>Welcome to React?</h2>
-          <div className="container">
-            <div className="card-panel teal lighten-2">Future home of the FCC-Alumni-Network</div>
-          </div>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <nav>
+                  <div className="nav-wrapper teal">
+                      <a href="#">Home</a>
+                    <ul id="nav-mobile" className="right hide-on-med-and-down">
+                      <a href="#">Login</a>
+                    </ul>
+                  </div>
+                </nav>
+                
+                <LoginComponent />
+                
+            </div>
+        );
+    }
 }
 
 export default App;
