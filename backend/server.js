@@ -1,39 +1,20 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from 'passport';
-import { Strategy } from 'passport-github2'
-import Session from 'express-session';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+
+import passportRoute from './routes/passportLogin';
+import userRoute from './routes/userRoute';
 
 dotenv.config();
+
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGO_URL, () => console.log('Connected via mongoose'));
 
 const app = express();
 app.use(bodyParser.json());
 
-app.use(Session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.use(new Strategy({
-  clientID: process.env.GITHUB_CLIENT_ID,
-  clientSecret: process.env.GITHUB_SECRET,
-  callbackURL: 'http://localhost:8080/auth/github/callback'
-}, function(accesstoken, refreshToken, profile, cb){
-  //find user in database
-  return cb(done, null);
-}));
-
-app.get('/auth/github', passport.authenticate('github'));
-
-app.get('/auth/github/callback', passport.authenticate('github'), ((req, res) => {
-  //successfull authentication from github
-  //make token 
-  res.send('Successful login');
-}))
+app.use(passportRoute);
+app.use(userRoute);
 
 app.listen(8080, () => console.log('Server is running on localhost:8080'));
