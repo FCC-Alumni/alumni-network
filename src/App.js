@@ -1,25 +1,25 @@
-import React, {Component} from 'react';
+import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
-import LoginComponent from './components/nav/Login';
-import HomePage from './components/navbar/HomePage';
+import LoginPage from './components/LoginPage';
+import HomePage from './components/HomePage';
+import PassportPage from './components/PassportPage';
 import './styles/App.css';
 
-class App extends Component {
+class App extends React.Component {
     render() {
         return (
-            <div>
-                <nav>
-                  <div className="nav-wrapper teal">
-                      <a href="#">Home</a>
-                    <ul id="nav-mobile" className="right hide-on-med-and-down">
-                      <a href="#">Login</a>
-                    </ul>
-                  </div>
-                </nav>
-                
-                <LoginComponent />
-                
+          <div>
+            
+            <div className="ui stackable teal pointing menu">
+              <NavLink className="item" activeClassName="item active" exact to="/">Home</NavLink>
+              <NavLink className="item" activeClassName="item active" exact to="/login">Login</NavLink>
             </div>
+            
+            <Route exact path="/" component={HomePage} />
+            <Route exact path="/login" component={LoginPage} />
+            <Route exact path="/account" component={PassportPage} />
+            
+          </div>
         );
     }
 }
