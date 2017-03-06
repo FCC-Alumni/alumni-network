@@ -27,14 +27,20 @@ passport.use(new Strategy({
   callbackURL: 'http://localhost:8080/auth/github/callback'
 }, function(accesstoken, refreshToken, profile, done) {
     User.findOne({ gihubId: profile.id }, function(err, user) {
-      console.log(profile);
       
       if (err) return done(err);
       
       if (user) {
+        console.log('done')
         return done(err, user);
       } else {
-        user = new User({ githubId: profile.id })
+        user = new User({ 
+          githubId: profile.id,
+          username: profile.username,
+          avatarUrl: profile._json.avatar_url,
+          githubUrl: profile.profileUrl
+        });
+        console.log(user);
         user.save(function(err) {
           if (!err) {
             return done(err, user);
