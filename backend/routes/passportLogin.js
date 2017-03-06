@@ -25,23 +25,23 @@ passport.use(new Strategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_SECRET,
   callbackURL: 'http://localhost:8080/auth/github/callback'
-}, function(accesstoken, refreshToken, profile, done) {
-    User.findOne({ gihubId: profile.id }, function(err, user) {
-      
+}, (accesstoken, refreshToken, profile, done) => {
+    User.findOne({ gihubId: profile.id }, (err, user) => {
+
       if (err) return done(err);
-      
+
+      // user registered previously and exists in database
       if (user) {
-        console.log('done')
         return done(err, user);
       } else {
-        user = new User({ 
+        // new registration: create ans save user in database
+        user = new User({
           githubId: profile.id,
           username: profile.username,
           avatarUrl: profile._json.avatar_url,
           githubUrl: profile.profileUrl
         });
-        console.log(user);
-        user.save(function(err) {
+        user.save((err) => {
           if (!err) {
             return done(err, user);
           }
@@ -53,9 +53,7 @@ passport.use(new Strategy({
 router.get('/auth/github', passport.authenticate('github'));
 
 router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), ((req, res) => {
-  //successfull authentication from github
-  //make token 
-  console.log('success', req.user);
+  // successfull authentication from github
   res.redirect('http://localhost:3000/account');
 }));
 
