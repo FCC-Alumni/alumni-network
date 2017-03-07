@@ -3,9 +3,12 @@ const Schema = mongoose.Schema;
 
 const User = new Schema({
     githubId: String,
-    username: String,
+    ghUsername: String,
+    fccUsername: String,
     avatarUrl: String,
-    githubUrl: String
+    githubData: Object,
+    fccCerts: Object,
+    verifiedUser: Boolean
 });
 
 export default mongoose.model('User', User);

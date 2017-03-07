@@ -6,10 +6,7 @@ const LoginPage = () => {
       <div className="ui center aligned segment">
         <h2>Please Login Using GitHub</h2>
         
-        <div className="ui button">
-          <i className="icon github"/>
-          <a href="http://localhost:8080/auth/github">Github</a>
-        </div>
+        <a className="ui button" href="http://localhost:8080/auth/github"><i className="icon github"/> Github</a>
         
         <h4>This app requires freeCodeCamp and GitHub credentials.</h4>
         <h4>To signup, you must have earned at least one freeCodeCamp certification.</h4>
