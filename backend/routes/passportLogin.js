@@ -26,29 +26,41 @@ passport.use(new Strategy({
   clientSecret: process.env.GITHUB_SECRET,
   callbackURL: 'http://localhost:8080/auth/github/callback'
 }, (accesstoken, refreshToken, profile, done) => {
-    User.findOne({ gihubId: profile.id }, (err, user) => {
+    User.findOne({ githubId: profile.id }, (err, user) => {
 
       if (err) return done(err);
-
-      // user registered previously and exists in database
-      if (user) {
-        return done(err, user);
-      } else {
+      
+      if (!user) {
         // new registration: create ans save user in database
         user = new User({
           githubId: profile.id,
-          username: profile.username,
+          ghUsername: profile.username,
+          fccUsername: profile.username,
           avatarUrl: profile._json.avatar_url,
-          githubUrl: profile.profileUrl
+          githubData: {
+            name: profile._json.name,
+            profileUrl: profile.profileUrl,
+            location: profile._json.location,
+            bio: profile._json.bio,
+            email: profile._json.email,
+            company: profile._json.company,
+            numPublicRepos: profile._json.public_repos,
+            numFollowers: profile._json.followers,
+            numFollowing: profile._json.following
+          }
         });
         user.save((err) => {
           if (!err) {
             return done(err, user);
           }
         });
+      } else {
+        // user registered previously and exists in database
+        console.log('user already exists')
+        return done(err, user);
       }
     });
-}))
+}));
 
 router.get('/auth/github', passport.authenticate('github'));
 
