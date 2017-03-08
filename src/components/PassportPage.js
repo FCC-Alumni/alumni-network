@@ -1,10 +1,12 @@
 import React from 'react';
-import { getUserData, verifyUser } from '../actions/loginActions';
+import { getUserData, verifyUser, saveUser } from '../actions/loginActions';
+import { addFlashMessage } from '../actions/flashMessages';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 class PassportPage extends React.Component {
   state = {
-    ghUsername: '',
-    fccUsername: '',
+    username: '',
     avatarUrl: '',
     mongoId: '',
     userIsVerified: false,
@@ -15,55 +17,85 @@ class PassportPage extends React.Component {
     getUserData().then(
       (res) => {
         if (res) {
-          const { ghUsername, fccUsername, avatarUrl, _id } = res;
-          this.setState({ ghUsername, fccUsername, avatarUrl, mongoId: _id });
+          const { username, avatarUrl, _id } = res;
+          this.setState({ username, avatarUrl, mongoId: _id });
         }
       },
       (err) => console.log // do something with error? display in UI?
     );
   }
 
-  handleChange = (e) => {
-    this.setState({ fccUsername: e.target.value });
-  }
-
-  handleSubmit = (e) => {
+  handleClick = (e) => {
     e.preventDefault();
-    const { fccUsername, mongoId } = this.state;
-    verifyUser(fccUsername, mongoId).then(
+    const { username, mongoId } = this.state;
+    verifyUser(username, mongoId).then(
       (res) => {
-        console.log(res.data.user)
-        this.setState({ userIsVerified: true });
+        const user = res.data.user;
+        this.props.saveUser(user);
+        this.props.addFlashMessage({
+          type: 'success',
+          text: {
+            header: 'Welcome to the freeCodeCamp Alumni Network!',
+            message: 'Your account is now verified!'
+          }
+        });
+        this.setState({ userIsVerified: true, redirect: true });
       },
       (err) => {
-        // redirect somehow with react router back to the login back, ?
-        this.setState({ userIsVerified: false });
+        this.props.addFlashMessage({
+          type: 'error',
+          text: {
+            header: 'User verification error!',
+            message: 'Either you have not earned any freeCodeCamp certifications, or you do not have a freeCodeCamp account. Please visit us again when you have resolved these issues.'
+          }
+        });
+        this.setState({ userIsVerified: false, redirect: true });
       }
     )
   }
 
   render() {
-    return (
+    const verifyForm = (
       <div className="ui container">
-      
-        <h1>{`Welcome ${this.state.ghUsername}!`}</h1>
+        
+        <h1>{`Welcome ${this.state.username}!`}</h1>
 
         { this.state.avatarUrl.length > 0 && <div className="ui small image"><img src={this.state.avatarUrl} alt="github avatar"/></div> }
+        
+        <br /><br />
+        <p>This extension of the freeCodeCamp Community is a network of like-minded individuals, who are serious about coding and about taking their skills to the next level.</p>
+        <p>While our goal is to be as inclusive as possible, to ensure that this network maintains its integrity as a serious place for serious campers, we do have some requirements that limit who can and cannot join.</p>
 
-        <h4>If your freeCodeCamp username is not the same as what is listed below, please change it so that we can pull the correct data from freeCodeCamp.</h4>
-
-        <form onSubmit={this.handleSubmit} className="ui form">
-          <div className="four wide field">
-            <input
-              value={this.state.fccUsername}
-              onChange={this.handleChange} />
-          </div>
-          <button type="submit" className="ui button">Verify Free Code Camp User Data</button>
-        </form>
+        <div className="ui info message">
+          <div className="header">To join the freeCodeCamp Alumni Network, you must have earned at least one of the following:</div>
+          <ul className="list">
+            <li>freeCodeCamp Front End Certification</li>
+            <li>freeCodeCamp Data Visualization Certification</li>
+            <li>freeCodeCamp Back End Certification</li>
+            <li>freeCodeCamp Full Stack Certification</li>
+          </ul>
+        </div>
+        
+        <p>To continue, please click the button below, which will verify your eligibility to join based on the above gudilines. Thanks!</p>
+        
+        <button onClick={this.handleClick} type="submit" className="ui button">Verify freeCodeCamp User Data</button>
 
       </div>
     );
+    return (
+      <div>
+        { 
+          this.state.redirect && this.state.userIsVerified ? <Redirect to="/profile_page" /> : 
+          this.state.redirect && !this.state.userIsVerified ? <Redirect to="/" /> : 
+          verifyForm 
+        }
+      </div>
+    )
   }
 }
 
-export default PassportPage;
+PassportPage.propTypes = {
+  saveUser: React.PropTypes.func.isRequired
+}
+
+export default connect(null, { saveUser, addFlashMessage })(PassportPage);

@@ -3,6 +3,9 @@ import { Route, NavLink } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
 import PassportPage from './components/PassportPage';
+import ProfilePage from './components/ProfilePage';
+import NavBar from './components/Navbar';
+import FlashMessagesList from './components/flash/FlashMessagesList';
 import './styles/App.css';
 
 class App extends React.Component {
@@ -10,14 +13,13 @@ class App extends React.Component {
         return (
           <div>
             
-            <div className="ui stackable teal pointing menu">
-              <NavLink className="item" activeClassName="item active" exact to="/"><i className="fa fa-free-code-camp" />freeCodeCamp Alumni Network</NavLink>
-              <NavLink className="item" activeClassName="item active" exact to="/login">Login</NavLink>
-            </div>
+            <NavBar />
+            <FlashMessagesList />
             
             <Route exact path="/" component={HomePage} />
-            <Route exact path="/login" component={LoginPage} />
-            <Route exact path="/account" component={PassportPage} />
+            <Route path="/login" component={LoginPage} />
+            <Route path="/account" component={PassportPage} />
+            <Route path="/profile_page" component={ProfilePage} />
             
           </div>
         );

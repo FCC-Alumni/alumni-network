@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
-import firstReducer from './reducers/firstReducer';
+import user from './reducers/user';
+import flashMessages from './reducers/flashMessages';
 
 export default combineReducers({ 
-  firstReducer
+  user,
+  flashMessages
 });
