@@ -48,7 +48,6 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
       User.findById(mongoId, (err, user) => {
         if (err) throw err;
         
-        user.fccUsername = username;
         user.verifiedUser = false;
         user.save();
         
@@ -60,7 +59,6 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
         if (err) throw err;
         
         user.fccCerts = certs;
-        user.fccUsername = username;
         user.verifiedUser = true;
         user.save();
         

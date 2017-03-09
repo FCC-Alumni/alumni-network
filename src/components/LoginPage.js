@@ -8,12 +8,12 @@ const LoginPage = () => {
         
         <a className="ui button" href="http://localhost:8080/auth/github"><i className="icon github"/> Github</a>
         
-        <h4>This app requires freeCodeCamp and GitHub credentials.</h4>
-        <h4>To signup, you must have earned at least one freeCodeCamp certification.</h4>
+        <div className="ui warning message">
+          <div className="header">Joining the freeCodeCamp Alumni Network requires both freeCodeCamp and GitHub credentials.</div>
+        </div>
       </div>
-      
     </div>
-  )
+  );
 }
 
 export default LoginPage;

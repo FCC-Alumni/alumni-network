@@ -34,15 +34,14 @@ passport.use(new Strategy({
         // new registration: create ans save user in database
         user = new User({
           githubId: profile.id,
-          ghUsername: profile.username,
-          fccUsername: profile.username,
+          username: profile.username,
           avatarUrl: profile._json.avatar_url,
+          email: profile._json.email,
           githubData: {
             name: profile._json.name,
             profileUrl: profile.profileUrl,
             location: profile._json.location,
             bio: profile._json.bio,
-            email: profile._json.email,
             company: profile._json.company,
             numPublicRepos: profile._json.public_repos,
             numFollowers: profile._json.followers,

@@ -3,6 +3,7 @@
   .App-logo {
     animation: App-logo-spin infinite 15s linear;
     margin-top: 100px;
+    margin-bottom: 20px;
   }
 }
 
@@ -15,6 +16,12 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+// fcc FA icon in navbar
 .menu .fa-free-code-camp {
   margin-right: 8px;
 } 
+
+.flash-message {
+  margin-bottom: 20px;
+}

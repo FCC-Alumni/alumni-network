@@ -1,10 +1,12 @@
-import DUMMY_CASE from '../actions/types.js';
+import { SAVE_USER } from '../actions/types';
 
 export default (state = [], action = {}) => {
   switch (action.type) {
     
-    case DUMMY_CASE: 
-      return [];
+    case SAVE_USER: 
+      return [
+        action.user
+      ];
       
     default: return state;
   }
