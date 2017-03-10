@@ -1,3 +1,6 @@
+@import 'animations';
+@import 'helperClasses';
+
 .App {
   text-align: center;
   .App-logo {
@@ -7,14 +10,8 @@
   }
 }
 
-
 .App-intro {
   font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }
 
 // fcc FA icon in navbar
@@ -23,5 +20,17 @@
 } 
 
 .flash-message {
-  margin-bottom: 20px;
+  margin: 20px 0;
+}
+
+// login page:
+#login-form {
+  @extend .middle-aligned;
+  height: 500px;
+  position: absolute;
+}
+
+// need media query to remove arrow at width/height of approx 850 X 725
+#arrow-bounce {
+  animation: bouncey-arrow 1.5s infinite;
 }

@@ -2,23 +2,33 @@ import React from 'react';
 import { getUserData, verifyUser, saveUser } from '../actions/loginActions';
 import { addFlashMessage } from '../actions/flashMessages';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 class PassportPage extends React.Component {
   state = {
     username: '',
     avatarUrl: '',
-    mongoId: '',
-    userIsVerified: false,
-    redirect: false
+    mongoId: ''
   }
 
   componentDidMount() {
     getUserData().then(
       (res) => {
         if (res) {
-          const { username, avatarUrl, _id } = res;
-          this.setState({ username, avatarUrl, mongoId: _id });
+          if (res.verifiedUser) {
+            const user = res;
+            this.props.saveUser(user);
+            this.props.addFlashMessage({
+              type: 'success',
+              text: {
+                header: 'Welcome to the freeCodeCamp Alumni Network!',
+                message: 'Welcome back to the app!'
+              }
+            });
+            this.props.history.push('/dashboard');
+          } else {
+            const { username, avatarUrl, _id } = res;
+            this.setState({ username, avatarUrl, mongoId: _id });
+          }
         }
       },
       (err) => console.log // do something with error? display in UI?
@@ -39,7 +49,7 @@ class PassportPage extends React.Component {
             message: 'Your account is now verified!'
           }
         });
-        this.setState({ userIsVerified: true, redirect: true });
+        this.props.history.push('/dashboard');
       },
       (err) => {
         this.props.addFlashMessage({
@@ -49,19 +59,19 @@ class PassportPage extends React.Component {
             message: 'Either you have not earned any freeCodeCamp certifications, or you do not have a freeCodeCamp account. Please visit us again when you have resolved these issues.'
           }
         });
-        this.setState({ userIsVerified: false, redirect: true });
+        this.props.history.push('/');
       }
     )
   }
 
   render() {
-    const verifyForm = (
+    return (
       <div className="ui container">
-        
+
         <h1>{`Welcome ${this.state.username}!`}</h1>
 
         { this.state.avatarUrl.length > 0 && <div className="ui small image"><img src={this.state.avatarUrl} alt="github avatar"/></div> }
-        
+
         <br /><br />
         <p>This extension of the freeCodeCamp Community is a network of like-minded individuals, who are serious about coding and about taking their skills to the next level.</p>
         <p>While our goal is to be as inclusive as possible, to ensure that this network maintains its integrity as a serious place for serious campers, we do have some requirements that limit who can and cannot join.</p>
@@ -75,20 +85,11 @@ class PassportPage extends React.Component {
             <li>freeCodeCamp Full Stack Certification</li>
           </ul>
         </div>
-        
+
         <p>To continue, please click the button below, which will verify your eligibility to join based on the above gudilines. Thanks!</p>
-        
+
         <button onClick={this.handleClick} type="submit" className="ui button">Verify freeCodeCamp User Data</button>
 
-      </div>
-    );
-    return (
-      <div>
-        { 
-          this.state.redirect && this.state.userIsVerified ? <Redirect to="/profile_page" /> : 
-          this.state.redirect && !this.state.userIsVerified ? <Redirect to="/" /> : 
-          verifyForm 
-        }
       </div>
     )
   }

@@ -37,6 +37,7 @@ passport.use(new Strategy({
           username: profile.username,
           avatarUrl: profile._json.avatar_url,
           email: profile._json.email,
+          joinedOn: new Date(),
           githubData: {
             name: profile._json.name,
             profileUrl: profile.profileUrl,
@@ -65,7 +66,14 @@ router.get('/auth/github', passport.authenticate('github'));
 
 router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), ((req, res) => {
   // successfull authentication from github
-  res.redirect('http://localhost:3000/account');
+  res.redirect('http://localhost:3000/verify_account');
 }));
+
+// logout user & redirect to home page
+router.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('http://localhost:3000/');
+});
+
 
 export default router;

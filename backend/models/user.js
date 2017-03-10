@@ -8,7 +8,8 @@ const User = new Schema({
     githubData: Object,
     fccCerts: Object,
     email: { type: String, lowercase: true },
-    verifiedUser: Boolean
+    verifiedUser: Boolean,
+    memberSince: { type: Date, default: Date.now }
 });
 
 export default mongoose.model('User', User);
