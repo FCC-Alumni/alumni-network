@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 import { SAVE_USER } from './types';
 
 export function getUserData() {

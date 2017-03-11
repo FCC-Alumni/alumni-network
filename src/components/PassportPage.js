@@ -96,7 +96,8 @@ class PassportPage extends React.Component {
 }
 
 PassportPage.propTypes = {
-  saveUser: React.PropTypes.func.isRequired
+  saveUser: React.PropTypes.func.isRequired,
+  addFlashMessage: React.PropTypes.isRequired
 }
 
 export default connect(null, { saveUser, addFlashMessage })(PassportPage);

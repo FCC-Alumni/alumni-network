@@ -37,9 +37,9 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
       return false;
     } else {
       return {
-        frontEnd: frontCert.request._redirectCount === 0 ? true : false,
-        backEnd: backCert.request._redirectCount === 0 ? true : false,
-        dataVis: dataCert.request._redirectCount === 0 ? true : false,
+        Front_End: frontCert.request._redirectCount === 0 ? true : false,
+        Back_End: backCert.request._redirectCount === 0 ? true : false,
+        Data_Visualization: dataCert.request._redirectCount === 0 ? true : false,
       }
     }
   })).then(certs => {
