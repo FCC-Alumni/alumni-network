@@ -24,3 +24,17 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById('root')
 );
+
+if (module.hot) {
+  module.hot.accept('./App', () => {
+    const NextApp = require('./App').default;
+    ReactDOM.render(
+      <BrowserRouter>
+        <Provider store={store}>
+          <NextApp />
+        </Provider>
+      </BrowserRouter>,
+      document.getElementById('root')
+    );
+  });
+}

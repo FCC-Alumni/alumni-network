@@ -42,5 +42,4 @@ NavBar.propTypes = {
   user: React.PropTypes.object.isRequired
 }
 
-// export default NavBar;
 export default connect(mapStateToProps)(NavBar);
