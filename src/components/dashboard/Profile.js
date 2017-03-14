@@ -1,18 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import RepoList from './common/RepoList';
-import MessageBox from './common/MessageBox';
-import DividingHeader from './common/DividingHeader';
-import DropdownMultiSelect from './common/DropdownMultiSelect';
-import UserLabel from './common/UserLabel';
-import { saveUser } from '../actions/loginActions';
+import RepoList from '../common/RepoList';
+import MessageBox from '../common/MessageBox';
+import DividingHeader from '../common/DividingHeader';
+import DropdownMultiSelect from '../common/DropdownMultiSelect';
+import UserLabel from '../common/UserLabel';
+import { saveUser } from '../../actions/loginActions';
 
-import { skills, interests } from '../assets/data/dropdownOptions';
+import { skills, interests } from '../../assets/data/dropdownOptions';
 
 class Dashboard extends React.Component {
   state = {
-    projects: [ 
+    projects: [
       {item: 'Example/Example', label: 'https://github.com/'},
       {item: 'Replace/With', label: 'https://gitlab.com/'},
       {item: 'User/Data', label: 'https://bitbucket.com/'},
@@ -22,7 +22,6 @@ class Dashboard extends React.Component {
     certs: [],
     mentor: false,
   }
-  
   componentDidMount() {
     const { fccCerts } = this.props.user;
     var certs = [];
@@ -33,27 +32,27 @@ class Dashboard extends React.Component {
     }
     this.setState({ certs });
   }
-  
+
   saveList = (items_list) => {
     this.setState({ projects: items_list });
   }
-  
+
   toggleMentorship = () => {
     const { mentor } = this.state;
     this.setState({ mentor: !mentor });
   }
-  
+
   handleSkillsChange = (e, data) => {
     this.setState({ skills: data.value });
   }
-  
+
   handleInterestsChange = (e, data) => {
     this.setState({ interests: data.value });
   }
-  
+
   render() {
     const { avatarUrl, username, email } = this.props.user;
-    
+
     const certificates = this.state.certs.map((item, index) => {
       return (
         <div key={index} className="item">
@@ -62,18 +61,18 @@ class Dashboard extends React.Component {
         </div>
       );
     });
-    
+
     return (
       <div id="dashboard-page-main-container" className="ui container">
-        <UserLabel 
+        <UserLabel
           label="Contributor"
           username={username}
           size="huge"
           image={avatarUrl}
         />
-            
+
         <div className="ui raised segment">
-          
+
           <div className="ui teal ribbon label">Personal Info</div>
           <div className="ui list">
             <div className="item">
@@ -98,16 +97,16 @@ class Dashboard extends React.Component {
                 </div>
               </div>
             </div>
-          </div>  
-          
+          </div>
+
           <div className="ui teal ribbon label">freeCodeCamp Certifications</div>
           <div className="ui list">
             {certificates}
           </div>
-          
+
           <div className="ui teal ribbon label">Mentorship Program</div>
           <MessageBox
-            type="info" 
+            type="info"
             header="Would you like to be a mentor?"
             message="The primary goal of this community is to bring together programmers of varying degrees of skill, and connect them with one another to form meaningful mentor/mentee relationships. If you are interested in becoming a mentor, please toggle the switch below. If your skills match with a prospective mentee, you will both be notified, and the rest will be up to you! We will try our best to match you based on interests, skills, location, and language. This feature can be turned off at any time here in your dashboard settings."
           />
@@ -115,45 +114,45 @@ class Dashboard extends React.Component {
             <input onClick={this.toggleMentorship} type="checkbox" name="public" />
             <label>Sign me up! I want to be a mentor.</label>
           </div><br /><br />
-          
-        
+
+
           <div className="ui teal ribbon label">Skills & Interests</div>
           <DividingHeader text="Core Skills" />
           <MessageBox
-            type="info" 
+            type="info"
             dismissable={true}
-            message="Enter information about your coding skills below, so other users know your strengths!" 
+            message="Enter information about your coding skills below, so other users know your strengths!"
           />
-          <DropdownMultiSelect 
+          <DropdownMultiSelect
             onChange={this.handleSkillsChange}
             options={skills}
-            placeholder="Choose Skills" 
+            placeholder="Choose Skills"
           />
-        
+
           <DividingHeader text="Coding Interests" />
           <MessageBox
-            type="info" 
+            type="info"
             dismissable={true}
-            message="Let other users know what you're into so you can find others with similar interetsts!" 
+            message="Let other users know what you're into so you can find others with similar interetsts!"
           />
-          <DropdownMultiSelect 
+          <DropdownMultiSelect
             onChange={this.handleInterestsChange}
             options={interests}
-            placeholder="Choose Interests" 
+            placeholder="Choose Interests"
           />
-          
+
           <DividingHeader text="Open Collaborative Projects" />
           <MessageBox
-            type="info" 
+            type="info"
             dismissable={true}
-            message="Share links to repos for projects that you could use some help with!" 
+            message="Share links to repos for projects that you could use some help with!"
           />
           <RepoList
             saveListToParent={this.saveList}
             username={username}
             prePopulateList={this.state.projects}
-          />  
-        
+          />
+
         </div>
       </div>
     );

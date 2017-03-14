@@ -12,13 +12,13 @@ class NavBar extends React.Component {
         </div>
       </div>
     );
-    
+
     const userNav = (
       <div className="ui stackable teal pointing menu">
-        <NavLink className="item" activeClassName="item active" exact to="/"><i className="fa fa-free-code-camp" />freeCodeCamp Alumni Network</NavLink>
-        <NavLink className="item" activeClassName="item active" exact to="/dashboard">Dashboard</NavLink>
-        <NavLink className="item" activeClassName="item active" exact to="/">Profile</NavLink>
-        <NavLink className="item" activeClassName="item active" exact to="/">Interests</NavLink>
+        <NavLink className="item" activeClassName="active item" exact to="/"><i className="fa fa-free-code-camp"></i>freeCodeCamp Alumni Network</NavLink>
+        <NavLink className="item" activeClassName="active item" exact to="/dashboard">Dashboard</NavLink>
+        <NavLink className="item" activeClassName="active item" exact to="/dashboard/community">Community</NavLink>
+        <NavLink className="item" activeClassName="active item" exact to="/dashboard/account">Account</NavLink>
         <div className="right menu">
           <a className="item" href="http://localhost:8080/logout">Logout</a>
         </div>
@@ -32,7 +32,7 @@ class NavBar extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     user: state.user
   }

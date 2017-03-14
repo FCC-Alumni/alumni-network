@@ -1,6 +1,6 @@
 import React from 'react';
-import { getUserData, verifyUser, saveUser } from '../actions/loginActions';
-import { addFlashMessage } from '../actions/flashMessages';
+import { getUserData, verifyUser, saveUser } from '../../actions/loginActions';
+import { addFlashMessage } from '../../actions/flashMessages';
 import { connect } from 'react-redux';
 
 class PassportPage extends React.Component {
@@ -96,7 +96,7 @@ class PassportPage extends React.Component {
 
 PassportPage.propTypes = {
   saveUser: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.isRequired
+  addFlashMessage: React.PropTypes.func.isRequired
 }
 
 export default connect(null, { saveUser, addFlashMessage })(PassportPage);
