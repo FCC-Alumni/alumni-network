@@ -9,7 +9,8 @@ export default function requireAuth(ComposedComponent) {
     state = {
       redirect: false
     }
-    componentWillMount() {
+    
+    componentWillMount() {  
       if(!this.props.isVerified) {
         this.props.addFlashMessage({ 
           type: 'error',
@@ -22,6 +23,7 @@ export default function requireAuth(ComposedComponent) {
         this.setState({ redirect: true });
       }
     }
+    
     render() {
       return (
         <div>

@@ -6,6 +6,7 @@ import MessageBox from './common/MessageBox';
 import DividingHeader from './common/DividingHeader';
 import DropdownMultiSelect from './common/DropdownMultiSelect';
 import UserLabel from './common/UserLabel';
+import { saveUser } from '../actions/loginActions';
 
 import { skills, interests } from '../assets/data/dropdownOptions';
 
@@ -63,7 +64,7 @@ class Dashboard extends React.Component {
     });
     
     return (
-      <div id="test" className="ui container">
+      <div id="dashboard-page-main-container" className="ui container">
         <UserLabel 
           label="Contributor"
           username={username}
@@ -110,7 +111,7 @@ class Dashboard extends React.Component {
             header="Would you like to be a mentor?"
             message="The primary goal of this community is to bring together programmers of varying degrees of skill, and connect them with one another to form meaningful mentor/mentee relationships. If you are interested in becoming a mentor, please toggle the switch below. If your skills match with a prospective mentee, you will both be notified, and the rest will be up to you! We will try our best to match you based on interests, skills, location, and language. This feature can be turned off at any time here in your dashboard settings."
           />
-          <div className="ui active toggle checkbox">
+        <div className="ui toggle checkbox">
             <input onClick={this.toggleMentorship} type="checkbox" name="public" />
             <label>Sign me up! I want to be a mentor.</label>
           </div><br /><br />
@@ -171,4 +172,4 @@ Dashboard.propTypes = {
   githubData: React.PropTypes.object.isRequired
 }
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps, { saveUser })(Dashboard);
