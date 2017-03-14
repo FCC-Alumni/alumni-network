@@ -1,12 +1,17 @@
 import React from 'react';
 import { Dropdown, Input } from 'semantic-ui-react';
 import Validator from 'validator';
-import { validateRepo, searchCommits } from '../../actions/repoValidations';
+import { validateGithubRepo, searchGithubCommits, validateOtherRepos } from '../../actions/repoValidations';
 import isEmpty from 'lodash/isEmpty';
 import indexOf from 'lodash/indexOf';
 import { repoOptions } from '../../assets/data/dropdownOptions';
 
-class ListMaker extends React.Component {
+/*
+ TODO: 
+ 1) Make sure user cannot add the same item twice
+*/
+
+class RepoList extends React.Component {
   state = {
     item: '',
     items_list: [],
@@ -49,13 +54,37 @@ class ListMaker extends React.Component {
     this.setState({ label: e.target.innerText, icon });
   }
   
+  validateGitLab_and_BitBucketRepos = (hostSite) => {
+    const { item, items_list, label } = this.state;
+    
+    validateOtherRepos(item).then((res) => {
+      if (res) {
+        items_list.push({item, label});
+        this.setState({ items_list, item: '', isLoading: false });
+      } else {
+        this.setState({ 
+          error: {
+            header: `Repository is private or invalid. Please enter a public, valid ${hostSite} repo.`,
+            repo: '',
+            owner: ''
+          }, 
+          item: '',
+          isLoading: false 
+        });
+      }
+    });
+  }
+  
   addItem = () => {
     this.setState({ isLoading: true });
     const { item, items_list, label } = this.state;
     const { saveListToParent } = this.props;
     const [ owner, repo ] = item.split('/');
     
-    if(item === '') return;
+    if(!item) {
+      this.setState({ isLoading: false }); 
+      return;
+    }
     
     // GITLAB VALIDATIONS:
     if (label === 'https://gitlab.com/') {
@@ -74,16 +103,15 @@ class ListMaker extends React.Component {
       ) {
         this.setState({ 
           error: {
-            header: 'Please enter a valid GitLab repository path: repo-owner/repo',
+            header: 'Please enter a valid GitLab repository path: namespace/repo',
             repo: "Owner: This value can only contain letters, digits, '_', '-' and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'",
             owner: "Repo: This value can only contain letters, digits, '_', '-' and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'"
           }, 
           item: '',
-          loading: false 
+          isLoading: false 
         });
       } else {
-        items_list.push({item, label});
-        this.setState({ items_list, item: '', isLoading: false });
+        this.validateGitLab_and_BitBucketRepos('GitLab');
       }
     }
     
@@ -95,16 +123,15 @@ class ListMaker extends React.Component {
       ) {
         this.setState({ 
           error: { 
-            header: 'Please enter a valid BitBucket repository path: repo-owner/repo',
+            header: 'Please enter a valid BitBucket repository path: namespace/repo',
             repo: 'Repo: This value must contain only ASCII letters, numbers, dashes, underscores and periods.',
             owner: 'Owner: This value must contain only ASCII letters, numbers, dashes and underscores.'
           }, 
           item: '',
-          loading: false 
+          isLoading: false 
         });
       } else {
-        items_list.push({item, label});
-        this.setState({ items_list, item: '', isLoading: false });
+        this.validateGitLab_and_BitBucketRepos('BitBucket');
       }
     }
 
@@ -119,7 +146,7 @@ class ListMaker extends React.Component {
       ) {
         this.setState({ 
           error: { 
-            header: 'Please enter a valid GitHub repository path: repo-owner/repo',
+            header: 'Please enter a valid GitHub repository path: namespace/repo',
             repo: 'Repo: This value may only contain alphanumeric characters, periods, and hyphens, and cannot begin with a period.',
             owner: 'Owner: This value may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.'
           }, 
@@ -130,8 +157,8 @@ class ListMaker extends React.Component {
         const { username } = this.props;
         // test with FreeCodeCamp/FreeCodeCamp repo
         // const username = 'tommygebru' // <-- control for testing reject() - has not contributed to repo 
-        // const username = 'bonham000' // <-- control for testing searchCommits() (bonham000 does not appear in 1st 100 FCC contributors)
-        validateRepo(owner, repo, username)
+        // const username = 'bonham000' // <-- control for testing searchGithubCommits() (bonham000 does not appear in 1st 100 FCC contributors)
+        validateGithubRepo(owner, repo, username)
         .then((res) => {
           const contributors = res.contributorsList;
           let isContributor = false;
@@ -149,7 +176,7 @@ class ListMaker extends React.Component {
           // prefer to use both checks, becuase this one in "preview"
           // github warns changes could happen at any time with no notice
           if (!isContributor) {
-            searchCommits(owner, repo, username)
+            searchGithubCommits(owner, repo, username)
             .then((res) => {
               const commits = res.data.items;
               if (commits.length > 0) {
@@ -182,7 +209,7 @@ class ListMaker extends React.Component {
           this.setState({
             item: '',
             error: {
-              header: 'Repository is invalid or does not exist.',
+              header: 'Repository is private or invalid. Please enter a public, valid GitHub repo',
               repo: '',
               owner: ''
             },
@@ -238,7 +265,7 @@ class ListMaker extends React.Component {
           onChange={this.handleChange}
           label={<Dropdown onChange={this.handleLabelChange} defaultValue="https://github.com/" options={repoOptions} />}
           labelPosition="left"
-          placeholder="Repo / Owner"
+          placeholder="Namespace / Repo"
           value={item}
           loading={isLoading}
           icon={icon}
@@ -267,14 +294,14 @@ class ListMaker extends React.Component {
   }
 }
 
-ListMaker.propTypes = {
+RepoList.propTypes = {
   saveListToParent: React.PropTypes.func.isRequired, 
   username: React.PropTypes.string.isRequired, 
   prePopulateList: React.PropTypes.array 
 }
 
-ListMaker.defaultProps = {
+RepoList.defaultProps = {
   prePopulateList: []
 }
 
-export default ListMaker;
+export default RepoList;

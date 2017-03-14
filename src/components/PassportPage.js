@@ -31,8 +31,7 @@ class PassportPage extends React.Component {
           }
         }
       },
-      (err) => console.log // do something with error? display in UI?
-    );
+    ).catch(console.log); // do something with error? display in UI?
   }
 
   handleClick = (e) => {
