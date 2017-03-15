@@ -19,9 +19,9 @@ export function searchGithubCommits(owner, repo, user) {
   });
 }
   
-//GITLAB:
-export function validateOtherRepos(repo_path) {
-  return axios.post('/api/verify-other-repos', { repo_path })
+//GITLAB && BITBUCKET:
+export function validateOtherRepos(repo_path, host_site) {
+  return axios.post('/api/verify-other-repos', { repo_path, host_site })
   .then((res) => {
     if (res.data.validPublicRepo === 'true') {
       return true;

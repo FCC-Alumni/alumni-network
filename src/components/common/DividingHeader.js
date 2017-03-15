@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function DividingHeader({ text }) {
+const DividingHeader = ({ text }) => {
   return (
     <div className="ui secondary pointing menu">
       <div className="item">{text}</div>
@@ -11,3 +11,5 @@ export default function DividingHeader({ text }) {
 DividingHeader.propTypes = {
   text: React.PropTypes.string.isRequired
 }
+
+export default DividingHeader;

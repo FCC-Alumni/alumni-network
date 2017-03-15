@@ -7,8 +7,9 @@ import indexOf from 'lodash/indexOf';
 import { repoOptions } from '../../assets/data/dropdownOptions';
 
 /*
- TODO: 
- 1) Make sure user cannot add the same item twice
+TODO:
+  1) Refactor addItem() code
+  2) Create RegExp's to replace long if statements in addItem()
 */
 
 class RepoList extends React.Component {
@@ -56,8 +57,9 @@ class RepoList extends React.Component {
   
   validateGitLab_and_BitBucketRepos = (hostSite) => {
     const { item, items_list, label } = this.state;
+    const hostUrl = hostSite === 'BitBucket' ? 'https://bitbucket.org/' : 'https://gitlab.com/';
     
-    validateOtherRepos(item).then((res) => {
+    validateOtherRepos(item, hostUrl).then((res) => {
       if (res) {
         items_list.push({item, label});
         this.setState({ items_list, item: '', isLoading: false });
@@ -72,6 +74,17 @@ class RepoList extends React.Component {
           isLoading: false 
         });
       }
+    })
+    .catch(err => {
+      this.setState({ 
+        error: {
+          header: `Our bad, it seems like we really messed this one up! Try again never. Just kidding, give us a few.`,
+          repo: '',
+          owner: ''
+        }, 
+        item: '',
+        isLoading: false 
+      });
     });
   }
   
@@ -84,6 +97,22 @@ class RepoList extends React.Component {
     if(!item) {
       this.setState({ isLoading: false }); 
       return;
+    }
+    
+    // check if item already exists on list
+    for (var obj of items_list) {
+      if (obj.item === item && obj.label === label) {
+        this.setState({ 
+          error: {
+            header: 'You have already added this repo to your list!',
+            repo: '',
+            owner: '',
+          }, 
+          item: '',
+          isLoading: false
+        }); 
+        return;
+      }
     }
     
     // GITLAB VALIDATIONS:
@@ -243,7 +272,6 @@ class RepoList extends React.Component {
   }
   
   render() {
-
     const { item, isLoading, icon, error } = this.state;
     
     const listItems = this.state.items_list.map((el, index) => {
