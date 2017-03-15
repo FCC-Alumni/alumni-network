@@ -2,25 +2,27 @@ import React from 'react';
 import axios from 'axios';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { saveUser } from '../../actions/loginActions';
-import { addFlashMessage } from '../../actions/flashMessages';
+import { saveUser } from '../actions/loginActions';
+import { addFlashMessage } from '../actions/flashMessages';
 
-import Profile from './Profile';
-import Community from './Community';
-import Account from './Account';
+import Landing from './dashboard/Landing';
+import Profile from './dashboard/Profile';
+import Community from './dashboard/Community';
+import Mentorship from './dashboard/Mentorship';
+import Chat from './dashboard/Chat';
 
 const checkSession = () => {
   return axios.get('/api/user').then(res => res.data)
     .catch(e => console.log(e));
 }
 
-class Dashboard extends React.Component {
+class AppContainer extends React.Component {
   componentDidMount() {
     checkSession().then(user => {
       if (user) {
         this.props.saveUser(user);
       } else {
-        this.props.addFlashMessage({ 
+        this.props.addFlashMessage({
           type: 'error',
             text: {
               header: 'Access forbiden!',
@@ -36,9 +38,11 @@ class Dashboard extends React.Component {
       <div>
         { this.props.username &&
           <div>
-            <Route exact path={`${this.props.match.url}/`} component={Profile}/>
+            <Route exact path={`${this.props.match.url}/`} component={Landing}/>
+            <Route exact path={`${this.props.match.url}/profile`} component={Profile}/>
             <Route exact path={`${this.props.match.url}/community`} component={Community}/>
-            <Route exact path={`${this.props.match.url}/account`} component={Account}/>
+            <Route exact path={`${this.props.match.url}/mentorship`} component={Mentorship}/>
+            <Route exact path={`${this.props.match.url}/chat`} component={Chat}/>
           </div>
         }
       </div>
@@ -52,4 +56,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { saveUser, addFlashMessage })(Dashboard);
+export default connect(mapStateToProps, { saveUser, addFlashMessage })(AppContainer);

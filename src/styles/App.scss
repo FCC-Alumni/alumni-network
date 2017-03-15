@@ -1,6 +1,8 @@
 @import 'animations';
 @import 'helperClasses';
+@import 'components/Dashboard';
 @import 'components/SliderToggle';
+@import 'components/ProfileStyles';
 
 .App {
   text-align: center;
@@ -39,10 +41,3 @@
 #profile-page-main-container {
   margin-bottom: 50px;
 }
-
-// styles for components:
-.community, .account {
-  text-align: center;
-}
-
-
