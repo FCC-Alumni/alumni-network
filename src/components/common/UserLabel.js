@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UserLabel = ({ color, size, image, username, label }) => {
+const UserLabel = ({ color, size, image, username, label, folder, toggleAll }) => {
   if (!image) {
     image = '/images/defaultAvatar.gif';
   }
@@ -9,6 +9,14 @@ const UserLabel = ({ color, size, image, username, label }) => {
       <img src={image} alt="user avatar" />
       {username}
       <div className="detail">{label}</div>
+      {
+        (typeof folder === 'boolean') &&
+        <div
+          onClick={toggleAll}
+          className="detail folderDetail">
+          {folder ? <i className="folder open icon"></i> : <i className="folder icon"></i>}
+        </div>
+      }
     </div>
   );
 }
@@ -29,11 +37,11 @@ UserLabel.defaultProps = {
 export default UserLabel;
 
 // EXAMPLE USAGE (Semantic UI classNames)
-// <UserLabel 
+// <UserLabel
 //   label="Contributor"
 //   username={username}
-//   size="huge" 
+//   size="huge"
 //   image={avatarUrl}
 // />
 //
-// only specify color & size if diff from default 
+// only specify color & size if diff from default

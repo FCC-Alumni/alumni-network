@@ -1,0 +1,33 @@
+
+.folderDetail:hover {
+  cursor: pointer;
+  i.folder.icon {
+    color: white !important;
+  }
+}
+
+.profileWrapper:hover, .fccWrapper:hover, .mentorshipWrapper:hover, .skillsWrapper:hover {
+  cursor: pointer;
+}
+
+.profilePane, .fccPane, .mentorshipPane, .skillsPane {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.profilePane.hide, .fccPane.hide, .mentorshipPane.hide, .skillsPane.hide {
+  overflow: hidden;
+  opacity: 0.01;
+  max-height: 0;
+  transition:
+    opacity 600ms ease-out,
+    max-height 500ms ease;
+}
+
+.profilePane.show, .fccPane.show, .mentorshipPane.show, .skillsPane.show {
+  opacity: 1.0;
+  max-height: 700px;
+  transition:
+    opacity 1000ms ease-in,
+    max-height 900ms ease-out;
+}

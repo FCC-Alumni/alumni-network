@@ -24,7 +24,7 @@ class PassportPage extends React.Component {
                 message: 'Welcome back to the app!'
               }
             });
-            this.props.history.push('/dashboard');
+            this.props.history.push('/dashboard/profile');
           } else {
             const { username, avatarUrl, _id } = res;
             this.setState({ username, avatarUrl, mongoId: _id });

@@ -4,7 +4,7 @@ import NavBar from './components/Navbar';
 import HomePage from './components/HomePage';
 import LoginPage from './components/signup/LoginPage';
 import PassportPage from './components/signup/PassportPage';
-import Dashboard from './components/dashboard/Dashboard';
+import AppContainer from './components/AppContainer';
 import FlashMessagesList from './components/flash/FlashMessagesList';
 import './styles/App.css';
 
@@ -20,7 +20,7 @@ class App extends React.Component {
         <Route path="/login" component={LoginPage} />
         <Route path="/verify_account" component={PassportPage} />
 
-        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/dashboard" component={AppContainer} />
 
       </div>
     );
