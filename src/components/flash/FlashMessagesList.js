@@ -20,7 +20,7 @@ FlashMessagesList.propTypes = {
   deleteFlashMessage: React.PropTypes.func.isRequired
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     messages: state.flashMessages 
   }

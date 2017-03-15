@@ -6,9 +6,7 @@ class MessageBox extends React.Component {
   }
   
   handleClick = () => {
-    const { style } = this.state;
-    style.display = "none";
-    this.setState({ style });
+    this.setState({ style: { display: "none" } });
   }
   
   render() {

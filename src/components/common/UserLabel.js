@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function UserLabel({ color, size, image, username, label }) {
+const UserLabel = ({ color, size, image, username, label }) => {
   if (!image) {
     image = '/images/defaultAvatar.gif';
   }
@@ -25,6 +25,8 @@ UserLabel.defaultProps = {
   color: 'teal',
   size: 'medium',
 }
+
+export default UserLabel;
 
 // EXAMPLE USAGE (Semantic UI classNames)
 // <UserLabel 

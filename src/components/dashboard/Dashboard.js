@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { saveUser } from '../../actions/loginActions';
+import { addFlashMessage } from '../../actions/flashMessages';
 
 import Profile from './Profile';
 import Community from './Community';
@@ -16,17 +17,24 @@ const checkSession = () => {
 class Dashboard extends React.Component {
   componentDidMount() {
     checkSession().then(user => {
-      if (user !== '') {
+      if (user) {
         this.props.saveUser(user);
       } else {
-        this.props.history.push('/');
+        this.props.addFlashMessage({ 
+          type: 'error',
+            text: {
+              header: 'Access forbiden!',
+              message: 'Please signup and/or login to view this page.'
+            }
+          });
+        this.props.history.push('/login');
       }
     });
   }
   render() {
     return (
       <div>
-        { this.props.username !== '' &&
+        { this.props.username &&
           <div>
             <Route exact path={`${this.props.match.url}/`} component={Profile}/>
             <Route exact path={`${this.props.match.url}/community`} component={Community}/>
@@ -44,4 +52,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { saveUser })(Dashboard);
+export default connect(mapStateToProps, { saveUser, addFlashMessage })(Dashboard);

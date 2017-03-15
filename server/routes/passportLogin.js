@@ -31,7 +31,7 @@ passport.use(new Strategy({
       if (err) return done(err);
       
       if (!user) {
-        // new registration: create ans save user in database
+        // new registration: create and save user in database
         user = new User({
           githubId: profile.id,
           username: profile.username,

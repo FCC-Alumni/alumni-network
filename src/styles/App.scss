@@ -1,5 +1,6 @@
 @import 'animations';
 @import 'helperClasses';
+@import 'components/SliderToggle';
 
 .App {
   text-align: center;
@@ -35,12 +36,13 @@
   animation: bouncey-arrow 1.5s infinite;
 }
 
-#dashboard-page-main-container {
+#profile-page-main-container {
   margin-bottom: 50px;
 }
-
 
 // styles for components:
 .community, .account {
   text-align: center;
 }
+
+
