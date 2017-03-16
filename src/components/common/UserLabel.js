@@ -27,16 +27,23 @@ UserLabel.propTypes = {
   image: React.PropTypes.string.isRequired,
   username: React.PropTypes.string.isRequired,
   label: React.PropTypes.string.isRequired,
+  toggleAll: React.PropTypes.func,
+  folder: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.bool
+  ])
 }
 
 UserLabel.defaultProps = {
   color: 'teal',
   size: 'medium',
+  folder: ''
 }
 
 export default UserLabel;
 
 // EXAMPLE USAGE (Semantic UI classNames)
+
 // <UserLabel
 //   label="Contributor"
 //   username={username}
@@ -45,3 +52,14 @@ export default UserLabel;
 // />
 //
 // only specify color & size if diff from default
+
+// OR:
+
+// <UserLabel
+//   label="Contributor"
+//   username={username}
+//   size="huge"
+//   image={avatarUrl}
+//   folder={this.state.showAll}
+//   toggleAll={this.toggleAll}
+// />
