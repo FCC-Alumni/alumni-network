@@ -69,7 +69,7 @@ class Profile extends React.Component {
   handleInterestsChange = (e, data) => {
     this.setState({ interests: data.value });
   }
-  
+
   handleInputChange = (e) => {
     this.setState({ [e.target.name] : e.target.value });
   }
@@ -104,7 +104,7 @@ class Profile extends React.Component {
   }
 
   render() {
-    console.log(this.state)
+
     const { username } = this.props.user;
     const { githubData } = this.props;
 
@@ -118,7 +118,7 @@ class Profile extends React.Component {
 
     return (
       <div id="profile-page-main-container" className="ui container">
-        
+
         <UserLabel
           label={this.state.mentor ? 'Mentor' : 'Member'}
           username={username}
@@ -127,7 +127,7 @@ class Profile extends React.Component {
           folder={this.state.showAll}
           toggleAll={this.toggleAll}
         />
-      
+
       {/* Does nothing for the time being */}
       <div style={{ float: 'right' }} className="ui huge teal label">
         Save
@@ -137,80 +137,80 @@ class Profile extends React.Component {
       </div>
 
         <div className="ui raised segment">
-          
+
           <form className="ui form">
-            
+
             <div className="ui teal ribbon label profileWrapper" onClick={this.toggle.bind(this, 'showProfile')}>Personal Info</div>
             <div className={`profilePane ${this.state.showProfile ? 'show' : 'hide'}`}>
               <div className="ui list">
-                
+
                 <ListItem icon="spy icon">
                   {username}
                 </ListItem>
-                
+
                 <ListItem icon="github icon">
                   <a href={githubData.profileUrl} target="_blank">GitHub Profile</a>
                 </ListItem>
-                
+
                 <ListItem>
                   <div className="ui transparent left icon input">
                     <i className="user icon" />
                     <input
-                      onChange={this.handleInputChange} 
-                      type="text" 
-                      placeholder="Enter Display Name..." 
-                      title="Display Name" 
-                      name="displayName" 
-                      value={this.state.displayName} 
+                      onChange={this.handleInputChange}
+                      type="text"
+                      placeholder="Enter Display Name..."
+                      title="Display Name"
+                      name="displayName"
+                      value={this.state.displayName}
                       />
                   </div>
                 </ListItem>
-                
+
                 <ListItem>
                   <div className="ui transparent left icon input">
                     <i className="mail icon" />
                     <input
-                      onChange={this.handleInputChange} 
-                      type="email" 
-                      placeholder="Enter Email..." 
-                      title="Email" 
-                      name="email" 
-                      value={this.state.email} 
+                      onChange={this.handleInputChange}
+                      type="email"
+                      placeholder="Enter Email..."
+                      title="Email"
+                      name="email"
+                      value={this.state.email}
                       />
                   </div>
                 </ListItem>
-                
+
                 <ListItem>
                   <div className="ui transparent left icon input">
                     <i className="marker icon" />
                     <input
-                      onChange={this.handleInputChange} 
-                      type="text" 
-                      placeholder="Enter Location..." 
-                      title="Location" 
-                      name="location" 
-                      value={this.state.location} 
+                      onChange={this.handleInputChange}
+                      type="text"
+                      placeholder="Enter Location..."
+                      title="Location"
+                      name="location"
+                      value={this.state.location}
                       />
                   </div>
                 </ListItem>
-                
+
               </div>
               <div className="ui six wide field">
                 <label>Bio</label>
                 <textarea
-                  onChange={this.handleInputChange} 
+                  onChange={this.handleInputChange}
                   name='bio'
                   rows="4"
                   value={this.state.bio}
                   />
               </div>
             </div>
-            
+
             <div className="ui teal ribbon label fccWrapper" onClick={this.toggle.bind(this, 'showFCC')}>freeCodeCamp Certifications</div>
             <div className={`ui list fccPane ${this.state.showFCC ? 'show' : 'hide'}`}>
               {certificates}
             </div>
-            
+
             <div className="ui teal ribbon label mentorshipWrapper" onClick={this.toggle.bind(this, 'showMentorship')}>Mentorship Program</div>
             <div className={`mentorshipPane ${this.state.showMentorship ? 'show' : 'hide'}`}>
               <MessageBox
@@ -223,9 +223,9 @@ class Profile extends React.Component {
                 saveStateToParent={this.toggleMentorship}
                 />
             </div>
-            
+
             <div className="ui teal ribbon label skillsWrapper" onClick={this.toggle.bind(this, 'showSkills')}>Skills & Interests</div>
-            
+
             <div className={`skillsPane ${this.state.showSkills ? 'show' : 'hide'}`}>
               <DividingHeader text="Core Skills" />
               <MessageBox
@@ -238,7 +238,7 @@ class Profile extends React.Component {
                 options={skills}
                 placeholder="Choose Skills"
                 />
-              
+
               <DividingHeader text="Coding Interests" />
               <MessageBox
                 type="info"
@@ -250,7 +250,7 @@ class Profile extends React.Component {
                 options={interests}
                 placeholder="Choose Interests"
                 />
-              
+
               <DividingHeader text="Open Collaborative Projects" />
               <MessageBox
                 type="info"
@@ -263,66 +263,66 @@ class Profile extends React.Component {
                 prePopulateList={this.state.projects}
                 />
             </div>
-            
+
             <div className="ui teal ribbon label socialWrapper" onClick={this.toggle.bind(this, 'showSocial')}>Social</div>
             <div className={`socialPane ${this.state.showSocial ? 'show' : 'hide'}`}>
-              <MessageBox 
+              <MessageBox
                 type="info"
                 dismissable={true}
                 message="Stay connected with campers on other networks! Let us know where your profiles live."
               />
               <div className="ui list">
-                
+
                 <ListItem>
                   <div className="ui left icon input mini">
                     <i className="codepen icon" />
                     <input
-                      onChange={this.handleInputChange} 
-                      type="text" 
-                      placeholder="Enter CodePen" 
-                      title="CodePen" 
+                      onChange={this.handleInputChange}
+                      type="text"
+                      placeholder="Enter CodePen"
+                      title="CodePen"
                       name="codepen"
-                      value={this.state.codepen} 
+                      value={this.state.codepen}
                       />
                   </div>
                 </ListItem>
-                
+
                 <ListItem>
                   <div className="ui left icon input mini">
                     <i className="twitter icon" />
                     <input
-                      onChange={this.handleInputChange} 
-                      type="text" 
-                      placeholder="Enter Twitter" 
-                      title="Twitter" 
+                      onChange={this.handleInputChange}
+                      type="text"
+                      placeholder="Enter Twitter"
+                      title="Twitter"
                       name="twitter"
-                      value={this.state.twitter} 
+                      value={this.state.twitter}
                       />
                   </div>
                 </ListItem>
-                
+
                 <ListItem>
                   <div className="ui left icon input mini">
                     <i className="linkedin icon" />
                     <input
-                      onChange={this.handleInputChange} 
-                      type="text" 
-                      placeholder="Enter LinkedIn" 
-                      title="LinkedIn" 
+                      onChange={this.handleInputChange}
+                      type="text"
+                      placeholder="Enter LinkedIn"
+                      title="LinkedIn"
                       name="linkedin"
-                      value={this.state.linkedin} 
+                      value={this.state.linkedin}
                       />
                   </div>
                 </ListItem>
-                
+
               </div>
             </div>
-            
+
             <div className="ui teal ribbon label careerWrapper" onClick={this.toggle.bind(this, 'showCareer')}>Career</div>
             <div className={`careerPane ${this.state.showCareer ? 'show' : 'hide'}`}>
               <h4>Career form goes here...</h4>
             </div>
-            
+
           </form>
 
         </div>

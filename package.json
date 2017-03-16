@@ -14,6 +14,8 @@
     "redux-thunk": "^2.2.0",
     "semantic-ui-react": "^0.67.0",
     "shortid": "^2.2.8",
+    "socket.io-client": "^1.7.3",
+    "socket.io-react": "^1.1.2",
     "validator": "^7.0.0"
   },
   "devDependencies": {

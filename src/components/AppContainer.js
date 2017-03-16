@@ -9,7 +9,7 @@ import Landing from './dashboard/Landing';
 import Profile from './dashboard/Profile';
 import Community from './dashboard/Community';
 import Mentorship from './dashboard/Mentorship';
-import Chat from './dashboard/Chat';
+import Chat from './dashboard/Chat/ChatController';
 
 const checkSession = () => {
   return axios.get('/api/user').then(res => res.data)
