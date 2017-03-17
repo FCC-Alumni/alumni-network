@@ -21,6 +21,7 @@
     "mongoose": "^4.8.5",
     "passport": "^0.3.2",
     "passport-github2": "^0.1.10",
+    "redis": "^2.7.1",
     "socket.io": "^1.7.3",
     "validator": "^7.0.0"
   },

@@ -134,7 +134,7 @@ class Profile extends React.Component {
 
     return (
       <div id="profile-page-main-container" className="ui container">
-        
+
         <UserLabel
           label={this.state.mentor ? 'Mentor' : 'Member'}
           username={username}
@@ -153,43 +153,43 @@ class Profile extends React.Component {
 
         <div className="ui raised segment">
 
-          <PersonalInfo 
-            {...this.state} 
-            toggle={this.toggle} 
-            handleInputChange={this.handleInputChange} 
-            username={username} 
+          <PersonalInfo
+            {...this.state}
+            toggle={this.toggle}
+            handleInputChange={this.handleInputChange}
+            username={username}
             githubData={githubData} />
 
-          <Certifications 
-            toggle={this.toggle} 
-            certificates={certificates} 
+          <Certifications
+            toggle={this.toggle}
+            certificates={certificates}
             showFCC={this.state.showFCC} />
 
-          <Mentorship 
-            toggle={this.toggle} 
-            showMentorship={this.state.showMentorship} 
+          <Mentorship
+            toggle={this.toggle}
+            showMentorship={this.state.showMentorship}
             toggleMentorship={this.toggleMentorship} />
-          
-          <SkillsAndInterests 
-            {...this.state} 
-            toggle={this.toggle} 
-            handleSkillsChange={this.handleSkillsChange} 
+
+          <SkillsAndInterests
+            {...this.state}
+            toggle={this.toggle}
+            handleSkillsChange={this.handleSkillsChange}
             handleInterestsChange={this.handleInterestsChange} />
-          
+
           <Collaboration
-            username={username} 
+            username={username}
             saveProjectsList={this.saveProjectsList}
-            toggle={this.toggle} 
-            projects={this.state.projects} 
+            toggle={this.toggle}
+            projects={this.state.projects}
             showCollaboration={this.state.showCollaboration} />
 
-          <Social 
-            {...this.state} 
-            toggle={this.toggle} 
+          <Social
+            {...this.state}
+            toggle={this.toggle}
             handleInputChange={this.handleInputChange} />
-          
-          <Career 
-            toggle={this.toggle} 
+
+          <Career
+            toggle={this.toggle}
             showCareer={this.state.showCareer} />
 
         </div>

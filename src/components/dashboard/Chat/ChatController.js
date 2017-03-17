@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ChatMessages from './Chat';
-import { socket } from '../../../actions/chat';
+import { socket, addMessage } from '../../../actions/chat';
 
 class ChatController extends React.Component {
   constructor(props) {
@@ -11,24 +11,23 @@ class ChatController extends React.Component {
       messages: []
     }
   }
-  
   handleChange = (e) => this.setState({ input: e.target.value });
-  
   submitMessage = (e) => {
     e.preventDefault();
-    const { input: message } = this.state;
+    const { input } = this.state;
     this.setState({ input: '' });
-    socket.emit('publish', { author: this.props.user.username, message } );
+    this.props.addMessage({ author: this.props.user, text: input });
   }
-  
   render() {
     return (
       <div className="ui container segment" id="chat">
-        <h2 className="ui dividing header">Recent Messages:</h2>
-        <div id="messages-container" className="ui comments">
-          <ChatMessages
-            user={this.props.user}
-            chat={this.props.chat} />
+        <div>
+          <div className="ui comments">
+            <h2 className="ui dividing header">Recent Messages:</h2>
+            <ChatMessages
+              user={this.props.user}
+              chat={this.props.chat} />
+          </div>
         </div>
         <form className="ui form" onSubmit={this.submitMessage}>
           <input
@@ -36,7 +35,7 @@ class ChatController extends React.Component {
             placeholder="Type a message here..."
             value={this.state.input}
             onChange={this.handleChange} />
-          <button className="ui primary button" type="submit">Submit Message</button>
+          <button className="ui primary button" onClick={this.submitMessage}>Submit Message</button>
         </form>
       </div>
     );
@@ -50,4 +49,4 @@ const mapStateToProps = ({ user, chat }) => {
   }
 }
 
-export default connect(mapStateToProps)(ChatController);
+export default connect(mapStateToProps, { addMessage })(ChatController);
