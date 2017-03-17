@@ -1,5 +1,4 @@
-
-module.exports = (io) => {
+export default (io) => {
 
   io.on('connection', (socket) => {
   	// inital connection of any client
@@ -11,9 +10,7 @@ module.exports = (io) => {
   	});
 
     // handle other events...
-
     socket.on('disconnect', () => console.log('Socket.io connection closed'));
   });
-
 
 }

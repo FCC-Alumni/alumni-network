@@ -14,7 +14,8 @@
 .mentorshipWrapper, 
 .skillsWrapper,
 .socialWrapper,
-.careerWrapper {
+.careerWrapper,
+.collaborationWrapper {
   cursor: pointer;
 }
 
@@ -23,7 +24,8 @@
 .mentorshipPane, 
 .skillsPane,
 .socialPane,
-.careerPane {
+.careerPane,
+.collaborationPane {
   padding-top: 8px;
   padding-bottom: 8px;
 }
@@ -33,11 +35,11 @@
 .mentorshipPane.hide, 
 .skillsPane.hide,
 .socialPane.hide,
-.careerPane.hide {
+.careerPane.hide,
+.collaborationPane.hide {
   overflow: hidden;
   opacity: 0.01;
   max-height: 0;
-  margin-bottom: 0;
   transition:
     opacity 400ms ease-out,
     max-height 300ms ease;
@@ -48,10 +50,11 @@
 .mentorshipPane.show, 
 .skillsPane.show,
 .socialPane.show,
-.careerPane.show {
+.careerPane.show,
+.collaborationPane.show {
   opacity: 1.0;
   max-height: 700px;
-  margin-bottom: 10px;
+  margin-bottom: 10px !important;
   transition:
     opacity 500ms ease-in,
     max-height 400ms ease-out;
