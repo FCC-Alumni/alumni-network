@@ -7,6 +7,9 @@ import passportRoute from './routes/passportLogin';
 import userRoute from './routes/userRoute';
 import gitLabRoute from './routes/gitLabRoute'
 
+import socket_io from 'socket.io';
+import socket from './chat-server/chat';
+
 dotenv.config();
 
 // initialize mongoDB
@@ -26,5 +29,5 @@ const port = process.env.PORT || 8080;
 const server = app.listen(port, () => console.log(`Express Server is listening on port ${port}`));
 
 // initialize Socket.io chat server
-const io = require('socket.io')(server);
-require('./chat-server/chat.js')(io);
+const io = socket_io(server);
+socket(io);
