@@ -11,34 +11,62 @@ const parseTime = (timestamp) => {
   let sec = a.getSeconds();
   let time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
   return time;
-}
+};
 
-const Chat = (props) => {
-  if (props.chat.size > 0) {
+export default ({ chat, user, setEdit, finishEdit, edit, saveEdit, like }) => {
+  if (chat.size > 0) {
     return (
       <div>
-        {props.chat.map(msg => {
+        {chat.map(msg => {
+          const id = msg.get('id');
+          const timestamp = msg.get('timestamp');
+          const text = msg.get('text');
+          const author = msg.get('author');
+          const likes = msg.get('likes');
           return (
-            <div className="comment" key={msg.get('id')} style={{ paddingTop: '12px' }}>
+            <div className="comment" key={id} style={{ paddingTop: '12px' }}>
               <a className="avatar">
-                <img src={props.user.avatarUrl}/>
+                <img src={user.avatarUrl}/>
               </a>
               <div className="content">
-                <a className="author">{msg.get('author')}</a>
+                <a className="author">{author}</a>
                 <div className="metadata">
-                  <span className="date">at {parseTime(msg.get('timestamp'))}</span>
+                  <span className="date">at {parseTime(timestamp)}</span>
+                  {user.username === author &&
+                    <span onClick={setEdit.bind(this, id)}>edit</span>}
                 </div>
-                <div className="text" style={{ marginTop: '4px' }}>
-                  {msg.get('text')}
-                </div>
+
+                {edit === id ?
+                <form
+                  className="ui form"
+                  style={{ marginTop: '10px' }}
+                  onSubmit={finishEdit}>
+                  <input
+                    type="text"
+                    placeholder="You should type something..."
+                    value={text}
+                    onChange={saveEdit.bind(this, edit)} />
+                  <button className="ui green button" onClick={finishEdit}>Save Edit</button>
+                </form>
+                :
+                <div
+                  className="text"
+                  style={{ marginTop: '4px' }}>
+                  {text}
+                </div>}
 
                 <div className="ui feed" style={{ marginTop: '0px' }}>
                   <div className="event">
                     <div className="content">
                       <div className="meta">
-                        <a className="like">
-                          <i className="like icon"></i> {msg.get('likes')} Likes
-                        </a>
+                        {(likes.indexOf(user.username) === -1) ?
+                          <a className="like" onClick={like.bind(this, id, user.username)}>
+                            <i className="like icon"></i> {likes.length} {likes.length ? 'Like' : 'Likes'}
+                          </a>
+                            :
+                          <a className="like">
+                            <i className="like icon"></i> {likes.length} {likes.length ? 'Like' : 'Likes'}
+                          </a>}
                       </div>
                     </div>
                   </div>
@@ -54,5 +82,3 @@ const Chat = (props) => {
   }
   return null;
 };
-
-export default Chat;

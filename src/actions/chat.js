@@ -14,18 +14,19 @@ export const EDIT_MESSAGE = 'EDIT_MESSAGE';
 export const LIKE_MESSAGE = 'LIKE_MESSAGE';
 export const RECEIVED_MESSAGE = 'RECEIVED_MESSAGE';
 export const RECEIVED_UPDATE = 'RECEIVED_UPDATE';
+export const RECEIVED_LIKE = 'RECEIVED_LIKE';
 
-socket.on('initalize-chat', (payload) => {
+socket.on('initalize-chat', (data) => {
   store.dispatch({
     type: INITIALIZE,
-    payload: payload.map(message => Map(message))
+    payload: data.map(message => Map(message))
   });
 });
 
-socket.on('broadcast-message', (payload) => {
+socket.on('broadcast-message', (message) => {
   store.dispatch({
     type: RECEIVED_MESSAGE,
-    payload
+    payload: message
   });
 });
 
@@ -35,7 +36,7 @@ export const addMessage = (payload) => {
     text,
     author: author.username,
     avatar: author.avatarUrl,
-    likes: 0,
+    likes: [],
     edited: false,
     timestamp: Date.now(),
     id: `${author.username}_${uuidV1()}`,
@@ -45,4 +46,50 @@ export const addMessage = (payload) => {
     type: ADD_MESSAGE,
     payload: message
   }
-}
+};
+
+socket.on('broadcast-update', (message) => {
+  store.dispatch({
+    type: RECEIVED_UPDATE,
+    payload: message
+  });
+});
+
+export const saveEdit = (id, event) => {
+  return {
+    type: EDIT_MESSAGE,
+    payload: {
+      id,
+      text: event.target.value
+    }
+  }
+};
+
+export const broadcastEdit = (id) => {
+  const message = store.getState().chat.find(d => d.get('id') === id).toJS();
+  socket.emit('update-message', message);
+  return {
+    type: null
+  }
+};
+
+socket.on('broadcast-like', ({ messageId, liker }) => {
+  store.dispatch({
+    type: RECEIVED_LIKE,
+    payload: {
+      messageId,
+      liker
+    }
+  })
+});
+
+export const likeMessage = (messageId, liker) => {
+  socket.emit('like-message', { messageId, liker });
+  return {
+    type: LIKE_MESSAGE,
+    payload: {
+      messageId,
+      liker
+    }
+  }
+};
