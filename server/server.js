@@ -17,7 +17,7 @@ client.on('ready', () => console.log('Redis connected'));
 
 // initialize mongoDB
 mongoose.Promise = require('bluebird');
-mongoose.connect(process.env.MONGO_URL, () => console.log('Connected via mongoose'));
+mongoose.connect(process.env.MONGO_URL, () => console.log('Mongoose connected'));
 
 // initialize Express app and setup routes
 const app = express();

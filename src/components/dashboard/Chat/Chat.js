@@ -13,10 +13,19 @@ const parseTime = (timestamp) => {
   return time;
 };
 
-export default ({ chat, user, setEdit, finishEdit, edit, saveEdit, like }) => {
+export default ({
+  chat,
+  user,
+  edit,
+  setEdit,
+  saveEdit,
+  editText,
+  finishEdit,
+  deleteMessage,
+  like }) => {
   if (chat.size > 0) {
     return (
-      <div>
+      <div className='chatMessage'>
         {chat.map(msg => {
           const id = msg.get('id');
           const timestamp = msg.get('timestamp');
@@ -33,7 +42,7 @@ export default ({ chat, user, setEdit, finishEdit, edit, saveEdit, like }) => {
                 <div className="metadata">
                   <span className="date">at {parseTime(timestamp)}</span>
                   {user.username === author &&
-                    <span onClick={setEdit.bind(this, id)}>edit</span>}
+                    <span className='editButton' onClick={setEdit.bind(this, id)}>edit</span>}
                 </div>
 
                 {edit === id ?
@@ -42,11 +51,14 @@ export default ({ chat, user, setEdit, finishEdit, edit, saveEdit, like }) => {
                   style={{ marginTop: '10px' }}
                   onSubmit={finishEdit}>
                   <input
+                    id="editInput"
+                    autoFocus
                     type="text"
-                    placeholder="You should type something..."
-                    value={text}
-                    onChange={saveEdit.bind(this, edit)} />
-                  <button className="ui green button" onClick={finishEdit}>Save Edit</button>
+                    placeholder="You should really type something..."
+                    value={editText}
+                    onChange={saveEdit.bind(this)} />
+                  <button className="ui green button" disabled={!editText} onClick={finishEdit}>Save Edit</button>
+                  <button className="ui red button" onClick={deleteMessage.bind(this, id)}>Delete Message</button>
                 </form>
                 :
                 <div
@@ -65,7 +77,7 @@ export default ({ chat, user, setEdit, finishEdit, edit, saveEdit, like }) => {
                           </a>
                             :
                           <a className="like">
-                            <i className="like icon"></i> {likes.length} {likes.length ? 'Like' : 'Likes'}
+                            <i className="like icon" style={{ color: 'red' }}></i> {likes.length} {likes.length ? 'Like' : 'Likes'}
                           </a>}
                       </div>
                     </div>
