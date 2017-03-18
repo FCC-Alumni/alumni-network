@@ -11,11 +11,25 @@
   button {
     margin-top: 10px;
   }
-
-  #messages-container {
-    // outline: 1px dotted;
-    // make chat container full width of parent
-    // set fixed height
-    // set overflow scroll
+  img {
+    border-radius: 50%;
+  }
+  #messageContainer {
+    width: 63.5vw;
+    max-height: 65vh;
+    overflow-y: auto;
+  }
+  .chatMessage {
+    #editInput {
+      width: 95%;
+    }
+    .editButton {
+      transition: color 300ms ease;
+    }
+    .editButton:hover {
+      cursor: pointer;
+      color: black;
+      transition: color 300ms ease;
+    }
   }
 }

@@ -3,6 +3,7 @@ import { List, Map } from 'immutable';
 import {
   INITIALIZE,
   ADD_MESSAGE,
+  DELETE_MESSAGE,
   EDIT_MESSAGE,
   LIKE_MESSAGE,
   RECEIVED_MESSAGE,
@@ -25,6 +26,9 @@ export default (state = List(), action) => {
     case ADD_MESSAGE:
       return state.push(action.payload);
 
+    case DELETE_MESSAGE:
+        return state.filter(message => message.get('id') !== payload.id);
+
     case LIKE_MESSAGE:
       return state.map(message => {
         if (message.get('id') === payload.messageId) {
@@ -37,6 +41,7 @@ export default (state = List(), action) => {
       });
 
     case EDIT_MESSAGE:
+    console.log(payload.text);
       return state.map(message => {
         if (message.get('id') === payload.id) {
           return message.set('text', payload.text);

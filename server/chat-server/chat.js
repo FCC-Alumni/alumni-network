@@ -14,7 +14,15 @@ const saveMessage = (message) => {
     const next = current.concat(message);
     redis.set('chat', JSON.stringify(next));
   });
-}
+};
+
+const registerDelete = (id) => {
+  redis.get('chat', (err, messages) => {
+    const current = JSON.parse(messages);
+    const next = current.filter(message => message.id !== id);
+    redis.set('chat', JSON.stringify(next));
+  });
+};
 
 // save an edited message to Redis
 const saveUpdate = (updatedMessage) => {
@@ -29,7 +37,7 @@ const saveUpdate = (updatedMessage) => {
     });
     redis.set('chat', JSON.stringify(updated));
   });
-}
+};
 
 // save a like event to Redis
 const saveLike = (messageId, liker) => {
@@ -45,14 +53,14 @@ const saveLike = (messageId, liker) => {
     });
     redis.set('chat', JSON.stringify(updated));
   })
-}
+};
 
 // socket.io events:
 module.exports = (io) => {
 
   io.on('connection', (socket) => {
 
-    console.log('Socket connection opened, initalizing new client with current Redis store');
+    console.log('Socket.io connected');
     redis.get('chat', (err, history) => initalizeClient(socket, history));
 
     // client submits message
@@ -71,6 +79,11 @@ module.exports = (io) => {
     socket.on('like-message', ({ messageId, liker }) => {
       saveLike(messageId, liker);
       socket.broadcast.emit('broadcast-like', { messageId, liker });
+    });
+
+    socket.on('delete-message', id => {
+      registerDelete(id);
+      socket.broadcast.emit('broadcast-deletion', id);
     });
 
     socket.on('disconnect', () => console.log('Socket connection closed'));;
