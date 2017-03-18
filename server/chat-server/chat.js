@@ -8,7 +8,7 @@ const initalizeClient = (socket, chatHistory) => {
 }
 
 // broadcast message to all listeneres
-const broadcastMessage = (message) => {
+const saveMessage = (message) => {
   redis.get('chat', (err, messages) => {
     const current = JSON.parse(messages);
     const next = current.concat(message);
@@ -16,6 +16,38 @@ const broadcastMessage = (message) => {
   });
 }
 
+// save an edited message to Redis
+const saveUpdate = (updatedMessage) => {
+  redis.get('chat', (err, messages) => {
+    const current = JSON.parse(messages);
+    const updated = current.map(message => {
+      if (message.id === updatedMessage.id) {
+        return updatedMessage;
+      } else {
+        return message;
+      }
+    });
+    redis.set('chat', JSON.stringify(updated));
+  });
+}
+
+// save a like event to Redis
+const saveLike = (messageId, liker) => {
+  redis.get('chat', (err, messages) => {
+    const current = JSON.parse(messages);
+    const updated = current.map(message => {
+      if (message.id === messageId) {
+        message.likes.push(liker);
+        return message;
+      } else {
+        return message;
+      }
+    });
+    redis.set('chat', JSON.stringify(updated));
+  })
+}
+
+// socket.io events:
 module.exports = (io) => {
 
   io.on('connection', (socket) => {
@@ -25,9 +57,21 @@ module.exports = (io) => {
 
     // client submits message
   	socket.on('submission', (data) => {
-      broadcastMessage(data)
+      saveMessage(data);
       socket.broadcast.emit('broadcast-message', data);
   	});
+
+    // client edits a message
+    socket.on('update-message', (data) => {
+      saveUpdate(data);
+      socket.broadcast.emit('broadcast-update', data);
+    });
+
+    // client likes a message
+    socket.on('like-message', ({ messageId, liker }) => {
+      saveLike(messageId, liker);
+      socket.broadcast.emit('broadcast-like', { messageId, liker });
+    });
 
     socket.on('disconnect', () => console.log('Socket connection closed'));;
   });
