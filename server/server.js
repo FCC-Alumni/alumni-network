@@ -10,7 +10,6 @@ import gitLabRoute from './routes/gitLabRoute'
 
 dotenv.config();
 
-
 // initialize redis
 export const client = redis.createClient();
 client.on('error', (err) => console.log(`Redis Error: ${err}`));
@@ -20,11 +19,9 @@ client.on('ready', () => console.log('Redis connected'));
 mongoose.Promise = require('bluebird');
 mongoose.connect(process.env.MONGO_URL, () => console.log('Mongoose connected'));
 
-
 //===========Populating DB with user data=====
 import { mockData } from './helper_functions/mockData';
-//Don't forget to comment out/delete the underneath function call
-//otherwise, we're going to keep adding in the same users everytime we refresh the server
+// this will only save users if they don't exist locally yet...still need to remove for production though
 mockData();
 
 // initialize Express app and setup routes
