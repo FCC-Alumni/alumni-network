@@ -16,7 +16,8 @@
   }
   #messageContainer {
     width: 63.5vw;
-    height: 65vh;
+    min-height: 25vh;
+    max-height: 50vh;
     overflow-y: auto;
   }
   .chatMessage {

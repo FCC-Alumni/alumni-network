@@ -17,11 +17,7 @@ export default (state = List(), action) => {
   switch (type) {
 
     case INITIALIZE:
-      if (payload.length > 0) {
-        return List(action.payload);
-      } else {
-        return state;
-      }
+      return (payload.length > 0) ? List(action.payload) : state;
 
     case ADD_MESSAGE:
       return state.push(action.payload);
@@ -29,19 +25,7 @@ export default (state = List(), action) => {
     case DELETE_MESSAGE:
         return state.filter(message => message.get('id') !== payload.id);
 
-    case LIKE_MESSAGE:
-      return state.map(message => {
-        if (message.get('id') === payload.messageId) {
-          return message.update('likes', likes => {
-            return (likes.indexOf(payload.liker) === -1 ? likes.concat(payload.liker) : likes);
-          });
-        } else {
-          return message;
-        }
-      });
-
     case EDIT_MESSAGE:
-    console.log(payload.text);
       return state.map(message => {
         if (message.get('id') === payload.id) {
           return message.set('text', payload.text);
@@ -50,10 +34,20 @@ export default (state = List(), action) => {
         }
       });
 
+    case LIKE_MESSAGE:
+      const { messageId, liker } = payload;
+      return state.map(message => {
+        if (message.get('id') === messageId && !message.get('likes').has(liker)) {
+            return message.update('likes', likes => likes.add(liker))
+        } else {
+          return message;
+        }
+      });
+
     case RECEIVED_LIKE:
       return state.map(message => {
         if (message.get('id') === payload.messageId) {
-          return message.update('likes', likes => likes.concat(payload.liker));
+          return message.update('likes', likes => likes.add(payload.liker));
         } else {
           return message;
         }
