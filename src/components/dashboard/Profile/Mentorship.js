@@ -2,11 +2,11 @@ import React from 'react';
 import MessageBox from '../../common/MessageBox';
 import SliderToggle from '../../common/SliderToggle';
 
-const Mentorship = ({ toggle, showMentorship, toggleMentorship }) => {
+const Mentorship = ({ toggle, showMentorship, toggleMentorship, handleInputChange, mentorshipSkills, isMentor }) => {
   return (
     <div>
       <div className="ui teal ribbon label mentorshipWrapper" onClick={() => { toggle('showMentorship') }}>Mentorship Program</div>
-      <div className={`mentorshipPane ${showMentorship ? 'show' : 'hide'}`}>
+      <form className={`mentorshipPane ui form ${showMentorship ? 'show' : 'hide'}`}>
         <MessageBox
           type="info"
           header="Would you like to be a mentor?"
@@ -14,9 +14,27 @@ const Mentorship = ({ toggle, showMentorship, toggleMentorship }) => {
         <SliderToggle
           label="Sign me up! I want to be a mentor!"
           saveStateToParent={toggleMentorship} />
-      </div>
+        <div className={`ui six wide field mentorshipSkillsPane ${isMentor ? 'show' : 'hide'}`}>
+          <label>Mentorship Skills</label>
+          <textarea 
+            onChange={handleInputChange} 
+            name="mentorshipSkills" 
+            value={mentorshipSkills}
+            rows="3"
+            placeholder="Please provide a short description of the skills you feel comfortable providing mentorship for." />
+        </div>
+      </form>
     </div>
   );
+}
+
+Mentorship.propTypes = {
+  toggle: React.PropTypes.func.isRequired,
+  showMentorship: React.PropTypes.bool.isRequired,
+  toggleMentorship: React.PropTypes.func.isRequired,
+  mentorshipSkills: React.PropTypes.string.isRequired,
+  handleInputChange: React.PropTypes.func.isRequired,
+  isMentor: React.PropTypes.bool.isRequired
 }
 
 export default Mentorship;

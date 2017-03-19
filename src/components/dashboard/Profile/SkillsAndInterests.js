@@ -1,5 +1,4 @@
 import React from 'react';
-import DividingHeader from '../../common/DividingHeader';
 import DropdownMultiSelect from '../../common/DropdownMultiSelect';
 import MessageBox from '../../common/MessageBox';
 
@@ -10,7 +9,10 @@ const SkillsAndInterests = ({ showSkills, toggle, handleSkillsChange, handleInte
     <div>
       <div className="ui teal ribbon label skillsWrapper" onClick={() => { toggle('showSkills') }}>Skills & Interests</div>
       <div className={`skillsPane ${showSkills ? 'show' : 'hide'}`}>
-        <DividingHeader text="Core Skills" />
+        <h4 className="ui horizontal divider header">
+          <i className="checkmark box icon" />
+          Core Skills
+        </h4>
         <MessageBox
           type="info"
           dismissable={true}
@@ -19,7 +21,10 @@ const SkillsAndInterests = ({ showSkills, toggle, handleSkillsChange, handleInte
           onChange={handleSkillsChange}
           options={skills}
           placeholder="Choose Skills" />
-        <DividingHeader text="Coding Interests" />
+        <h4 className="ui horizontal divider header">
+          <i className="checkmark box icon" />
+          Coding Interests
+        </h4>
         <MessageBox
           type="info"
           dismissable={true}

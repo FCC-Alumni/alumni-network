@@ -18,4 +18,44 @@ const User = new Schema({
     mentor: Boolean
 });
 
+// const User = new Schema({
+//   verifiedUser: Boolean,
+//   memberSince: { type: Date, default: Date.now },
+//   avatarUrl: String,
+//   githubId: String,
+//   personal: {
+//     username: String,
+//     profileUrl: String,
+//     displayName: String,
+//     email: String,
+//     location: String,
+//     bio: String
+//   },
+//   fccCerts: {
+//     Front_End: Boolean,
+//     Back_End: Boolean,
+//     Data_Visulization: Boolean
+//   },
+//   mentorship: {
+//     isMentor: Boolean,
+//     mentorshipSkills: String
+//   },
+//   skillsAndInterests: {
+//     coreSkills: Array,
+//     codingInterests: Array
+//   },
+//   projects: Array,
+//   social: {
+//     codepen: String,
+//     linkedin: String,
+//     twitter: String,
+//   },
+//   career: {
+//     working: String,
+//     company: String,
+//     tenure: String,
+//     jobSearch: String,
+//   }
+// });
+
 export default mongoose.model('User', User);

@@ -28,26 +28,34 @@ TODO:
 
 class Profile extends React.Component {
   state = {
+    errors: {
+      displayName: 'error goes here!'
+    },
     projects: [
-      // this is example data and will eventually come from redux store via db
       {item: 'Example/Example', label: 'https://github.com/'},
       {item: 'Replace/With', label: 'https://gitlab.com/'},
       {item: 'User/Data', label: 'https://bitbucket.com/'},
     ],
     interests: [],
     skills: [],
-    certs: [],
-    mentor: false,
-    /* technically not cool, but not seeing the choice if we want to autofill and manage state */
     displayName: this.props.githubData.name ? this.props.githubData.name : '',
     email: this.props.email ? this.props.email : '',
     location: this.props.githubData.location ? this.props.githubData.location : '',
     bio: this.props.githubData.bio ? this.props.githubData.bio : '',
     /****/
-    codepen: '',
-    twitter: '',
-    linkedin: '',
-    /****/
+    mentor: false,
+    mentorshipSkills: '',
+    career: {
+      working: '',
+      company: '',
+      tenure: '',
+      jobSearch: '',
+    },
+    social: {
+      codepen: '',
+      twitter: '',
+      linkedin: '',
+    },
     showAll: true,
     showProfile: true,
     showFCC: false,
@@ -57,16 +65,6 @@ class Profile extends React.Component {
     showCareer: false,
     showCollaboration: false
     // ^^ was thinking about putting these into an object for organization of the state object...
-  }
-  componentDidMount() {
-    const { fccCerts } = this.props.user;
-    var certs = [];
-    for (var cert in fccCerts) {
-      if (fccCerts[cert]) {
-        certs.push(cert.replace(/_/g, ' ') + ' Certified');
-      }
-    }
-    this.setState({ certs });
   }
 
   saveProjectsList = (items_list) => {
@@ -84,9 +82,43 @@ class Profile extends React.Component {
   handleInterestsChange = (e, data) => {
     this.setState({ interests: data.value });
   }
+  
+  handleTenureChange = (e, data) => {
+    let { career } = this.state;
+    career.tenure = data.value;
+    this.setState({ career });
+  }
 
+  handleRadioChange = (e) => {
+    let { career } = this.state;
+    if (e.target.name === 'working') {
+      if (e.target.id === 'Yes') {
+        career.working = 'yes';
+        career.jobSearch = '';
+        this.setState({ career });
+      } else {
+        career.working = 'no';
+        career.company = '';
+        career.tenure = '';
+        this.setState({ career });
+      }
+    } else if (e.target.name === 'jobSearch') {
+      career.jobSearch = e.target.id;
+      this.setState({ career });
+    }
+  }
+  
   handleInputChange = (e) => {
-    this.setState({ [e.target.name] : e.target.value });
+    let { career, social } = this.state;
+    if (e.target.name === 'company') {
+      career.company = e.target.value;
+      this.setState({ career });
+    } else if (e.target.name === 'codepen' || e.target.name === 'linkedin' || e.target.name === 'twitter') {
+      social[e.target.name] = e.target.value;
+      this.setState({ social });
+    } else {
+      this.setState({ [e.target.name] : e.target.value });
+    }
   }
 
   toggle = (target) => {
@@ -120,17 +152,8 @@ class Profile extends React.Component {
   }
 
   render() {
-
     const { username } = this.props.user;
     const { githubData } = this.props;
-
-    const certificates = this.state.certs.map((item, index) => {
-      return (
-        <ListItem key={index} icon="certificate yellow icon">
-          {item}
-        </ListItem>
-      );
-    });
 
     return (
       <div id="profile-page-main-container" className="ui container">
@@ -158,17 +181,21 @@ class Profile extends React.Component {
             toggle={this.toggle}
             handleInputChange={this.handleInputChange}
             username={username}
-            githubData={githubData} />
+            githubData={githubData} 
+            errors={this.state.errors }/>
 
           <Certifications
             toggle={this.toggle}
-            certificates={certificates}
-            showFCC={this.state.showFCC} />
+            showFCC={this.state.showFCC}
+            fccCerts={this.props.user.fccCerts} />
 
           <Mentorship
             toggle={this.toggle}
             showMentorship={this.state.showMentorship}
-            toggleMentorship={this.toggleMentorship} />
+            toggleMentorship={this.toggleMentorship}
+            mentorshipSkills={this.state.mentorshipSkills}
+            handleInputChange={this.handleInputChange}
+            isMentor={this.state.mentor} />
 
           <SkillsAndInterests
             {...this.state}
@@ -184,13 +211,19 @@ class Profile extends React.Component {
             showCollaboration={this.state.showCollaboration} />
 
           <Social
-            {...this.state}
+            {...this.state.social}
+            showSocial={this.state.showSocial}
             toggle={this.toggle}
             handleInputChange={this.handleInputChange} />
 
           <Career
             toggle={this.toggle}
-            showCareer={this.state.showCareer} />
+            showCareer={this.state.showCareer}
+            handleInputChange={this.handleRadioChange}
+            isWorking={this.state.career.working}
+            company={this.state.career.company} 
+            errors={this.state.errors}
+            handleTenureChange={this.handleTenureChange} />
 
         </div>
       </div>
