@@ -10,6 +10,8 @@ import {
 const credentials = `client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_SECRET}`;
 
 const fakeUsers = [
+  'quincylarson',
+  'berkeleytrue',
   'weezlo',
   'mmhansen',
   'forkerino',
@@ -19,12 +21,24 @@ const fakeUsers = [
   '0x0936',
   'hkuz',
   'coymeetsworld',
-  'hay-dee'
+  'hay-dee',
+  'p1xt',
+  'bengitter',
+  'josh5231',
 ];
 
 function getCertifications(username) {
   return axios.all([getFrontEndCert(username), getBackEndCert(username), getDataVisCert(username)])
   .then(axios.spread((frontCert, backCert, dataCert) => {
+
+    if (username === 'quincylarson') {
+      return {
+        Front_End: true,
+        Back_End: true,
+        Data_Visualization: true
+      };
+    };
+
     if ((frontCert.request._redirectCount +
       backCert.request._redirectCount +
       dataCert.request._redirectCount) >= 3 ) {
@@ -39,16 +53,28 @@ function getCertifications(username) {
   }));
 };
 
+function logResult(users, completed) {
+  if (users === fakeUsers.length) {
+    console.log(`${users} out of ${fakeUsers.length} total users successfully pre-populated in database`);
+  } else if (completed === fakeUsers.length) {
+    console.log(`${completed} mock users exist in database`);
+  };
+};
+
 export function mockData() {
-  var users = 0;
+  let users = 0;
+  let completed = 0;
   fakeUsers.forEach(user => {
     axios.get(`https://api.github.com/users/${user}?${credentials}`)
     .then(response => {
       const { data } = response;
       User.find({ username: data.login }, (err, user) => {
-        if (!user) {
+        if (user.length === 0) {
           getCertifications(data.login).then(certs => {
+            console.log(`${data.login} created in database.`);
             users++;
+            completed++;
+            logResult(users, completed);
             User.create({
               githubId: data.id,
               username: data.login,
@@ -71,12 +97,11 @@ export function mockData() {
               if(err) console.log(err);
             }));
           }).catch(err => console.log(err));
-        }
+        } else {
+          completed++;
+          logResult(users, completed);
+        };
       });
     }).catch(err => console.log(err));
    });
-  console.log(users.length > 0 ?
-    `${users} mock users created in database` :
-    `${fakeUsers.length} mock users exist in databse`
-  );
 };
