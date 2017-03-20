@@ -4,7 +4,7 @@ import MessageBox from '../../common/MessageBox';
 
 import { skills, interests } from '../../../assets/data/dropdownOptions';
 
-const SkillsAndInterests = ({ showSkills, toggle, handleSkillsChange, handleInterestsChange }) => {
+const SkillsAndInterests = ({ showSkills, toggle, handleSkillsChange, handleInterestsChange, coreSkills, codingInterests }) => {
   return (
     <div>
       <div className="ui teal ribbon label skillsWrapper" onClick={() => { toggle('showSkills') }}>Skills & Interests</div>
@@ -20,7 +20,8 @@ const SkillsAndInterests = ({ showSkills, toggle, handleSkillsChange, handleInte
         <DropdownMultiSelect
           onChange={handleSkillsChange}
           options={skills}
-          placeholder="Choose Skills" />
+          placeholder="Choose Skills"
+          defaultValue={coreSkills} />
         <h4 className="ui horizontal divider header">
           <i className="checkmark box icon" />
           Coding Interests
@@ -32,7 +33,8 @@ const SkillsAndInterests = ({ showSkills, toggle, handleSkillsChange, handleInte
         <DropdownMultiSelect
           onChange={handleInterestsChange}
           options={interests}
-          placeholder="Choose Interests" />
+          placeholder="Choose Interests"
+          defaultValue={codingInterests} />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RadioButton = ({ onChange, name, label }) => {
+const RadioButton = ({ onChange, name, label, checked }) => {
   return (
     <div>
       <div className="field">
@@ -9,7 +9,8 @@ const RadioButton = ({ onChange, name, label }) => {
             onChange={onChange} 
             type="radio" 
             id={label.replace(/\s/g, '_')} 
-            name={name} />
+            name={name}
+            checked={checked} />
           <label>{label}</label>
         </div>
       </div>

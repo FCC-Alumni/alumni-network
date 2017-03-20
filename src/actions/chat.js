@@ -43,6 +43,7 @@ export const addMessage = (payload) => {
     timestamp: Date.now(),
     id: `${author.username}_${uuidV1()}`,
   });
+  console.log(message.toJS(), message);
   socket.emit('submission', message);
   return {
     type: ADD_MESSAGE,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getUserData, verifyUser, saveUser } from '../../actions/loginActions';
+import { getUserData, verifyUser, saveUser } from '../../actions/user';
 import { addFlashMessage } from '../../actions/flashMessages';
 import { connect } from 'react-redux';
 
@@ -11,63 +11,65 @@ class PassportPage extends React.Component {
   }
 
   componentDidMount() {
-    getUserData().then(
-      (res) => {
-        if (res) {
-          if (res.verifiedUser) {
-            const user = res;
-            this.props.saveUser(user);
-            this.props.addFlashMessage({
-              type: 'success',
-              text: {
-                header: 'Welcome to the freeCodeCamp Alumni Network!',
-                message: 'Welcome back to the app!'
-              }
-            });
-            this.props.history.push('/dashboard/profile');
-          } else {
-            const { username, avatarUrl, _id } = res;
-            this.setState({ username, avatarUrl, mongoId: _id });
-          }
+    getUserData().then(user => {
+      if (user) {
+        // redirect on subsequent login
+        if (user.verifiedUser) {
+          this.props.saveUser(user);
+          this.props.addFlashMessage({
+            type: 'success',
+            text: {
+              header: 'Welcome to the freeCodeCamp Alumni Network!',
+              message: 'Welcome back to the app!'
+            }
+          });
+          this.props.history.push('/dashboard/profile');
+          // verification process
+        } else {
+          const { personal, username, _id } = user;
+          const { avatarUrl } = personal;
+          this.setState({ displayName: username, username, avatarUrl, mongoId: _id });
         }
-      },
-    ).catch(console.log); // do something with error? display in UI?
+      }
+    });
+  }
+  
+  handleChange = (e) => {
+    this.setState({ username: e.target.value });
   }
 
-  handleClick = (e) => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const { username, mongoId } = this.state;
-    verifyUser(username, mongoId).then(
-      (res) => {
-        const user = res.data.user;
-        this.props.saveUser(user);
-        this.props.addFlashMessage({
-          type: 'success',
-          text: {
-            header: 'Welcome to the freeCodeCamp Alumni Network!',
-            message: 'Your account is now verified!'
-          }
-        });
-        this.props.history.push('/dashboard');
-      },
-      (err) => {
-        this.props.addFlashMessage({
-          type: 'error',
-          text: {
-            header: 'User verification error!',
-            message: 'Either you have not earned any freeCodeCamp certifications, or you do not have a freeCodeCamp account. Please visit us again when you have resolved these issues.'
-          }
-        });
-        this.props.history.push('/');
-      }
-    )
+    verifyUser(username, mongoId).then(res => {
+      const user = res.data.user;
+      this.props.saveUser(user);
+      this.props.addFlashMessage({
+        type: 'success',
+        text: {
+          header: 'Welcome to the freeCodeCamp Alumni Network!',
+          message: 'Your account is now verified!'
+        }
+      });
+      this.props.history.push('/dashboard/profile');
+    })
+    .catch(err => {
+      this.props.addFlashMessage({
+        type: 'error',
+        text: {
+          header: 'User verification error!',
+          message: 'Either you have not earned any freeCodeCamp certifications, or you do not have a freeCodeCamp account. Please visit us again when you have resolved these issues.'
+        }
+      });
+      this.props.history.push('/');
+    })
   }
 
   render() {
     return (
       <div className="ui container">
 
-        <h1>{`Welcome ${this.state.username}!`}</h1>
+        <h1>{`Welcome ${this.state.displayName}!`}</h1>
 
         { this.state.avatarUrl.length > 0 && <div className="ui small image"><img src={this.state.avatarUrl} alt="github avatar"/></div> }
 
@@ -84,10 +86,22 @@ class PassportPage extends React.Component {
             <li>freeCodeCamp Full Stack Certification</li>
           </ul>
         </div>
+        
+        <h4>If your freeCodeCamp username is not the same as what is listed below, please change it so that we can pull the correct data from freeCodeCamp. Then, to continue, please click the button below, which will verify your eligibility to join based on the above gudilines. Thanks!</h4>
 
-        <p>To continue, please click the button below, which will verify your eligibility to join based on the above gudilines. Thanks!</p>
+        <form style={{ paddingBottom: 50 }} onSubmit={this.handleSubmit} className="ui form">
+          <div className="inline field">
+            <label>Username:</label>
+            <div className="ui input small">
+              <input
+                value={this.state.username}
+                onChange={this.handleChange} />
+            </div>
+          </div>
+          
+          <button type="submit" className="ui button">Verify Free Code Camp User Data</button>
+        </form>
 
-        <button onClick={this.handleClick} type="submit" className="ui button">Verify freeCodeCamp User Data</button>
 
       </div>
     )

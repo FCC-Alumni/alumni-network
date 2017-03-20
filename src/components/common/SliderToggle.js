@@ -8,6 +8,12 @@ class SliderToggle extends React.Component {
     on: false,
     style: OFF_POSITION
   }
+  
+  componentWillMount() {
+    if (this.props.defaultOn) {
+      this.setState({ style: ON_POSITION, on: true });
+    }
+  }
 
   handleClick = () => {
     if (!this.state.on) {
@@ -33,7 +39,8 @@ class SliderToggle extends React.Component {
 
 SliderToggle.propTypes = {
   saveStateToParent: React.PropTypes.func.isRequired,
-  label: React.PropTypes.string
+  label: React.PropTypes.string,
+  defaultOn: React.PropTypes.bool.isRequired
 }
 
 export default SliderToggle;

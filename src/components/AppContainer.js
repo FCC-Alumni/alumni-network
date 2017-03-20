@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { saveUser } from '../actions/loginActions';
+import { saveUser, getUserData, verifyUser } from '../actions/user';
 import { addFlashMessage } from '../actions/flashMessages';
 
 import Landing from './dashboard/Landing';
@@ -11,17 +11,24 @@ import Community from './dashboard/Community';
 import Mentorship from './dashboard/Mentorship';
 import Chat from './dashboard/Chat/ChatController';
 
-const checkSession = () => {
-  return axios.get('/api/user').then(res => res.data)
-    .catch(e => console.log(e));
-}
-
 class AppContainer extends React.Component {
+  
   componentDidMount() {
-    checkSession().then(user => {
+    getUserData().then(user => {
       if (user) {
-        this.props.saveUser(user);
+        // refresh page, authenticated route
+        if (!user.verifiedUser) {
+          console.log('Performing reverification')
+          verifyUser(user.username, user._id).then(res => {
+            const user = res.data.user;
+            this.props.saveUser(user);
+          })
+        } else {
+          console.log('Saving user to redux')
+          this.props.saveUser(user);
+        } 
       } else {
+        // protect authenticated route
         this.props.addFlashMessage({
           type: 'error',
             text: {
@@ -33,6 +40,7 @@ class AppContainer extends React.Component {
       }
     });
   }
+  
   render() {
     return (
       <div>
@@ -52,7 +60,7 @@ class AppContainer extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    username: state.user.username
+    username: state.user.get('username')
   }
 }
 

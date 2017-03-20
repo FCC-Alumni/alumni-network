@@ -7,7 +7,18 @@ import { Dropdown } from 'semantic-ui-react';
 
 import { surveyOptions } from '../../../assets/data/dropdownOptions';
 
-const Career = ({ toggle, showCareer, handleInputChange, handleTenureChange, isWorking, company, errors }) => {
+const Career = ({ 
+  toggle, 
+  showCareer, 
+  handleInputChange, 
+  handleRadioChange, 
+  handleTenureChange, 
+  working, 
+  company, 
+  tenure, 
+  jobSearch, 
+  errors 
+}) => {
   return (
     <div>
       <div className="ui teal ribbon label careerWrapper" onClick={() => { toggle('showCareer')}}>Career</div>
@@ -21,45 +32,52 @@ const Career = ({ toggle, showCareer, handleInputChange, handleTenureChange, isW
           <RadioButton 
             label='Yes'
             name="working"
-            onChange={handleInputChange} />
+            onChange={handleRadioChange}
+            checked={working === 'yes' && true} />
           <RadioButton 
             label='No'
             name="working"
-            onChange={handleInputChange} />
+            onChange={handleRadioChange}
+            checked={working === 'no' && true}  />
         </div>
-        { isWorking === 'yes' && 
-          <div>
-            <div className="inline field">
-              <label>For how long have you been a working software developer?</label>
-              <Dropdown options={surveyOptions} onChange={handleTenureChange} placeholder="≤ 5 years"/>
-            </div>
-            <FormField 
-              label="Where are you currently employed?"
-              onChange={handleInputChange}
-              name="company"
-              placeholder="Enter Company"
-              inputOptions="mini"
-              value={company}
-              errors={errors} />
+        <div className={`surveyPaneWorking ${working === 'yes' ? 'show' : 'hide'}`}>
+          <div className="inline field">
+            <label>For how long have you been a working software developer?</label>
+            <Dropdown 
+              options={surveyOptions} 
+              onChange={handleTenureChange} 
+              defaultValue={tenure} 
+              placeholder="≤ 5 years"/>
           </div>
-        }
-        { isWorking === 'no' && 
+          <FormField 
+            label="Where are you currently employed?"
+            onChange={handleInputChange}
+            name="company"
+            placeholder="Enter Company"
+            inputOptions="mini"
+            value={company}
+            errors={errors} />
+        </div>
+        <div className={`surveyPaneWorking ${working === 'no' ? 'show' : 'hide'}`}>
           <div className="inline fields">
             <label>Are you currently looking for full-time employment as a software developer?</label>
             <RadioButton 
               label='Yes!'
               name="jobSearch"
-              onChange={handleInputChange} />
+              onChange={handleRadioChange}
+              checked={jobSearch === 'Yes!' && true} />
             <RadioButton 
               label='Not quite ready'
               name="jobSearch"
-              onChange={handleInputChange} />
+              onChange={handleRadioChange} 
+              checked={jobSearch === 'Not quite ready' && true} />
             <RadioButton 
               label='I am a hobbyist'
               name="jobSearch"
-              onChange={handleInputChange} />
+              onChange={handleRadioChange} 
+              checked={jobSearch === 'I am a hobbyist' && true} />
           </div>
-        }  
+        </div>
       </form>
     </div>
   );
