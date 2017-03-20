@@ -15,7 +15,7 @@ class App extends React.Component {
 
         <Route path="/" component={NavBar} />
         <FlashMessagesList />
-        
+
         <Route exact path="/" component={HomePage} />
         <Route path="/login" component={LoginPage} />
         <Route path="/verify_account" component={PassportPage} />

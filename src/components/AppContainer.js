@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { populateCommunity } from '../actions/community';
 import { saveUser, getUserData, verifyUser } from '../actions/user';
 import { addFlashMessage } from '../actions/flashMessages';
 
@@ -12,23 +13,13 @@ import Mentorship from './dashboard/Mentorship';
 import Chat from './dashboard/Chat/ChatController';
 
 class AppContainer extends React.Component {
-  
+
   componentDidMount() {
     getUserData().then(user => {
       if (user) {
-        // refresh page, authenticated route
-        if (!user.verifiedUser) {
-          console.log('Performing reverification')
-          verifyUser(user.username, user._id).then(res => {
-            const user = res.data.user;
-            this.props.saveUser(user);
-          })
-        } else {
-          console.log('Saving user to redux')
-          this.props.saveUser(user);
-        } 
+        this.props.saveUser(user);
+        this.props.populateCommunity();
       } else {
-        // protect authenticated route
         this.props.addFlashMessage({
           type: 'error',
             text: {
@@ -40,7 +31,7 @@ class AppContainer extends React.Component {
       }
     });
   }
-  
+
   render() {
     return (
       <div>
@@ -64,4 +55,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { saveUser, addFlashMessage })(AppContainer);
+export default connect(mapStateToProps, { saveUser, addFlashMessage, populateCommunity })(AppContainer);

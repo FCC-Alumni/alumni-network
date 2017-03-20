@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { Map } from 'immutable';
-// import { withRouter } from 'react-router-dom';
 import { SAVE_USER } from './types';
 
 export const getUserData = () => {
-  return axios.get('/api/user').then(res => res.data)
-    .catch(console.log);
+  return axios.get('/api/user')
+    .then(res => res.data)
+    .catch(err => null);
 }
 
 export const verifyUser = (username, mongoId) => {
@@ -20,5 +20,8 @@ export const saveUser = (user) => {
 }
 
 export const updateUser = (user) => {
-  return axios.post('/api/update-user', { user });
+  axios.post('/api/update-user', { user }).then(res => {
+    const { updatedUser } = res.data;
+    saveUser(Map(updatedUser));
+  }).catch(err => console.log(err));
 }

@@ -42,7 +42,7 @@ class Profile extends React.Component {
       showSocial: false,
       showCareer: false,
       showCollaboration: false,
-      modalOpen: false 
+      modalOpen: false
     }
   }
 
@@ -70,7 +70,7 @@ class Profile extends React.Component {
     user.skillsAndInterests.codingInterests = data.value;
     this.setState({ user });
   }
-  
+
   handleTenureChange = (e, data) => {
     let { user } = this.state;
     user.career.tenure = data.value;
@@ -93,10 +93,10 @@ class Profile extends React.Component {
     }
     this.setState({ user });
   }
-  
+
   handleInputChange = (e) => {
     let { user } = this.state;
-    
+
     if (e.target.name === 'company') {
       user.career.company = e.target.value;
     } else if (e.target.name === 'codepen' || e.target.name === 'linkedin' || e.target.name === 'twitter') {
@@ -104,9 +104,9 @@ class Profile extends React.Component {
     } else if (e.target.name === 'mentorshipSkills' ) {
       user.mentorship.mentorshipSkills = e.target.value;
     } else {
-      user.personal[e.target.name] = e.target.value; 
+      user.personal[e.target.name] = e.target.value;
     }
-    
+
     this.setState({ user });
   }
 
@@ -139,17 +139,12 @@ class Profile extends React.Component {
       showCollaboration: !this.state.showAll
     });
   }
-  
+
   saveChanges = () => {
-    updateUser(this.state.user).then(res => {
-      const { updatedUser } = res.data;
-      this.props.saveUser(updatedUser);
-    })
-    .catch(console.log);
-  
+    updateUser(this.state.user);
     this.setState({ modalOpen: true });
   }
-  
+
   closeModal = () => {
     this.setState({ modalOpen: false });
   }
@@ -176,7 +171,7 @@ class Profile extends React.Component {
             <i className="save icon" />
           </div>
         </div>
-        
+
         <Modal size="small" open={this.state.modalOpen} close={this.closeModal} />
 
         <div className="ui raised segment">
@@ -229,7 +224,7 @@ class Profile extends React.Component {
             showCareer={this.state.showCareer}
             handleRadioChange={this.handleRadioChange}
             handleInputChange={this.handleInputChange}
-            handleTenureChange={this.handleTenureChange} 
+            handleTenureChange={this.handleTenureChange}
             errors={errors} />
 
         </div>

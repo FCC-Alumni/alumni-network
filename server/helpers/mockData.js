@@ -5,7 +5,7 @@ import {
   getFrontEndCert,
   getBackEndCert,
   getDataVisCert
-} from '../routes/getCerts';
+} from './getCerts';
 
 const credentials = `client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_SECRET}`;
 
@@ -68,8 +68,8 @@ export function mockData() {
     axios.get(`https://api.github.com/users/${user}?${credentials}`)
     .then(response => {
       const { data } = response;
-      User.find({ username: data.login }, (err, user) => {
-        if (user.length === 0) {
+      User.findOne({ username: data.login }, (err, user) => {
+        if (!user) {
           getCertifications(data.login).then(certs => {
             console.log(`${data.login} created in database.`);
             users++;
