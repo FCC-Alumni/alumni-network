@@ -29,7 +29,7 @@ passport.use(new Strategy({
     User.findOne({ githubId: profile.id }, (err, user) => {
 
       if (err) return done(err);
-      
+
       if (!user) {
         // new registration: create and save user in database
         user = new User({
@@ -55,7 +55,7 @@ passport.use(new Strategy({
         });
       } else {
         // user registered previously and exists in database
-        console.log('user already exists')
+        console.log('user already exists');
         return done(err, user);
       }
     });

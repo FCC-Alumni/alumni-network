@@ -4,9 +4,10 @@ import dotenv from 'dotenv';
 import redis from 'redis';
 import mongoose from 'mongoose';
 
-import passportRoute from './routes/passportLogin';
-import userRoute from './routes/userRoute';
-import gitLabRoute from './routes/gitLabRoute'
+import passportRoute from './routes/passport';
+import user from './routes/user';
+import community from './routes/community';
+import gitLabRoute from './helpers/gitLabRoute';
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ mongoose.Promise = require('bluebird');
 mongoose.connect(process.env.MONGO_URL, () => console.log('Mongoose connected'));
 
 //===========Populating DB with user data=====
-import { mockData } from './helper_functions/mockData';
+import { mockData } from './helpers/mockData';
 // this will only save users if they don't exist locally yet...still need to remove for production though
 mockData();
 
@@ -29,7 +30,8 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use(passportRoute);
-app.use(userRoute);
+app.use(user);
+app.use(community);
 app.use(gitLabRoute);
 
 // initialize Express server

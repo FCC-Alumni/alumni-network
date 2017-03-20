@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 class PassportPage extends React.Component {
   state = {
+    loading: true,
     username: '',
     avatarUrl: '',
     mongoId: ''
@@ -12,6 +13,7 @@ class PassportPage extends React.Component {
 
   componentDidMount() {
     getUserData().then(user => {
+    this.setState({ loading: false });
       if (user) {
         // redirect on subsequent login
         if (user.verifiedUser) {
@@ -25,15 +27,17 @@ class PassportPage extends React.Component {
           });
           this.props.history.push('/dashboard/profile');
           // verification process
-        } else {
+        } else if (user.username) {
           const { personal, username, _id } = user;
           const { avatarUrl } = personal;
           this.setState({ displayName: username, username, avatarUrl, mongoId: _id });
         }
+      } else {
+        this.props.history.push('/login');
       }
     });
   }
-  
+
   handleChange = (e) => {
     this.setState({ username: e.target.value });
   }
@@ -41,7 +45,9 @@ class PassportPage extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const { username, mongoId } = this.state;
+    this.setState({ loading: true });
     verifyUser(username, mongoId).then(res => {
+      this.setState({ loading: false });
       const user = res.data.user;
       this.props.saveUser(user);
       this.props.addFlashMessage({
@@ -54,6 +60,7 @@ class PassportPage extends React.Component {
       this.props.history.push('/dashboard/profile');
     })
     .catch(err => {
+      this.setState({ loading: false });
       this.props.addFlashMessage({
         type: 'error',
         text: {
@@ -67,43 +74,45 @@ class PassportPage extends React.Component {
 
   render() {
     return (
-      <div className="ui container">
+      <div>
+        {!this.state.loading ?
+          <div className='ui container'>
 
-        <h1>{`Welcome ${this.state.displayName}!`}</h1>
+            <h1>{`Welcome ${this.state.displayName}!`}</h1>
 
-        { this.state.avatarUrl.length > 0 && <div className="ui small image"><img src={this.state.avatarUrl} alt="github avatar"/></div> }
+            { this.state.avatarUrl.length > 0 && <div className="ui small image"><img src={this.state.avatarUrl} alt="github avatar"/></div> }
 
-        <br /><br />
-        <p>This extension of the freeCodeCamp Community is a network of like-minded individuals, who are serious about coding and about taking their skills to the next level.</p>
-        <p>While our goal is to be as inclusive as possible, to ensure that this network maintains its integrity as a serious place for serious campers, we do have some requirements that limit who can and cannot join.</p>
+            <br /><br />
+            <p>This extension of the freeCodeCamp Community is a network of like-minded individuals, who are serious about coding and about taking their skills to the next level.</p>
+            <p>While our goal is to be as inclusive as possible, to ensure that this network maintains its integrity as a serious place for serious campers, we do have some requirements that limit who can and cannot join.</p>
 
-        <div className="ui info message">
-          <div className="header">To join the freeCodeCamp Alumni Network, you must have earned at least one of the following:</div>
-          <ul className="list">
-            <li>freeCodeCamp Front End Certification</li>
-            <li>freeCodeCamp Data Visualization Certification</li>
-            <li>freeCodeCamp Back End Certification</li>
-            <li>freeCodeCamp Full Stack Certification</li>
-          </ul>
-        </div>
-        
-        <h4>If your freeCodeCamp username is not the same as what is listed below, please change it so that we can pull the correct data from freeCodeCamp. Then, to continue, please click the button below, which will verify your eligibility to join based on the above gudilines. Thanks!</h4>
-
-        <form style={{ paddingBottom: 50 }} onSubmit={this.handleSubmit} className="ui form">
-          <div className="inline field">
-            <label>Username:</label>
-            <div className="ui input small">
-              <input
-                value={this.state.username}
-                onChange={this.handleChange} />
+            <div className="ui info message">
+              <div className="header">To join the freeCodeCamp Alumni Network, you must have earned at least one of the following:</div>
+              <ul className="list">
+                <li>freeCodeCamp Front End Certification</li>
+                <li>freeCodeCamp Data Visualization Certification</li>
+                <li>freeCodeCamp Back End Certification</li>
+                <li>freeCodeCamp Full Stack Certification</li>
+              </ul>
             </div>
-          </div>
-          
-          <button type="submit" className="ui button">Verify Free Code Camp User Data</button>
-        </form>
 
+            <h4>If your freeCodeCamp username is not the same as what is listed below, please change it so that we can pull the correct data from freeCodeCamp. Then, to continue, please click the button below, which will verify your eligibility to join based on the above gudilines. Thanks!</h4>
 
-      </div>
+            <form style={{ paddingBottom: 50 }} onSubmit={this.handleSubmit} className="ui form">
+              <div className="inline field">
+                <label>Username:</label>
+                <div className="ui input small">
+                  <input
+                    value={this.state.username}
+                    onChange={this.handleChange} />
+                </div>
+              </div>
+
+              <button type="submit" className="ui button">Verify Free Code Camp User Data</button>
+            </form>
+
+          </div> : <h1 style={{ textAlign: 'center' }}>Loading...</h1>}
+        </div>
     )
   }
 }
