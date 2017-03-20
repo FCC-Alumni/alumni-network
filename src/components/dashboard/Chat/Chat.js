@@ -71,13 +71,13 @@ export default ({
                   <div className="event">
                     <div className="content">
                       <div className="meta">
-                        {(likes.indexOf(user.username) === -1) ?
+                        {!likes.has(user.username) ?
                           <a className="like" onClick={like.bind(this, id, user.username)}>
-                            <i className="like icon"></i> {likes.length} {likes.length ? 'Like' : 'Likes'}
+                            <i className="like icon"></i> {likes.size} {likes.size ? 'Like' : 'Likes'}
                           </a>
                             :
                           <a className="like">
-                            <i className="like icon" style={{ color: 'red' }}></i> {likes.length} {likes.length ? 'Like' : 'Likes'}
+                            <i className="like icon" style={{ color: 'red' }}></i> {likes.size} {likes.size ? 'Like' : 'Likes'}
                           </a>}
                       </div>
                     </div>
@@ -91,6 +91,11 @@ export default ({
         }
       </div>
     );
+  } else {
+    return (
+      <div>
+        <b>There are no messages yet... why not add one?</b>
+      </div>
+    );
   }
-  return null;
 };
