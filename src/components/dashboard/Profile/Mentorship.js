@@ -13,7 +13,8 @@ const Mentorship = ({ toggle, showMentorship, toggleMentorship, handleInputChang
           message="The primary goal of this community is to bring together programmers of varying degrees of skill, and connect them with one another to form meaningful mentor/mentee relationships. If you are interested in becoming a mentor, please toggle the switch below. If your skills match with a prospective mentee, you will both be notified, and the rest will be up to you! We will try our best to match you based on interests, skills, location, and language. This feature can be turned off at any time here in your dashboard settings." />
         <SliderToggle
           label="Sign me up! I want to be a mentor!"
-          saveStateToParent={toggleMentorship} />
+          saveStateToParent={toggleMentorship}
+          defaultOn={isMentor ? true : false} />
         <div className={`ui six wide field mentorshipSkillsPane ${isMentor ? 'show' : 'hide'}`}>
           <label>Mentorship Skills</label>
           <textarea 

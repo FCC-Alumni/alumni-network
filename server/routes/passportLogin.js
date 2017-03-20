@@ -35,18 +35,17 @@ passport.use(new Strategy({
         user = new User({
           githubId: profile.id,
           username: profile.username,
-          avatarUrl: profile._json.avatar_url,
-          email: profile._json.email,
-          joinedOn: new Date(),
-          githubData: {
-            name: profile._json.name,
+          personal: {
+            memberSince: new Date(),
+            avatarUrl: profile._json.avatar_url,
             profileUrl: profile.profileUrl,
-            location: profile._json.location,
-            bio: profile._json.bio,
-            company: profile._json.company,
-            numPublicRepos: profile._json.public_repos,
-            numFollowers: profile._json.followers,
-            numFollowing: profile._json.following
+            displayName: profile._json.name ? profile._json.name : '',
+            email: profile._json.email ? profile._json.email : '',
+            location: profile._json.location ? profile._json.location : '',
+            bio: profile._json.bio ? profile._json.bio : '',
+          },
+          career: {
+            company: profile._json.company ? profile._json.company : '',
           }
         });
         user.save((err) => {

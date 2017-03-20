@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function FormField({ label, icon, onChange, value, type, name, errors, tooltip, inputOptions, placeholder }) {
+const FormField = ({ label, icon, onChange, value, type, name, errors, tooltip, inputOptions, placeholder }) => {
   return (
     <div className="inline field">
       { label && <label>{label}</label> } 
@@ -22,8 +22,6 @@ export default function FormField({ label, icon, onChange, value, type, name, er
   )
 }
 
-
-
 FormField.propTypes = {
   label: React.PropTypes.string,
   onChange: React.PropTypes.func.isRequired,
@@ -43,3 +41,5 @@ FormField.defaultProps = {
   label: '',
   inputOptions: ''
 }
+
+export default FormField;

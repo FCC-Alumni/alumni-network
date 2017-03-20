@@ -5,7 +5,7 @@ import {
   getFrontEndCert,
   getBackEndCert,
   getDataVisCert
-} from '../routes/getCerts';
+} from './getCerts';
 
 const credentials = `client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_SECRET}`;
 
@@ -40,33 +40,31 @@ function getCertifications(username) {
 };
 
 export function mockData() {
-  var users = 0;
   fakeUsers.forEach(user => {
     axios.get(`https://api.github.com/users/${user}?${credentials}`)
     .then(response => {
       const { data } = response;
-      User.find({ username: data.login }, (err, user) => {
+      User.findOne({ githubId: data.id }, (err, user) => {
         if (!user) {
           getCertifications(data.login).then(certs => {
-            users++;
+            console.log(`mock user ${data.login} added to database`);
             User.create({
               githubId: data.id,
               username: data.login,
-              avatarUrl: data.avatar_url,
-              email: data.email,
-              joinedOn: new Date(),
-              githubData: {
-                name: data.name,
-                profileUrl: data.html_url,
-                location: data.location,
-                bio: data.bio,
-                company: data.company,
-                numPublicRepos: data.public_repos,
-                numFollowers: data.followers,
-                numFollowing: data.following
-              },
               fccCerts: certs,
-              verifiedUser: true
+              verifiedUser: true,
+              personal: {
+                memberSince: new Date(),
+                avatarUrl: data.avatar_url,
+                profileUrl: data.Url,
+                displayName: data.name ? data.name : '',
+                email: data.email ? data.email : '',
+                location: data.location ? data.location : '',
+                bio: data.bio ? data.bio : '',
+              },
+              career: {
+                company: data.company ? data.company : '',
+              }
             }, ((err, newUser) => {
               if(err) console.log(err);
             }));
@@ -74,9 +72,5 @@ export function mockData() {
         }
       });
     }).catch(err => console.log(err));
-   });
-  console.log(users.length > 0 ?
-    `${users} mock users created in database` :
-    `${fakeUsers.length} mock users exist in databse`
-  );
+  });
 };

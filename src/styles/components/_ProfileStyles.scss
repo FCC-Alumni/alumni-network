@@ -2,6 +2,14 @@
   margin-bottom: 50px;
 }
 
+#saveButton {
+  float: right;
+  cursor: pointer;
+  &:hover {
+    color: rgb(10, 97, 89) !important;
+  }
+}
+
 .folderDetail:hover {
   cursor: pointer;
   i.folder.icon {
@@ -38,7 +46,9 @@
 .socialPane.hide,
 .careerPane.hide,
 .collaborationPane.hide,
-.mentorshipSkillsPane.hide {
+.mentorshipSkillsPane.hide,
+.surveyPaneWorking.hide,
+.surveyPaneLooking.hide {
   @extend .profile-pane-transition-in;
 }
 
@@ -49,7 +59,9 @@
 .socialPane.show,
 .careerPane.show,
 .collaborationPane.show,
-.mentorshipSkillsPane.show {
+.mentorshipSkillsPane.show,
+.surveyPaneWorking.show,
+.surveyPaneLooking.show {
   @extend .profile-pane-transition-out;
 }
 
