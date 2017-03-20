@@ -2,7 +2,9 @@ import React from 'react';
 import ListItem from '../../common/ListItem';
 import FormField from '../../common/FormField';
 
-const PersonalInfo = ({ username, showProfile, toggle, githubData, email, handleInputChange, location, bio, displayName, errors }) => {
+const inputOptions = 'small left icon'; 
+
+const PersonalInfo = ({ username, showProfile, toggle, profileUrl, email, handleInputChange, location, bio, displayName, errors }) => {
   return (
     <div>
       <div className="ui teal ribbon label profileWrapper" onClick={() => { toggle('showProfile') }}>Personal Info</div>
@@ -12,7 +14,7 @@ const PersonalInfo = ({ username, showProfile, toggle, githubData, email, handle
             {username}
           </ListItem>
           <ListItem icon="github icon">
-            <a href={githubData.profileUrl} target="_blank">GitHub Profile</a>
+            <a href={profileUrl} target="_blank">GitHub Profile</a>
           </ListItem>
           <ListItem>
             <FormField
@@ -21,7 +23,7 @@ const PersonalInfo = ({ username, showProfile, toggle, githubData, email, handle
               name="displayName"
               value={displayName}
               errors={errors}
-              inputOptions="mini left icon"
+              inputOptions={inputOptions}
               icon='user icon'
               tooltip="Display Name" />
           </ListItem>
@@ -33,7 +35,7 @@ const PersonalInfo = ({ username, showProfile, toggle, githubData, email, handle
               name="email"
               value={email}
               errors={errors}
-              inputOptions="mini left icon" 
+              inputOptions={inputOptions}
               icon="mail icon"
               tooltip="Email" />
           </ListItem>
@@ -44,7 +46,7 @@ const PersonalInfo = ({ username, showProfile, toggle, githubData, email, handle
               name="location"
               value={location}
               errors={errors}
-              inputOptions="mini left icon" 
+              inputOptions={inputOptions}
               icon="marker icon"
               tooltip="Location" />
           </ListItem>

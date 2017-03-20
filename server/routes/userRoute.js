@@ -6,7 +6,7 @@ import {
   getFrontEndCert, 
   getBackEndCert, 
   getDataVisCert 
-} from './getCerts';
+} from '../helper_functions/getCerts';
 
 const router = express.Router();
 
@@ -58,14 +58,35 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
       User.findById(mongoId, (err, user) => {
         if (err) throw err;
         
+        user.username = username;
         user.fccCerts = certs;
         user.verifiedUser = true;
         user.save();
         
         res.json({ user });
       });
+      
     }
   });
 });
+
+router.post('/api/update-user', (req, res) => {
+  const { user } = req.body;
+  
+  User.findById(user._id, (err, updatedUser) => {
+    if (err) throw err;
+
+    updatedUser.personal = user.personal;
+    updatedUser.mentorship = user.mentorship;
+    updatedUser.career = user.career;
+    updatedUser.skillsAndInterests = user.skillsAndInterests;
+    updatedUser.projects = user.projects;
+    updatedUser.social = user.social;
+    
+    updatedUser.save();
+    
+    res.json({ updatedUser })
+  });
+})
 
 export default router;

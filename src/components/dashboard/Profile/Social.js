@@ -1,8 +1,11 @@
 import React from 'react';
 import ListItem from '../../common/ListItem';
 import MessageBox from '../../common/MessageBox';
+import FormField from '../../common/FormField';
 
-const Social = ({ showSocial, handleInputChange, codepen, twitter, linkedin, toggle }) => {
+const inputOptions = 'small left icon';
+
+const Social = ({ showSocial, handleInputChange, codepen, twitter, linkedin, toggle, errors }) => {
   return (
     <div>
       <div className="ui teal ribbon label socialWrapper" onClick={() => { toggle('showSocial')}}>Social</div>
@@ -13,40 +16,37 @@ const Social = ({ showSocial, handleInputChange, codepen, twitter, linkedin, tog
           message="Stay connected with campers on other networks! Let us know where your profiles live." />
         <div className="ui list">
           <ListItem>
-            <div className="ui left icon input mini">
-              <i className="codepen icon" />
-              <input
-                onChange={handleInputChange}
-                type="text"
-                placeholder="Enter CodePen"
-                title="CodePen"
-                name="codepen"
-                value={codepen} />
-            </div>
+            <FormField
+              onChange={handleInputChange}
+              placeholder="Enter CodePen"
+              name="codepen"
+              value={codepen}
+              errors={errors}
+              inputOptions={inputOptions}
+              icon='codepen icon'
+              tooltip="CodePen" />
           </ListItem>
           <ListItem>
-            <div className="ui left icon input mini">
-              <i className="twitter icon" />
-              <input
-                onChange={handleInputChange}
-                type="text"
-                placeholder="Enter Twitter"
-                title="Twitter"
-                name="twitter"
-                value={twitter} />
-            </div>
+            <FormField
+              onChange={handleInputChange}
+              placeholder="Enter Twitter"
+              name="twitter"
+              value={twitter}
+              errors={errors}
+              inputOptions={inputOptions}
+              icon='twitter icon'
+              tooltip="Twitter" />
           </ListItem>
           <ListItem>
-            <div className="ui left icon input mini">
-              <i className="linkedin icon" />
-              <input
-                onChange={handleInputChange}
-                type="text"
-                placeholder="Enter LinkedIn"
-                title="LinkedIn"
-                name="linkedin"
-                value={linkedin} />
-            </div>
+            <FormField
+              onChange={handleInputChange}
+              placeholder="Enter LinkedIn"
+              name="linkedin"
+              value={linkedin}
+              errors={errors}
+              inputOptions={inputOptions}
+              icon='linkedin icon'
+              tooltip="LinkedIn" />
           </ListItem>
         </div>
       </div>

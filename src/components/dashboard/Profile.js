@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import UserLabel from '../common/UserLabel';
 import ListItem from '../common/ListItem';
+import Modal from '../common/Modal';
+
 
 import PersonalInfo from './Profile/PersonalInfo';
 import Certifications from './Profile/Certifications';
@@ -12,113 +14,100 @@ import Collaboration from './Profile/Collaboration';
 import Social from './Profile/Social';
 import Career from './Profile/Career';
 
-import { saveUser } from '../../actions/loginActions';
+import { saveUser, updateUser } from '../../actions/user';
 
 /*
 TODO:
-  1) save all
+  1) save all √
   2) save individual section
-  3) connect to DB
-  4) connect to redux
-  5) add career form / questionaire ***
-  6) add personal info > timezones ***
-  7) areas of mentorship ***
+  3) connect to DB √
+  4) connect to redux √
+  5) add career form / questionaire √
+  7) areas of mentorship √
   8) folder icon behavior - open when any field expanded
 */
 
 class Profile extends React.Component {
-  state = {
-    errors: {
-      displayName: 'error goes here!'
-    },
-    projects: [
-      {item: 'Example/Example', label: 'https://github.com/'},
-      {item: 'Replace/With', label: 'https://gitlab.com/'},
-      {item: 'User/Data', label: 'https://bitbucket.com/'},
-    ],
-    interests: [],
-    skills: [],
-    displayName: this.props.githubData.name ? this.props.githubData.name : '',
-    email: this.props.email ? this.props.email : '',
-    location: this.props.githubData.location ? this.props.githubData.location : '',
-    bio: this.props.githubData.bio ? this.props.githubData.bio : '',
-    /****/
-    mentor: false,
-    mentorshipSkills: '',
-    career: {
-      working: '',
-      company: '',
-      tenure: '',
-      jobSearch: '',
-    },
-    social: {
-      codepen: '',
-      twitter: '',
-      linkedin: '',
-    },
-    showAll: true,
-    showProfile: true,
-    showFCC: false,
-    showMentorship: false,
-    showSkills: false,
-    showSocial: false,
-    showCareer: false,
-    showCollaboration: false
-    // ^^ was thinking about putting these into an object for organization of the state object...
+  constructor(props) {
+    super(props);
+    const user = this.props.user.toJS();
+    this.state = {
+      user,
+      errors: {},
+      showAll: true,
+      showProfile: true,
+      showFCC: false,
+      showMentorship: false,
+      showSkills: false,
+      showSocial: false,
+      showCareer: false,
+      showCollaboration: false,
+      modalOpen: false 
+    }
   }
 
+
   saveProjectsList = (items_list) => {
-    this.setState({ projects: items_list });
+    const { user } = this.state;
+    user.projects = items_list;
+    this.setState({ user });
   }
 
   toggleMentorship = (bool) => {
-    this.setState({ mentor: bool });
+    const { user } = this.state;
+    user.mentorship.isMentor = bool;
+    this.setState({ user });
   }
 
   handleSkillsChange = (e, data) => {
-    this.setState({ skills: data.value });
+    const { user } = this.state;
+    user.skillsAndInterests.coreSkills = data.value;
+    this.setState({ user });
   }
 
   handleInterestsChange = (e, data) => {
-    this.setState({ interests: data.value });
+    const { user } = this.state;
+    user.skillsAndInterests.codingInterests = data.value;
+    this.setState({ user });
   }
   
   handleTenureChange = (e, data) => {
-    let { career } = this.state;
-    career.tenure = data.value;
-    this.setState({ career });
+    let { user } = this.state;
+    user.career.tenure = data.value;
+    this.setState({ user });
   }
 
   handleRadioChange = (e) => {
-    let { career } = this.state;
+    let { user } = this.state;
     if (e.target.name === 'working') {
       if (e.target.id === 'Yes') {
-        career.working = 'yes';
-        career.jobSearch = '';
-        this.setState({ career });
-      } else {
-        career.working = 'no';
-        career.company = '';
-        career.tenure = '';
-        this.setState({ career });
+        user.career.working = 'yes';
+        user.career.jobSearch = '';
+      } else if (e.target.id === 'No') {
+        user.career.working = 'no';
+        user.career.company = '';
+        user.career.tenure = '';
       }
     } else if (e.target.name === 'jobSearch') {
-      career.jobSearch = e.target.id;
-      this.setState({ career });
+      user.career.jobSearch = e.target.id.replace(/_/g, ' ');
     }
+    this.setState({ user });
   }
   
   handleInputChange = (e) => {
-    let { career, social } = this.state;
+    let { user } = this.state;
+    
     if (e.target.name === 'company') {
-      career.company = e.target.value;
-      this.setState({ career });
+      user.career.company = e.target.value;
     } else if (e.target.name === 'codepen' || e.target.name === 'linkedin' || e.target.name === 'twitter') {
-      social[e.target.name] = e.target.value;
-      this.setState({ social });
+      user.social[e.target.name] = e.target.value;
+    } else if (e.target.name === 'mentorshipSkills' ) {
+      user.mentorship.mentorshipSkills = e.target.value;
     } else {
-      this.setState({ [e.target.name] : e.target.value });
+      user.personal[e.target.name] = e.target.value; 
     }
+    
+    this.setState({ user });
   }
 
   toggle = (target) => {
@@ -150,55 +139,72 @@ class Profile extends React.Component {
       showCollaboration: !this.state.showAll
     });
   }
+  
+  saveChanges = () => {
+    updateUser(this.state.user).then(res => {
+      const { updatedUser } = res.data;
+      this.props.saveUser(updatedUser);
+    })
+    .catch(console.log);
+  
+    this.setState({ modalOpen: true });
+  }
+  
+  closeModal = () => {
+    this.setState({ modalOpen: false });
+  }
 
   render() {
-    const { username } = this.props.user;
-    const { githubData } = this.props;
+    const { mentorship, username, personal, social, career, skillsAndInterests } = this.state.user;
+    const { errors } = this.state;
 
     return (
       <div id="profile-page-main-container" className="ui container">
 
         <UserLabel
-          label={this.state.mentor ? 'Mentor' : 'Member'}
+          label={mentorship.mentor ? 'Mentor' : 'Member'}
           username={username}
           size="huge"
-          image={this.props.user.avatarUrl}
+          image={personal.avatarUrl}
           folder={this.state.showAll}
           toggleAll={this.toggleAll} />
 
         {/* Does nothing for the time being */}
-        <div style={{ float: 'right' }} className="ui huge teal label">
+        <div onClick={this.saveChanges} id="saveButton" className="ui huge teal label">
           Save
           <div className="detail">
             <i className="save icon" />
           </div>
         </div>
+        
+        <Modal size="small" open={this.state.modalOpen} close={this.closeModal} />
 
         <div className="ui raised segment">
 
           <PersonalInfo
-            {...this.state}
+            {...personal}
+            showProfile={this.state.showProfile}
             toggle={this.toggle}
             handleInputChange={this.handleInputChange}
             username={username}
-            githubData={githubData} 
-            errors={this.state.errors }/>
+            errors={errors }/>
 
           <Certifications
             toggle={this.toggle}
             showFCC={this.state.showFCC}
-            fccCerts={this.props.user.fccCerts} />
+            fccCerts={this.state.user.fccCerts} />
 
           <Mentorship
+            {...mentorship}
             toggle={this.toggle}
             showMentorship={this.state.showMentorship}
             toggleMentorship={this.toggleMentorship}
-            mentorshipSkills={this.state.mentorshipSkills}
-            handleInputChange={this.handleInputChange}
-            isMentor={this.state.mentor} />
+            handleInputChange={this.handleInputChange} />
 
+          {/* Think about allowing additions by user to dropdowns */}
           <SkillsAndInterests
-            {...this.state}
+            {...skillsAndInterests}
+            showSkills={this.state.showSkills}
             toggle={this.toggle}
             handleSkillsChange={this.handleSkillsChange}
             handleInterestsChange={this.handleInterestsChange} />
@@ -207,23 +213,24 @@ class Profile extends React.Component {
             username={username}
             saveProjectsList={this.saveProjectsList}
             toggle={this.toggle}
-            projects={this.state.projects}
+            projects={this.state.user.projects}
             showCollaboration={this.state.showCollaboration} />
 
           <Social
-            {...this.state.social}
+            {...social}
             showSocial={this.state.showSocial}
             toggle={this.toggle}
-            handleInputChange={this.handleInputChange} />
+            handleInputChange={this.handleInputChange}
+            errors={errors} />
 
           <Career
+            {...career}
             toggle={this.toggle}
             showCareer={this.state.showCareer}
-            handleInputChange={this.handleRadioChange}
-            isWorking={this.state.career.working}
-            company={this.state.career.company} 
-            errors={this.state.errors}
-            handleTenureChange={this.handleTenureChange} />
+            handleRadioChange={this.handleRadioChange}
+            handleInputChange={this.handleInputChange}
+            handleTenureChange={this.handleTenureChange} 
+            errors={errors} />
 
         </div>
       </div>
@@ -233,14 +240,12 @@ class Profile extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
-    githubData: state.user.githubData
+    user: state.user
   }
 }
 
 Profile.propTypes = {
-  user: React.PropTypes.object.isRequired,
-  githubData: React.PropTypes.object.isRequired
+  user: React.PropTypes.object.isRequired
 }
 
 export default connect(mapStateToProps, { saveUser })(Profile);
