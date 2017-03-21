@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -21,7 +22,7 @@ TODO:
   - save individual section
   - folder icon behavior - open when any field expanded
   - add validations for form fields - should be loose validations since nothing is strictly required
-  - use passport to pull in LinkedIn and Twitter handles 
+  - use passport to pull in LinkedIn and Twitter handles
   - save all √
   - connect to DB √
   - connect to redux √

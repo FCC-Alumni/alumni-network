@@ -20,10 +20,9 @@ client.on('ready', () => console.log('Redis connected'));
 mongoose.Promise = require('bluebird');
 mongoose.connect(process.env.MONGO_URL, () => console.log('Mongoose connected'));
 
-//===========Populating DB with user data=====
-import { mockData } from './helpers/mockData';
-// this will only save users if they don't exist locally yet...still need to remove for production though
-mockData();
+/*=========== Populating DB with user data =====>
+This will only save users if they don't exist locally yet */
+require('./helpers/mockData');
 
 // initialize Express app and setup routes
 const app = express();
@@ -40,4 +39,4 @@ const server = app.listen(port, () => console.log(`Express Server is listening o
 
 // initialize Socket.io chat server
 const io = require('socket.io')(server);
-require('./chat-server/chat.js')(io);
+require('./chat/chat.js')(io);

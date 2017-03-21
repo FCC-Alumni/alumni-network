@@ -28,7 +28,7 @@ const fakeUsers = [
   'bonham000'
 ];
 
-function getCertifications(username) {
+const getCertifications = (username) => {
   return axios.all([getFrontEndCert(username), getBackEndCert(username), getDataVisCert(username)])
   .then(axios.spread((frontCert, backCert, dataCert) => {
 
@@ -54,7 +54,7 @@ function getCertifications(username) {
   }));
 };
 
-function logResult(users, completed) {
+const logResult = (users, completed) => {
   if (users === fakeUsers.length) {
     console.log(`${users} out of ${fakeUsers.length} total users successfully pre-populated in database`);
   } else if (completed === fakeUsers.length) {
@@ -62,7 +62,7 @@ function logResult(users, completed) {
   };
 };
 
-export function mockData() {
+(function() {
   let users = 0;
   let completed = 0;
   fakeUsers.forEach(user => {
@@ -104,4 +104,4 @@ export function mockData() {
       });
     }).catch(err => console.log(err));
    });
-};
+})();
