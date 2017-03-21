@@ -1,6 +1,13 @@
 // styles for components:
-.community, .mentorship, {
+.mentorship, {
   text-align: center;
+}
+
+.community {
+  padding: 0 3vw 5vh 3vw;
+  .fa-free-code-camp {
+    margin-right: 5px;
+  }
 }
 
 #chat {

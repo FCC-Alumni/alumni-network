@@ -25,13 +25,14 @@ const fakeUsers = [
   'p1xt',
   'bengitter',
   'josh5231',
+  'bonham000'
 ];
 
 function getCertifications(username) {
   return axios.all([getFrontEndCert(username), getBackEndCert(username), getDataVisCert(username)])
   .then(axios.spread((frontCert, backCert, dataCert) => {
 
-    if (username === 'quincylarson') {
+    if (username === 'QuincyLarson' || username === 'P1xt') {
       return {
         Front_End: true,
         Back_End: true,
