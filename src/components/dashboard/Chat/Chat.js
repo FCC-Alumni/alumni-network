@@ -34,10 +34,13 @@ export default ({
           const likes = msg.get('likes');
           return (
             <div className="comment" key={id} style={{ paddingTop: '12px' }}>
+
               <a className="avatar">
-                <img src={user.get('personal').avatarUrl}/>
+                <img src={user.get('personal').avatarUrl} alt={`${author}'s Avatar'`}/>
               </a>
+
               <div className="content">
+
                 <a className="author">{author}</a>
                 <div className="metadata">
                   <span className="date">at {parseTime(timestamp)}</span>
@@ -46,6 +49,7 @@ export default ({
                 </div>
 
                 {edit === id ?
+
                 <form
                   className="ui form"
                   style={{ marginTop: '10px' }}
@@ -60,11 +64,20 @@ export default ({
                   <button className="ui green button" disabled={!editText} onClick={finishEdit}>Save Edit</button>
                   <button className="ui red button" onClick={deleteMessage.bind(this, id)}>Delete Message</button>
                 </form>
+
                 :
+
                 <div
                   className="text"
                   style={{ marginTop: '4px' }}>
-                  {text}
+                  {text.split(' ').map((word, idx) => {
+                    if (word.charAt(0) === ':' && word.charAt(word.length - 1) === ':') {
+                      word = word.slice(1, word.length - 1);
+                      return <i key={word + idx} className={`em em-${word}`}></i>
+                    } else {
+                      return <span key={word + idx}> {word} </span>;
+                    }
+                  })}
                 </div>}
 
                 <div className="ui feed" style={{ marginTop: '0px' }}>
@@ -84,7 +97,7 @@ export default ({
                   </div>
                 </div>
 
-              </div>
+              </div>  
             </div>
             )
           })
