@@ -11,7 +11,6 @@
 }
 
 #chat {
-  background: rgba(250,250,250,0.93);
   width: 65vw;
   form {
     margin-top: 25px;
@@ -22,28 +21,10 @@
   img {
     border-radius: 50%;
   }
-  h2 {
-    padding-right: 40px;
-  }
-  #infoIcon {
-    position: absolute;
-    font-size: 20px;
-    right: 5px;
-    top: 10px;
-    transition: color 250ms ease-in-out;
-  }
-  #infoIcon:hover {
-    cursor: pointer;
-    color: rgb(0,225,225) !important;
-    transition: color 250ms ease-in-out;
-  }
-  #chatInput {
-    padding-right: 35px;
-  }
   #messageContainer {
     width: 63.5vw;
     min-height: 25vh;
-    max-height: 45vh;
+    max-height: 50vh;
     overflow-y: auto;
   }
   .chatMessage {
@@ -58,14 +39,5 @@
       color: black;
       transition: color 300ms ease;
     }
-  }
-  #smiles {
-    position: absolute;
-    right: 0px;
-    top: 10px;
-    font-size: 20px;
-  }
-  #smiles:hover {
-    cursor: pointer;
   }
 }
