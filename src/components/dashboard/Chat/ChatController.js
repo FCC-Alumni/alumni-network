@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Modal from './ChatModal';
 import ChatMessages from './Chat';
 import {
   socket,
@@ -18,7 +19,8 @@ class ChatController extends React.Component {
       messages: [],
       edit: null,
       editText: null,
-      scroll: false
+      scroll: false,
+      modal: false
     };
   }
   setEdit = (id) => {
@@ -68,12 +70,19 @@ class ChatController extends React.Component {
       this.setState({ scroll: false });
     };
   }
+  toggleModal = () => {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
   render() {
     return (
       <div className="ui container segment" id="chat">
+        <Modal size="medium" open={this.state.modal} close={this.toggleModal} />
         <div>
           <div className="ui comments">
             <h2 className="ui dividing header">The Mess Hall is a place to connect with other members:</h2>
+            <i onClick={this.toggleModal} className="info teal circle icon" id="infoIcon"></i>
             <div id='messageContainer'>
               <ChatMessages
                 user={this.props.user}

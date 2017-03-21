@@ -14,6 +14,18 @@
   img {
     border-radius: 50%;
   }
+  #infoIcon {
+    position: absolute;
+    font-size: 20px;
+    right: 5px;
+    top: 10px;
+    transition: color 250ms ease-in-out;
+  }
+  #infoIcon:hover {
+    cursor: pointer;
+    color: rgb(0,225,225) !important;
+    transition: color 250ms ease-in-out;
+  }
   #messageContainer {
     width: 63.5vw;
     min-height: 25vh;
@@ -32,5 +44,9 @@
       color: black;
       transition: color 300ms ease;
     }
+  }
+  #chatModalButton {
+    background: #00B5AD;
+    color: #00B5AD;
   }
 }
