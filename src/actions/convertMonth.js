@@ -24,6 +24,8 @@ const convertMonthToString = (year, month) => {
       return 'Nov ' + year;
     case '12':
       return 'Dec ' + year;
+    default:
+      return '';
   }
 }
 

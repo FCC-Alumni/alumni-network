@@ -1,9 +1,8 @@
 import React from 'react';
-import axios from 'axios';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { populateCommunity } from '../actions/community';
-import { saveUser, getUserData, verifyUser } from '../actions/user';
+import { saveUser, getUserData } from '../actions/user';
 import { addFlashMessage } from '../actions/flashMessages';
 
 import Landing from './dashboard/Landing';

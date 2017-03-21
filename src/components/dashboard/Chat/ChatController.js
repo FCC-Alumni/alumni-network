@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Modal from './ChatModal';
+import EmojiInput from './EmojiInput';
 import ChatMessages from './Chat';
 import {
-  socket,
   addMessage,
   deleteMessage,
   saveEdit,
@@ -22,6 +22,21 @@ class ChatController extends React.Component {
       scroll: false,
       modal: false
     };
+    // this sucks when screen resized smaller... will need to deal with that:
+    document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
+  }
+  componentDidMount() {
+    this.chatContainer = document.getElementById('messageContainer');
+    this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+  }
+  componentDidUpdate() {
+    if (this.state.scroll) {
+      this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+      this.setState({ scroll: false });
+    };
+  }
+  componentWillUnmount() {
+    document.body.style.backgroundImage = null;
   }
   setEdit = (id) => {
     if (this.state.editText !== '') {
@@ -31,13 +46,6 @@ class ChatController extends React.Component {
         editText: this.props.chat.find(m => m.get('id') === id).get('text')
       });
     };
-  }
-  deleteMessage = (id) => {
-    this.setState({
-      edit: null,
-      editText: null
-    });
-    this.props.deleteMessage(id);
   }
   saveEdit = (e) => {
     const editText = e.target.value;
@@ -54,21 +62,16 @@ class ChatController extends React.Component {
       });
     };
   }
-  handleChange = (e) => this.setState({ input: e.target.value });
-  submitMessage = (e) => {
-    e.preventDefault();
-    const { input } = this.state;
-    if (input) {
-      this.setState({ input: '', scroll: true });
-      this.props.addMessage({ author: this.props.user, text: input });
-    };
+  deleteMessage = (id) => {
+    this.setState({
+      edit: null,
+      editText: null
+    });
+    this.props.deleteMessage(id);
   }
-  componentDidUpdate() {
-    if (this.state.scroll) {
-      const chat = document.getElementById('messageContainer');
-      chat.scrollTop = chat.scrollHeight;
-      this.setState({ scroll: false });
-    };
+  submitMessage = (text) => {
+    this.setState({ text: '', scroll: true });
+    this.props.addMessage({ author: this.props.user, text });
   }
   toggleModal = () => {
     this.setState({
@@ -78,7 +81,7 @@ class ChatController extends React.Component {
   render() {
     return (
       <div className="ui container segment" id="chat">
-        <Modal size="medium" open={this.state.modal} close={this.toggleModal} />
+        <Modal size="large" open={this.state.modal} close={this.toggleModal} />
         <div>
           <div className="ui comments">
             <h2 className="ui dividing header">The Mess Hall is a place to connect with other members:</h2>
@@ -97,15 +100,11 @@ class ChatController extends React.Component {
             </div>
           </div>
         </div>
-        <form className="ui form" onSubmit={this.submitMessage}>
-          <input
-            autoFocus
-            type="text"
-            placeholder={(this.props.chat.size === 0 ? "Start" : "Join" ) + " the conversation here..."}
-            value={this.state.input}
-            onChange={this.handleChange} />
-          <button className="ui teal button" onClick={this.submitMessage}>Submit Message</button>
-        </form>
+        <EmojiInput
+          submit={this.submitMessage}
+          placeholder={
+            (this.props.chat.size === 0 ?
+              "Start" : "Join" ) + " the conversation here..."} />
       </div>
     );
   }
