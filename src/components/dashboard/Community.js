@@ -1,20 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import UserCard from './Community/UserCard';
+
 class Community extends React.Component {
   render() {
     return (
-      <div className="ui container community">
-        <h1>
-          This is the Community:
-        </h1>
-        {this.props.users.map(user => {
-          return (
-            <div className='ui card'>
-              <h1>{user.username}</h1>
-            </div>
-          );
-        })}
+      <div className="community">
+        <div className="ui four cards">
+          {this.props.users.map(user => {
+            return (
+              <UserCard user={user} />
+            );
+          })}
+        </div>
       </div>
     );
   }
