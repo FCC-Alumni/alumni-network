@@ -18,13 +18,15 @@ import { saveUser, updateUser } from '../../actions/user';
 
 /*
 TODO:
-  1) save all √
-  2) save individual section
-  3) connect to DB √
-  4) connect to redux √
-  5) add career form / questionaire √
-  7) areas of mentorship √
-  8) folder icon behavior - open when any field expanded
+  - save individual section
+  - folder icon behavior - open when any field expanded
+  - add validations for form fields - should be loose validations since nothing is strictly required
+  - use passport to pull in LinkedIn and Twitter handles 
+  - save all √
+  - connect to DB √
+  - connect to redux √
+  - add career form / questionaire √
+  - areas of mentorship √
 */
 
 class Profile extends React.Component {
@@ -45,7 +47,6 @@ class Profile extends React.Component {
       modalOpen: false
     }
   }
-
 
   saveProjectsList = (items_list) => {
     const { user } = this.state;
@@ -164,7 +165,6 @@ class Profile extends React.Component {
           folder={this.state.showAll}
           toggleAll={this.toggleAll} />
 
-        {/* Does nothing for the time being */}
         <div onClick={this.saveChanges} id="saveButton" className="ui huge teal label">
           Save
           <div className="detail">
