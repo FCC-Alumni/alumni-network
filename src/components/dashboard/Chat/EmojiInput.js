@@ -72,24 +72,23 @@ export default class Emoji extends React.Component {
 
   render() {
     const emojiPickerStyles = {
+      zIndex: '2'
+      width: '100%',
       position: 'absolute',
       left: 0, top: '40px',
-      backgroundColor: 'rgba(250,250,250,0.98)',
-      width: '100%',
       padding: '.3em .6em',
       border: '1px solid #0074d9',
-      zIndex: '2'
+      backgroundColor: 'rgba(250,250,250,0.98)',
     };
     return (
       <form className="ui form" onSubmit={this.submit}>
         <input
           autoFocus
-          id='chatInput'
           name="emoji"
+          id='chatInput'
           autoComplete="off"
           value={this.state.text}
           onChange={this.updateState}
-          onKeyDown={this.grabKeyPress}
           placeholder={this.props.placeholder}
           ref={(input) => { this.chatInput = input }}
           type={this.state.showEmojiPicker ? "search" : "text"} />
