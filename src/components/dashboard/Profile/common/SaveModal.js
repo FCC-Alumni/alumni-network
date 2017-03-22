@@ -1,12 +1,12 @@
 import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 
-const MyModal = ({ size, close, open }) => {
+const SaveModal = ({ size, close, open }) => {
   return(
     <div>
       <Modal size={size} open={open} onClose={close}>
         <Modal.Header>
-          Success!
+          Success
         </Modal.Header>
         <Modal.Content>
           <p>Your profile has been successfully updated!</p>
@@ -19,4 +19,4 @@ const MyModal = ({ size, close, open }) => {
   );
 }
 
-export default MyModal;
+export default SaveModal;

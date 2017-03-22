@@ -2,12 +2,32 @@
   margin-bottom: 50px;
 }
 
+.saveSection,
 #saveButton {
   float: right;
   cursor: pointer;
   &:hover {
     color: rgb(10, 97, 89) !important;
   }
+}
+
+@keyframes bounceUp {
+  0% { top: 15px; opacity: 0.01; }
+  80% { top: -8px; opacity: 0.7; }
+  100% { top: 0; opacity: 1.0; }
+}
+
+.savedPopUp {
+  position: absolute;
+}
+
+.savedPopUp.hide {
+  opacity: 0.01;
+  transition: opacity 100ms ease-in;
+}
+
+.savedPopUp.show {
+  animation: bounceUp 200ms;
 }
 
 .folderDetail:hover {

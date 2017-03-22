@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import UserLabel from '../common/UserLabel';
 import ListItem from '../common/ListItem';
-import Modal from '../common/Modal';
+import Modal from './Profile/common/SaveModal';
 
 
 import PersonalInfo from './Profile/PersonalInfo';
@@ -45,8 +45,27 @@ class Profile extends React.Component {
       showSocial: false,
       showCareer: false,
       showCollaboration: false,
-      modalOpen: false
+      modalOpen: false,
+      personalPopUp: false,
+      fccPopUp: false,
+      mentorshipPopUp: false,
+      skillsPopUp: false,
+      collaboPopUp: false,
+      socialPopUp: false,
+      careerPopUp: false,
     }
+  }
+  
+  handleSubSaveClick = (e) => {
+    e.stopPropagation();
+    e.persist();
+    updateUser(this.state.user);
+    this.setState({ [e.target.id]: true });
+    setTimeout( _ => this.resetPopUp(e.target.id), 1000);
+  }
+  
+  resetPopUp = (id) => {
+    this.setState({ [id]: false });
   }
 
   saveProjectsList = (items_list) => {
@@ -179,6 +198,8 @@ class Profile extends React.Component {
 
           <PersonalInfo
             {...personal}
+            subSaveClick={this.handleSubSaveClick}
+            showPopUp={this.state.personalPopUp}
             showProfile={this.state.showProfile}
             toggle={this.toggle}
             handleInputChange={this.handleInputChange}
@@ -187,11 +208,15 @@ class Profile extends React.Component {
 
           <Certifications
             toggle={this.toggle}
+            subSaveClick={this.handleSubSaveClick}
+            showPopUp={this.state.fccPopUp}
             showFCC={this.state.showFCC}
             fccCerts={this.state.user.fccCerts} />
 
           <Mentorship
             {...mentorship}
+            subSaveClick={this.handleSubSaveClick}
+            showPopUp={this.state.mentorshipPopUp}
             toggle={this.toggle}
             showMentorship={this.state.showMentorship}
             toggleMentorship={this.toggleMentorship}
@@ -200,6 +225,8 @@ class Profile extends React.Component {
           {/* Think about allowing additions by user to dropdowns */}
           <SkillsAndInterests
             {...skillsAndInterests}
+            subSaveClick={this.handleSubSaveClick}
+            showPopUp={this.state.skillsPopUp}
             showSkills={this.state.showSkills}
             toggle={this.toggle}
             handleSkillsChange={this.handleSkillsChange}
@@ -207,6 +234,8 @@ class Profile extends React.Component {
 
           <Collaboration
             username={username}
+            subSaveClick={this.handleSubSaveClick}
+            showPopUp={this.state.collaboPopUp}
             saveProjectsList={this.saveProjectsList}
             toggle={this.toggle}
             projects={this.state.user.projects}
@@ -214,6 +243,8 @@ class Profile extends React.Component {
 
           <Social
             {...social}
+            subSaveClick={this.handleSubSaveClick}
+            showPopUp={this.state.socialPopUp}
             showSocial={this.state.showSocial}
             toggle={this.toggle}
             handleInputChange={this.handleInputChange}
@@ -221,6 +252,8 @@ class Profile extends React.Component {
 
           <Career
             {...career}
+            subSaveClick={this.handleSubSaveClick}
+            showPopUp={this.state.careerPopUp}
             toggle={this.toggle}
             showCareer={this.state.showCareer}
             handleRadioChange={this.handleRadioChange}

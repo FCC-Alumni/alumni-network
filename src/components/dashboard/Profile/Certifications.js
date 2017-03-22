@@ -1,7 +1,8 @@
 import React from 'react';
 import ListItem from '../../common/ListItem';
+import Ribbon from './common/RibbonHeader';
 
-const Certifications = ({ toggle, fccCerts, showFCC }) => {
+const Certifications = ({ toggle, fccCerts, subSaveClick, showPopUp, showFCC }) => {
   var certs = [];
   for (var cert in fccCerts) {
     if (fccCerts[cert]) {
@@ -17,7 +18,14 @@ const Certifications = ({ toggle, fccCerts, showFCC }) => {
   });
   return (
     <div>
-      <div className="ui teal ribbon label fccWrapper" onClick={ () => { toggle('showFCC') } }>freeCodeCamp Certifications</div>
+      <Ribbon 
+        showPopUp={showPopUp} 
+        id="fccPopUp"
+        showSave={showFCC}
+        subSaveClick={subSaveClick}
+        content="freeCodeCamp Certifications" 
+        wrapperClass="fccWrapper" 
+        onClick={() => { toggle('showFCC')}} />
       <div className={`ui list fccPane ${showFCC ? 'show' : 'hide'}`}>
         {certificates}
       </div>
