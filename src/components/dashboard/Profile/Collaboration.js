@@ -1,11 +1,19 @@
 import React from 'react';
 import MessageBox from '../../common/MessageBox';
 import RepoList from '../../common/RepoList';
+import Ribbon from './common/RibbonHeader';
 
-const Collaboration = ({ toggle, showCollaboration, saveProjectsList, username, projects }) => {
+const Collaboration = ({ toggle, showCollaboration, subSaveClick, showPopUp, saveProjectsList, username, projects }) => {
   return (
     <div>
-      <div className="ui teal ribbon label collaborationWrapper" onClick={() => { toggle('showCollaboration')}}>Collaboration</div>
+      <Ribbon 
+        showPopUp={showPopUp} 
+        id="collaboPopUp"
+        showSave={showCollaboration}
+        subSaveClick={subSaveClick}
+        content="Collaboration" 
+        wrapperClass="collaborationWrapper" 
+        onClick={()=>{toggle('showCollaboration')}} />
       <div className={`collaborationPane ${showCollaboration ? 'show' : 'hide'}`}>
         <MessageBox
           type="info"

@@ -8,3 +8,10 @@
   50% { margin-top: 390px; }
   100% { margin-top: 410px; }
 }
+
+@keyframes bounceUp {
+  0% { top: 15px; opacity: 0.01; }
+  80% { top: -8px; opacity: 0.7; }
+  100% { top: 0; opacity: 1.0; }
+}
+  

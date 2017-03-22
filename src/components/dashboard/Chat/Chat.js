@@ -36,7 +36,7 @@ export default ({
             <div className="comment" key={id} style={{ paddingTop: '12px' }}>
 
               <a className="avatar">
-                <img src={user.get('personal').avatarUrl} alt={`${author}'s Avatar'`}/>
+                <img src={user.personal.avatarUrl} alt={`${author}'s Avatar'`}/>
               </a>
 
               <div className="content">

@@ -20,7 +20,13 @@ function isAuthenticated(req, res, next) {
 }
 
 router.get('/api/user', (req, res) => {
-  res.send(req.user);
+  if (req.user) {
+    User.findOne({ username: req.user.username }, (err, user) => {
+      if (!err) {
+        res.send(user)
+      }
+    });
+  }
 });
 
 router.post('/api/verify-credentials', isAuthenticated, (req, res) => {

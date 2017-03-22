@@ -72,7 +72,7 @@ export default class Emoji extends React.Component {
 
   render() {
     const emojiPickerStyles = {
-      zIndex: '2'
+      zIndex: '2',
       width: '100%',
       position: 'absolute',
       left: 0, top: '40px',

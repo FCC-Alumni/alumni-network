@@ -3,6 +3,7 @@ import React from 'react';
 import MessageBox from '../../common/MessageBox';
 import FormField from '../../common/FormField';
 import RadioButton from '../../common/RadioButton';
+import Ribbon from './common/RibbonHeader';
 import { Dropdown } from 'semantic-ui-react';
 
 import { surveyOptions } from '../../../assets/data/dropdownOptions';
@@ -17,11 +18,20 @@ const Career = ({
   company, 
   tenure, 
   jobSearch, 
+  subSaveClick, 
+  showPopUp, 
   errors 
 }) => {
   return (
     <div>
-      <div className="ui teal ribbon label careerWrapper" onClick={() => { toggle('showCareer')}}>Career</div>
+      <Ribbon 
+        showPopUp={showPopUp} 
+        id="careerPopUp"
+        subSaveClick={subSaveClick}
+        showSave={showCareer}
+        content="Career" 
+        wrapperClass="careerWrapper" 
+        onClick={()=>{toggle('showCareer')}} />
       <form className={`careerPane ui six wide form ${showCareer ? 'show' : 'hide'}`}>
         <MessageBox 
           type="info"

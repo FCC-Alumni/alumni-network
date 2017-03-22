@@ -1,13 +1,21 @@
 import React from 'react';
 import ListItem from '../../common/ListItem';
 import FormField from '../../common/FormField';
+import Ribbon from './common/RibbonHeader';
 
 const inputOptions = 'small left icon'; 
 
-const PersonalInfo = ({ username, showProfile, toggle, profileUrl, email, handleInputChange, location, bio, displayName, errors }) => {
+const PersonalInfo = ({ username, showProfile, toggle, profileUrl, email, subSaveClick, showPopUp, handleInputChange, location, bio, displayName, errors }) => {
   return (
     <div>
-      <div className="ui teal ribbon label profileWrapper" onClick={() => { toggle('showProfile') }}>Personal Info</div>
+      <Ribbon 
+        showSave={showProfile}
+        showPopUp={showPopUp} 
+        id="personalPopUp"
+        subSaveClick={subSaveClick} 
+        content="Personal Info" 
+        wrapperClass="profileWrapper" 
+        onClick={()=>{toggle('showProfile')}} />
       <form className={`ui form profilePane ${showProfile ? 'show' : 'hide'}`}>
         <div className="ui list">
           <ListItem icon="spy icon">

@@ -2,13 +2,21 @@ import React from 'react';
 import ListItem from '../../common/ListItem';
 import MessageBox from '../../common/MessageBox';
 import FormField from '../../common/FormField';
+import Ribbon from './common/RibbonHeader';
 
 const inputOptions = 'small left icon';
 
-const Social = ({ showSocial, handleInputChange, codepen, twitter, linkedin, toggle, errors }) => {
+const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepen, twitter, linkedin, toggle, errors }) => {
   return (
     <div>
-      <div className="ui teal ribbon label socialWrapper" onClick={() => { toggle('showSocial')}}>Social</div>
+      <Ribbon 
+        showPopUp={showPopUp} 
+        subSaveClick={subSaveClick}
+        id="socialPopUp"
+        showSave={showSocial}
+        content="Social" 
+        wrapperClass="socialWrapper" 
+        onClick={()=>{toggle('showSocial')}} />
       <div className={`socialPane ${showSocial ? 'show' : 'hide'}`}>
         <MessageBox
           type="info"

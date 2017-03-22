@@ -1,13 +1,21 @@
 import React from 'react';
 import DropdownMultiSelect from '../../common/DropdownMultiSelect';
 import MessageBox from '../../common/MessageBox';
+import Ribbon from './common/RibbonHeader';
 
 import { skills, interests } from '../../../assets/data/dropdownOptions';
 
-const SkillsAndInterests = ({ showSkills, toggle, handleSkillsChange, handleInterestsChange, coreSkills, codingInterests }) => {
+const SkillsAndInterests = ({ showSkills, subSaveClick, showPopUp, toggle, handleSkillsChange, handleInterestsChange, coreSkills, codingInterests }) => {
   return (
     <div>
-      <div className="ui teal ribbon label skillsWrapper" onClick={() => { toggle('showSkills') }}>Skills & Interests</div>
+      <Ribbon 
+        showPopUp={showPopUp} 
+        id="skillsPopUp"
+        showSave={showSkills}
+        subSaveClick={subSaveClick}
+        content="Skills & Interests" 
+        wrapperClass="skillsWrapper" 
+        onClick={()=>{toggle('showSkills')}} />
       <div className={`skillsPane ${showSkills ? 'show' : 'hide'}`}>
         <h4 className="ui horizontal divider header">
           <i className="checkmark box icon" />

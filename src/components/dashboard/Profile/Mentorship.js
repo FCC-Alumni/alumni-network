@@ -1,11 +1,19 @@
 import React from 'react';
 import MessageBox from '../../common/MessageBox';
 import SliderToggle from '../../common/SliderToggle';
+import Ribbon from './common/RibbonHeader';
 
-const Mentorship = ({ toggle, showMentorship, toggleMentorship, handleInputChange, mentorshipSkills, isMentor }) => {
+const Mentorship = ({ toggle, showMentorship, subSaveClick, showPopUp, toggleMentorship, handleInputChange, mentorshipSkills, isMentor }) => {
   return (
     <div>
-      <div className="ui teal ribbon label mentorshipWrapper" onClick={() => { toggle('showMentorship') }}>Mentorship Program</div>
+      <Ribbon 
+        showPopUp={showPopUp} 
+        id="mentorshipPopUp"
+        showSave={showMentorship}
+        subSaveClick={subSaveClick}
+        content="Mentorship Program" 
+        wrapperClass="mentorshipWrapper" 
+        onClick={()=>{toggle('showMentorship')}} />
       <form className={`mentorshipPane ui form ${showMentorship ? 'show' : 'hide'}`}>
         <MessageBox
           type="info"

@@ -50,7 +50,7 @@ class AppContainer extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    username: state.user.get('username')
+    username: state.user.username
   }
 }
 
