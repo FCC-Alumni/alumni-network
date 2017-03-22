@@ -76,6 +76,34 @@ const fakeUsers = [
   'bonham000'
 ];
 
+const mentorshipSource = [
+  'I want to help people learn to code.',
+  'I am really good with D3 and can help people with that',
+  'I know React really well and can mentor people in React',
+  'I would love to help someone learn about serverside code',
+  'I am very good at database design',
+  'I would like to mentor someone in creating a full stack app',
+  'I can help someone practice algorithms',
+  'I would be happy to help someone practice interview questions',
+  'I can advise someone on the job search',
+  'I am very good with CSS and responsive design',
+  'I know Redux very well and can help mentor someone on that',
+  'I am really good with Express and Node.',
+  'I am great at mobile app design',
+  'I am very knowledgeable in Ruby and Rails',
+  'I am a Python master and can help you with data science problems'
+];
+
+const mentorshipSkillsList = [];
+
+(function randomizeMentorship() {
+  while (mentorshipSource.length > 0) {
+    var index = Math.floor(Math.random() * (mentorshipSource.length - 0));
+    var bio = mentorshipSource.splice(index, 1);
+    mentorshipSkillsList.push(bio);
+  }
+})();
+
 const getCertifications = (username) => {
   return axios.all([getFrontEndCert(username), getBackEndCert(username), getDataVisCert(username)])
   .then(axios.spread((frontCert, backCert, dataCert) => {
@@ -117,6 +145,12 @@ const logResult = (users, completed) => {
     axios.get(`https://api.github.com/users/${user}?${credentials}`)
     .then(response => {
       const { data } = response;
+
+      const isMentor = Math.random() > 0.5;
+      let mentorshipSkills = '';
+
+      if (isMentor) mentorshipSkills = mentorshipSkillsList.pop();
+
       User.findOne({ username: data.login }, (err, user) => {
         if (!user) {
           getCertifications(data.login).then(certs => {
@@ -139,8 +173,8 @@ const logResult = (users, completed) => {
                 bio: data.bio ? data.bio : '',
               },
               mentorship: {
-                isMentor: Math.random() > 0.5,
-                mentorshipSkills: ''
+                isMentor,
+                mentorshipSkills
               },
               skillsAndInterests: {
                 coreSkills: generate(skills, 0.2),
