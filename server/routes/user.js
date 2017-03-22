@@ -1,6 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import axios from 'axios';
+import _merge from 'lodash/merge';
 import User from '../models/user';
 import {
   getFrontEndCert,
@@ -10,8 +11,8 @@ import {
 
 const router = express.Router();
 
-// example of an authentication middleware:
-function isAuthenticated(req, res, next) {
+// authentication middleware using express-session:
+export const isAuthenticated = (req, res, next) => {
   if (req.user) {
     next();
   } else {
@@ -24,8 +25,12 @@ router.get('/api/user', (req, res) => {
     User.findOne({ username: req.user.username }, (err, user) => {
       if (!err) {
         res.send(user)
+      } else {
+        res.sendStatus(401);
       }
     });
+  } else {
+    res.sendStatus(401);
   }
 });
 
@@ -79,23 +84,17 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
   });
 });
 
-router.post('/api/update-user', (req, res) => {
-  const { user } = req.body;
-
-  User.findById(user._id, (err, updatedUser) => {
-    if (err) throw err;
-
-    updatedUser.personal = user.personal;
-    updatedUser.mentorship = user.mentorship;
-    updatedUser.career = user.career;
-    updatedUser.skillsAndInterests = user.skillsAndInterests;
-    updatedUser.projects = user.projects;
-    updatedUser.social = user.social;
-
-    updatedUser.save();
-
-    res.json({ updatedUser })
+router.post('/api/update-user', isAuthenticated, (req, res) => {
+  const updatedUser = req.body.user;
+  User.findById(updatedUser._id, (err, user) => {
+    if (!err) {
+      _merge(user, updatedUser);
+      user.save()
+      res.json({ updatedUser: user });
+    } else {
+      res.status(401).json({ error: 'User could not be saved' });
+    };
   });
-})
+});
 
 export default router;

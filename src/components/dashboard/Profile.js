@@ -26,6 +26,7 @@ TODO:
   - connect to redux √
   - add career form / questionaire √
   - areas of mentorship √
+  - error handling if save to server fails?
 */
 
 class Profile extends React.Component {
@@ -53,7 +54,7 @@ class Profile extends React.Component {
       careerPopUp: false,
     }
   }
-  
+
   handleSubSaveClick = (e) => {
     e.stopPropagation();
     e.persist();
@@ -61,11 +62,11 @@ class Profile extends React.Component {
       const { updatedUser } = res.data;
       this.props.saveUser(updatedUser);
     }).catch(err => console.log(err));
-    
+
     this.setState({ [e.target.id]: true });
     setTimeout( _ => this.resetPopUp(e.target.id), 1000);
   }
-  
+
   resetPopUp = (id) => {
     this.setState({ [id]: false });
   }
@@ -167,9 +168,8 @@ class Profile extends React.Component {
     updateUser(this.state.user).then(res => {
       const { updatedUser } = res.data;
       this.props.saveUser(updatedUser);
+      this.setState({ modalOpen: true });
     }).catch(err => console.log(err));
-    
-    this.setState({ modalOpen: true });
   }
 
   closeModal = () => {

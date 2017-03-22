@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { SAVE_USER } from '../actions/types';
 import { POPULATE } from '../actions/community';
 import { List } from 'immutable';

@@ -3,7 +3,7 @@ import { SAVE_USER } from './types';
 
 export const getUserData = () => {
   return axios.get('/api/user')
-    .then(res => res.data)
+    .then(res =>  res.data)
     .catch(err => null);
 }
 

@@ -1,4 +1,6 @@
 
+import { isAuthenticated } from '../routes/user';
+
 import { client as redis } from '../server.js';
 redis.set('chat', JSON.stringify([]));
 
