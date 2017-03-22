@@ -1,7 +1,6 @@
 import { SAVE_USER } from '../actions/types';
-import { Map } from 'immutable';
 
-const defaultUser = Map({
+const defaultUser = {
   githubId: '',
   username: '',
   verifiedUser: false,
@@ -12,7 +11,7 @@ const defaultUser = Map({
   projects: [],
   social: {},
   career: {}
-});
+};
 
 export default (state = defaultUser, action) => {
   switch (action.type) {

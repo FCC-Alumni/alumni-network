@@ -11,12 +11,6 @@
   }
 }
 
-@keyframes bounceUp {
-  0% { top: 15px; opacity: 0.01; }
-  80% { top: -8px; opacity: 0.7; }
-  100% { top: 0; opacity: 1.0; }
-}
-
 .savedPopUp {
   position: absolute;
 }

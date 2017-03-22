@@ -74,8 +74,8 @@ class PassportPage extends React.Component {
 
   render() {
     const loader = (
-      <div className="ui active inverted dimmer">
-        <div className="ui text huge loader">Loading...</div>
+      <div className="ui active dimmer">
+        <div className="ui text huge loader">Loading</div>
       </div>
     );
     

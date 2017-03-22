@@ -27,7 +27,7 @@ class NavBar extends React.Component {
     );
     return (
       <div>
-        { this.props.user.get('verifiedUser') ? userNav : guestNav }
+        { this.props.user.verifiedUser ? userNav : guestNav }
       </div>
     );
   }

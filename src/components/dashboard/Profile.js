@@ -3,9 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import UserLabel from '../common/UserLabel';
-import ListItem from '../common/ListItem';
 import Modal from './Profile/common/SaveModal';
-
 
 import PersonalInfo from './Profile/PersonalInfo';
 import Certifications from './Profile/Certifications';
@@ -19,7 +17,7 @@ import { saveUser, updateUser } from '../../actions/user';
 
 /*
 TODO:
-  - save individual section
+  - save individual section √
   - folder icon behavior - open when any field expanded
   - add validations for form fields - should be loose validations since nothing is strictly required
   - use passport to pull in LinkedIn and Twitter handles
@@ -33,7 +31,7 @@ TODO:
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-    const user = this.props.user.toJS();
+    const user = this.props.user;
     this.state = {
       user,
       errors: {},
@@ -59,7 +57,11 @@ class Profile extends React.Component {
   handleSubSaveClick = (e) => {
     e.stopPropagation();
     e.persist();
-    updateUser(this.state.user);
+    updateUser(this.state.user).then(res => {
+      const { updatedUser } = res.data;
+      this.props.saveUser(updatedUser);
+    }).catch(err => console.log(err));
+    
     this.setState({ [e.target.id]: true });
     setTimeout( _ => this.resetPopUp(e.target.id), 1000);
   }
@@ -162,7 +164,11 @@ class Profile extends React.Component {
   }
 
   saveChanges = () => {
-    updateUser(this.state.user);
+    updateUser(this.state.user).then(res => {
+      const { updatedUser } = res.data;
+      this.props.saveUser(updatedUser);
+    }).catch(err => console.log(err));
+    
     this.setState({ modalOpen: true });
   }
 

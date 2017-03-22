@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Map } from 'immutable';
 import { SAVE_USER } from './types';
 
 export const getUserData = () => {
@@ -15,13 +14,10 @@ export const verifyUser = (username, mongoId) => {
 export const saveUser = (user) => {
   return {
     type: SAVE_USER,
-    user: Map(user)
+    user: user
   }
 }
 
 export const updateUser = (user) => {
-  axios.post('/api/update-user', { user }).then(res => {
-    const { updatedUser } = res.data;
-    saveUser(Map(updatedUser));
-  }).catch(err => console.log(err));
+  return axios.post('/api/update-user', { user });
 }
