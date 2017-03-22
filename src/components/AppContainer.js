@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { populateCommunity } from '../actions/community';
 import { saveUser, getUserData } from '../actions/user';
-import { addFlashMessage } from '../actions/flashMessages';
+import { addFlashMessage, clearFlashMessage } from '../actions/flashMessages';
 
 import Landing from './dashboard/Landing';
 import Profile from './dashboard/Profile';
@@ -28,7 +28,13 @@ class AppContainer extends React.Component {
           });
         this.props.history.push('/login');
       }
-    });
+    }).catch(err => this.props.history.push('/login'));
+  }
+
+  componentDidUpdate() {
+    // this will clear flash messages when user navigates to a new route...
+    // if this produces other unwanted behavior we can revise
+    this.props.clearFlashMessage();
   }
 
   render() {
@@ -54,4 +60,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { saveUser, addFlashMessage, populateCommunity })(AppContainer);
+const dispatch = {
+  saveUser,
+  addFlashMessage,
+  clearFlashMessage,
+  populateCommunity
+}
+
+export default connect(mapStateToProps, dispatch)(AppContainer);

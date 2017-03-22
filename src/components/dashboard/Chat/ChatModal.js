@@ -54,7 +54,6 @@ export default ({ size, close, open }) => {
           <Button
             positive
             onClick={close}
-            color='teal'
             icon='checkmark'
             labelPosition='right'
             style={{ background: teal }}

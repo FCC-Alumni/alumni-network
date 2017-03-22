@@ -9,6 +9,54 @@ import {
 
 const credentials = `client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_SECRET}`;
 
+const skills = [
+  'Angular',
+  'Backbone',
+  'C++',
+  'CSS',
+  'D3',
+  'Ember',
+  'HTML',
+  'Java',
+  'Javascript',
+  'jQuery',
+  'Less',
+  'Meteor',
+  'MongoDB',
+  'Vue',
+  'NodeJS',
+  'PHP',
+  'Python',
+  'Rails',
+  'React',
+  'Ruby',
+  'SASS',
+  'SQL',
+  'ThreeJS',
+];
+
+const interests = [
+  'Behavior Driven Development',
+  'Big Data / NOSQL',
+  'Blockchain / Bitcoin / Digital Currency',
+  'Data Science',
+  'DevOps',
+  'Game Development',
+  'Internet of Things (IoT)',
+  'Machine Learning / Artificial Intelligence',
+  'QA / Testing',
+  'Test Driven Development',
+  'UI Design',
+  'User Experience',
+  'Virtual / Augmented Reality',
+];
+
+const generate = (type, threshold) => {
+  return type.reduce((accum, curr) => {
+    return Math.random() < threshold ? accum.concat(curr) : accum;
+  }, []);
+};
+
 const fakeUsers = [
   'quincylarson',
   'berkeleytrue',
@@ -89,6 +137,14 @@ const logResult = (users, completed) => {
                 email: data.email ? data.email : '',
                 location: data.location ? data.location : '',
                 bio: data.bio ? data.bio : '',
+              },
+              mentorship: {
+                isMentor: Math.random() > 0.5,
+                mentorshipSkills: ''
+              },
+              skillsAndInterests: {
+                coreSkills: generate(skills, 0.2),
+                codingInterests: generate(interests, 0.5)
               },
               career: {
                 company: data.company ? data.company : '',
