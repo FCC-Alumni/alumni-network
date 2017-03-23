@@ -1,4 +1,7 @@
 import React from 'react';
+import Label from '../../common/UserLabel';
+import DividingHeader from '../../common/DividingHeader';
+
 import convertMonthToString from '../../../actions/convertMonth';
 
 /*
@@ -16,16 +19,41 @@ const UserCard = ({ user }) => {
   var certs = [];
   for (var cert in user.fccCerts) {
     if (user.fccCerts[cert]) {
-      certs.push(cert.replace(/_/g, ' ') + ', ');
+      certs.push(cert.replace(/_/g, ' '));
     }
   }
-  var lastIndex = certs.length - 1;
-  certs[lastIndex] = certs[certs.length-1].slice(0, -2);
   
   return(
     <div className='ui raised card'>
-      <div className="image">
-        <img src={user.personal.avatarUrl} alt="user avatar"/>
+      <div className="ui slide masked reveal image">
+        <img src={user.personal.avatarUrl} className="visible content" alt="user avatar"/>
+        <div className="hidden content">
+          <div className="labelWrapper">
+            <Label
+              image={user.personal.avatarUrl}
+              size="large" 
+              username={user.username} 
+              label={user.mentorship.isMentor ? 'Mentor' : 'Member'} />
+          </div>
+          <div className="summaryWrapper">
+            <DividingHeader size="h6" icon="checkmark box icon" content="Core Skills" />
+            <div className="ui list">
+              { 
+                user.skillsAndInterests.coreSkills.length > 0 ?
+                user.skillsAndInterests.coreSkills.map((item, i) => i < 3 && <div className="item" key={i}>{item}</div>) :
+                'User has not entered any skills yet!'
+              }
+            </div>
+            <DividingHeader size="h6" icon="checkmark box icon" content="Coding Interests" />
+            <div className="ui list">
+              { 
+                user.skillsAndInterests.codingInterests.length > 0 ?
+                user.skillsAndInterests.codingInterests.map((item, i) => i < 3 && <div className="item" key={i}>{item}</div>) :
+                'User has not entered any interests yet!'
+              }
+            </div>
+          </div>
+        </div>
       </div>
       <div className="content">
         <div className="header">
@@ -36,7 +64,7 @@ const UserCard = ({ user }) => {
         </div>
         <div className="description">
           <i className="yellow certificate icon" />
-          {certs}
+          {certs.toString().split(',').join(', ')}
         </div>
       </div>
       <div className="extra content">

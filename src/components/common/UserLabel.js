@@ -5,7 +5,7 @@ const UserLabel = ({ color, size, image, username, label, folder, toggleAll }) =
     image = '/images/defaultAvatar.gif';
   }
   return (
-    <div className={'ui image label ' + color + ' ' + size}>
+    <div className={`ui image label ${color} ${size}`}>
       <img src={image} alt="user avatar" />
       {username}
       <div className="detail">{label}</div>

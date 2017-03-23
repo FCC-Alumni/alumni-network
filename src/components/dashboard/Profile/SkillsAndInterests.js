@@ -1,6 +1,7 @@
 import React from 'react';
 import DropdownMultiSelect from '../../common/DropdownMultiSelect';
 import MessageBox from '../../common/MessageBox';
+import DividingHeader from '../../common/DividingHeader';
 import Ribbon from './common/RibbonHeader';
 
 import { skills, interests } from '../../../assets/data/dropdownOptions';
@@ -17,10 +18,7 @@ const SkillsAndInterests = ({ showSkills, subSaveClick, showPopUp, toggle, handl
         wrapperClass="skillsWrapper" 
         onClick={()=>{toggle('showSkills')}} />
       <div className={`skillsPane ${showSkills ? 'show' : 'hide'}`}>
-        <h4 className="ui horizontal divider header">
-          <i className="checkmark box icon" />
-          Core Skills
-        </h4>
+        <DividingHeader size="h4" content="Core Skills" icon="checkmark box icon" />
         <MessageBox
           type="info"
           dismissable={true}
@@ -30,10 +28,7 @@ const SkillsAndInterests = ({ showSkills, subSaveClick, showPopUp, toggle, handl
           options={skills}
           placeholder="Choose Skills"
           defaultValue={coreSkills} />
-        <h4 className="ui horizontal divider header">
-          <i className="checkmark box icon" />
-          Coding Interests
-        </h4>
+        <DividingHeader size="h4" content="Coding Interests" icon="checkmark box icon" />
         <MessageBox
           type="info"
           dismissable={true}
