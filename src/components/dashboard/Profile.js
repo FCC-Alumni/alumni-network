@@ -17,6 +17,7 @@ import { saveUser, updateUser } from '../../actions/user';
 
 /*
 TODO:
+  - add error popup and modal for error on save
   - save individual section √
   - folder icon behavior - open when any field expanded
   - add validations for form fields - should be loose validations since nothing is strictly required
@@ -61,10 +62,9 @@ class Profile extends React.Component {
     updateUser(this.state.user).then(res => {
       const { updatedUser } = res.data;
       this.props.saveUser(updatedUser);
+      this.setState({ [e.target.id]: true });
+      setTimeout( _ => this.resetPopUp(e.target.id), 1000);
     }).catch(err => console.log(err));
-
-    this.setState({ [e.target.id]: true });
-    setTimeout( _ => this.resetPopUp(e.target.id), 1000);
   }
 
   resetPopUp = (id) => {

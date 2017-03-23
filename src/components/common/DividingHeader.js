@@ -7,16 +7,62 @@ TODO:
   - this will make component more reusable and robust
   - then replace H2 in ChatContainer with this component
 */
-const DividingHeader = ({ text }) => {
+const DividingHeader = ({ icon, content, size }) => {
   return (
-    <div className="ui secondary pointing menu">
-      <div className="item">{text}</div>
+    <div>
+      {
+        size === 'h1' &&
+        <h1 className="ui horizontal divider header">
+          { icon && <i className={icon} /> }
+          {content}
+        </h1>
+      }
+      {
+        size === 'h2' &&
+        <h2 className="ui horizontal divider header">
+          { icon && <i className={icon} /> }
+          {content}
+        </h2>
+      }
+      {
+        size === 'h3' &&
+        <h3 className="ui horizontal divider header">
+          { icon && <i className={icon} /> }
+          {content}
+        </h3>
+      }
+      {
+        size === 'h4' &&
+        <h4 className="ui horizontal divider header">
+          { icon && <i className={icon} /> }
+          {content}
+        </h4>
+      }
+      {
+        size === 'h5' &&
+        <h5 className="ui horizontal divider header">
+          { icon && <i className={icon} /> }
+          {content}
+        </h5>
+      }
+      {
+        size === 'h6' &&
+        <h6 className="ui horizontal divider header">
+          { icon && <i className={icon} /> }
+          {content}
+        </h6>
+      }
     </div>
   );
 }
 
 DividingHeader.propTypes = {
-  text: React.PropTypes.string.isRequired
+  content: React.PropTypes.string.isRequired,
+  icon: React.PropTypes.string
+}
+
+DividingHeader.defaultProps = {
+  icon: ''
 }
 
 export default DividingHeader;
