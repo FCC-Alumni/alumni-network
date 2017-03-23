@@ -17,6 +17,26 @@ export const RECEIVED_LIKE = 'RECEIVED_LIKE';
 export const RECEIVED_MESSAGE = 'RECEIVED_MESSAGE';
 export const RECEIVED_UPDATE = 'RECEIVED_UPDATE';
 
+export const INITIALIZE_PRIVATE = 'INITIALIZE_PRIVATE';
+export const ADD_MESSAGE_PRIVATE = 'ADD_MESSAGE_PRIVATE';
+export const EDIT_MESSAGE_PRIVATE = 'EDIT_MESSAGE_PRIVATE';
+export const DELETE_MESSAGE_PRIVATE = 'DELETE_MESSAGE_PRIVATE';
+export const LIKE_MESSAGE_PRIVATE = 'LIKE_MESSAGE_PRIVATE';
+export const RECEIVED_LIKE_PRIVATE = 'RECEIVED_LIKE_PRIVATE';
+export const RECEIVED_MESSAGE_PRIVATE = 'RECEIVED_MESSAGE_PRIVATE';
+export const RECEIVED_UPDATE_PRIVATE = 'RECEIVED_UPDATE_PRIVATE';
+
+/** PRIVATE CHAT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+export const initiatePrivateChat = (author) => {
+  return {
+    type: INITIALIZE_PRIVATE,
+    payload: author
+  }
+}
+
+/** ALL CHAT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 socket.on('initalize-chat', (data) => {
   data.forEach(message => message.likes = Set(message.likes));
   store.dispatch({
@@ -34,8 +54,8 @@ socket.on('broadcast-message', (message) => {
 });
 
 export const addMessage = (payload) => {
-  const { author, text } = payload;
-  const message = Map({
+  const { author, text, conversant } = payload;
+  let message = Map({
     text,
     author: author.username,
     avatar: author.avatarUrl,
@@ -44,18 +64,39 @@ export const addMessage = (payload) => {
     timestamp: Date.now(),
     id: (author.username + '_' + uuidV1()),
   });
-  socket.emit('submission', message);
-  return {
-    type: ADD_MESSAGE,
-    payload: message
+  if (conversant) {
+    message = message.set('reciepient', conversant);
+    return {
+      type: ADD_MESSAGE_PRIVATE,
+      payload: {
+        message,
+        reciepient: conversant
+      }
+    }
+  } else {
+    socket.emit('submission', message);
+    return {
+      type: ADD_MESSAGE,
+      payload: message
+    }
   }
 };
 
-export const deleteMessage = (id) => {
-  socket.emit('delete-message', id);
-  return {
-    type: DELETE_MESSAGE,
-    payload: { id }
+export const deleteMessage = (id, conversant) => {
+  if (conversant) {
+    return {
+      type: DELETE_MESSAGE_PRIVATE,
+      payload: {
+        id,
+        reciepient: conversant
+      }
+    }
+  } else {
+    socket.emit('delete-message', id);
+    return {
+      type: DELETE_MESSAGE,
+      payload: { id }
+    }
   }
 };
 
@@ -74,22 +115,35 @@ socket.on('broadcast-update', (message) => {
   });
 });
 
-export const saveEdit = (id, text) => {
-  return {
-    type: EDIT_MESSAGE,
-    payload: {
-      id,
-      text
+export const saveEdit = (id, text, conversant) => {
+  if (conversant) {
+    return {
+      type: EDIT_MESSAGE_PRIVATE,
+      payload: {
+        id,
+        text,
+        reciepient: conversant
+      }
     }
-  };
+  } else {
+    return {
+      type: EDIT_MESSAGE,
+      payload: {
+        id,
+        text
+      }
+    };
+  }
 };
 
-export const broadcastEdit = (id) => {
-  const message = store.getState().chat.find(d => d.get('id') === id).toJS();
-  socket.emit('update-message', message);
-  return {
-    type: null
+export const broadcastEdit = (id, conversant) => {
+  if (conversant) {
+    // private socket action here
+  } else {
+    const message = store.getState().chat.find(d => d.get('id') === id).toJS();
+    socket.emit('update-message', message);
   }
+  return { type: null }
 };
 
 socket.on('broadcast-like', ({ messageId, liker }) => {
@@ -102,13 +156,25 @@ socket.on('broadcast-like', ({ messageId, liker }) => {
   })
 });
 
-export const likeMessage = (messageId, liker) => {
-  socket.emit('like-message', { messageId, liker });
-  return {
-    type: LIKE_MESSAGE,
-    payload: {
-      messageId,
-      liker
+export const likeMessage = (messageId, liker, conversant) => {
+  if (conversant) {
+    // private socket action here
+    return {
+      type: LIKE_MESSAGE_PRIVATE,
+      payload: {
+        messageId,
+        liker,
+        reciepient: conversant
+      }
+    }
+  } else {
+    socket.emit('like-message', { messageId, liker });
+    return {
+      type: LIKE_MESSAGE,
+      payload: {
+        messageId,
+        liker
+      }
     }
   }
 };

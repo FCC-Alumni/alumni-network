@@ -19,11 +19,33 @@
   button {
     margin-top: 10px;
   }
-  img {
-    border-radius: 50%;
-  }
   h2 {
     padding-right: 40px;
+  }
+  .linkHome {
+    position: absolute;
+    right: 15px;
+    color: #00b5ad;
+    span {
+      text-decoration: underline;
+    }
+  }
+  .linkHome:hover {
+    color: rgb(0,225,225);
+  }
+  .conversant {
+    color: #00b5ad;
+  }
+  .privateAvatar {
+    margin-right: 7px;
+    margin-bottom: -5px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+  }
+  .author-link:hover {
+    cursor: pointer;
+    color: rgb(0,225,225);
   }
   #infoIcon {
     position: absolute;
@@ -47,6 +69,9 @@
     overflow-y: auto;
   }
   .chatMessage {
+    .timeStamp {
+      color: rgb(125,125,125);
+    }
     #editInput {
       width: 95%;
     }
