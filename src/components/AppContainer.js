@@ -47,6 +47,7 @@ class AppContainer extends React.Component {
             <Route exact path={`${this.props.match.url}/community`} component={Community}/>
             <Route exact path={`${this.props.match.url}/mentorship`} component={Mentorship}/>
             <Route exact path={`${this.props.match.url}/chat`} component={Chat}/>
+            <Route exact path={`${this.props.match.url}/chat/:username`} component={Chat}/>
           </div>
         }
       </div>

@@ -3,6 +3,11 @@ import { Modal, Button } from 'semantic-ui-react';
 
 export default ({ size, close, open }) => {
   const teal = '#00b5ad';
+  const fireStyle = {
+    width: "45px",
+    height: "45px",
+    marginBottom: "-5px"
+  }
   return(
     <div>
       <Modal size={size} open={open} onClose={close}>
@@ -10,11 +15,12 @@ export default ({ size, close, open }) => {
         <Modal.Header style={{ background: teal, color: 'white' }}>
           <h1>
             <span>Mess Hall Chat &nbsp;</span>
-            <i style={{ marginBottom: '10px' }} className="em em-fire"></i>
-            <i style={{ marginBottom: '10px' }} className="em em-fire"></i>
-            <i style={{ marginBottom: '10px' }} className="em em-fire"></i>
+            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" /></span>
+            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" /></span>
+            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" /></span>
           </h1>
         </Modal.Header>
+
 
         <Modal.Content>
 

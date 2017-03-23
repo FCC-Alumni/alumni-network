@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactEmoji from 'react-emoji';
+import { Route, NavLink } from 'react-router-dom';
 
 const parseTime = (timestamp) => {
   let a = new Date(timestamp);
@@ -14,6 +16,8 @@ const parseTime = (timestamp) => {
 };
 
 export default ({
+  path,
+  like,
   chat,
   user,
   edit,
@@ -22,7 +26,8 @@ export default ({
   editText,
   finishEdit,
   deleteMessage,
-  like }) => {
+  reciepient,
+  initiatePrivateChat }) => {
   if (chat.size > 0) {
     return (
       <div className='chatMessage'>
@@ -41,9 +46,15 @@ export default ({
 
               <div className="content">
 
-                <a className="author">{author}</a>
+                {path ?
+                  <span onClick={initiatePrivateChat.bind(this, author)} className='author author-link'>{author}</span>
+                    :
+                  <span className='author'>{author}</span>}
+
                 <div className="metadata">
-                  <span className="date">at {parseTime(timestamp)}</span>
+                  <span className="date">at
+                    <span className="timeStamp"> {parseTime(timestamp)} </span>
+                  </span>
                   {user.username === author &&
                     <span className='editButton' onClick={setEdit.bind(this, id)}>edit</span>}
                 </div>
@@ -72,8 +83,7 @@ export default ({
                   style={{ marginTop: '4px' }}>
                   {text.split(' ').map((word, idx) => {
                     if (word.charAt(0) === ':' && word.charAt(word.length - 1) === ':') {
-                      word = word.slice(1, word.length - 1);
-                      return <i key={word + idx} className={`em em-${word}`}></i>
+                      return <span key={word + idx}>{ReactEmoji.emojify(word)}</span>
                     } else {
                       return <span key={word + idx}> {word} </span>;
                     }
@@ -85,7 +95,7 @@ export default ({
                     <div className="content">
                       <div className="meta">
                         {!likes.has(user.username) ?
-                          <a className="like" onClick={like.bind(this, id, user.username)}>
+                          <a className="like" onClick={like.bind(this, id, user.username, reciepient)}>
                             <i className="like icon"></i> {likes.size} {likes.size ? 'Like' : 'Likes'}
                           </a>
                             :
@@ -97,7 +107,7 @@ export default ({
                   </div>
                 </div>
 
-              </div>  
+              </div>
             </div>
             )
           })
