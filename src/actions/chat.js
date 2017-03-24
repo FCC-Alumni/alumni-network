@@ -1,4 +1,5 @@
 /* eslint-disable */
+import axios from 'axios';
 import uuidV1 from 'uuid/v1';
 import { Map, Set } from 'immutable';
 import { store } from '../index.js';
@@ -17,6 +18,7 @@ export const RECEIVED_LIKE = 'RECEIVED_LIKE';
 export const RECEIVED_MESSAGE = 'RECEIVED_MESSAGE';
 export const RECEIVED_UPDATE = 'RECEIVED_UPDATE';
 
+export const POPULATE_PRIVATE = 'POPULATE_PRIVATE';
 export const INITIALIZE_PRIVATE = 'INITIALIZE_PRIVATE';
 export const ADD_MESSAGE_PRIVATE = 'ADD_MESSAGE_PRIVATE';
 export const EDIT_MESSAGE_PRIVATE = 'EDIT_MESSAGE_PRIVATE';
@@ -28,12 +30,30 @@ export const RECEIVED_UPDATE_PRIVATE = 'RECEIVED_UPDATE_PRIVATE';
 
 /** PRIVATE CHAT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+const populatePrivateChat = (user, data) => {
+  return {
+    type: POPULATE_PRIVATE,
+    payload: {
+      user,
+      data
+    }
+  }
+};
+
+export const fetchPrivateChat = (user) => {
+  return dispatch => {
+    return axios.get('/api/private-chat/initialize').then(res => {
+      dispatch(populatePrivateChat(user, res.data));
+    });
+  }
+};
+
 export const initiatePrivateChat = (author) => {
   return {
     type: INITIALIZE_PRIVATE,
     payload: author
   }
-}
+};
 
 /** ALL CHAT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -66,6 +86,7 @@ export const addMessage = (payload) => {
   });
   if (conversant) {
     message = message.set('reciepient', conversant);
+    axios.post('/api/private-chat/add-message', message);
     return {
       type: ADD_MESSAGE_PRIVATE,
       payload: {

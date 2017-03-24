@@ -27,21 +27,6 @@ const registerDelete = (id) => {
   });
 };
 
-// save an edited message to Redis
-const saveUpdate = (updatedMessage) => {
-  redis.get('chat', (err, messages) => {
-    const current = JSON.parse(messages);
-    const updated = current.map(message => {
-      if (message.id === updatedMessage.id) {
-        return updatedMessage;
-      } else {
-        return message;
-      }
-    });
-    redis.set('chat', JSON.stringify(updated));
-  });
-};
-
 // save a like event to Redis
 const saveLike = (messageId, liker) => {
   redis.get('chat', (err, messages) => {
@@ -50,6 +35,21 @@ const saveLike = (messageId, liker) => {
       if (message.id === messageId) {
         message.likes.push(liker);
         return message;
+      } else {
+        return message;
+      }
+    });
+    redis.set('chat', JSON.stringify(updated));
+  });
+};
+
+// save an edited message to Redis
+const saveUpdate = (updatedMessage) => {
+  redis.get('chat', (err, messages) => {
+    const current = JSON.parse(messages);
+    const updated = current.map(message => {
+      if (message.id === updatedMessage.id) {
+        return updatedMessage;
       } else {
         return message;
       }

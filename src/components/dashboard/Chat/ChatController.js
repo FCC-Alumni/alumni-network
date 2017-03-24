@@ -11,8 +11,11 @@ import {
   saveEdit,
   likeMessage,
   broadcastEdit,
+  fetchPrivateChat,
   initiatePrivateChat
 } from '../../../actions/chat';
+
+import axios from 'axios';
 
 class ChatController extends React.Component {
   constructor(props) {
@@ -32,6 +35,11 @@ class ChatController extends React.Component {
     document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
     this.chatContainer = document.getElementById('messageContainer');
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+    // if there are no private chat messages try to fetch from server:
+    // this isn't ideal but we are not storing any 'Fetched Yet?' state anywhere
+    if (this.props.privateChatSize === 0) {
+      this.props.fetchPrivateChat(this.props.user.username);
+    }
   }
   componentDidUpdate() {
     if (this.state.scroll) {
@@ -167,7 +175,8 @@ const mapStateToProps = ({ user, chat, privateChat, community }, props) => {
     return {
       conversant: null,
       user,
-      chat
+      chat,
+      privateChatSize: privateChat.size
     }
   }
 };
@@ -178,6 +187,7 @@ const dispatch = {
   likeMessage,
   deleteMessage,
   broadcastEdit,
+  fetchPrivateChat,
   initiatePrivateChat
 };
 
