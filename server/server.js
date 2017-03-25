@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import passportRoute from './routes/passport';
 import user from './routes/user';
 import community from './routes/community';
+import privateChat from './routes/private-chat';
 import gitLabRoute from './helpers/gitLabRoute';
 
 dotenv.config();
@@ -31,6 +32,7 @@ app.use(bodyParser.json());
 app.use(passportRoute);
 app.use(user);
 app.use(community);
+app.use(privateChat);
 app.use(gitLabRoute);
 
 // initialize Express server
