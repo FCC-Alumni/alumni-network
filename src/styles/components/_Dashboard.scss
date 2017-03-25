@@ -59,6 +59,43 @@
     color: rgb(0,225,225) !important;
     transition: color 250ms ease-in-out;
   }
+  #privateChatIcon {
+    position: absolute;
+    font-size: 22px;
+    right: 32px;
+    top: 9px;
+    transition: color 250ms ease-in-out;
+  }
+  #privateChatIcon:hover {
+    cursor: pointer;
+    color: rgb(0,225,225) !important;
+    transition: color 250ms ease-in-out;
+  }
+  #privateChatChannels {
+    position: absolute;
+    top: 5px;
+    right: 65px;
+    width: 225px;
+    min-height: 35px;
+    padding: 10px;
+    color: black;
+    border-radius: 3px;
+    background: rgba(0,225,225, 0.65);
+    h3 {
+      text-decoration: underline;
+      margin-bottom: 7px;
+    }
+    .privateChannel {
+      font-weight: bold;
+      color: black;
+      transition: color 150ms ease-in-out;
+    }
+    .privateChannel:hover {
+      cursor: pointer;
+      color: white;
+      transition: color 150ms ease-in-out;
+    }
+  }
   #chatInput {
     padding-right: 35px;
   }

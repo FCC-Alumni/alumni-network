@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactEmoji from 'react-emoji';
-import { Route, NavLink } from 'react-router-dom';
 
 const parseTime = (timestamp) => {
   let a = new Date(timestamp);

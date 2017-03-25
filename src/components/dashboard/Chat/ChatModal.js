@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 

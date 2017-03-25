@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -26,7 +27,8 @@ class ChatController extends React.Component {
       edit: null,
       editText: null,
       scroll: false,
-      modal: false
+      modal: false,
+      privateChannels: false
     };
     // this sucks when screen resized smaller... will need to deal with that:
     document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
@@ -35,6 +37,9 @@ class ChatController extends React.Component {
     document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
     this.chatContainer = document.getElementById('messageContainer');
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+
+    document.addEventListener('mousedown', this.handleClick);
+
     // if there are no private chat messages try to fetch from server:
     // this isn't ideal but we are not storing any 'Fetched Yet?' state anywhere
     if (this.props.privateChatSize === 0) {
@@ -49,10 +54,13 @@ class ChatController extends React.Component {
   }
   componentWillUnmount() {
     document.body.style.backgroundImage = null;
+    document.removeEventListener('mousedown', this.handleClick, false);
   }
   setEdit = (id) => {
     if (this.state.editText !== '') {
-      if (this.state.edit) this.props.broadcastEdit(this.state.edit);
+      const { edit, editText } = this.state;
+      const { user, conversant } = this.props;
+      if (this.state.edit) this.props.broadcastEdit(edit, editText, conversant, user.username);
       this.setState({
         edit: id,
         editText: this.props.chat.find(m => m.get('id') === id).get('text')
@@ -69,7 +77,9 @@ class ChatController extends React.Component {
   finishEdit = (e) => {
     e.preventDefault();
     if (this.state.editText) {
-      this.props.broadcastEdit(this.state.edit, this.props.conversant);
+      const { edit, editText } = this.state;
+      const { user, conversant } = this.props;
+      this.props.broadcastEdit(edit, editText, conversant, user.username);
       this.setState({
         edit: null,
         editText: null
@@ -81,7 +91,7 @@ class ChatController extends React.Component {
       edit: null,
       editText: null
     });
-    this.props.deleteMessage(id, this.props.conversant);
+    this.props.deleteMessage(id, this.props.conversant, this.props.user.username);
   }
   submitMessage = (text) => {
     const { conversant } = this.props;
@@ -94,13 +104,46 @@ class ChatController extends React.Component {
     });
   }
 
+  togglePrivateChannels = () => {
+    this.setState({
+      privateChannels: !this.state.privateChannels
+    });
+  }
+
   initiatePrivateChat = (author) => {
     this.props.initiatePrivateChat(author);
     this.props.history.push(`chat/${author}`);
   }
 
+  handleClick = (e) => {
+    if (e.srcElement.id !== 'privateChatChannels' &&
+        e.srcElement.className !== 'privateChannel' &&
+        e.srcElement.className !== 'privateChannelsTitle') {
+      this.setState({
+        privateChannels: false
+      });
+    }
+  }
+
   render() {
     const { conversant } = this.props;
+
+    const privateChannels = (
+      <div id="privateChatChannels">
+        <h3 className='privateChannelsTitle'>Private Chat Channels:</h3>
+        {this.props.privateChat.map(username => {
+          return (
+            <span
+              key={username}
+              className='privateChannel'
+              onClick={this.initiatePrivateChat.bind(this, username)}>
+              {username}
+            </span>
+          );
+        })}
+      </div>
+    );
+
     return (
       <div className="ui container segment" id="chat">
         <Modal size="large" open={this.state.modal} close={this.toggleModal} />
@@ -124,7 +167,11 @@ class ChatController extends React.Component {
             }
 
             </h2>
-            {!conversant && <i onClick={this.toggleModal} className="info teal circle icon" id="infoIcon"></i>}
+            {!conversant && <div>
+              <i onClick={this.togglePrivateChannels} className="comments teal icon" id="privateChatIcon"></i>
+              <i onClick={this.toggleModal} className="info teal circle icon" id="infoIcon"></i>
+            </div>}
+            {this.state.privateChannels && privateChannels}
             <div id='messageContainer'>
               <ChatMessages
                 path={conversant ? null : this.props.match.url}
@@ -169,6 +216,7 @@ const mapStateToProps = ({ user, chat, privateChat, community }, props) => {
       conversant: username,
       conversantAvatar: community.find(u => u.username === username).personal.avatarUrl,
       user,
+      privateChat: [],
       chat: privateChat.get(username)
     }
   } else {
@@ -176,6 +224,7 @@ const mapStateToProps = ({ user, chat, privateChat, community }, props) => {
       conversant: null,
       user,
       chat,
+      privateChat: privateChat.keySeq(),
       privateChatSize: privateChat.size
     }
   }
