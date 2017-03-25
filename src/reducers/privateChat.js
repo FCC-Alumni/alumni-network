@@ -49,11 +49,6 @@ export default (state = Map(), action) => {
       return state.updateIn([reciepient], l => l.push(message));
     }
 
-    case DELETE_MESSAGE_PRIVATE: {
-      return state.updateIn([payload.reciepient], l =>
-        l.filter(message => message.get('id') !== payload.id));
-    }
-
     case EDIT_MESSAGE_PRIVATE: {
       const { id, text, reciepient } = payload;
       return state.updateIn([reciepient], l => {
@@ -80,16 +75,22 @@ export default (state = Map(), action) => {
       });
     }
 
-    // real-time update actions:
+    case DELETE_MESSAGE_PRIVATE: {
+      return state.updateIn([payload.reciepient], l =>
+        l.filter(message => message.get('id') !== payload.id));
+    }
 
+    // real-time update actions:
     case RECEIVED_MESSAGE_PRIVATE: {
-      const { author, reciepient, message } = payload;
-      return state.updateIn([reciepient], l => l.push(Map(message)));
+      const { reciepient, message } = payload;
+      return state.updateIn([message.author], l => {
+        return l.push(Map(message));
+      });
     }
 
     case RECEIVED_UPDATE_PRIVATE: {
       const { author, reciepient, id, text } = payload;
-      return state.updateIn([reciepient], l => {
+      return state.updateIn([author], l => {
         return l.map(message => {
           if (message.get('id') === id) {
             return message.set('text', text);
@@ -102,9 +103,9 @@ export default (state = Map(), action) => {
 
     case RECEIVED_LIKE_PRIVATE: {
       const { liker, reciepient, id } = payload;
-      return state.updateIn([reciepient], l => {
+      return state.updateIn([liker], l => {
         return l.map(message => {
-          if (message.get('id') === payload.messageId) {
+          if (message.get('id') === id) {
             return message.update('likes', likes => likes.add(liker));
           } else {
             return message;
@@ -115,7 +116,7 @@ export default (state = Map(), action) => {
 
     case RECEIVED_DELETE_PRIVATE: {
       const { author, reciepient, id } = payload;
-      return state.updateIn([reciepient], l => {
+      return state.updateIn([author], l => {
         return l.filter(m => {
           return m.get('id') !== id;
         });

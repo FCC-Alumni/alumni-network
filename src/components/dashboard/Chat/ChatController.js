@@ -26,9 +26,9 @@ class ChatController extends React.Component {
       messages: [],
       edit: null,
       editText: null,
-      scroll: false,
       modal: false,
-      privateChannels: false
+      privateChannels: false,
+      scroll: true
     };
     // this sucks when screen resized smaller... will need to deal with that:
     document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
@@ -46,15 +46,18 @@ class ChatController extends React.Component {
       this.props.fetchPrivateChat(this.props.user.username);
     }
   }
-  componentDidUpdate() {
-    if (this.state.scroll) {
-      this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
-      this.setState({ scroll: false });
-    };
-  }
   componentWillUnmount() {
     document.body.style.backgroundImage = null;
     document.removeEventListener('mousedown', this.handleClick, false);
+    clearTimeout(this.timeout);
+  }
+  // safeguard timeouts within a method so we can clear when component unmounts:
+  timeout = (fn, d) => setTimeout(() => fn(), d);
+  submitMessage = (text) => {
+    const { conversant } = this.props;
+    this.setState({ text: '' });
+    this.props.addMessage({ author: this.props.user, text, conversant });
+    this.timeout(() => this.chatContainer.scrollTop = this.chatContainer.scrollHeight, 50);
   }
   setEdit = (id) => {
     if (this.state.editText !== '') {
@@ -93,28 +96,21 @@ class ChatController extends React.Component {
     });
     this.props.deleteMessage(id, this.props.conversant, this.props.user.username);
   }
-  submitMessage = (text) => {
-    const { conversant } = this.props;
-    this.setState({ text: '', scroll: true });
-    this.props.addMessage({ author: this.props.user, text, conversant });
-  }
   toggleModal = () => {
     this.setState({
       modal: !this.state.modal
     });
   }
-
   togglePrivateChannels = () => {
     this.setState({
       privateChannels: !this.state.privateChannels
     });
   }
-
   initiatePrivateChat = (author) => {
     this.props.initiatePrivateChat(author);
+    this.setState({ scroll: false });
     this.props.history.push(`chat/${author}`);
   }
-
   handleClick = (e) => {
     if (e.srcElement.id !== 'privateChatChannels' &&
         e.srcElement.className !== 'privateChannel' &&
@@ -124,14 +120,12 @@ class ChatController extends React.Component {
       });
     }
   }
-
   render() {
-    const { conversant } = this.props;
-
+    const { conversant, privateChat } = this.props;
     const privateChannels = (
       <div id="privateChatChannels">
         <h3 className='privateChannelsTitle'>Private Chat Channels:</h3>
-        {this.props.privateChat.map(username => {
+        {privateChat.size > 0 ? privateChat.map(username => {
           return (
             <span
               key={username}
@@ -140,7 +134,11 @@ class ChatController extends React.Component {
               {username}
             </span>
           );
-        })}
+        }) :
+          <span>
+            <b>No Private Chats yet!</b><br/>
+            Click another user's name to start a chat with them.
+          </span>}
       </div>
     );
 
@@ -184,6 +182,7 @@ class ChatController extends React.Component {
                 editText={this.state.editText}
                 like={this.props.likeMessage}
                 reciepient={this.props.conversant}
+                conversantAvatar={this.props.conversantAvatar}
                 initiatePrivateChat={this.initiatePrivateChat}
                 deleteMessage={this.deleteMessage} />
             </div>
@@ -222,6 +221,7 @@ const mapStateToProps = ({ user, chat, privateChat, community }, props) => {
   } else {
     return {
       conversant: null,
+      conversantAvatar: null,
       user,
       chat,
       privateChat: privateChat.keySeq(),

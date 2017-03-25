@@ -47,6 +47,9 @@
     cursor: pointer;
     color: rgb(0,225,225);
   }
+  .author-link-inactive:hover {
+    color: rgb(0,225,225);
+  }
   #infoIcon {
     position: absolute;
     font-size: 20px;
@@ -80,7 +83,7 @@
     padding: 10px;
     color: black;
     border-radius: 3px;
-    background: rgba(0,225,225, 0.65);
+    background: rgba(0,225,225, 0.95);
     h3 {
       text-decoration: underline;
       margin-bottom: 7px;

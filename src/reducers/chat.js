@@ -1,14 +1,14 @@
 
 import { List, Map } from 'immutable';
 import {
-  INITIALIZE,
-  ADD_MESSAGE,
-  DELETE_MESSAGE,
-  EDIT_MESSAGE,
-  LIKE_MESSAGE,
-  RECEIVED_MESSAGE,
-  RECEIVED_UPDATE,
-  RECEIVED_LIKE
+  CHAT_INITIALIZE,
+  CHAT_ADD_MESSAGE,
+  CHAT_DELETE_MESSAGE,
+  CHAT_EDIT_MESSAGE,
+  CHAT_LIKE_MESSAGE,
+  CHAT_RECEIVED_MESSAGE,
+  CHAT_RECEIVED_UPDATE,
+  CHAT_RECEIVED_LIKE
 } from '../actions/chat';
 
 /*** Chat history is a List. Each entry represents
@@ -20,16 +20,13 @@ export default (state = List(), action) => {
 
   switch (type) {
 
-    case INITIALIZE:
+    case CHAT_INITIALIZE:
       return (payload.length > 0) ? List(action.payload) : state;
 
-    case ADD_MESSAGE:
+    case CHAT_ADD_MESSAGE:
       return state.push(action.payload);
 
-    case DELETE_MESSAGE:
-        return state.filter(message => message.get('id') !== payload.id);
-
-    case EDIT_MESSAGE:
+    case CHAT_EDIT_MESSAGE:
       return state.map(message => {
         if (message.get('id') === payload.id) {
           return message.set('text', payload.text);
@@ -38,7 +35,7 @@ export default (state = List(), action) => {
         }
       });
 
-    case LIKE_MESSAGE:
+    case CHAT_LIKE_MESSAGE:
       const { messageId, liker } = payload;
       return state.map(message => {
         if (message.get('id') === messageId && !message.get('likes').has(liker)) {
@@ -48,22 +45,25 @@ export default (state = List(), action) => {
         }
       });
 
-    case RECEIVED_LIKE:
+    case CHAT_DELETE_MESSAGE:
+      return state.filter(message => message.get('id') !== payload.id);
+
+    case CHAT_RECEIVED_MESSAGE:
+      return state.push(Map(action.payload));
+
+    case CHAT_RECEIVED_UPDATE:
       return state.map(message => {
-        if (message.get('id') === payload.messageId) {
-          return message.update('likes', likes => likes.add(payload.liker));
+        if (message.get('id') === payload.id) {
+          return Map(payload);
         } else {
           return message;
         }
       });
 
-    case RECEIVED_MESSAGE:
-      return state.push(Map(action.payload));
-
-    case RECEIVED_UPDATE:
+    case CHAT_RECEIVED_LIKE:
       return state.map(message => {
-        if (message.get('id') === payload.id) {
-          return Map(payload);
+        if (message.get('id') === payload.messageId) {
+          return message.update('likes', likes => likes.add(payload.liker));
         } else {
           return message;
         }

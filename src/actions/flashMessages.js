@@ -19,3 +19,14 @@ export function clearFlashMessage() {
     type: CLEAR_FLASH_MESSAGE
   }
 }
+
+// helper to generate errors:
+export const flashError = (message) => {
+  return {
+    type: 'error',
+    text: {
+      header: 'There was a problem...',
+      message
+    }
+  };
+}
