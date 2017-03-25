@@ -11,6 +11,10 @@ import {
   RECEIVED_LIKE
 } from '../actions/chat';
 
+/*** Chat history is a List. Each entry represents
+ * a message and is a Map, within which likes are
+ * represented as a Set ***/
+
 export default (state = List(), action) => {
   const { type, payload } = action;
 

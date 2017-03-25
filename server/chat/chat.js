@@ -63,32 +63,48 @@ module.exports = (io) => {
 
   io.on('connection', (socket) => {
 
-    // new client connects, send them the current chat history
     console.log('Socket.io connected');
     redis.get('chat', (err, history) => initalizeClient(socket, history));
 
-    // client submits message
+    // GLOBAL CHAT events ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   	socket.on('submission', (data) => {
       saveMessage(data);
       socket.broadcast.emit('broadcast-message', data);
   	});
 
-    // client edits a message
     socket.on('update-message', (data) => {
       saveUpdate(data);
       socket.broadcast.emit('broadcast-update', data);
     });
 
-    // client likes a message
     socket.on('like-message', ({ messageId, liker }) => {
       saveLike(messageId, liker);
       socket.broadcast.emit('broadcast-like', { messageId, liker });
     });
 
-    // client deletes a message
     socket.on('delete-message', id => {
       registerDelete(id);
       socket.broadcast.emit('broadcast-deletion', id);
+    });
+
+    // PRIVATE-CHAT events ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // only triggered from client after successful database update ~~~~~~
+
+    socket.on('private-submission', (data) => {
+      socket.broadcast.emit('broadcast-private-submission', data);
+    });
+
+    socket.on('private-update', (data) => {
+      socket.broadcast.emit('broadcast-private-update', data);
+    });
+
+    socket.on('private-like', (data) => {
+      socket.broadcast.emit('broadcast-private-like', data);
+    });
+
+    socket.on('private-delete', (data) => {
+      socket.broadcast.emit('broadcast-private-delete', data);
     });
 
     socket.on('disconnect', () => console.log('Socket connection closed'));;
