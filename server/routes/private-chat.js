@@ -39,34 +39,10 @@ router.post('/api/private-chat/add-message', isAuthenticated, (req, res) => {
   });
 });
 
-// save a like event
-router.post('/api/private-chat/like-message', isAuthenticated, (req, res) => {
-  const { id, conversant } = req.body;
-  const { username } = req.user;
-
-  PrivateChat.findOne({ $and: [{members: username}, {members: conversant }] }, (err, chat) => {
-    if (err) res.sendStatus(500);
-    if (chat) {
-      chat.history = chat.history.map(message => {
-        if (message.id === id) message.likes.push(username);
-        return message;
-      })
-      chat.save(e => {
-        if (e) res.sendStatus(500);
-        res.sendStatus(200);
-      });
-    } else {
-      res.sendStatus(404);
-    }
-  });
-
-});
-
 // handle editing message
 router.post('/api/private-chat/edit-message', isAuthenticated, (req, res) => {
   const { id, text, conversant } = req.body;
   const { username } = req.user;
-
     PrivateChat.findOne({ $and: [{members: username}, {members: conversant }] }, (err, chat) => {
       if (err) res.sendStatus(500);
       if (chat) {
@@ -82,14 +58,33 @@ router.post('/api/private-chat/edit-message', isAuthenticated, (req, res) => {
         res.sendStatus(404);
       }
     });
+});
 
+// save a like event
+router.post('/api/private-chat/like-message', isAuthenticated, (req, res) => {
+  const { id, conversant } = req.body;
+  const { username } = req.user;
+  PrivateChat.findOne({ $and: [{members: username}, {members: conversant }] }, (err, chat) => {
+    if (err) res.sendStatus(500);
+    if (chat) {
+      chat.history = chat.history.map(message => {
+        if (message.id === id) message.likes.push(username);
+        return message;
+      })
+      chat.save(e => {
+        if (e) res.sendStatus(500);
+        res.sendStatus(200);
+      });
+    } else {
+      res.sendStatus(404);
+    }
+  });
 });
 
 // handle message deletion
 router.post('/api/private-chat/delete-message', isAuthenticated, (req, res) => {
   const { id, conversant } = req.body;
   const { username } = req.user;
-
   PrivateChat.findOne({ $and: [{members: username}, {members: conversant }] }, (err, conversation) => {
     if (err) res.sendStatus(500);
     if (conversation) {
@@ -102,7 +97,6 @@ router.post('/api/private-chat/delete-message', isAuthenticated, (req, res) => {
       res.sendStatus(404);
     }
   });
-
 });
 
 export default router;

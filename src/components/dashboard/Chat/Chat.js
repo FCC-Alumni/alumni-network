@@ -24,8 +24,8 @@ export default ({
   saveEdit,
   editText,
   finishEdit,
-  deleteMessage,
   reciepient,
+  deleteMessage,
   initiatePrivateChat }) => {
   if (chat.size > 0) {
     return (
@@ -35,20 +35,21 @@ export default ({
           const timestamp = msg.get('timestamp');
           const text = msg.get('text');
           const author = msg.get('author');
+          const avatar = msg.get('avatar');
           const likes = msg.get('likes');
           return (
             <div className="comment" key={id} style={{ paddingTop: '12px' }}>
 
               <a className="avatar">
-                <img src={user.personal.avatarUrl} alt={`${author}'s Avatar'`}/>
+                <img src={avatar} alt={`${author}'s Avatar'`}/>
               </a>
 
               <div className="content">
 
-                {path ?
+                {path && author !== user.username?
                   <span onClick={initiatePrivateChat.bind(this, author)} className='author author-link'>{author}</span>
                     :
-                  <span className='author'>{author}</span>}
+                  <span className='author author-link-inactive'>{author}</span>}
 
                 <div className="metadata">
                   <span className="date">at
@@ -95,11 +96,11 @@ export default ({
                       <div className="meta">
                         {!likes.has(user.username) ?
                           <a className="like" onClick={like.bind(this, id, user.username, reciepient)}>
-                            <i className="like icon"></i> {likes.size} {likes.size ? 'Like' : 'Likes'}
+                            <i className="like icon"></i> {likes.size} {likes.size === 1 ? 'Like' : 'Likes'}
                           </a>
                             :
                           <a className="like">
-                            <i className="like icon" style={{ color: 'red' }}></i> {likes.size} {likes.size ? 'Like' : 'Likes'}
+                            <i className="like icon" style={{ color: 'red' }}></i> {likes.size} {likes.size === 1 ? 'Like' : 'Likes'}
                           </a>}
                       </div>
                     </div>

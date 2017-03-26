@@ -10,15 +10,6 @@ const DEV_HOST = 'http://localhost:8080';
 const PROD_HOST = ''; // production host url
 export const socket = require('socket.io-client').connect(DEV_HOST);
 
-export const INITIALIZE = 'INITIALIZE';
-export const ADD_MESSAGE = 'ADD_MESSAGE';
-export const EDIT_MESSAGE = 'EDIT_MESSAGE';
-export const LIKE_MESSAGE = 'LIKE_MESSAGE';
-export const DELETE_MESSAGE = 'DELETE_MESSAGE';
-export const RECEIVED_MESSAGE = 'RECEIVED_MESSAGE';
-export const RECEIVED_LIKE = 'RECEIVED_LIKE';
-export const RECEIVED_UPDATE = 'RECEIVED_UPDATE';
-
 export const PRIVATE_ERROR = 'PRIVATE_ERROR';
 export const POPULATE_PRIVATE = 'POPULATE_PRIVATE';
 export const INITIALIZE_PRIVATE = 'INITIALIZE_PRIVATE';
@@ -31,7 +22,85 @@ export const RECEIVED_LIKE_PRIVATE = 'RECEIVED_LIKE_PRIVATE';
 export const RECEIVED_UPDATE_PRIVATE = 'RECEIVED_UPDATE_PRIVATE';
 export const RECEIVED_DELETE_PRIVATE = 'RECEIVED_DELETE_PRIVATE';
 
-/** PRIVATE CHAT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+export const CHAT_INITIALIZE = 'CHAT_INITIALIZE';
+export const CHAT_ADD_MESSAGE = 'CHAT_ADD_MESSAGE';
+export const CHAT_EDIT_MESSAGE = 'CHAT_EDIT_MESSAGE';
+export const CHAT_LIKE_MESSAGE = 'CHAT_LIKE_MESSAGE';
+export const CHAT_DELETE_MESSAGE = 'CHAT_DELETE_MESSAGE';
+export const CHAT_RECEIVED_MESSAGE = 'CHAT_RECEIVED_MESSAGE';
+export const CHAT_RECEIVED_LIKE = 'CHAT_RECEIVED_LIKE';
+export const CHAT_RECEIVED_UPDATE = 'CHAT_RECEIVED_UPDATE';
+
+import { flashError } from './flashMessages';
+
+/** PRIVATE CHAT real-time updates: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  */
+
+socket.on('broadcast-private-submission', data => {
+  console.log('received private message:', data);
+  const { reciepient, message } = data;
+  const user = store.getState().user.username;
+  if (user === reciepient) {
+    message.likes = Set(message.likes);
+    store.dispatch({
+      type: RECEIVED_MESSAGE_PRIVATE,
+      payload: {
+        message,
+        reciepient
+      }
+    });
+  };
+});
+
+socket.on('broadcast-private-update', data => {
+  console.log('received private update:', data);
+  const { author, reciepient, id, text } = data;
+  const user = store.getState().user.username;
+  if (user === reciepient) {
+    store.dispatch({
+      type: RECEIVED_UPDATE_PRIVATE,
+      payload: {
+        id,
+        text,
+        author,
+        reciepient
+      }
+    });
+  }
+});
+
+socket.on('broadcast-private-like', data => {
+  console.log('received private like:', data);
+  const { liker, reciepient, id } = data;
+  const user = store.getState().user.username;
+  if (user === reciepient) {
+    store.dispatch({
+      type: RECEIVED_LIKE_PRIVATE,
+      payload: {
+        id,
+        liker,
+        reciepient
+      }
+    });
+  }
+});
+
+socket.on('broadcast-private-delete', data => {
+  console.log('received private delete:', data);
+  const { author, reciepient, id } = data;
+  const user = store.getState().user.username;
+  if (user === reciepient) {
+    store.dispatch({
+      type: RECEIVED_DELETE_PRIVATE,
+      payload: {
+        id,
+        author,
+        reciepient
+      }
+    });
+  }
+});
+
+/** PRIVATE CHAT actions: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 const populatePrivateChat = (user, data) => {
   return {
@@ -49,7 +118,7 @@ export const fetchPrivateChat = (user) => {
       .then(res => {
         dispatch(populatePrivateChat(user, res.data));
       }).catch(err => {
-        dispatch(addFlashMessage('There was an error loading the messages.'))
+        dispatch(addFlashMessage(flashError('There was an error loading the messages.')));
       });
   }
 };
@@ -61,96 +130,66 @@ export const initiatePrivateChat = (author) => {
   }
 };
 
-socket.on('broadcast-private-submission', data => {
-  console.log('received private message:', data);
-  const { author, reciepient, message } = data;
-  const user = store.getState().user.username;
-  if (user === reciepient) {
-    message.likes = Set();
-    store.dispatch({
-      type: RECEIVED_MESSAGE_PRIVATE,
-      payload: {
-        author,
-        reciepient,
-        message
-      }
-    });
-  };
-});
-
-socket.on('broadcast-private-update', data => {
-  console.log('received private update:', data);
-  const { author, reciepient, id, text } = data;
-  const user = store.getState().user.username;
-  if (user === reciepient) {
-    store.dispatch({
-      type: RECEIVED_UPDATE_PRIVATE,
-      payload: {
-        author,
-        reciepient,
-        id,
-        text
-      }
-    });
-  }
-});
-
-socket.on('broadcast-private-like', data => {
-  console.log('received private like:', data);
-  const { liker, reciepient, id } = data;
-  const user = store.getState().user.username;
-  if (user === reciepient) {
-    store.dispatch({
-      type: RECEIVED_LIKE_PRIVATE,
-      payload: {
-        liker,
-        reciepient,
-        id,
-      }
-    });
-  }
-});
-
-socket.on('broadcast-private-delete', data => {
-  console.log('received private delete:', data);
-  const { author, reciepient, id } = data;
-  const user = store.getState().user.username;
-  if (user === reciepient) {
-    store.dispatch({
-      type: RECEIVED_DELETE_PRIVATE,
-      payload: {
-        author,
-        reciepient,
-        id,
-      }
-    });
-  }
-});
-
-/** ALL CHAT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-socket.on('initalize-chat', (data) => {
-  data.forEach(message => message.likes = Set(message.likes));
-  store.dispatch({
-    type: INITIALIZE,
-    payload: data.map(message => Map(message))
-  });
-});
+/** MAIN CHAT real-time updates: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  */
 
 socket.on('broadcast-message', message => {
   message.likes = Set();
   store.dispatch({
-    type: RECEIVED_MESSAGE,
+    type: CHAT_RECEIVED_MESSAGE,
     payload: message
   });
 });
+
+socket.on('broadcast-update', message => {
+  message.likes = Set(message.likes);
+  store.dispatch({
+    type: CHAT_RECEIVED_UPDATE,
+    payload: message
+  });
+});
+
+socket.on('broadcast-like', ({ messageId, liker }) => {
+  store.dispatch({
+    type: CHAT_RECEIVED_LIKE,
+    payload: {
+      liker,
+      messageId
+    }
+  });
+});
+
+socket.on('broadcast-deletion', id => {
+  store.dispatch({
+    type: CHAT_DELETE_MESSAGE,
+    payload: { id }
+  });
+});
+
+export const populateChat = () => {
+  return dispatch => {
+    return axios.get('/api/chat-history')
+      .then(res => {
+        dispatch({
+          type: CHAT_INITIALIZE,
+          payload: res.data.history.map(message => {
+            message.likes = Set(message.likes);
+            return Map(message);
+          })
+        });
+      }).catch(err => {
+        dispatch(addFlashMessage(flashError('There was an error loading chat history.')));
+      });
+  }
+};
+
+/** chat actions: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  */
 
 export const addMessage = payload => {
   const { author, text, conversant } = payload;
   let message = Map({
     text,
     author: author.username,
-    avatar: author.avatarUrl,
+    avatar: author.personal.avatarUrl,
     likes: Set(),
     edited: false,
     timestamp: Date.now(),
@@ -170,30 +209,29 @@ export const addMessage = payload => {
             }
           });
        }).catch(err => {
-         dispatch(addFlashMessage('Could not add message.'));
+         dispatch(addFlashMessage(flashError('Could not add message.')));
        });
     }
   } else {
-    socket.emit('submission', message);
-    return {
-      type: ADD_MESSAGE,
-      payload: message
+    return dispatch => {
+      return axios.post('/api/chat-add-message', message)
+        .then(res => {
+          socket.emit('submission', message);
+          dispatch({
+            type: CHAT_ADD_MESSAGE,
+            payload: message
+          });
+        }).catch(err => {
+          dispatch(addFlashMessage(flashError('Could not add message.')));
+        });
     }
   }
 };
 
-socket.on('broadcast-update', message => {
-  message.likes = Set(message.likes);
-  store.dispatch({
-    type: RECEIVED_UPDATE,
-    payload: message
-  });
-});
-
 export const saveEdit = (id, text, conversant) => {
   if (!conversant) {
     return {
-      type: EDIT_MESSAGE,
+      type: CHAT_EDIT_MESSAGE,
       payload: {
         id,
         text
@@ -219,25 +257,24 @@ export const broadcastEdit = (id, text, conversant, author) => {
             }
           })
         }).catch(err => {
-          dispatch(addFlashMessage('Could not edit message.'))
+          dispatch(addFlashMessage(flashError('Could not edit message.')));
         });
     }
   } else {
-    const message = store.getState().chat.find(d => d.get('id') === id).toJS();
-    socket.emit('update-message', message);
-  }
-  return { type: null }
-};
-
-socket.on('broadcast-like', ({ messageId, liker }) => {
-  store.dispatch({
-    type: RECEIVED_LIKE,
-    payload: {
-      messageId,
-      liker
+    // need to send message id and text to update, then dispatch specific update action here:
+    const message = store.getState().chat.find(m => m.get('id') === id).toJS();
+    return dispatch => {
+      return axios.post('/api/chat-edit-message', { id, text })
+        .then(res => {
+          message.text = text;
+          socket.emit('update-message', message);
+          dispatch(saveEdit(id, text));
+        }).catch(err => {
+          dispatch(addFlashMessage(flashError('Could not edit message.')));
+        });
     }
-  });
-});
+  }
+};
 
 export const likeMessage = (messageId, liker, conversant) => {
   if (conversant) {
@@ -249,23 +286,30 @@ export const likeMessage = (messageId, liker, conversant) => {
           dispatch({
             type: LIKE_MESSAGE_PRIVATE,
               payload: {
-                messageId,
                 liker,
+                messageId,
                 reciepient: conversant
               }
             });
         }).catch(err => {
-          dispatch(addFlashMessage('Could not submit the like to the server right now.'));
+          dispatch(addFlashMessage(flashError('Could not submit the like to the server right now.')));
         });
     }
   } else {
-    socket.emit('like-message', { messageId, liker });
-    return {
-      type: LIKE_MESSAGE,
-      payload: {
-        messageId,
-        liker
-      }
+    return dispatch => {
+      return axios.post('/api/chat-like-message', { id: messageId, liker })
+        .then(res => {
+          socket.emit('like-message', { messageId, liker });
+          dispatch({
+            type: CHAT_LIKE_MESSAGE,
+            payload: {
+              liker,
+              messageId
+            }
+          });
+        }).catch(err => {
+          dipsatch(addFlashMessage(flashError('Could not like message.')));
+        });
     }
   }
 };
@@ -284,21 +328,21 @@ export const deleteMessage = (id, conversant, author) => {
             }
           });
         }).catch(err => {
-          dispatch(addFlashMessage('Message could not be deleted.'));
+          dispatch(addFlashMessage(flashError('Message could not be deleted.')));
         });
       }
   } else {
-    socket.emit('delete-message', id);
-    return {
-      type: DELETE_MESSAGE,
-      payload: { id }
+    return dispatch => {
+      return axios.post('/api/chat-delete-message', id)
+        .then(res => {
+          socket.emit('delete-message', id);
+          dispatch({
+            type: CHAT_DELETE_MESSAGE,
+            payload: { id }
+          });
+        }).catch(err => {
+          dispatch(addFlashMessage(flashError('Message could not be deleted.')));
+        });
     }
   }
 };
-
-socket.on('broadcast-deletion', id => {
-  store.dispatch({
-    type: DELETE_MESSAGE,
-    payload: { id }
-  });
-});

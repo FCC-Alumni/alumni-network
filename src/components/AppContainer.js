@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { populateChat } from '../actions/chat';
 import { populateCommunity } from '../actions/community';
 import { saveUser, getUserData } from '../actions/user';
 import { addFlashMessage, clearFlashMessage } from '../actions/flashMessages';
@@ -16,8 +17,10 @@ class AppContainer extends React.Component {
   componentDidMount() {
     getUserData().then(user => {
       if (user) {
+        // fetch user, community, and chat data when dashboard loads:
         this.props.saveUser(user);
         this.props.populateCommunity();
+        this.props.populateChat();
       } else {
         this.props.addFlashMessage({
           type: 'error',
@@ -55,6 +58,15 @@ class AppContainer extends React.Component {
   }
 };
 
+AppContainer.propTypes = {
+  username: React.PropTypes.string.isRequired,
+  saveUser: React.PropTypes.func.isRequired,
+  addFlashMessage: React.PropTypes.func.isRequired,
+  clearFlashMessage: React.PropTypes.func.isRequired,
+  populateChat: React.PropTypes.func.isRequired,
+  populateCommunity: React.PropTypes.func.isRequired,
+}
+
 const mapStateToProps = (state) => {
   return {
     username: state.user.username
@@ -65,6 +77,7 @@ const dispatch = {
   saveUser,
   addFlashMessage,
   clearFlashMessage,
+  populateChat,
   populateCommunity
 }
 

@@ -7,15 +7,16 @@ import mongoose from 'mongoose';
 import passportRoute from './routes/passport';
 import user from './routes/user';
 import community from './routes/community';
+import chat from './routes/chat';
 import privateChat from './routes/private-chat';
 import gitLabRoute from './helpers/gitLabRoute';
 
 dotenv.config();
 
 // initialize redis
-export const client = redis.createClient();
-client.on('error', (err) => console.log(`Redis Error: ${err}`));
-client.on('ready', () => console.log('Redis connected'));
+// export const client = redis.createClient();
+// client.on('error', (err) => console.log(`Redis Error: ${err}`));
+// client.on('ready', () => console.log('Redis connected'));
 
 // initialize mongoDB
 mongoose.Promise = require('bluebird');
@@ -32,6 +33,7 @@ app.use(bodyParser.json());
 app.use(passportRoute);
 app.use(user);
 app.use(community);
+app.use(chat);
 app.use(privateChat);
 app.use(gitLabRoute);
 

@@ -45,7 +45,8 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
     if ((frontCert.request._redirectCount +
       backCert.request._redirectCount +
       dataCert.request._redirectCount) >= 3 ) {
-      return false;
+      // NOTE: change back to false:
+      return true;
     } else {
       return {
         Front_End: frontCert.request._redirectCount === 0 ? true : false,
