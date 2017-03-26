@@ -1,15 +1,28 @@
 import React from 'react';
 import { Dropdown } from 'semantic-ui-react';
 
-const DropdownMultiSelect = ({ options, onChange, placeholder, defaultValue }) => (
-  <Dropdown placeholder={placeholder} defaultValue={defaultValue} onChange={onChange} fluid multiple selection options={options} />
-)
+const DropdownMultiSelect = ({ options, onChange, placeholder, fluid, value, search }) => (
+  <Dropdown 
+    placeholder={placeholder} 
+    value={value} 
+    onChange={onChange} 
+    fluid={fluid} 
+    search={search}
+    multiple 
+    selection 
+    options={options} />
+);
 
 DropdownMultiSelect.propTypes = {
   options: React.PropTypes.array.isRequired,
   onChange: React.PropTypes.func.isRequired,
-  placeholder: React.PropTypes.string.isRequired,
-  defaultValue: React.PropTypes.array
+  placeholder: React.PropTypes.string,
+  search: React.PropTypes.bool
+}
+
+DropdownMultiSelect.defaultProps = {
+  fluid: true,
+  search: false
 }
 
 export default DropdownMultiSelect

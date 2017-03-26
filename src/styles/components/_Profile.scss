@@ -63,7 +63,7 @@
 .mentorshipSkillsPane.hide,
 .surveyPaneWorking.hide,
 .surveyPaneLooking.hide {
-  @extend .profile-pane-transition-in;
+  @extend .transition-in;
 }
 
 .profilePane.show, 
@@ -76,7 +76,7 @@
 .mentorshipSkillsPane.show,
 .surveyPaneWorking.show,
 .surveyPaneLooking.show {
-  @extend .profile-pane-transition-out;
+  @extend .transition-out;
 }
 
 .fccPane.show {

@@ -16,9 +16,9 @@ export default ({ size, close, open }) => {
         <Modal.Header style={{ background: teal, color: 'white' }}>
           <h1>
             <span>Mess Hall Chat &nbsp;</span>
-            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" /></span>
-            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" /></span>
-            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" /></span>
+            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" alt="fire emoji" /></span>
+            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" alt="fire emoji" /></span>
+            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" alt="fire emoji" /></span>
           </h1>
         </Modal.Header>
 

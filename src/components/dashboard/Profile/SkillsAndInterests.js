@@ -19,6 +19,7 @@ const SkillsAndInterests = ({ showSkills, subSaveClick, showPopUp, toggle, handl
         onClick={()=>{toggle('showSkills')}} />
       <div className={`skillsPane ${showSkills ? 'show' : 'hide'}`}>
         <DividingHeader size="h4" content="Core Skills" icon="checkmark box icon" />
+        <div className="spacer" />
         <MessageBox
           type="info"
           dismissable={true}
@@ -27,8 +28,11 @@ const SkillsAndInterests = ({ showSkills, subSaveClick, showPopUp, toggle, handl
           onChange={handleSkillsChange}
           options={skills}
           placeholder="Choose Skills"
-          defaultValue={coreSkills} />
+          search={true}
+          value={coreSkills} />
+        <div className="spacer" />
         <DividingHeader size="h4" content="Coding Interests" icon="checkmark box icon" />
+        <div className="spacer" />
         <MessageBox
           type="info"
           dismissable={true}
@@ -37,7 +41,9 @@ const SkillsAndInterests = ({ showSkills, subSaveClick, showPopUp, toggle, handl
           onChange={handleInterestsChange}
           options={interests}
           placeholder="Choose Interests"
-          defaultValue={codingInterests} />
+          search={true}
+          value={codingInterests} />
+        <div className="spacer" />
       </div>
     </div>
   );

@@ -1,0 +1,30 @@
+.search-fields,
+.search-filters {
+  @extend .center-aligned;
+}
+
+.search-filters.hide {
+  @extend .transition-out;
+}
+
+.search-filters.show {
+  @extend .transition-in;
+}
+
+.filters-selector {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  width: 230px;
+  margin: 5px auto;
+}
+
+.search-results {
+  padding-bottom: 50px !important;
+  @extend .center-aligned;
+}
+
+.search-result-item {
+  min-width: 35vw !important;
+}
+

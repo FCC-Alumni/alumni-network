@@ -85,16 +85,24 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
   });
 });
 
-router.post('/api/update-user', isAuthenticated, (req, res) => {
-  const updatedUser = req.body.user;
-  User.findById(updatedUser._id, (err, user) => {
+router.post('/api/update-user', (req, res) => {
+  const { user } = req.body;
+  
+  User.findById(user._id, (err, updatedUser) => {
     if (!err) {
-      _merge(user, updatedUser);
-      user.save()
-      res.json({ updatedUser: user });
+      updatedUser.personal = user.personal;
+      updatedUser.mentorship = user.mentorship;
+      updatedUser.career = user.career;
+      updatedUser.skillsAndInterests = user.skillsAndInterests;
+      updatedUser.projects = user.projects;
+      updatedUser.social = user.social;
+      
+      updatedUser.save();
+      
+      res.json({ updatedUser })
     } else {
       res.status(401).json({ error: 'User could not be saved' });
-    };
+    }
   });
 });
 

@@ -4,7 +4,13 @@
   justify-content: center;
 }
 
-.profile-pane-transition-in {
+.center-aligned {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+}
+
+.transition-in {
   overflow: hidden;
   opacity: 0.01;
   max-height: 0;
@@ -13,10 +19,18 @@
     max-height 300ms ease;
 }
 
-.profile-pane-transition-out {
+.transition-out {
   opacity: 1.0;
   max-height: 700px;
   transition:
     opacity 500ms ease-in,
     max-height 400ms ease-out;
+}
+
+.spacer {
+  padding: 5px;
+}
+
+.text-align-center {
+  text-align: center !important;
 }

@@ -18,4 +18,11 @@ const RadioButton = ({ onChange, name, label, checked }) => {
   );
 }
 
+RadioButton.propTypes = {
+  onChange: React.PropTypes.func.isRequired,
+  name: React.PropTypes.string.isRequired,
+  label: React.PropTypes.string,
+  checked: React.PropTypes.bool.isRequired
+}
+
 export default RadioButton;

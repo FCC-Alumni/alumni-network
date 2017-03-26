@@ -1,0 +1,16 @@
+.community {
+  padding: 0 3vw 5vh 3vw;
+  .fa-free-code-camp {
+    margin-right: 5px;
+  }
+}
+
+.labelWrapper {
+  @extend .center-aligned;
+  padding-top: 1em;
+  padding-bottom: 2em;
+}
+
+.summaryWrapper {
+  text-align: center;
+}
