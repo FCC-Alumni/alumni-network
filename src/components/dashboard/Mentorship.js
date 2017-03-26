@@ -7,6 +7,7 @@ import UserLabel from '../common/UserLabel';
 import DropDown from '../common/DropdownMultiSelect';
 import { Checkbox } from 'semantic-ui-react';
 
+import { filterSliders } from '../../assets/data/mapArrays';
 import { searchTypes } from '../../assets/data/dropdownOptions';
 import isEmpty from 'lodash/isEmpty';
 
@@ -200,8 +201,62 @@ class Mentorship extends React.Component {
 
   render() {
     const { results, value, showFilters } = this.state;
+
+    const noResultsMessage = (
+      <div className="item">
+        <div className="ui tiny image">
+          <i className="huge teal warning circle icon" />
+        </div>
+        <div className="middle aligned content">
+          <div className="header">
+            Bummer man... No results.
+          </div>
+        </div>
+      </div>
+    );
+
+    const listResults = results.map(user => {
+      return (
+        <div key={user._id} className="item search-result-item">
+          <div className="ui tiny circular image">
+            <img src={user.personal.avatarUrl} />
+          </div>
+          <div className="content">
+            <div className="header">{user.username}</div>
+            {this.props.currentUser !== user.username &&
+              <i
+                className="comments icon chatIcon"
+                onClick={this.initiatePrivateChat.bind(this, user.username)}>
+              </i>}
+            <div className="meta">
+              <span><strong>{user.personal.displayName}</strong></span>
+              <i className="angle double right icon" />
+              <span>{user.mentorship.isMentor ? 'Mentor' : 'Member'}</span>
+            </div>
+            <div className="description">
+              {user.mentorship.mentorshipSkills}
+            </div>
+          </div>
+        </div>
+      );
+    });
+
+    const searchFilters = filterSliders.map(radio => {
+      return (
+        <div key={radio.name}>
+          <Checkbox
+            slider
+            name={radio.name}
+            onChange={this.handleSliderChange}
+            label={radio.label} />
+          <div className="spacer" />
+        </div>
+      );
+    });
+
     return (
       <div className="ui container">
+
         <h1 className="text-align-center">
           Search for a mentorship match here!
         </h1>
@@ -218,40 +273,12 @@ class Mentorship extends React.Component {
 
           <div className={`search-filters ${!showFilters ? 'show' : 'hide'}`}>
             <div className="center-sliders">
-              <Checkbox
-                slider
-                name="mentorsOnly"
-                onChange={this.handleSliderChange}
-                label="Mentors Only" />
-              <div className="spacer" />
-              <Checkbox
-                slider
-                onChange={this.handleSliderChange}
-                name="prosOnly"
-                label="Professional Developers Only" />
-              <div className="spacer" />
-              <Checkbox
-                slider
-                onChange={this.handleSliderChange}
-                name="frontendOnly"
-                label="Front End Certified" />
-              <div className="spacer" />
-              <Checkbox
-                slider
-                name="backendOnly"
-                onChange={this.handleSliderChange}
-                label="Back End Certified" />
-              <div className="spacer" />
-              <Checkbox
-                slider
-                name="dataVisOnly"
-                onChange={this.handleSliderChange}
-                label="Data Visualization Certified" />
-              <div className="spacer" />
+              { searchFilters }
             </div>
           </div>
 
           <div className="ui inline fields search-fields">
+
             <div className="field">
               <DropDown
                 value={this.state.dropdownValue}
@@ -259,6 +286,7 @@ class Mentorship extends React.Component {
                 fluid={false}
                 onChange={this.handleDropdownChange} />
             </div>
+
             <div className="field">
               <div className={`ui fluid search ${this.state.isLoading && 'loading'}`}>
                 <div className="ui icon input">
@@ -272,50 +300,14 @@ class Mentorship extends React.Component {
                 </div>
               </div>
             </div>
+
           </div>
+
         </div>
 
         <div className="search-results">
           <div className="ui divided items">
-            {
-              value.length > 0 && results.length === 0 ?
-              <div className="item">
-                <div className="ui tiny image">
-                  <i className="huge teal warning circle icon" />
-                </div>
-                <div className="middle aligned content">
-                  <div className="header">
-                    Bummer man... No results.
-                  </div>
-                </div>
-              </div>
-              :
-              this.state.results.map(user => {
-                return (
-                  <div key={user._id} className="item search-result-item">
-                    <div className="ui tiny circular image">
-                      <img src={user.personal.avatarUrl} />
-                    </div>
-                    <div className="content">
-                      <div className="header">{user.username}</div>
-                      {this.props.currentUser !== user.username &&
-                        <i
-                          className="comments icon chatIcon"
-                          onClick={this.initiatePrivateChat.bind(this, user.username)}>
-                        </i>}
-                      <div className="meta">
-                        <span><strong>{user.personal.displayName}</strong></span>
-                        <i className="angle double right icon" />
-                        <span>{user.mentorship.isMentor ? 'Mentor' : 'Member'}</span>
-                      </div>
-                      <div className="description">
-                        {user.mentorship.mentorshipSkills}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            }
+            { !isEmpty(value) && isEmpty(results) ? noResultsMessage : listResults }
           </div>
         </div>
 
