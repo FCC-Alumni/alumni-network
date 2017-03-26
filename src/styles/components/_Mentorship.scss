@@ -26,5 +26,15 @@
 
 .search-result-item {
   min-width: 35vw !important;
+  .chatIcon {
+    font-size: 20px;
+    margin-left: 4px;
+    margin-bottom: 2px;
+    transition: color 100ms ease-in-out;
+  }
+  .chatIcon:hover {
+    cursor: pointer;
+    color: rgb(0,225,225);
+    transition: color 100ms ease-in-out;
+  }
 }
-

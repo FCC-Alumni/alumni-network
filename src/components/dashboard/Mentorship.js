@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { initiatePrivateChat } from '../../actions/chat';
 
 import Radio from '../common/RadioButton';
 import UserLabel from '../common/UserLabel';
@@ -48,27 +49,34 @@ class Mentorship extends React.Component {
       all: true,
     }
   }
-  
+
+  componentWillUnmount() {
+    /*** We would like to store filter state in Redux on component unmounting
+     * (when user navigates away), and restore it from state when the component
+     * is mounted again (user navigates back)— thoughts?
+    */
+  }
+
   handleChange = (e) => {
     this.setState({ value: e.target.value });
     if (e.target.value) this.search(e.target.value);
     else this.setState({ results: [] });
   }
-  
+
   search = (escapedRegex) => {
     this.setState({ isLoading: true });
-    
+
     const { searchCriteria } = this.state;
     var { community } = this.props,
     regex = new RegExp(escapedRegex, 'i'),
-    matchSkill = [], 
-    matchInterest = [], 
+    matchSkill = [],
+    matchInterest = [],
     matchAll = [],
     matchLocation = false,
     mentorshipBio = false,
     matchName = false,
     matchCompany = false;
-    
+
     // search filters:
     if (this.state.mentorsOnly) {
       community = community.filter(user => user.mentorship.isMentor && user);
@@ -85,18 +93,18 @@ class Mentorship extends React.Component {
     if (this.state.dataVisOnly) {
       community = community.filter(user => user.fccCerts.Data_Visualization && user);
     }
-    
-    // regex search: 
+
+    // regex search:
     const results = community.filter(user => {
-      
-      const { 
+
+      const {
         username,
         personal: { displayName, location },
         mentorship: { mentorshipSkills },
         skillsAndInterests: { coreSkills, codingInterests },
-        career: { company } 
+        career: { company }
       } = user;
-      
+
       if (searchCriteria.all) {
         matchName = searchApi.names(regex, username, displayName);
         matchSkill = searchApi.filter(regex, coreSkills);
@@ -113,53 +121,54 @@ class Mentorship extends React.Component {
         }
         if (searchCriteria.location) {
           matchLocation = searchApi.match(regex, location);
-        } 
+        }
         if (searchCriteria.name) {
           matchName = searchApi.names(regex, username, displayName);
         }
         if (searchCriteria.skills) {
           matchSkill = searchApi.filter(regex, coreSkills);
-        } 
+        }
         if (searchCriteria.interests) {
           matchInterest = searchApi.filter(regex, codingInterests);
         }
       }
-      
-      return ( 
-        !isEmpty(matchSkill) || 
-        !isEmpty(matchInterest) || 
-        matchName || 
+
+      return (
+        !isEmpty(matchSkill) ||
+        !isEmpty(matchInterest) ||
+        matchName ||
         matchLocation ||
         mentorshipBio ||
         matchCompany
       ) && user;
-      
+
     });
-    
+
     this.setState({ results, isLoading: false });
-    
+
   }
-  
+
   handleSliderChange = (e, data) => {
     this.setState({ [data.name]: data.checked }, () => {
-      
-      const { 
-        mentorsOnly, 
-        prosOnly, 
-        frontendOnly, 
-        backendOnly, 
-        dataVisOnly 
+
+      const {
+        mentorsOnly,
+        prosOnly,
+        frontendOnly,
+        backendOnly,
+        dataVisOnly
       } = this.state;
-      
+
       if (!mentorsOnly && !prosOnly && !frontendOnly && !backendOnly && !dataVisOnly) {
         this.setState({ results: [] });
-      } else this.search();
+      }
+      this.search(this.state.value);
     });
   }
-  
+
   handleDropdownChange = (e, data) => {
     const { searchCriteria } = this.state;
-    
+
     for (var criteria in searchCriteria) {
       if (data.value.indexOf(criteria) > -1) {
         searchCriteria[criteria] = true;
@@ -167,23 +176,28 @@ class Mentorship extends React.Component {
         searchCriteria[criteria] = false;
       }
     }
-    
+
     if (isEmpty(data.value)) {
       searchCriteria.all = true;
       this.setState({ dropdownValue: ['all'] });
     } else {
       this.setState({ dropdownValue: data.value });
     }
-    
+
     this.setState({ searchCriteria });
-  } 
-  
+  }
+
   showFilters = () => {
     const { showFilters: currState } = this.state;
-    
+
     this.setState({ showFilters: !currState });
   }
-  
+
+  initiatePrivateChat = (user) => {
+    this.props.initiatePrivateChat(user);
+    this.props.history.push(`chat/${user}`);
+  }
+
   render() {
     const { results, value, showFilters } = this.state;
     return (
@@ -191,67 +205,68 @@ class Mentorship extends React.Component {
         <h1 className="text-align-center">
           Search for a mentorship match here!
         </h1>
-        
-        
+
+
         <div className="ui form">
-          
+
           <div className="filters-selector-wrap">
             <div onClick={this.showFilters} className="text-align-center filters-selector">
               <i className={`${!showFilters ? 'teal unhide' : 'brown hide'} icon`} />
-              {`${!showFilters ? 'Show' : 'Hide'} Search Filters`} 
+              {`${!showFilters ? 'Show' : 'Hide'} Search Filters`}
             </div>
-          </div> 
-          
+          </div>
+
           <div className={`search-filters ${!showFilters ? 'show' : 'hide'}`}>
             <div className="center-sliders">
-              <Checkbox 
-                slider 
+              <Checkbox
+                slider
                 name="mentorsOnly"
                 onChange={this.handleSliderChange}
                 label="Mentors Only" />
               <div className="spacer" />
-              <Checkbox 
-                slider 
+              <Checkbox
+                slider
                 onChange={this.handleSliderChange}
                 name="prosOnly"
                 label="Professional Developers Only" />
               <div className="spacer" />
-              <Checkbox 
-                slider 
+              <Checkbox
+                slider
                 onChange={this.handleSliderChange}
                 name="frontendOnly"
                 label="Front End Certified" />
               <div className="spacer" />
-              <Checkbox 
-                slider 
+              <Checkbox
+                slider
                 name="backendOnly"
                 onChange={this.handleSliderChange}
                 label="Back End Certified" />
               <div className="spacer" />
-              <Checkbox 
-                slider 
+              <Checkbox
+                slider
                 name="dataVisOnly"
                 onChange={this.handleSliderChange}
                 label="Data Visualization Certified" />
               <div className="spacer" />
             </div>
           </div>
-        
+
           <div className="ui inline fields search-fields">
             <div className="field">
-              <DropDown 
+              <DropDown
                 value={this.state.dropdownValue}
-                options={searchTypes} 
-                fluid={false} 
+                options={searchTypes}
+                fluid={false}
                 onChange={this.handleDropdownChange} />
             </div>
             <div className="field">
               <div className={`ui fluid search ${this.state.isLoading && 'loading'}`}>
                 <div className="ui icon input">
-                  <input 
+                  <input
+                    autoFocus
                     value={value}
-                    onChange={this.handleChange} 
-                    type="text" 
+                    onChange={this.handleChange}
+                    type="text"
                     placeholder="Search Community" />
                   <i className="search icon"></i>
                 </div>
@@ -259,11 +274,11 @@ class Mentorship extends React.Component {
             </div>
           </div>
         </div>
-          
+
         <div className="search-results">
           <div className="ui divided items">
             {
-              value.length > 0 && results.length === 0 ? 
+              value.length > 0 && results.length === 0 ?
               <div className="item">
                 <div className="ui tiny image">
                   <i className="huge teal warning circle icon" />
@@ -283,6 +298,11 @@ class Mentorship extends React.Component {
                     </div>
                     <div className="content">
                       <div className="header">{user.username}</div>
+                      {this.props.currentUser !== user.username &&
+                        <i
+                          className="comments icon chatIcon"
+                          onClick={this.initiatePrivateChat.bind(this, user.username)}>
+                        </i>}
                       <div className="meta">
                         <span><strong>{user.personal.displayName}</strong></span>
                         <i className="angle double right icon" />
@@ -298,8 +318,7 @@ class Mentorship extends React.Component {
             }
           </div>
         </div>
-          
-        
+
       </div>
     );
   }
@@ -307,8 +326,9 @@ class Mentorship extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    currentUser: state.user.username,
     community: state.community.toJS()
   }
 }
 
-export default connect(mapStateToProps)(Mentorship);
+export default connect(mapStateToProps, { initiatePrivateChat })(Mentorship);
