@@ -1,22 +1,21 @@
 /* eslint-disable */
 import React from 'react';
-import { Route, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Route, NavLink } from 'react-router-dom';
+import axios from 'axios';
 import { List, Set } from 'immutable';
 import Modal from './ChatModal';
 import EmojiInput from './EmojiInput';
 import ChatMessages from './Chat';
 import {
   addMessage,
-  deleteMessage,
   saveEdit,
   likeMessage,
+  deleteMessage,
   broadcastEdit,
   fetchPrivateChat,
   initiatePrivateChat
 } from '../../../actions/chat';
-
-import axios from 'axios';
 
 class ChatController extends React.Component {
   constructor(props) {
@@ -214,7 +213,7 @@ ChatController.propTypes = {
   onlineStatus: React.PropTypes.object.isRequired
 };
 
-const findMentors = (community) => {
+export const findMentors = (community) => {
   return Set(community.map(user => {
     if (user.mentorship.isMentor) return user.username;
   }));
