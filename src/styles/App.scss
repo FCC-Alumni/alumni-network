@@ -1,6 +1,6 @@
 @import 'animations';
 @import 'helperClasses';
-@import 'components/Dashboard';
+@import 'components/Chat';
 @import 'components/SliderToggle';
 @import 'components/Profile';
 @import 'components/Community';
@@ -39,4 +39,3 @@
 #arrow-bounce {
   animation: bouncey-arrow 1.5s infinite;
 }
-
