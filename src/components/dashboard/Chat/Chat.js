@@ -20,11 +20,13 @@ export default ({
   chat,
   user,
   edit,
+  mentors,
   setEdit,
   saveEdit,
   editText,
   finishEdit,
   reciepient,
+  onlineStatus,
   deleteMessage,
   initiatePrivateChat }) => {
   if (chat.size > 0) {
@@ -46,10 +48,20 @@ export default ({
 
               <div className="content">
 
-                {path && author !== user.username?
-                  <span onClick={initiatePrivateChat.bind(this, author)} className='author author-link'>{author}</span>
+                { path && author !== user.username ?
+                  <span
+                    onClick={initiatePrivateChat.bind(this, author)}
+                    className='author author-link'>
+                    {author}
+                    {mentors.has(author) && <i className="student icon mentorIcon"></i>}
+                    {onlineStatus.has(author) && <i className="star icon onlineIcon"></i>}
+                  </span>
                     :
-                  <span className='author author-link-inactive'>{author}</span>}
+                  <span className='author author-link-inactive'>
+                    {author}
+                    {mentors.has(author) && <i className="student icon mentorIcon"></i>}
+                    {onlineStatus.has(author) && <i className="star icon onlineIcon"></i>}
+                  </span> }
 
                 <div className="metadata">
                   <span className="date">at

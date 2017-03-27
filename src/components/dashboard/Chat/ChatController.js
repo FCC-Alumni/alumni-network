@@ -2,7 +2,7 @@
 import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { List } from 'immutable';
+import { List, Set } from 'immutable';
 import Modal from './ChatModal';
 import EmojiInput from './EmojiInput';
 import ChatMessages from './Chat';
@@ -121,18 +121,20 @@ class ChatController extends React.Component {
     }
   }
   render() {
+
     const { conversant, privateChat } = this.props;
+
     const privateChannels = (
       <div id="privateChatChannels">
         <h3 className='privateChannelsTitle'>Private Chat Channels:</h3>
         {privateChat.size > 0 ? privateChat.map(username => {
           return (
-            <span
+            <div
               key={username}
               className='privateChannel'
               onClick={this.initiatePrivateChat.bind(this, username)}>
               {username}
-            </span>
+            </div>
           );
         }) :
           <span>
@@ -172,19 +174,21 @@ class ChatController extends React.Component {
             {this.state.privateChannels && privateChannels}
             <div id='messageContainer'>
               <ChatMessages
-                path={conversant ? null : this.props.match.url}
                 user={this.props.user}
                 chat={this.props.chat}
                 edit={this.state.edit}
                 setEdit={this.setEdit}
                 saveEdit={this.saveEdit}
                 finishEdit={this.finishEdit}
-                editText={this.state.editText}
+                mentors={this.props.mentors}
                 like={this.props.likeMessage}
+                editText={this.state.editText}
                 reciepient={this.props.conversant}
-                conversantAvatar={this.props.conversantAvatar}
+                deleteMessage={this.deleteMessage}
+                onlineStatus={this.props.onlineStatus}
                 initiatePrivateChat={this.initiatePrivateChat}
-                deleteMessage={this.deleteMessage} />
+                conversantAvatar={this.props.conversantAvatar}
+                path={conversant ? null : this.props.match.url} />
             </div>
           </div>
         </div>
@@ -205,25 +209,37 @@ ChatController.propTypes = {
   saveEdit: React.PropTypes.func.isRequired,
   likeMessage: React.PropTypes.func.isRequired,
   deleteMessage: React.PropTypes.func.isRequired,
-  broadcastEdit: React.PropTypes.func.isRequired
+  broadcastEdit: React.PropTypes.func.isRequired,
+  mentors: React.PropTypes.object.isRequired,
+  onlineStatus: React.PropTypes.object.isRequired
 };
 
-const mapStateToProps = ({ user, chat, privateChat, community }, props) => {
+const findMentors = (community) => {
+  return Set(community.map(user => {
+    if (user.mentorship.isMentor) return user.username;
+  }));
+};
+
+const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, props) => {
   const { username } = props.match.params;
   if (username) {
     return {
-      conversant: username,
-      conversantAvatar: community.find(u => u.username === username).personal.avatarUrl,
       user,
+      onlineStatus,
       privateChat: [],
-      chat: privateChat.get(username)
+      conversant: username,
+      mentors: findMentors(community),
+      chat: privateChat.get(username),
+      conversantAvatar: community.find(u => u.username === username).personal.avatarUrl
     }
   } else {
     return {
-      conversant: null,
-      conversantAvatar: null,
       user,
       chat,
+      onlineStatus,
+      conversant: null,
+      conversantAvatar: null,
+      mentors: findMentors(community),
       privateChat: privateChat.keySeq(),
       privateChatSize: privateChat.size
     }
@@ -231,8 +247,8 @@ const mapStateToProps = ({ user, chat, privateChat, community }, props) => {
 };
 
 const dispatch = {
-  addMessage,
   saveEdit,
+  addMessage,
   likeMessage,
   deleteMessage,
   broadcastEdit,

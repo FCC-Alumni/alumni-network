@@ -45,8 +45,7 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
     if ((frontCert.request._redirectCount +
       backCert.request._redirectCount +
       dataCert.request._redirectCount) >= 3 ) {
-      // NOTE: change back to false:
-      return true;
+      return false;
     } else {
       return {
         Front_End: frontCert.request._redirectCount === 0 ? true : false,
@@ -87,7 +86,7 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
 
 router.post('/api/update-user', (req, res) => {
   const { user } = req.body;
-  
+
   User.findById(user._id, (err, updatedUser) => {
     if (!err) {
       updatedUser.personal = user.personal;
@@ -96,9 +95,9 @@ router.post('/api/update-user', (req, res) => {
       updatedUser.skillsAndInterests = user.skillsAndInterests;
       updatedUser.projects = user.projects;
       updatedUser.social = user.social;
-      
+
       updatedUser.save();
-      
+
       res.json({ updatedUser })
     } else {
       res.status(401).json({ error: 'User could not be saved' });

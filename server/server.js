@@ -14,9 +14,9 @@ import gitLabRoute from './helpers/gitLabRoute';
 dotenv.config();
 
 // initialize redis
-// export const client = redis.createClient();
-// client.on('error', (err) => console.log(`Redis Error: ${err}`));
-// client.on('ready', () => console.log('Redis connected'));
+export const client = redis.createClient();
+client.on('error', (err) => console.log(`Redis Error: ${err}`));
+client.on('ready', () => console.log('Redis connected'));
 
 // initialize mongoDB
 mongoose.Promise = require('bluebird');
