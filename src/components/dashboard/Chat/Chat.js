@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactEmoji from 'react-emoji';
+import marked from 'marked';
+import Textarea from 'react-textarea-autosize';
 
 const parseTime = (timestamp) => {
   let a = new Date(timestamp);
@@ -13,6 +15,23 @@ const parseTime = (timestamp) => {
   let time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
   return time;
 };
+
+// NOTE => MARKED SETUP:
+
+// ALLOWS LINE BREAKS WITH RETURN BUTTON
+marked.setOptions({
+  breaks: true,
+});
+
+// INSERTS target="_blank" INTO HREF TAGS (required for codepen links)
+const renderer = new marked.Renderer();
+renderer.link = function (href, title, text) {
+  if (!href.startsWith('http')) {
+    return `<a target="_blank" href="https://${href}">${text}</a>`;
+  } else {
+    return `<a target="_blank" href="${href}">${text}</a>`;
+  }
+}
 
 export default ({
   path,
@@ -75,9 +94,10 @@ export default ({
 
                 <form
                   className="ui form"
-                  style={{ marginTop: '10px' }}
-                  onSubmit={finishEdit}>
-                  <input
+                  style={{ marginTop: '10px' }}>
+                  <Textarea
+                    rows={1}
+                    maxRows={10}
                     id="editInput"
                     autoFocus
                     type="text"
@@ -97,7 +117,7 @@ export default ({
                     if (word.charAt(0) === ':' && word.charAt(word.length - 1) === ':') {
                       return <span key={word + idx}>{ReactEmoji.emojify(word)}</span>
                     } else {
-                      return <span key={word + idx}> {word} </span>;
+                      return <span key={word + idx} dangerouslySetInnerHTML={{__html: marked(word, { renderer: renderer })}} />
                     }
                   })}
                 </div>}
