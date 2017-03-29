@@ -5,6 +5,7 @@ import { initiatePrivateChat } from '../../actions/chat';
 import Radio from '../common/RadioButton';
 import UserLabel from '../common/UserLabel';
 import DropDown from '../common/DropdownMultiSelect';
+import SearchResults from './Mentorship/SearchResults';
 import { Checkbox } from 'semantic-ui-react';
 
 import { filterSliders } from '../../assets/data/mapArrays';
@@ -25,7 +26,7 @@ const searchApi = {
   },
   match: (regex, string) => {
     return regex.test(string) ? true : false;
-  },
+  }
 }
 
 class Mentorship extends React.Component {
@@ -59,17 +60,35 @@ class Mentorship extends React.Component {
   }
 
   handleChange = (e) => {
-    this.setState({ value: e.target.value });
-    if (e.target.value) this.search(e.target.value);
-    else this.setState({ results: [] });
+    var { value } = e.target;
+    const {
+      mentorsOnly,
+      prosOnly,
+      frontendOnly,
+      backendOnly,
+      dataVisOnly
+    } = this.state;
+
+    this.setState({ value: value });
+
+    if (e.target.value) this.search(value)
+    else if (
+      !value &&
+      !mentorsOnly &&
+      !prosOnly &&
+      !frontendOnly &&
+      !backendOnly &&
+      !dataVisOnly ) {
+      this.setState({ results: [] });
+    }
   }
 
-  search = (escapedRegex) => {
+  search = (searchString) => {
     this.setState({ isLoading: true });
 
     const { searchCriteria } = this.state;
     var { community } = this.props,
-    regex = new RegExp(escapedRegex, 'i'),
+    regexArray = searchString && searchString.split(' ').map(escapedRegex => new RegExp(escapedRegex, 'i')),
     matchSkill = [],
     matchInterest = [],
     matchAll = [],
@@ -96,56 +115,58 @@ class Mentorship extends React.Component {
     }
 
     // regex search:
-    const results = community.filter(user => {
+    regexArray && regexArray.forEach(regex => {
+      community = community.filter(user => {
 
-      const {
-        username,
-        personal: { displayName, location },
-        mentorship: { mentorshipSkills },
-        skillsAndInterests: { coreSkills, codingInterests },
-        career: { company }
-      } = user;
+        const {
+          username,
+          personal: { displayName, location },
+          mentorship: { mentorshipSkills },
+          skillsAndInterests: { coreSkills, codingInterests },
+          career: { company }
+        } = user;
 
-      if (searchCriteria.all) {
-        matchName = searchApi.names(regex, username, displayName);
-        matchSkill = searchApi.filter(regex, coreSkills);
-        matchInterest = searchApi.filter(regex, codingInterests);
-        matchLocation = searchApi.match(regex, location);
-        mentorshipBio = searchApi.match(regex, mentorshipSkills);
-        matchCompany = searchApi.match(regex, company);
-      } else {
-        if (searchCriteria.company) {
-          matchCompany = searchApi.match(regex, company);
-        }
-        if (searchCriteria.mentorshipBio) {
-          mentorshipBio = searchApi.match(regex, mentorshipSkills);
-        }
-        if (searchCriteria.location) {
-          matchLocation = searchApi.match(regex, location);
-        }
-        if (searchCriteria.name) {
+        if (searchCriteria.all) {
           matchName = searchApi.names(regex, username, displayName);
-        }
-        if (searchCriteria.skills) {
           matchSkill = searchApi.filter(regex, coreSkills);
-        }
-        if (searchCriteria.interests) {
           matchInterest = searchApi.filter(regex, codingInterests);
+          matchLocation = searchApi.match(regex, location);
+          mentorshipBio = searchApi.match(regex, mentorshipSkills);
+          matchCompany = searchApi.match(regex, company);
+        } else {
+          if (searchCriteria.company) {
+            matchCompany = searchApi.match(regex, company);
+          }
+          if (searchCriteria.mentorshipBio) {
+            mentorshipBio = searchApi.match(regex, mentorshipSkills);
+          }
+          if (searchCriteria.location) {
+            matchLocation = searchApi.match(regex, location);
+          }
+          if (searchCriteria.name) {
+            matchName = searchApi.names(regex, username, displayName);
+          }
+          if (searchCriteria.skills) {
+            matchSkill = searchApi.filter(regex, coreSkills);
+          }
+          if (searchCriteria.interests) {
+            matchInterest = searchApi.filter(regex, codingInterests);
+          }
         }
-      }
 
-      return (
-        !isEmpty(matchSkill) ||
-        !isEmpty(matchInterest) ||
-        matchName ||
-        matchLocation ||
-        mentorshipBio ||
-        matchCompany
-      ) && user;
+        return (
+          !isEmpty(matchSkill) ||
+          !isEmpty(matchInterest) ||
+          matchName ||
+          matchLocation ||
+          mentorshipBio ||
+          matchCompany
+        ) && user;
 
+      });
     });
 
-    this.setState({ results, isLoading: false });
+    this.setState({ results: community, isLoading: false });
 
   }
 
@@ -160,16 +181,30 @@ class Mentorship extends React.Component {
         dataVisOnly
       } = this.state;
 
-      if (!mentorsOnly && !prosOnly && !frontendOnly && !backendOnly && !dataVisOnly) {
+      if (!this.state.value && !mentorsOnly && !prosOnly && !frontendOnly && !backendOnly && !dataVisOnly) {
         this.setState({ results: [] });
+      } else {
+        this.search(this.state.value);
       }
-      this.search(this.state.value);
+
     });
   }
 
   handleDropdownChange = (e, data) => {
     const { searchCriteria } = this.state;
 
+    // make "all" only tag when selected
+    if (data.value.indexOf('all') === data.value.length - 1 && data.value.length > 1) {
+      data.value = ['all']
+      // remove "all" when other tags selected
+    } else if (data.value.indexOf('all') > -1 && data.value.length > 1) {
+      data.value.splice(data.value.indexOf('all'), 1);
+      // switch to "all" when all other tags are removed
+    } else if (isEmpty(data.value)) {
+      data.value = ['all']
+    }
+
+    // match state to selection(s)
     for (var criteria in searchCriteria) {
       if (data.value.indexOf(criteria) > -1) {
         searchCriteria[criteria] = true;
@@ -178,14 +213,7 @@ class Mentorship extends React.Component {
       }
     }
 
-    if (isEmpty(data.value)) {
-      searchCriteria.all = true;
-      this.setState({ dropdownValue: ['all'] });
-    } else {
-      this.setState({ dropdownValue: data.value });
-    }
-
-    this.setState({ searchCriteria });
+    this.setState({ searchCriteria, dropdownValue: data.value });
   }
 
   showFilters = () => {
@@ -201,45 +229,6 @@ class Mentorship extends React.Component {
 
   render() {
     const { results, value, showFilters } = this.state;
-
-    const noResultsMessage = (
-      <div className="item">
-        <div className="ui tiny image">
-          <i className="huge teal warning circle icon" />
-        </div>
-        <div className="middle aligned content">
-          <div className="header">
-            Bummer man... No results.
-          </div>
-        </div>
-      </div>
-    );
-
-    const listResults = results.map(user => {
-      return (
-        <div key={user._id} className="item search-result-item">
-          <div className="ui tiny circular image">
-            <img src={user.personal.avatarUrl} />
-          </div>
-          <div className="content">
-            <div className="header">{user.username}</div>
-            {this.props.currentUser !== user.username &&
-              <i
-                className="comments icon chatIcon"
-                onClick={this.initiatePrivateChat.bind(this, user.username)}>
-              </i>}
-            <div className="meta">
-              <span><strong>{user.personal.displayName}</strong></span>
-              <i className="angle double right icon" />
-              <span>{user.mentorship.isMentor ? 'Mentor' : 'Member'}</span>
-            </div>
-            <div className="description">
-              {user.mentorship.mentorshipSkills}
-            </div>
-          </div>
-        </div>
-      );
-    });
 
     const searchFilters = filterSliders.map(radio => {
       return (
@@ -261,16 +250,13 @@ class Mentorship extends React.Component {
           Search for a mentorship match here!
         </h1>
 
-
         <div className="ui form">
-
           <div className="filters-selector-wrap">
             <div onClick={this.showFilters} className="text-align-center filters-selector">
               <i className={`${!showFilters ? 'teal unhide' : 'brown hide'} icon`} />
               {`${!showFilters ? 'Show' : 'Hide'} Search Filters`}
             </div>
           </div>
-
           <div className={`search-filters ${!showFilters ? 'show' : 'hide'}`}>
             <div className="center-sliders">
               { searchFilters }
@@ -278,7 +264,6 @@ class Mentorship extends React.Component {
           </div>
 
           <div className="ui inline fields search-fields">
-
             <div className="field">
               <DropDown
                 value={this.state.dropdownValue}
@@ -286,7 +271,6 @@ class Mentorship extends React.Component {
                 fluid={false}
                 onChange={this.handleDropdownChange} />
             </div>
-
             <div className="field">
               <div className={`ui fluid search ${this.state.isLoading && 'loading'}`}>
                 <div className="ui icon input">
@@ -300,15 +284,15 @@ class Mentorship extends React.Component {
                 </div>
               </div>
             </div>
-
           </div>
-
         </div>
 
         <div className="search-results">
-          <div className="ui divided items">
-            { !isEmpty(value) && isEmpty(results) ? noResultsMessage : listResults }
-          </div>
+          <SearchResults
+            currentUser={this.props.currentUser}
+            initiatePrivateChat={this.initiatePrivateChat}
+            results={results}
+            noResults={!isEmpty(value) && isEmpty(results)} />
         </div>
 
       </div>

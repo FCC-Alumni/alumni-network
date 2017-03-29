@@ -93,13 +93,7 @@ export default ({
                 <div
                   className="text"
                   style={{ marginTop: '4px' }}>
-                  {text.split(' ').map((word, idx) => {
-                    if (word.charAt(0) === ':' && word.charAt(word.length - 1) === ':') {
-                      return <span key={word + idx}>{ReactEmoji.emojify(word)}</span>
-                    } else {
-                      return <span key={word + idx}> {word} </span>;
-                    }
-                  })}
+                  { ReactEmoji.emojify(text) }
                 </div>}
 
                 <div className="ui feed" style={{ marginTop: '0px' }}>
