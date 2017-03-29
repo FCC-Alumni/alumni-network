@@ -94,7 +94,9 @@ export default ({
                 <div
                   className="text"
                   style={{ marginTop: '4px' }}>
-                  {ReactEmoji.emojify(text)}
+
+                  { ReactEmoji.emojify(text) }
+
                 </div>}
 
                 <div className="ui feed" style={{ marginTop: '0px' }}>

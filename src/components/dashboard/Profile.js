@@ -177,8 +177,18 @@ class Profile extends React.Component {
   }
 
   render() {
-    const { mentorship, username, personal, social, career, skillsAndInterests } = this.state.user;
-    const { errors } = this.state;
+
+    const {
+      errors,
+      user: {
+        mentorship,
+        username,
+        personal,
+        social,
+        career,
+        skillsAndInterests
+      }
+    } = this.state;
 
     return (
       <div id="profile-page-main-container" className="ui container">
