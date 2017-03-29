@@ -32,14 +32,12 @@ class ChatController extends React.Component {
     // this sucks when screen resized smaller... will need to deal with that:
     document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
   }
-
   componentDidMount() {
     document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
     this.chatContainer = document.getElementById('messageContainer');
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
 
     document.addEventListener('mousedown', this.handleClick);
-    document.addEventListener('keydown', this.handleNewLine);
 
     // if there are no private chat messages try to fetch from server:
     // this isn't ideal but we are not storing any 'Fetched Yet?' state anywhere
@@ -47,23 +45,19 @@ class ChatController extends React.Component {
       this.props.fetchPrivateChat(this.props.user.username);
     }
   }
-
   componentWillUnmount() {
     document.body.style.backgroundImage = null;
     document.removeEventListener('mousedown', this.handleClick, false);
     clearTimeout(this.timeout);
   }
-
   // safeguard timeouts within a method so we can clear when component unmounts:
   timeout = (fn, d) => setTimeout(() => fn(), d);
-
   submitMessage = (text) => {
     const { conversant } = this.props;
     this.setState({ text: '' });
     this.props.addMessage({ author: this.props.user, text, conversant });
     this.timeout(() => this.chatContainer.scrollTop = this.chatContainer.scrollHeight, 50);
   }
-
   setEdit = (id) => {
     if (this.state.editText !== '') {
       const { edit, editText } = this.state;
@@ -75,7 +69,6 @@ class ChatController extends React.Component {
       });
     };
   }
-
   saveEdit = (e) => {
     const editText = e.target.value;
     this.setState({ editText });
@@ -83,8 +76,8 @@ class ChatController extends React.Component {
       this.props.saveEdit(this.state.edit, this.state.editText, this.props.conversant);
     }
   }
-
-  finishEdit = () => {
+  finishEdit = (e) => {
+    e.preventDefault();
     if (this.state.editText) {
       const { edit, editText } = this.state;
       const { user, conversant } = this.props;
@@ -95,7 +88,6 @@ class ChatController extends React.Component {
       });
     };
   }
-
   deleteMessage = (id) => {
     this.setState({
       edit: null,
@@ -103,25 +95,21 @@ class ChatController extends React.Component {
     });
     this.props.deleteMessage(id, this.props.conversant, this.props.user.username);
   }
-
   toggleModal = () => {
     this.setState({
       modal: !this.state.modal
     });
   }
-
   togglePrivateChannels = () => {
     this.setState({
       privateChannels: !this.state.privateChannels
     });
   }
-
   initiatePrivateChat = (author) => {
     this.props.initiatePrivateChat(author);
     this.setState({ scroll: false });
     this.props.history.push(`chat/${author}`);
   }
-
   handleClick = (e) => {
     if (e.srcElement.id !== 'privateChatChannels' &&
         e.srcElement.className !== 'privateChannel' &&
@@ -131,13 +119,6 @@ class ChatController extends React.Component {
       });
     }
   }
-
-  handleNewLine = (e) => {
-    if (!e.shiftKey && e.keyCode === 13) {
-      this.finishEdit();
-    }
-  }
-
   render() {
 
     const { conversant, privateChat } = this.props;

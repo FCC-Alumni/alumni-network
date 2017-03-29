@@ -1,7 +1,6 @@
 import React from 'react';
 import EmojiPicker from 'react-emoji-picker';
 import emojiMap from 'react-emoji-picker/lib/emojiMap';
-import Textarea from 'react-textarea-autosize';
 
 export default class Emoji extends React.Component {
 
@@ -10,10 +9,6 @@ export default class Emoji extends React.Component {
     last: '',
     emoji: null,
     showEmojiPicker: false
-  }
-
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleNewLine);
   }
 
   validateEmoji = () => {
@@ -75,12 +70,6 @@ export default class Emoji extends React.Component {
     }
   }
 
-  handleNewLine = (e) => {
-    if (!e.shiftKey && e.keyCode === 13) {
-      this.submit(e);
-    }
-  }
-
   render() {
     const emojiPickerStyles = {
       zIndex: '2',
@@ -92,10 +81,8 @@ export default class Emoji extends React.Component {
       backgroundColor: 'rgba(250,250,250,0.98)',
     };
     return (
-      <form className="ui form">
-        <Textarea
-          rows={1}
-          maxRows={10}
+      <form className="ui form" onSubmit={this.submit}>
+        <input
           autoFocus
           name="emoji"
           id='chatInput'
