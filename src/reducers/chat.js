@@ -29,7 +29,9 @@ export default (state = List(), action) => {
     case CHAT_EDIT_MESSAGE:
       return state.map(message => {
         if (message.get('id') === payload.id) {
-          return message.set('text', payload.text);
+          return message
+            .set('text', payload.text)
+            .set('edited', true);
         } else {
           return message;
         }

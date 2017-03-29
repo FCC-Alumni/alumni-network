@@ -47,7 +47,10 @@ router.post('/api/private-chat/edit-message', isAuthenticated, (req, res) => {
       if (err) res.sendStatus(500);
       if (chat) {
         chat.history = chat.history.map(message => {
-          if (message.id === id) message.text = text;
+          if (message.id === id) {
+            message.text = text;
+            message.edited = true;
+          }
           return message;
         })
         chat.save(e => {

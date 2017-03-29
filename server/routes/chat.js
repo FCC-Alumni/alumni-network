@@ -42,7 +42,10 @@ router.post('/api/chat-edit-message', isAuthenticated, (req, res) => {
     if (err) res.sendStatus(500);
     if (chat) {
       chat.history = chat.history.map(m => {
-        if (m.id === id) m.text = text;
+        if (m.id === id) {
+          m.text = text;
+          m.edited = true;
+        }
         return m;
       });
       chat.save(e => {

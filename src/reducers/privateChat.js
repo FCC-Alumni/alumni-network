@@ -93,7 +93,9 @@ export default (state = Map(), action) => {
       return state.updateIn([author], l => {
         return l.map(message => {
           if (message.get('id') === id) {
-            return message.set('text', text);
+            return message
+              .set('text', text)
+              .set('edited', true);
           } else {
             return message;
           }
