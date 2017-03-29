@@ -31,6 +31,13 @@ class ChatController extends React.Component {
     };
     // this sucks when screen resized smaller... will need to deal with that:
     document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
+    // scroll to bottom of chats when component mounts:
+    this.timeout(() => {
+      if (this.chatContainer) {
+        this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+      }
+    }, 50);
+
   }
   componentDidMount() {
     document.body.style.backgroundImage = "url('/images/fcc-banner.png')";

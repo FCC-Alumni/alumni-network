@@ -39,6 +39,7 @@ export default ({
           const author = msg.get('author');
           const avatar = msg.get('avatar');
           const likes = msg.get('likes');
+          const edited = msg.get('edited');
           return (
             <div className="comment" key={id} style={{ paddingTop: '12px' }}>
 
@@ -93,7 +94,9 @@ export default ({
                 <div
                   className="text"
                   style={{ marginTop: '4px' }}>
+
                   { ReactEmoji.emojify(text) }
+
                 </div>}
 
                 <div className="ui feed" style={{ marginTop: '0px' }}>
@@ -108,6 +111,7 @@ export default ({
                           <a className="like">
                             <i className="like icon" style={{ color: 'red' }}></i> {likes.size} {likes.size === 1 ? 'Like' : 'Likes'}
                           </a>}
+                          {edited && <span>edited</span>}
                       </div>
                     </div>
                   </div>

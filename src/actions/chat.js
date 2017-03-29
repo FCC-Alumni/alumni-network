@@ -261,7 +261,6 @@ export const broadcastEdit = (id, text, conversant, author) => {
         });
     }
   } else {
-    // need to send message id and text to update, then dispatch specific update action here:
     const message = store.getState().chat.find(m => m.get('id') === id).toJS();
     return dispatch => {
       return axios.post('/api/chat-edit-message', { id, text })

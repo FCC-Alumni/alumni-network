@@ -16,6 +16,7 @@ module.exports = (io) => {
           if (!err) {
             const users = JSON.parse(data);
             users[socket.id] = user;
+            users[user] = socket.id;
             redis.set('online-users', JSON.stringify(users));
             socket.broadcast.emit('user-online', { user });
           }
@@ -39,16 +40,52 @@ module.exports = (io) => {
 
     // private chat:
     socket.on('private-submission', (data) => {
-      socket.broadcast.emit('broadcast-private-submission', data);
+      const { reciepient } = data;
+      redis.get('online-users', (err, onlineUsers) => {
+        if (!err) {
+          const users = JSON.parse(onlineUsers);
+          if (reciepient in users) {
+            socket.broadcast.to(users[reciepient])
+              .emit('broadcast-private-submission', data);
+          }
+        }
+      });
     });
     socket.on('private-update', (data) => {
-      socket.broadcast.emit('broadcast-private-update', data);
+      const { reciepient } = data;
+      redis.get('online-users', (err, onlineUsers) => {
+        if (!err) {
+          const users = JSON.parse(onlineUsers);
+          if (reciepient in users) {
+            socket.broadcast.to(users[reciepient])
+              .emit('broadcast-private-update', data);
+          }
+        }
+      });
     });
     socket.on('private-like', (data) => {
-      socket.broadcast.emit('broadcast-private-like', data);
+      const { reciepient } = data;
+      redis.get('online-users', (err, onlineUsers) => {
+        if (!err) {
+          const users = JSON.parse(onlineUsers);
+          if (reciepient in users) {
+            socket.broadcast.to(users[reciepient])
+              .emit('broadcast-private-like', data);
+          }
+        }
+      });
     });
     socket.on('private-delete', (data) => {
-      socket.broadcast.emit('broadcast-private-delete', data);
+      const { reciepient } = data;
+      redis.get('online-users', (err, onlineUsers) => {
+        if (!err) {
+          const users = JSON.parse(onlineUsers);
+          if (reciepient in users) {
+            socket.broadcast.to(users[reciepient])
+              .emit('broadcast-private-delete', data);
+          }
+        }
+      });
     });
 
     socket.on('disconnect', () => {
@@ -57,6 +94,7 @@ module.exports = (io) => {
           const users = JSON.parse(data);
           const disconnectedUser = users[socket.id];
           delete users[socket.id];
+          delete users[disconnectedUser];
           redis.set('online-users', JSON.stringify(users));
           socket.broadcast.emit('user-offline', { user: disconnectedUser} );
         };
