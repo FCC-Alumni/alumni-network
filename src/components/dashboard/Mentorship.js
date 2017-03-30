@@ -1,21 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { initiatePrivateChat } from '../../actions/chat';
+import { saveSearchState } from '../../actions/user';
 
-import Radio from '../common/RadioButton';
-import UserLabel from '../common/UserLabel';
-import DropDown from '../common/DropdownMultiSelect';
+import DropDown from '../common/DropdownMulti';
 import SearchResults from './Mentorship/SearchResults';
 import { Checkbox } from 'semantic-ui-react';
 
 import { filterSliders } from '../../assets/data/mapArrays';
 import { searchTypes } from '../../assets/data/dropdownOptions';
+import { defaultState } from '../../reducers/search';
 import isEmpty from 'lodash/isEmpty';
-
-/*
-TODO:
-  - we need to look at location in general (should have zip code or somehting and get location by API - for D3 map as well!)
-*/
 
 const searchApi = {
   names: (regex, username, name) => {
@@ -30,57 +25,70 @@ const searchApi = {
 }
 
 class Mentorship extends React.Component {
-  state = {
-    value: '',
-    results: [],
-    showFilters: false,
-    dropdownValue: ['all'],
-    isLoading: false,
-    mentorsOnly: false,
-    prosOnly: false,
-    frontendOnly: false,
-    backendOnly: false,
-    dataVisOnly: false,
-    searchCriteria: {
-      skills: false,
-      interests: false,
-      location: false,
-      mentorshipBio: false,
-      name: false,
-      company: false,
-      all: true,
+  constructor(props) {
+    super(props);
+    const { searchState } = this.props;
+    this.state = {
+      ...searchState
+    // STATE STRUCTURE:
+    // disableClear: true,
+    // value: '',
+    // results: [],
+    // showFilters: false,
+    // dropdownValue: ['all'],
+    // isLoading: false,
+    // mentorsOnly: false,
+    // prosOnly: false,
+    // frontendOnly: false,
+    // backendOnly: false,
+    // dataVisOnly: false,
+    // searchCriteria: {
+    //   skills: false,
+    //   interests: false,
+    //   location: false,
+    //   mentorshipBio: false,
+    //   name: false,
+    //   company: false,
+    //   all: true,
+    // }
     }
   }
 
   componentWillUnmount() {
-    /*** We would like to store filter state in Redux on component unmounting
-     * (when user navigates away), and restore it from state when the component
-     * is mounted again (user navigates back)— thoughts?
-    */
+    this.props.saveSearchState(this.state);
+  }
+
+  isStateless = () => {
+    if (!this.state.value &&
+      !this.state.mentorsOnly &&
+      !this.state.prosOnly &&
+      !this.state.frontendOnly &&
+      !this.state.backendOnly &&
+      !this.state.dataVisOnly) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  disableClear = () => {
+    if (this.isStateless() &&
+      (this.state.dropdownValue[0] === 'all' &&
+      this.state.dropdownValue.length === 1)) {
+      this.setState({ disableClear: true });
+    } else {
+      this.setState({ disableClear: false });
+    }
   }
 
   handleChange = (e) => {
-    var { value } = e.target;
-    const {
-      mentorsOnly,
-      prosOnly,
-      frontendOnly,
-      backendOnly,
-      dataVisOnly
-    } = this.state;
-
-    this.setState({ value: value });
-
-    if (e.target.value) this.search(value)
-    else if (
-      !value &&
-      !mentorsOnly &&
-      !prosOnly &&
-      !frontendOnly &&
-      !backendOnly &&
-      !dataVisOnly ) {
-      this.setState({ results: [] });
-    }
+    this.setState({ value: e.target.value }, () => {
+      this.disableClear();
+      if (this.state.value) this.search(this.state.value)
+      else if (this.isStateless()) {
+        this.setState({ results: [] });
+      }
+    });
   }
 
   search = (searchString) => {
@@ -91,7 +99,6 @@ class Mentorship extends React.Component {
     regexArray = searchString && searchString.split(' ').map(escapedRegex => new RegExp(escapedRegex, 'i')),
     matchSkill = [],
     matchInterest = [],
-    matchAll = [],
     matchLocation = false,
     mentorshipBio = false,
     matchName = false,
@@ -162,31 +169,24 @@ class Mentorship extends React.Component {
           mentorshipBio ||
           matchCompany
         ) && user;
-
       });
     });
 
     this.setState({ results: community, isLoading: false });
-
   }
 
   handleSliderChange = (e, data) => {
+
+    // pass in callback function to this.setState to be sure changes
+    // have taken effect when search is run, otherwise search will be
+    // delivering results that are one action behind users actual
     this.setState({ [data.name]: data.checked }, () => {
-
-      const {
-        mentorsOnly,
-        prosOnly,
-        frontendOnly,
-        backendOnly,
-        dataVisOnly
-      } = this.state;
-
-      if (!this.state.value && !mentorsOnly && !prosOnly && !frontendOnly && !backendOnly && !dataVisOnly) {
+      this.disableClear();
+      if (this.isStateless()) {
         this.setState({ results: [] });
       } else {
         this.search(this.state.value);
       }
-
     });
   }
 
@@ -213,13 +213,21 @@ class Mentorship extends React.Component {
       }
     }
 
-    this.setState({ searchCriteria, dropdownValue: data.value });
+    this.setState({
+      searchCriteria,
+      dropdownValue: data.value
+    }, () => this.disableClear());
   }
 
   showFilters = () => {
-    const { showFilters: currState } = this.state;
+    this.setState({ showFilters: !this.state.showFilters });
+  }
 
-    this.setState({ showFilters: !currState });
+  clearSearch = () => {
+    this.setState({
+      ...defaultState,
+      showFilters: this.state.showFilters
+    });
   }
 
   initiatePrivateChat = (user) => {
@@ -236,6 +244,7 @@ class Mentorship extends React.Component {
           <Checkbox
             slider
             name={radio.name}
+            checked={this.state[radio.name]}
             onChange={this.handleSliderChange}
             label={radio.label} />
           <div className="spacer" />
@@ -287,6 +296,18 @@ class Mentorship extends React.Component {
           </div>
         </div>
 
+        <div className="button-wrapper">
+          <div
+            onClick={this.clearSearch}
+            className={`ui labeled button ${this.state.disableClear && 'disabled'}`}>
+            <div className="ui basic teal button">
+              <i className="remove icon"></i>
+              Clear All Fields
+            </div>
+            <div className="ui basic left pointing teal label">{`${results.length} results`}</div>
+          </div>
+        </div>
+
         <div className="search-results">
           <SearchResults
             currentUser={this.props.currentUser}
@@ -303,8 +324,9 @@ class Mentorship extends React.Component {
 const mapStateToProps = (state) => {
   return {
     currentUser: state.user.username,
-    community: state.community.toJS()
+    community: state.community.toJS(),
+    searchState: state.search
   }
 }
 
-export default connect(mapStateToProps, { initiatePrivateChat })(Mentorship);
+export default connect(mapStateToProps, { initiatePrivateChat, saveSearchState })(Mentorship);
