@@ -6,7 +6,7 @@ const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults })
     return (
       <div key={user._id} className="item search-result-item">
         <div className="ui tiny circular image">
-          <img src={user.personal.avatarUrl} />
+          <img src={user.personal.avatarUrl} alt={`${user.username}'s avatar`}/>
         </div>
         <div className="content">
           <div className="header">{user.username}</div>

@@ -1,6 +1,13 @@
 .search-fields,
-.search-filters {
+.search-filters,
+.button-wrapper,
+.results-indicator-wrapper {
   @extend .center-aligned;
+}
+
+.button-wrapper,
+.results-indicator-wrapper {
+  padding-bottom: 15px;
 }
 
 .search-filters.hide {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SAVE_USER } from './types';
+import { SAVE_USER, SAVE_SEARCH_STATE } from './types';
 
 export const getUserData = () => {
   return axios.get('/api/user')
@@ -20,4 +20,11 @@ export const saveUser = (user) => {
 
 export const updateUser = (user) => {
   return axios.post('/api/update-user', { user });
+}
+
+export const saveSearchState = (searchState) => {
+  return {
+    type: SAVE_SEARCH_STATE,
+    searchState
+  }
 }

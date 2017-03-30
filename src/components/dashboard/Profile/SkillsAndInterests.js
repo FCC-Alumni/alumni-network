@@ -1,5 +1,5 @@
 import React from 'react';
-import DropdownMultiSelect from '../../common/DropdownMultiSelect';
+import DropdownMulti from '../../common/DropdownMulti';
 import MessageBox from '../../common/MessageBox';
 import DividingHeader from '../../common/DividingHeader';
 import Ribbon from './common/RibbonHeader';
@@ -24,7 +24,7 @@ const SkillsAndInterests = ({ showSkills, subSaveClick, showPopUp, toggle, handl
           type="info"
           dismissable={true}
           message="Enter information about your coding skills below, so other users know your strengths!" />
-        <DropdownMultiSelect
+        <DropdownMulti
           onChange={handleSkillsChange}
           options={skills}
           placeholder="Choose Skills"
@@ -37,7 +37,7 @@ const SkillsAndInterests = ({ showSkills, subSaveClick, showPopUp, toggle, handl
           type="info"
           dismissable={true}
           message="Let other users know what you're into so you can find others with similar interetsts!" />
-        <DropdownMultiSelect
+        <DropdownMulti
           onChange={handleInterestsChange}
           options={interests}
           placeholder="Choose Interests"

@@ -17,17 +17,18 @@ import { saveUser, updateUser } from '../../actions/user';
 
 /*
 TODO:
+  - we need to look at how users enter location (should have zip code or somehting and get location name by API - for D3 map as well!)
   - add error popup and modal for error on save
-  - save individual section √
   - folder icon behavior - open when any field expanded
   - add validations for form fields - should be loose validations since nothing is strictly required
   - use passport to pull in LinkedIn and Twitter handles
+  - error handling if save to server fails?
+  - save individual section √
   - save all √
   - connect to DB √
   - connect to redux √
   - add career form / questionaire √
   - areas of mentorship √
-  - error handling if save to server fails?
 */
 
 class Profile extends React.Component {
