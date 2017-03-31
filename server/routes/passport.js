@@ -1,6 +1,8 @@
 import express from 'express';
 import passport from 'passport';
-import { Strategy } from 'passport-github2'
+import { Strategy as GitHubStrategy } from 'passport-github2'
+import { Strategy as TwitterStrategy } from 'passport-twitter';
+import { Strategy as LinkedInStrategy } from 'passport-linkedin';
 import Session from 'express-session';
 import User from '../models/user';
 import dotenv from 'dotenv';
@@ -21,7 +23,8 @@ router.use(passport.session());
 passport.serializeUser(function(user, done) { done(null, user) });
 passport.deserializeUser(function(user, done) { done(null, user) });
 
-passport.use(new Strategy({
+// GITHUB
+passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_SECRET,
   callbackURL: 'http://localhost:8080/auth/github/callback'
@@ -63,9 +66,65 @@ passport.use(new Strategy({
 
 router.get('/auth/github', passport.authenticate('github'));
 
-router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), ((req, res) => {
+router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: 'http://localhost:3000/login' }), ((req, res) => {
   // successfull authentication from github
   res.redirect('http://localhost:3000/verify_account');
+}));
+
+// TWITTER
+passport.use(new TwitterStrategy({
+  consumerKey: process.env.TWITTER_KEY,
+  consumerSecret: process.env.TWITTER_SECRET,
+  callbackURL: 'http://localhost:8080/connect/twitter/callback'
+},
+(token, tokenSecret, profile, done) => {
+  return done(null, profile)
+}));
+
+router.get('/connect/twitter', passport.authorize('twitter'));
+
+router.get('/connect/twitter/callback',
+  passport.authorize('twitter', { failureRedirect: 'http://localhost:3000/dashboard/profile' }), ((req, res) => {
+    const { user, account } = req;
+
+    User.findOne({ githubId: user.githubId }, (err, user) => {
+      if (!err) {
+        user.social.twitter = account.username;
+        user.save();
+        res.redirect('http://localhost:3000/dashboard/profile');
+        console.log('updated user with twitter handle');
+      } else {
+        console.log(err);
+      }
+    });
+}));
+
+// LinkedIn
+passport.use(new LinkedInStrategy({
+  consumerKey: process.env.LINKEDIN_KEY,
+  consumerSecret: process.env.LINKEDIN_SECRET,
+  callbackURL: 'http://localhost:8080/connect/linkedin/callback'
+},
+(token, tokenSecret, profile, done) => {
+  return done(null, profile)
+}));
+
+router.get('/connect/linkedin', passport.authorize('linkedin'));
+
+router.get('/connect/linkedin/callback',
+  passport.authorize('linkedin', { failureRedirect: 'http://localhost:3000/dashboard/profile' }), ((req, res) => {
+    const { user, account } = req;
+
+    User.findOne({ githubId: user.githubId }, (err, user) => {
+      if (!err) {
+        user.social.linkedin = account.displayName;
+        user.save();
+        res.redirect('http://localhost:3000/dashboard/profile');
+        console.log('updated user with linkedin handle');
+      } else {
+        console.log(err);
+      }
+    });
 }));
 
 // logout user & redirect to home page

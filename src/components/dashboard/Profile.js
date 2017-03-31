@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import UserLabel from '../common/UserLabel';
 import Modal from './Profile/common/SaveModal';
 
-import PersonalInfo from './Profile/PersonalInfo';
-import Certifications from './Profile/Certifications';
-import Mentorship from './Profile/Mentorship';
-import SkillsAndInterests from './Profile/SkillsAndInterests';
-import Collaboration from './Profile/Collaboration';
 import Social from './Profile/Social';
 import Career from './Profile/Career';
+import Mentorship from './Profile/Mentorship';
+import PersonalInfo from './Profile/PersonalInfo';
+import Collaboration from './Profile/Collaboration';
+import Certifications from './Profile/Certifications';
+import SkillsAndInterests from './Profile/SkillsAndInterests';
 
 import { saveUser, updateUser } from '../../actions/user';
 
@@ -39,21 +39,21 @@ class Profile extends React.Component {
       user,
       errors: {},
       showAll: true,
-      showProfile: true,
       showFCC: false,
-      showMentorship: false,
+      modalOpen: false,
+      showProfile: true,
       showSkills: false,
       showSocial: false,
       showCareer: false,
+      showMentorship: false,
       showCollaboration: false,
-      modalOpen: false,
-      personalPopUp: false,
       fccPopUp: false,
-      mentorshipPopUp: false,
       skillsPopUp: false,
-      collaboPopUp: false,
       socialPopUp: false,
       careerPopUp: false,
+      collaboPopUp: false,
+      personalPopUp: false,
+      mentorshipPopUp: false,
     }
   }
 
@@ -106,12 +106,12 @@ class Profile extends React.Component {
     let { user } = this.state;
     if (e.target.name === 'working') {
       if (e.target.id === 'Yes') {
-        user.career.working = 'yes';
         user.career.jobSearch = '';
+        user.career.working = 'yes';
       } else if (e.target.id === 'No') {
-        user.career.working = 'no';
-        user.career.company = '';
         user.career.tenure = '';
+        user.career.company = '';
+        user.career.working = 'no';
       }
     } else if (e.target.name === 'jobSearch') {
       user.career.jobSearch = e.target.id.replace(/_/g, ' ');
@@ -124,7 +124,10 @@ class Profile extends React.Component {
 
     if (e.target.name === 'company') {
       user.career.company = e.target.value;
-    } else if (e.target.name === 'codepen' || e.target.name === 'linkedin' || e.target.name === 'twitter') {
+    } else if (
+      e.target.name === 'codepen' ||
+      e.target.name === 'linkedin' ||
+      e.target.name === 'twitter') {
       user.social[e.target.name] = e.target.value;
     } else if (e.target.name === 'mentorshipSkills' ) {
       user.mentorship.mentorshipSkills = e.target.value;
@@ -139,12 +142,25 @@ class Profile extends React.Component {
     /* we pass callback to setState to catch state after update
       in case all the modals are now open or closed */
     this.setState({ [target]: !this.state[target] }, () => {
-      const { showProfile, showFCC, showMentorship, showSkills, showCollaboration, showSocial, showCareer } = this.state;
-      if (!showProfile && !showFCC && !showMentorship && !showSkills && !showSocial && !showCareer && !showCollaboration) {
+      if (
+        !this.state.showFCC &&
+        !this.state.showSkills &&
+        !this.state.showSocial &&
+        !this.state.showCareer &&
+        !this.state.showProfile &&
+        !this.state.showMentorship &&
+        !this.state.showCollaboration) {
         this.setState({
           showAll: false
         });
-      } else if (showProfile && showFCC && showMentorship && showSkills && showSocial && showCareer && showCollaboration) {
+      } else if (
+        this.state.showFCC &&
+        this.state.showSocial &&
+        this.state.showSkills &&
+        this.state.showCareer &&
+        this.state.showProfile &&
+        this.state.showMentorship &&
+        this.state.showCollaboration) {
         this.setState({
           showAll: true
         });
@@ -155,12 +171,12 @@ class Profile extends React.Component {
   toggleAll = () => {
     this.setState({
       showAll: !this.state.showAll,
-      showProfile: !this.state.showAll,
       showFCC: !this.state.showAll,
-      showMentorship: !this.state.showAll,
+      showCareer: !this.state.showAll,
       showSkills: !this.state.showAll,
       showSocial: !this.state.showAll,
-      showCareer: !this.state.showAll,
+      showProfile: !this.state.showAll,
+      showMentorship: !this.state.showAll,
       showCollaboration: !this.state.showAll
     });
   }
@@ -173,6 +189,17 @@ class Profile extends React.Component {
     }).catch(err => console.log(err));
   }
 
+  clearSocialInput = (site) => {
+    const { user } = this.state;
+    user.social[site] = '';
+    this.setState({ user }, () => {
+      updateUser(user).then(res => {
+        const { updatedUser } = res.data;
+        this.props.saveUser(updatedUser);
+      });
+    });
+  }
+
   closeModal = () => {
     this.setState({ modalOpen: false });
   }
@@ -182,11 +209,11 @@ class Profile extends React.Component {
     const {
       errors,
       user: {
-        mentorship,
-        username,
-        personal,
         social,
         career,
+        personal,
+        username,
+        mentorship,
         skillsAndInterests
       }
     } = this.state;
@@ -195,12 +222,12 @@ class Profile extends React.Component {
       <div id="profile-page-main-container" className="ui container">
 
         <UserLabel
-          label={mentorship.mentor ? 'Mentor' : 'Member'}
-          username={username}
           size="huge"
+          username={username}
           image={personal.avatarUrl}
           folder={this.state.showAll}
-          toggleAll={this.toggleAll} />
+          toggleAll={this.toggleAll}
+          label={mentorship.mentor ? 'Mentor' : 'Member'} />
 
         <div onClick={this.saveChanges} id="saveButton" className="ui huge teal label">
           Save
@@ -215,68 +242,69 @@ class Profile extends React.Component {
 
           <PersonalInfo
             {...personal}
-            subSaveClick={this.handleSubSaveClick}
-            showPopUp={this.state.personalPopUp}
-            showProfile={this.state.showProfile}
+            errors={errors }
             toggle={this.toggle}
-            handleInputChange={this.handleInputChange}
             username={username}
-            errors={errors }/>
+            showProfile={this.state.showProfile}
+            showPopUp={this.state.personalPopUp}
+            subSaveClick={this.handleSubSaveClick}
+            handleInputChange={this.handleInputChange} />
 
           <Certifications
             toggle={this.toggle}
-            subSaveClick={this.handleSubSaveClick}
-            showPopUp={this.state.fccPopUp}
             showFCC={this.state.showFCC}
-            fccCerts={this.state.user.fccCerts} />
+            showPopUp={this.state.fccPopUp}
+            fccCerts={this.state.user.fccCerts}
+            subSaveClick={this.handleSubSaveClick} />
 
           <Mentorship
             {...mentorship}
+            toggle={this.toggle}
             subSaveClick={this.handleSubSaveClick}
             showPopUp={this.state.mentorshipPopUp}
-            toggle={this.toggle}
-            showMentorship={this.state.showMentorship}
             toggleMentorship={this.toggleMentorship}
+            showMentorship={this.state.showMentorship}
             handleInputChange={this.handleInputChange} />
 
           {/* Think about allowing additions by user to dropdowns */}
           <SkillsAndInterests
-            {...skillsAndInterests}
-            subSaveClick={this.handleSubSaveClick}
-            showPopUp={this.state.skillsPopUp}
-            showSkills={this.state.showSkills}
             toggle={this.toggle}
+            {...skillsAndInterests}
+            showSkills={this.state.showSkills}
+            showPopUp={this.state.skillsPopUp}
+            subSaveClick={this.handleSubSaveClick}
             handleSkillsChange={this.handleSkillsChange}
             handleInterestsChange={this.handleInterestsChange} />
 
           <Collaboration
             username={username}
-            subSaveClick={this.handleSubSaveClick}
-            showPopUp={this.state.collaboPopUp}
-            saveProjectsList={this.saveProjectsList}
             toggle={this.toggle}
             projects={this.state.user.projects}
+            showPopUp={this.state.collaboPopUp}
+            subSaveClick={this.handleSubSaveClick}
+            saveProjectsList={this.saveProjectsList}
             showCollaboration={this.state.showCollaboration} />
 
           <Social
             {...social}
-            subSaveClick={this.handleSubSaveClick}
-            showPopUp={this.state.socialPopUp}
-            showSocial={this.state.showSocial}
+            errors={errors}
             toggle={this.toggle}
-            handleInputChange={this.handleInputChange}
-            errors={errors} />
+            clear={this.clearSocialInput}
+            showSocial={this.state.showSocial}
+            showPopUp={this.state.socialPopUp}
+            subSaveClick={this.handleSubSaveClick}
+            handleInputChange={this.handleInputChange} />
 
           <Career
             {...career}
-            subSaveClick={this.handleSubSaveClick}
-            showPopUp={this.state.careerPopUp}
+            errors={errors}
             toggle={this.toggle}
             showCareer={this.state.showCareer}
-            handleRadioChange={this.handleRadioChange}
+            showPopUp={this.state.careerPopUp}
+            subSaveClick={this.handleSubSaveClick}
             handleInputChange={this.handleInputChange}
-            handleTenureChange={this.handleTenureChange}
-            errors={errors} />
+            handleRadioChange={this.handleRadioChange}
+            handleTenureChange={this.handleTenureChange} />
 
         </div>
       </div>

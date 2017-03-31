@@ -23,7 +23,7 @@ export const defaultState = {
   }
 }
 
-export const search = (state = defaultState, action) => {
+export default (state = defaultState, action) => {
   switch (action.type) {
 
     case SAVE_SEARCH_STATE:
