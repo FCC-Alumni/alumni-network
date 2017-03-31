@@ -1,18 +1,57 @@
 import React from 'react';
 
-const FormField = ({ label, icon, onChange, value, type, name, errors, tooltip, inputOptions, placeholder }) => {
+const FormField = ({
+  icon,
+  label,
+  type,
+  name,
+  clear,
+  value,
+  errors,
+  tooltip,
+  onChange,
+  username,
+  disabled,
+  actionUrl,
+  actionText,
+  placeholder,
+  removeSocial,
+  inputOptions,
+  reactionText,
+}) => {
   return (
     <div className="inline field">
-      { label && <label>{label}</label> } 
+      { label && <label>{label}</label> }
       <div className={`ui input ${inputOptions}`}>
         { icon &&  <i className={icon} /> }
         <input
-          onChange={onChange}
           type={type}
-          placeholder={placeholder}
-          title={tooltip}
           name={name}
-          value={value} />
+          value={value}
+          title={tooltip}
+          disabled={disabled}
+          onChange={onChange}
+          placeholder={placeholder} />
+        {
+          (inputOptions.indexOf('corner') > -1 && !value) &&
+          <a href={actionUrl}>
+            <div
+              style={{ cursor: 'pointer' }}
+              className="ui corner green label"
+              title="Sign in to retrieve your credentials">
+              {actionText}
+            </div>
+          </a>
+        }
+        {
+          (inputOptions.indexOf('corner') > -1 && value) &&
+          <div
+            style={{ cursor: 'pointer' }}
+            onClick={() => {clear(name)}}
+            className="ui corner red label">
+            {reactionText}
+          </div>
+        }
       </div>
       { errors[name] &&
         <div className="ui small left pointing red basic label">
@@ -23,23 +62,28 @@ const FormField = ({ label, icon, onChange, value, type, name, errors, tooltip, 
 }
 
 FormField.propTypes = {
-  label: React.PropTypes.string,
-  onChange: React.PropTypes.func.isRequired,
-  value: React.PropTypes.string.isRequired,
-  type: React.PropTypes.string,
-  name: React.PropTypes.string.isRequired,
-  errors: React.PropTypes.object.isRequired,
-  placeholder: React.PropTypes.string,
-  tooltip: React.PropTypes.string,
   icon: React.PropTypes.string,
-  inputOptions: React.PropTypes.string
+  type: React.PropTypes.string,
+  label: React.PropTypes.string,
+  disabled: React.PropTypes.bool,
+  onChange: React.PropTypes.func,
+  tooltip: React.PropTypes.string,
+  actionUrl: React.PropTypes.string,
+  actionText: React.PropTypes.string,
+  placeholder: React.PropTypes.string,
+  inputOptions: React.PropTypes.string,
+  name: React.PropTypes.string.isRequired,
+  value: React.PropTypes.string.isRequired,
+  errors: React.PropTypes.object.isRequired
 }
 
 FormField.defaultProps = {
-  type: 'text',
   icon: '',
   label: '',
-  inputOptions: ''
+  type: 'text',
+  disabled: false,
+  inputOptions: '',
+  actionButton: false
 }
 
 export default FormField;

@@ -6,16 +6,16 @@ import Ribbon from './common/RibbonHeader';
 
 const inputOptions = 'small left icon';
 
-const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepen, twitter, linkedin, toggle, errors }) => {
+const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepen, twitter, linkedin, toggle, errors, clear }) => {
   return (
     <div>
-      <Ribbon 
-        showPopUp={showPopUp} 
-        subSaveClick={subSaveClick}
+      <Ribbon
+        content="Social"
         id="socialPopUp"
         showSave={showSocial}
-        content="Social" 
-        wrapperClass="socialWrapper" 
+        showPopUp={showPopUp}
+        subSaveClick={subSaveClick}
+        wrapperClass="socialWrapper"
         onClick={()=>{toggle('showSocial')}} />
       <div className={`socialPane ${showSocial ? 'show' : 'hide'}`}>
         <MessageBox
@@ -25,36 +25,45 @@ const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepe
         <div className="ui list">
           <ListItem>
             <FormField
-              onChange={handleInputChange}
-              placeholder="Enter CodePen"
               name="codepen"
               value={codepen}
               errors={errors}
-              inputOptions={inputOptions}
+              tooltip="CodePen"
               icon='codepen icon'
-              tooltip="CodePen" />
-          </ListItem>
-          <ListItem>
-            <FormField
-              onChange={handleInputChange}
-              placeholder="Enter Twitter"
-              name="twitter"
-              value={twitter}
-              errors={errors}
+              placeholder="Enter CodePen"
               inputOptions={inputOptions}
-              icon='twitter icon'
-              tooltip="Twitter" />
+              onChange={handleInputChange} />
           </ListItem>
           <ListItem>
             <FormField
-              onChange={handleInputChange}
-              placeholder="Enter LinkedIn"
+              clear={clear}
+              name="twitter"
+              errors={errors}
+              value={twitter}
+              tooltip="Twitter"
+              icon='twitter icon'
+              placeholder="Enter Twitter"
+              disabled={twitter ? false : true}
+              inputOptions={inputOptions + ' corner labeled'}
+              actionUrl="http://localhost:8080/connect/twitter"
+              reactionText={<i style={{ cursor: 'pointer' }} className="remove icon" />}
+              actionText={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
+          </ListItem>
+          <ListItem>
+            <FormField
+              clear={clear}
+              errors={errors}
               name="linkedin"
               value={linkedin}
-              errors={errors}
-              inputOptions={inputOptions}
+              tooltip="LinkedIn"
               icon='linkedin icon'
-              tooltip="LinkedIn" />
+              inputOptions={inputOptions}
+              placeholder="Enter LinkedIn"
+              disabled={linkedin ? false : true}
+              inputOptions={inputOptions + ' corner labeled'}
+              actionUrl="http://localhost:8080/connect/linkedin"
+              reactionText={<i style={{ cursor: 'pointer' }} className="remove icon" />}
+              actionText={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
           </ListItem>
         </div>
       </div>
