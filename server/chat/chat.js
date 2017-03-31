@@ -1,7 +1,7 @@
 
 /*** we will use Redis to maintain a record of
   currently online users: ***/
-import { client as redis } from '../server.js';
+import { client as redis } from '../../server.js';
 redis.set('online-users', JSON.stringify({}));
 
 // all real-time chat events:

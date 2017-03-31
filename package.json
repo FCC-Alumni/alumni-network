@@ -1,40 +1,40 @@
 {
-  "name": "alumni-network",
-  "version": "0.1.0",
-  "private": true,
+  "name": "free-code-camp-alumni-network",
+  "version": "1.0.0",
+  "description": "An app for connecting freeCodeCamp Alumni built on the MERN stack.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec babel-node -- ./server.js",
+    "start": "node --exec babel-node -- ./server.js",
+    "deploy": "git push heroku master",
+    "heroku-postinstall": "cd client/ && npm install && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "axios": "^0.15.3",
-    "immutable": "^3.8.1",
+    "babel-cli": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "bcrypt": "^1.0.2",
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.0",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.0",
+    "express-session": "^1.15.1",
     "lodash": "^4.17.4",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-emoji": "^0.4.4",
-    "react-emoji-picker": "^1.0.13",
-    "react-redux": "^5.0.3",
-    "react-router-dom": "^4.0.0-beta.7",
-    "redux": "^3.6.0",
-    "redux-devtools-extension": "^2.13.0",
-    "redux-thunk": "^2.2.0",
-    "semantic-ui-react": "^0.67.0",
-    "shortid": "^2.2.8",
-    "socket.io-client": "^1.7.3",
-    "socket.io-react": "^1.1.2",
-    "uuid": "^3.0.1",
+    "mongodb": "^2.2.24",
+    "mongoose": "^4.8.5",
+    "passport": "^0.3.2",
+    "passport-github2": "^0.1.10",
+    "passport-linkedin": "^1.0.0",
+    "passport-twitter": "^1.0.4",
+    "redis": "^2.7.1",
+    "socket.io": "^1.7.3",
     "validator": "^7.0.0"
   },
   "devDependencies": {
-    "node-sass": "^4.5.0",
-    "npm-run-all": "^4.0.2",
-    "react-scripts": "0.9.3"
-  },
-  "scripts": {
-    "build-css": "node-sass src/ -o src/",
-    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
-    "start-js": "react-scripts start",
-    "start": "npm-run-all -p watch-css start-js",
-    "build": "npm run build-css && react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  },
-  "proxy": "http://localhost:8080"
+    "nodemon": "^1.11.0"
+  }
 }
