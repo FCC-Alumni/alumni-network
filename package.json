@@ -22,7 +22,7 @@
     "body-parser": "^1.17.0",
     "dotenv": "^4.0.0",
     "express": "^4.15.0",
-    "express-session": "^1.15.1",
+    "express-session": "1.15.1",
     "lodash": "^4.17.4",
     "mongodb": "^2.2.24",
     "mongoose": "^4.8.5",

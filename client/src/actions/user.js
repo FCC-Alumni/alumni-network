@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { SAVE_USER, SAVE_SEARCH_STATE } from './types';
+import {
+  SAVE_USER,
+  SAVE_SEARCH_STATE,
+  SAVE_PROFILE_VIEW_STATE
+} from './types';
 
 export const getUserData = () => {
   return axios.get('/api/user')
@@ -26,5 +30,12 @@ export const saveSearchState = (searchState) => {
   return {
     type: SAVE_SEARCH_STATE,
     searchState
+  }
+}
+
+export const saveViewState = (profileView) => {
+  return {
+    type: SAVE_PROFILE_VIEW_STATE,
+    profileView
   }
 }

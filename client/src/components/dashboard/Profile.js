@@ -13,7 +13,7 @@ import Collaboration from './Profile/Collaboration';
 import Certifications from './Profile/Certifications';
 import SkillsAndInterests from './Profile/SkillsAndInterests';
 
-import { saveUser, updateUser } from '../../actions/user';
+import { saveUser, updateUser, saveViewState } from '../../actions/user';
 
 /*
 TODO:
@@ -34,19 +34,12 @@ TODO:
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-    const user = this.props.user;
+    const { user, viewState } = this.props;
     this.state = {
       user,
+      viewState,
       errors: {},
-      showAll: true,
-      showFCC: false,
       modalOpen: false,
-      showProfile: true,
-      showSkills: false,
-      showSocial: false,
-      showCareer: false,
-      showMentorship: false,
-      showCollaboration: false,
       fccPopUp: false,
       skillsPopUp: false,
       socialPopUp: false,
@@ -55,6 +48,10 @@ class Profile extends React.Component {
       personalPopUp: false,
       mentorshipPopUp: false,
     }
+  }
+
+  componentWillUnmount() {
+    this.props.saveViewState(this.state.viewState);
   }
 
   handleSubSaveClick = (e) => {
@@ -73,37 +70,37 @@ class Profile extends React.Component {
   }
 
   saveProjectsList = (items_list) => {
-    const { user } = this.state;
+    var { user } = this.state;
     user.projects = items_list;
     this.setState({ user });
   }
 
   toggleMentorship = (bool) => {
-    const { user } = this.state;
+    var { user } = this.state;
     user.mentorship.isMentor = bool;
     this.setState({ user });
   }
 
   handleSkillsChange = (e, data) => {
-    const { user } = this.state;
+    var { user } = this.state;
     user.skillsAndInterests.coreSkills = data.value;
     this.setState({ user });
   }
 
   handleInterestsChange = (e, data) => {
-    const { user } = this.state;
+    var { user } = this.state;
     user.skillsAndInterests.codingInterests = data.value;
     this.setState({ user });
   }
 
   handleTenureChange = (e, data) => {
-    let { user } = this.state;
+    var { user } = this.state;
     user.career.tenure = data.value;
     this.setState({ user });
   }
 
   handleRadioChange = (e) => {
-    let { user } = this.state;
+    var { user } = this.state;
     if (e.target.name === 'working') {
       if (e.target.id === 'Yes') {
         user.career.jobSearch = '';
@@ -120,7 +117,7 @@ class Profile extends React.Component {
   }
 
   handleInputChange = (e) => {
-    let { user } = this.state;
+    var { user } = this.state;
 
     if (e.target.name === 'company') {
       user.career.company = e.target.value;
@@ -139,46 +136,48 @@ class Profile extends React.Component {
   }
 
   toggle = (target) => {
+    const { viewState } = this.state;
     /* we pass callback to setState to catch state after update
       in case all the modals are now open or closed */
-    this.setState({ [target]: !this.state[target] }, () => {
+    viewState[target] = !viewState[target];
+    this.setState({ viewState }, () => {
       if (
-        !this.state.showFCC &&
-        !this.state.showSkills &&
-        !this.state.showSocial &&
-        !this.state.showCareer &&
-        !this.state.showProfile &&
-        !this.state.showMentorship &&
-        !this.state.showCollaboration) {
-        this.setState({
-          showAll: false
-        });
+        !viewState.showFCC &&
+        !viewState.showSkills &&
+        !viewState.showSocial &&
+        !viewState.showCareer &&
+        !viewState.showProfile &&
+        !viewState.showMentorship &&
+        !viewState.showCollaboration
+      ) {
+          viewState.showAll = false;
+          this.setState({ viewState });
       } else if (
-        this.state.showFCC &&
-        this.state.showSocial &&
-        this.state.showSkills &&
-        this.state.showCareer &&
-        this.state.showProfile &&
-        this.state.showMentorship &&
-        this.state.showCollaboration) {
-        this.setState({
-          showAll: true
-        });
+        viewState.showFCC &&
+        viewState.showSocial &&
+        viewState.showSkills &&
+        viewState.showCareer &&
+        viewState.showProfile &&
+        viewState.showMentorship &&
+        viewState.showCollaboration
+      ) {
+          viewState.showAll = true;
+          this.setState({ viewState });
       }
     });
   }
 
   toggleAll = () => {
-    this.setState({
-      showAll: !this.state.showAll,
-      showFCC: !this.state.showAll,
-      showCareer: !this.state.showAll,
-      showSkills: !this.state.showAll,
-      showSocial: !this.state.showAll,
-      showProfile: !this.state.showAll,
-      showMentorship: !this.state.showAll,
-      showCollaboration: !this.state.showAll
-    });
+    const { viewState, viewState: { showAll } } = this.state;
+    viewState.showAll = !showAll;
+    viewState.showFCC = !showAll;
+    viewState.showCareer = !showAll;
+    viewState.showSkills = !showAll;
+    viewState.showSocial = !showAll;
+    viewState.showProfile = !showAll;
+    viewState.showMentorship = !showAll;
+    viewState.showCollaboration = !showAll;
+    this.setState({ viewState });
   }
 
   saveChanges = () => {
@@ -190,7 +189,7 @@ class Profile extends React.Component {
   }
 
   clearSocialInput = (site) => {
-    const { user } = this.state;
+    var { user } = this.state;
     user.social[site] = '';
     this.setState({ user }, () => {
       updateUser(user).then(res => {
@@ -225,8 +224,8 @@ class Profile extends React.Component {
           size="huge"
           username={username}
           image={personal.avatarUrl}
-          folder={this.state.showAll}
           toggleAll={this.toggleAll}
+          folder={this.state.viewState.showAll}
           label={mentorship.mentor ? 'Mentor' : 'Member'} />
 
         <div onClick={this.saveChanges} id="saveButton" className="ui huge teal label">
@@ -245,17 +244,17 @@ class Profile extends React.Component {
             errors={errors }
             toggle={this.toggle}
             username={username}
-            showProfile={this.state.showProfile}
             showPopUp={this.state.personalPopUp}
             subSaveClick={this.handleSubSaveClick}
-            handleInputChange={this.handleInputChange} />
+            handleInputChange={this.handleInputChange}
+            showProfile={this.state.viewState.showProfile} />
 
           <Certifications
             toggle={this.toggle}
-            showFCC={this.state.showFCC}
             showPopUp={this.state.fccPopUp}
             fccCerts={this.state.user.fccCerts}
-            subSaveClick={this.handleSubSaveClick} />
+            subSaveClick={this.handleSubSaveClick}
+            showFCC={this.state.viewState.showFCC} />
 
           <Mentorship
             {...mentorship}
@@ -263,16 +262,16 @@ class Profile extends React.Component {
             subSaveClick={this.handleSubSaveClick}
             showPopUp={this.state.mentorshipPopUp}
             toggleMentorship={this.toggleMentorship}
-            showMentorship={this.state.showMentorship}
-            handleInputChange={this.handleInputChange} />
+            handleInputChange={this.handleInputChange}
+            showMentorship={this.state.viewState.showMentorship} />
 
           {/* Think about allowing additions by user to dropdowns */}
           <SkillsAndInterests
             toggle={this.toggle}
             {...skillsAndInterests}
-            showSkills={this.state.showSkills}
             showPopUp={this.state.skillsPopUp}
             subSaveClick={this.handleSubSaveClick}
+            showSkills={this.state.viewState.showSkills}
             handleSkillsChange={this.handleSkillsChange}
             handleInterestsChange={this.handleInterestsChange} />
 
@@ -283,27 +282,27 @@ class Profile extends React.Component {
             showPopUp={this.state.collaboPopUp}
             subSaveClick={this.handleSubSaveClick}
             saveProjectsList={this.saveProjectsList}
-            showCollaboration={this.state.showCollaboration} />
+            showCollaboration={this.state.viewState.showCollaboration} />
 
           <Social
             {...social}
             errors={errors}
             toggle={this.toggle}
             clear={this.clearSocialInput}
-            showSocial={this.state.showSocial}
             showPopUp={this.state.socialPopUp}
             subSaveClick={this.handleSubSaveClick}
-            handleInputChange={this.handleInputChange} />
+            handleInputChange={this.handleInputChange}
+            showSocial={this.state.viewState.showSocial} />
 
           <Career
             {...career}
             errors={errors}
             toggle={this.toggle}
-            showCareer={this.state.showCareer}
             showPopUp={this.state.careerPopUp}
             subSaveClick={this.handleSubSaveClick}
             handleInputChange={this.handleInputChange}
             handleRadioChange={this.handleRadioChange}
+            showCareer={this.state.viewState.showCareer}
             handleTenureChange={this.handleTenureChange} />
 
         </div>
@@ -314,12 +313,14 @@ class Profile extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    viewState: state.profileViewState
   }
 }
 
 Profile.propTypes = {
-  user: React.PropTypes.object.isRequired
+  user: React.PropTypes.object.isRequired,
+  viewState: React.PropTypes.object
 }
 
-export default connect(mapStateToProps, { saveUser })(Profile);
+export default connect(mapStateToProps, { saveUser, saveViewState })(Profile);

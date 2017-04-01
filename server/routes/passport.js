@@ -3,6 +3,7 @@ import passport from 'passport';
 import { Strategy as GitHubStrategy } from 'passport-github2'
 import { Strategy as TwitterStrategy } from 'passport-twitter';
 import { Strategy as LinkedInStrategy } from 'passport-linkedin';
+import { isAuthenticated } from '../routes/user';
 import Session from 'express-session';
 import User from '../models/user';
 import dotenv from 'dotenv';
@@ -76,21 +77,20 @@ passport.use(new TwitterStrategy({
   consumerKey: process.env.TWITTER_KEY,
   consumerSecret: process.env.TWITTER_SECRET,
   callbackURL: 'http://localhost:8080/connect/twitter/callback'
-},
-(token, tokenSecret, profile, done) => {
+}, (token, tokenSecret, profile, done) => {
   return done(null, profile)
 }));
 
-router.get('/connect/twitter', passport.authorize('twitter'));
+router.get('/connect/twitter', isAuthenticated, passport.authorize('twitter'));
 
 router.get('/connect/twitter/callback',
   passport.authorize('twitter', { failureRedirect: 'http://localhost:3000/dashboard/profile' }), ((req, res) => {
     const { user, account } = req;
 
-    User.findOne({ githubId: user.githubId }, (err, user) => {
+    User.findOne({ githubId: user.githubId }, (err, updatedUser) => {
       if (!err) {
-        user.social.twitter = account.username;
-        user.save();
+        updatedUser.social.twitter = account.username;
+        updatedUser.save();
         res.redirect('http://localhost:3000/dashboard/profile');
         console.log('updated user with twitter handle');
       } else {
@@ -104,21 +104,19 @@ passport.use(new LinkedInStrategy({
   consumerKey: process.env.LINKEDIN_KEY,
   consumerSecret: process.env.LINKEDIN_SECRET,
   callbackURL: 'http://localhost:8080/connect/linkedin/callback'
-},
-(token, tokenSecret, profile, done) => {
+}, (token, tokenSecret, profile, done) => {
   return done(null, profile)
 }));
 
-router.get('/connect/linkedin', passport.authorize('linkedin'));
+router.get('/connect/linkedin', isAuthenticated, passport.authorize('linkedin'));
 
 router.get('/connect/linkedin/callback',
   passport.authorize('linkedin', { failureRedirect: 'http://localhost:3000/dashboard/profile' }), ((req, res) => {
-    const { user, account } = req;
 
-    User.findOne({ githubId: user.githubId }, (err, user) => {
+    User.findOne({ githubId: req.user.githubId }, (err, updatedUser) => {
       if (!err) {
-        user.social.linkedin = account.displayName;
-        user.save();
+        updatedUser.social.linkedin = req.account.displayName;
+        updatedUser.save();
         res.redirect('http://localhost:3000/dashboard/profile');
         console.log('updated user with linkedin handle');
       } else {

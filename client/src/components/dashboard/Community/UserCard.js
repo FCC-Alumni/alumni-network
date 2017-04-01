@@ -13,7 +13,7 @@ TODO:
 */
 
 const UserCard = ({ user }) => {
-  
+
   const joinedOn = user.personal.memberSince.split('-').slice(0, 2);
   const prettyDate = convertMonthToString(...joinedOn);
   var certs = [];
@@ -22,7 +22,7 @@ const UserCard = ({ user }) => {
       certs.push(cert.replace(/_/g, ' '));
     }
   }
-  
+
   return(
     <div className='ui raised card'>
       <div className="ui slide masked reveal image">
@@ -31,14 +31,14 @@ const UserCard = ({ user }) => {
           <div className="labelWrapper">
             <Label
               image={user.personal.avatarUrl}
-              size="large" 
-              username={user.username} 
+              size="large"
+              username={user.username}
               label={user.mentorship.isMentor ? 'Mentor' : 'Member'} />
           </div>
           <div className="summaryWrapper">
             <DividingHeader size="h6" icon="checkmark box icon" content="Core Skills" />
             <div className="ui list">
-              { 
+              {
                 user.skillsAndInterests.coreSkills.length > 0 ?
                 user.skillsAndInterests.coreSkills.map((item, i) => i < 3 && <div className="item" key={i}>{item}</div>) :
                 'User has not entered any skills yet!'
@@ -46,7 +46,7 @@ const UserCard = ({ user }) => {
             </div>
             <DividingHeader size="h6" icon="checkmark box icon" content="Coding Interests" />
             <div className="ui list">
-              { 
+              {
                 user.skillsAndInterests.codingInterests.length > 0 ?
                 user.skillsAndInterests.codingInterests.map((item, i) => i < 3 && <div className="item" key={i}>{item}</div>) :
                 'User has not entered any interests yet!'
@@ -76,7 +76,7 @@ const UserCard = ({ user }) => {
           <a target="_blank" href={`https://www.freecodecamp.com/${user.username}`}><i className="fa fa-free-code-camp"/></a>
           { user.social.codepen && <a target="_blank" href={`https://www.freecodecamp.com/${user.username}`}><i className="codepen icon"/></a> }
           {/*these need to be fixed! just a potential */}
-          { user.social.linkedin && <a target="_blank" href={`https://www.linkedin.com/${user.social.linkedin}`}><i className="linkedin icon"/></a> }
+          { user.social.linkedin && <a target="_blank" href={`https://www.linkedin.com/search/results/index/?keywords=${encodeURIComponent(user.social.linkedin)}&origin=GLOBAL_SEARCH_HEADER`}><i className="linkedin icon"/></a> }
           { user.social.twitter && <a target="_blank" href={`https://www.twitter.com/${user.social.twitter}`}><i className="twitter icon"/></a> }
         </span>
       </div>

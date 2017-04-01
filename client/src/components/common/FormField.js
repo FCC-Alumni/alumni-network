@@ -13,11 +13,11 @@ const FormField = ({
   username,
   disabled,
   actionUrl,
-  actionText,
+  actionIcon,
   placeholder,
   removeSocial,
   inputOptions,
-  reactionText,
+  reactionIcon,
 }) => {
   return (
     <div className="inline field">
@@ -31,7 +31,8 @@ const FormField = ({
           title={tooltip}
           disabled={disabled}
           onChange={onChange}
-          placeholder={placeholder} />
+          placeholder={placeholder}
+          readOnly={!onChange && true} />
         {
           (inputOptions.indexOf('corner') > -1 && !value) &&
           <a href={actionUrl}>
@@ -39,7 +40,7 @@ const FormField = ({
               style={{ cursor: 'pointer' }}
               className="ui corner green label"
               title="Sign in to retrieve your credentials">
-              {actionText}
+              {actionIcon}
             </div>
           </a>
         }
@@ -48,8 +49,9 @@ const FormField = ({
           <div
             style={{ cursor: 'pointer' }}
             onClick={() => {clear(name)}}
-            className="ui corner red label">
-            {reactionText}
+            className="ui corner red label"
+            title="Remove account">
+            {reactionIcon}
           </div>
         }
       </div>
@@ -69,9 +71,10 @@ FormField.propTypes = {
   onChange: React.PropTypes.func,
   tooltip: React.PropTypes.string,
   actionUrl: React.PropTypes.string,
-  actionText: React.PropTypes.string,
+  actionIcon: React.PropTypes.object,
   placeholder: React.PropTypes.string,
   inputOptions: React.PropTypes.string,
+  reactionIcon: React.PropTypes.object,
   name: React.PropTypes.string.isRequired,
   value: React.PropTypes.string.isRequired,
   errors: React.PropTypes.object.isRequired

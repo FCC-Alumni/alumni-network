@@ -16,7 +16,7 @@ export const isAuthenticated = (req, res, next) => {
   if (req.user) {
     next();
   } else {
-    res.sendStatus(401);
+    res.redirect('http://localhost:3000/login');
   }
 }
 

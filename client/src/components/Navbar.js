@@ -1,11 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import sticky from '../assets/helpers/stickyNav';
+import $ from 'jquery';
+
+// Damn you jQuery! >>
+$('.ui.sticky').sticky();
 
 class NavBar extends React.Component {
   render() {
     const guestNav = (
-      <div className="ui stackable teal pointing menu">
+      <div className="ui huge fixed sticky stackable teal pointing menu">
         <NavLink className="item" activeClassName="item active" exact to="/"><i className="fa fa-free-code-camp" />freeCodeCamp Alumni Network</NavLink>
         <div className="right menu">
           <NavLink className="item" activeClassName="item active" exact to="/login">Login</NavLink>
@@ -14,7 +19,7 @@ class NavBar extends React.Component {
     );
 
     const userNav = (
-      <div className="ui stackable teal pointing menu">
+      <div className="ui huge fixed sticky stackable teal pointing menu">
         <NavLink className="item" activeClassName="active item" exact to="/dashboard"><i className="fa fa-free-code-camp"></i>freeCodeCamp Alumni Network</NavLink>
         <NavLink className="item" activeClassName="active item" exact to="/dashboard/profile">Profile</NavLink>
         <NavLink className="item" activeClassName="active item" exact to="/dashboard/community">Community</NavLink>

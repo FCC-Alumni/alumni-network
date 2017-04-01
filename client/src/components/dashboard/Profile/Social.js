@@ -46,8 +46,8 @@ const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepe
               disabled={twitter ? false : true}
               inputOptions={inputOptions + ' corner labeled'}
               actionUrl="http://localhost:8080/connect/twitter"
-              reactionText={<i style={{ cursor: 'pointer' }} className="remove icon" />}
-              actionText={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
+              reactionIcon={<i style={{ cursor: 'pointer' }} className="remove icon" />}
+              actionIcon={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
           </ListItem>
           <ListItem>
             <FormField
@@ -57,13 +57,12 @@ const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepe
               value={linkedin}
               tooltip="LinkedIn"
               icon='linkedin icon'
-              inputOptions={inputOptions}
               placeholder="Enter LinkedIn"
               disabled={linkedin ? false : true}
               inputOptions={inputOptions + ' corner labeled'}
               actionUrl="http://localhost:8080/connect/linkedin"
-              reactionText={<i style={{ cursor: 'pointer' }} className="remove icon" />}
-              actionText={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
+              reactionIcon={<i style={{ cursor: 'pointer' }} className="remove icon" />}
+              actionIcon={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
           </ListItem>
         </div>
       </div>
