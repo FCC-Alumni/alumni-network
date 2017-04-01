@@ -21,9 +21,7 @@
     "socket.io-client": "^1.7.3",
     "socket.io-react": "^1.1.2",
     "uuid": "^3.0.1",
-    "validator": "^7.0.0"
-  },
-  "devDependencies": {
+    "validator": "^7.0.0",
     "node-sass": "^4.5.0",
     "npm-run-all": "^4.0.2",
     "react-scripts": "0.9.3"

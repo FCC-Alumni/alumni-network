@@ -2,7 +2,6 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import redis from 'redis';
 import mongoose from 'mongoose';
 
 import passportRoute from './server/routes/passport';
@@ -10,14 +9,9 @@ import user from './server/routes/user';
 import community from './server/routes/community';
 import chat from './server/routes/chat';
 import privateChat from './server/routes/private-chat';
-import gitLabRoute from './server/helpers/gitLabRoute';
+import gitLabRoute from './server/helpers/gitlabRoute';
 
 dotenv.config();
-
-// initialize redis
-export const client = redis.createClient();
-client.on('error', (err) => console.log(`Redis Error: ${err}`));
-client.on('ready', () => console.log('Redis connected'));
 
 // initialize mongoDB
 mongoose.Promise = require('bluebird');

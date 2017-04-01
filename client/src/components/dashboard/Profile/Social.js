@@ -4,6 +4,8 @@ import MessageBox from '../../common/MessageBox';
 import FormField from '../../common/FormField';
 import Ribbon from './common/RibbonHeader';
 
+import { APP_HOST } from '../../../actions/chat';
+
 const inputOptions = 'small left icon';
 
 const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepen, twitter, linkedin, toggle, errors, clear }) => {
@@ -45,7 +47,7 @@ const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepe
               placeholder="Enter Twitter"
               disabled={twitter ? false : true}
               inputOptions={inputOptions + ' corner labeled'}
-              actionUrl="http://localhost:8080/connect/twitter"
+              actionUrl={`${APP_HOST}/connect/twitter`}
               reactionIcon={<i style={{ cursor: 'pointer' }} className="remove icon" />}
               actionIcon={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
           </ListItem>
@@ -60,7 +62,7 @@ const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepe
               placeholder="Enter LinkedIn"
               disabled={linkedin ? false : true}
               inputOptions={inputOptions + ' corner labeled'}
-              actionUrl="http://localhost:8080/connect/linkedin"
+              actionUrl={`${APP_HOST}/connect/linkedin`}
               reactionIcon={<i style={{ cursor: 'pointer' }} className="remove icon" />}
               actionIcon={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
           </ListItem>

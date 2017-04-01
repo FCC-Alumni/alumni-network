@@ -3,6 +3,7 @@ import passport from 'passport';
 import axios from 'axios';
 import _merge from 'lodash/merge';
 import User from '../models/user';
+import { isAuthenticated } from './passport';
 import {
   getFrontEndCert,
   getBackEndCert,
@@ -10,15 +11,6 @@ import {
 } from '../helpers/getCerts';
 
 const router = express.Router();
-
-// authentication middleware using express-session:
-export const isAuthenticated = (req, res, next) => {
-  if (req.user) {
-    next();
-  } else {
-    res.redirect('http://localhost:3000/login');
-  }
-}
 
 router.get('/api/user', (req, res) => {
   if (req.user) {

@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 import sticky from '../assets/helpers/stickyNav';
 import $ from 'jquery';
 
+import { APP_HOST } from '../actions/chat';
+
 // Damn you jQuery! >>
 $('.ui.sticky').sticky();
 
@@ -26,7 +28,7 @@ class NavBar extends React.Component {
         <NavLink className="item" activeClassName="active item" exact to="/dashboard/mentorship">Mentorship</NavLink>
         <NavLink className="item" activeClassName="active item" exact to="/dashboard/chat">Mess Hall</NavLink>
         <div className="right menu">
-          <a className="item" href="http://localhost:8080/logout">Logout</a>
+          <a className="item" href={`${APP_HOST}/logout`}>Logout</a>
         </div>
       </div>
     );

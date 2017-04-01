@@ -2,13 +2,16 @@
 import axios from 'axios';
 import uuidV1 from 'uuid/v1';
 import { Map, Set } from 'immutable';
-import { store } from '../index.js';
+import { store } from '../index';
 import { addFlashMessage } from './flashMessages';
 
-// setup socket.io connection
+// define hosts
 const DEV_HOST = 'http://localhost:8080';
-const PROD_HOST = ''; // production host url
-export const socket = require('socket.io-client').connect(DEV_HOST);
+const PROD_HOST = 'https://safe-cliffs-78756.herokuapp.com';
+export const APP_HOST = process.env.NODE_ENV === 'production' ? PROD_HOST : DEV_HOST;
+
+// setup socket.io connection
+export const socket = require('socket.io-client').connect(`${APP_HOST}/`);
 
 export const PRIVATE_ERROR = 'PRIVATE_ERROR';
 export const POPULATE_PRIVATE = 'POPULATE_PRIVATE';

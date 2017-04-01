@@ -2,7 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import axios from 'axios';
 import PrivateChat from '../models/private-chat';
-import { isAuthenticated } from './user';
+import { isAuthenticated } from './passport';
 
 const router = express.Router();
 

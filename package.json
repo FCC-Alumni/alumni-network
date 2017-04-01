@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --exec babel-node -- ./server.js",
-    "start": "node --exec babel-node -- ./server.js",
+    "start": "babel-node ./server.js",
     "deploy": "git push heroku master",
-    "heroku-postinstall": "cd client/ && npm install && npm run build"
+    "postinstall": "cd client/ && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
