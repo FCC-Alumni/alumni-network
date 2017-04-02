@@ -27,6 +27,9 @@ export default (state = Map(), action) => {
     case POPULATE_PRIVATE: {
       const { user, data } = payload;
       let reciepient;
+
+      if (data.length === 0) return state;
+      
       // we basically need to do some conversions to the data...
       data.map(data => {
         if (data.members[0] === user) {
