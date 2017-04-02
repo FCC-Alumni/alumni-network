@@ -18,11 +18,16 @@ router.get('/api/private-chat/initialize', isAuthenticated, (req, res) => {
 // handle new messages
 router.post('/api/private-chat/add-message', isAuthenticated, (req, res) => {
   const { username } = req.user;
-  PrivateChat.findOne({ $and: [{members: username}, {members: req.body.reciepient}] }, (err, conversation) => {
+  const { reciepient } = req.body;
+  PrivateChat.findOne({ $and: [{members: username}, {members: reciepient}] }, (err, conversation) => {
     if (err) res.sendStatus(500);
     if (!conversation) {
       const chat = new PrivateChat({
-        members: [ username, req.body.reciepient ],
+        members: [ username, reciepient ],
+        notifications: {
+          [username]: 0,
+          [reciepient]: 0
+        },
         history: [ req.body ]
       });
       chat.save(e => {
@@ -92,6 +97,40 @@ router.post('/api/private-chat/delete-message', isAuthenticated, (req, res) => {
     if (err) res.sendStatus(500);
     if (conversation) {
       conversation.history = conversation.history.filter(m => m.id !== id);
+      conversation.save(e => {
+        if (e) res.sendStatus(500);
+        res.sendStatus(200);
+      });
+    } else {
+      res.sendStatus(404);
+    }
+  });
+});
+
+router.post('/api/private-chat/add-notification', isAuthenticated, (req, res) => {
+  const { author, reciepient } = req.body;
+  PrivateChat.findOne({ $and: [{members: author}, {members: reciepient}] }, (err, conversation) => {
+    if (err) res.sendStatus(500);
+    if (conversation) {
+      conversation.notifications[reciepient]++;
+      conversation.markModified('notifications');
+      conversation.save(e => {
+        if (e) res.sendStatus(500);
+        res.sendStatus(200);
+      });
+    } else {
+      res.sendStatus(404);
+    }
+  });
+});
+
+router.post('/api/private-chat/clear-notifications', isAuthenticated, (req, res) => {
+  const { author, reciepient } = req.body;
+  PrivateChat.findOne({ $and: [{members: author}, {members: reciepient }] }, (err, conversation) => {
+    if (err) res.sendStatus(500);
+    if (conversation) {
+      conversation.notifications[author] = 0;
+      conversation.markModified('notifications');
       conversation.save(e => {
         if (e) res.sendStatus(500);
         res.sendStatus(200);

@@ -16,6 +16,7 @@ import {
   deleteMessage,
   broadcastEdit,
   fetchPrivateChat,
+  clearNotifications,
   initiatePrivateChat
 } from '../../../actions/chat';
 
@@ -28,8 +29,7 @@ class ChatController extends React.Component {
       edit: null,
       editText: null,
       modal: false,
-      privateChannels: false,
-      scroll: true
+      privateChannels: false
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -43,14 +43,6 @@ class ChatController extends React.Component {
     if (this.props.screen.isDesktop) document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
     this.chatContainer = document.getElementById('messageContainer');
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
-
-    document.addEventListener('mousedown', this.handleClick);
-
-    // if there are no private chat messages try to fetch from server:
-    // this isn't ideal but we are not storing any 'Fetched Yet?' state anywhere
-    if (this.props.privateChatSize === 0) {
-      this.props.fetchPrivateChat(this.props.user.username);
-    }
   }
   componentDidUpdate(prevProps) {
     if (this.props.chat.size > prevProps.chat.size) {
@@ -59,9 +51,7 @@ class ChatController extends React.Component {
   }
   componentWillUnmount() {
     document.body.style.backgroundImage = null;
-    document.removeEventListener('mousedown', this.handleClick, false);
   }
-  // safeguard timeouts within a method so we can clear when component unmounts:
   submitMessage = (text) => {
     const { conversant } = this.props;
     this.setState({ text: '' });
@@ -114,34 +104,34 @@ class ChatController extends React.Component {
       privateChannels: !this.state.privateChannels
     });
   }
-  initiatePrivateChat = (author) => {
-    this.props.initiatePrivateChat(author);
-    this.setState({ scroll: false });
-    this.props.history.push(`chat/${author}`);
-  }
-  handleClick = (e) => {
-    if (e.srcElement.id !== 'privateChatChannels' &&
-        e.srcElement.className !== 'privateChannel' &&
-        e.srcElement.className !== 'privateChannelsTitle') {
-      this.setState({
-        privateChannels: false
+  initiatePrivateChat = (author, notifcations) => {
+    if (notifcations) {
+      this.props.clearNotifications({
+        author: this.props.user.username,
+        reciepient: author
       });
     }
+    this.props.history.push(`chat/${author}`);
   }
   render() {
 
-    const { conversant, privateChat, screen } = this.props;
+    const { conversant, privateChat, totalNotifications, screen } = this.props;
 
     const privateChannels = (
-      <div id="privateChatChannels">
+      <div id="privateChatChannels" className='privateChatChannelsBox'>
         <h3 className='privateChannelsTitle'>Private Chat Channels:</h3>
-        {privateChat.size > 0 ? privateChat.map(username => {
+        {privateChat.size > 0 ? privateChat.keySeq().map(username => {
+          const notifications = privateChat.getIn([username, 'notifications']);
           return (
             <div
               key={username}
               className='privateChannel'
-              onClick={this.initiatePrivateChat.bind(this, username)}>
-              {username}
+              onClick={this.initiatePrivateChat.bind(this, username, notifications)}>
+              <img src={privateChat.getIn([username, 'history'])
+                .find(m => m.get('author') === username).get('avatar')} alt="User Avatar"/>
+              {notifications > 0 &&
+                <span className="notifications privateNotifications">{notifications}</span>}
+              <span className="privateUsername">{username}</span>
             </div>
           );
         }) :
@@ -149,6 +139,7 @@ class ChatController extends React.Component {
             <b>No Private Chats yet!</b><br/>
             Click another user's name to start a chat with them.
           </span>}
+          <i className="remove icon" id="closePrivateChat" onClick={this.togglePrivateChannels}></i>
       </div>
     );
 
@@ -178,7 +169,12 @@ class ChatController extends React.Component {
 
             </h2>
             {!conversant && <div>
-              <i onClick={this.togglePrivateChannels} className="comments teal icon" id="privateChatIcon"></i>
+              {totalNotifications ? <div onClick={this.togglePrivateChannels} id="privateChatIconWrapper">
+                <i className="comments teal icon" id="privateChatIcon"></i>
+                <span className="notifications totalNotifications">{totalNotifications}</span>
+              </div> : <div onClick={this.togglePrivateChannels}>
+                <i className="comments teal icon" id="privateChatIcon"></i>
+              </div>}
               <i onClick={this.toggleModal} className="info teal circle icon" id="infoIcon"></i>
             </div>}
             {this.state.privateChannels && privateChannels}
@@ -221,6 +217,7 @@ ChatController.propTypes = {
   likeMessage: React.PropTypes.func.isRequired,
   deleteMessage: React.PropTypes.func.isRequired,
   broadcastEdit: React.PropTypes.func.isRequired,
+  clearNotifications: React.PropTypes.func.isRequired,
   mentors: React.PropTypes.object.isRequired,
   onlineStatus: React.PropTypes.object.isRequired
 };
@@ -240,7 +237,7 @@ const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, p
       privateChat: [],
       conversant: username,
       mentors: findMentors(community),
-      chat: privateChat.get(username),
+      chat: privateChat.getIn([username, 'history']),
       conversantAvatar: community.find(u => u.username === username).personal.avatarUrl
     }
   } else {
@@ -251,7 +248,8 @@ const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, p
       conversant: null,
       conversantAvatar: null,
       mentors: findMentors(community),
-      privateChat: privateChat.keySeq(),
+      privateChat: privateChat,
+      totalNotifications: privateChat.reduce((t,c) => t + c.get('notifications'), 0),
       privateChatSize: privateChat.size
     }
   }
@@ -264,6 +262,7 @@ const dispatch = {
   deleteMessage,
   broadcastEdit,
   fetchPrivateChat,
+  clearNotifications,
   initiatePrivateChat
 };
 

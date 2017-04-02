@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const PrivateChat = new Schema({
   members: Array,
+  notifications: Object,
   history: [{
     id: String,
     timestamp: Number,

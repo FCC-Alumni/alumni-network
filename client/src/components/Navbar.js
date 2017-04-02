@@ -26,7 +26,7 @@ class NavBar extends React.Component {
   }
   render() {
     const guestNav = (
-      <div className="ui huge fixed sticky stackable teal pointing menu">
+      <div className="ui huge fixed stackable teal pointing menu">
         <NavLink className="item" activeClassName="item active" exact to="/"><i className="fa fa-free-code-camp" />freeCodeCamp Alumni Network</NavLink>
         <div className="right menu">
           <NavLink className="item" activeClassName="item active" exact to="/login">Login</NavLink>
@@ -37,10 +37,10 @@ class NavBar extends React.Component {
     const userNav = (
       <div>
         {!this.state.nav ?
-          <div className="ui huge fixed sticky stackable teal pointing menu">
+          <div className="ui huge fixed stackable teal pointing menu">
             <div className="item" onClick={this.toggleNav}><i className="fa fa-free-code-camp"></i>freeCodeCamp Alumni Network</div>
           </div> :
-          <div className="ui huge fixed sticky stackable teal pointing menu">
+          <div className="ui huge fixed stackable teal pointing menu">
             <div className="item" onClick={this.toggleNav}><i className="fa fa-free-code-camp"></i>freeCodeCamp Alumni Network</div>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard">Dashboard</NavLink>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/profile">Profile</NavLink>

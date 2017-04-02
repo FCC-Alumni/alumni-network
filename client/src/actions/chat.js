@@ -24,6 +24,8 @@ export const RECEIVED_MESSAGE_PRIVATE = 'RECEIVED_MESSAGE_PRIVATE';
 export const RECEIVED_LIKE_PRIVATE = 'RECEIVED_LIKE_PRIVATE';
 export const RECEIVED_UPDATE_PRIVATE = 'RECEIVED_UPDATE_PRIVATE';
 export const RECEIVED_DELETE_PRIVATE = 'RECEIVED_DELETE_PRIVATE';
+export const PRIVATE_CHAT_NOTIFY = 'PRIVATE_CHAT_NOTIFY';
+export const CLEAR_NOTICATIONS = 'CLEAR_NOTICATIONS';
 
 export const CHAT_INITIALIZE = 'CHAT_INITIALIZE';
 export const CHAT_ADD_MESSAGE = 'CHAT_ADD_MESSAGE';
@@ -40,7 +42,23 @@ import { flashError } from './flashMessages';
 
 socket.on('broadcast-private-submission', data => {
   console.log('received private message:', data);
+
   const { reciepient, message } = data;
+  // if user is not in private chat window, add a notification for them:
+  if (!window.location.href.includes(message.author)) {
+    axios.post('/api/private-chat/add-notification', { author: message.author, reciepient })
+    .then(res => {
+      store.dispatch({
+        type: PRIVATE_CHAT_NOTIFY,
+        payload: {
+          reciepient: message.author
+        }
+      });
+    }).catch(err => {
+      dispatch(addFlashMessage(flashError('There was an error saving a new notification.')));
+    });
+  }
+
   const user = store.getState().user.username;
   if (user === reciepient) {
     message.likes = Set(message.likes);
@@ -132,6 +150,22 @@ export const initiatePrivateChat = (author) => {
     payload: author
   }
 };
+
+export const clearNotifications = (data) => {
+  return dispatch => {
+    return axios.post('/api/private-chat/clear-notifications', data)
+      .then(res => {
+        dispatch({
+          type: CLEAR_NOTICATIONS,
+          payload: {
+            reciepient: data.reciepient
+          }
+        });
+      }).catch(err => {
+        dispatch(addFlashMessage(flashError('There was an error updating the notifications.')));
+      });
+  }
+}
 
 /** MAIN CHAT real-time updates: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  */
 

@@ -1,6 +1,7 @@
+import PrivateChat from '../models/private-chat';
+
 import redis from 'redis';
 import url from 'url';
-
 /*** we will use Redis to maintain a record of
   currently online users: ***/
 const herokuRedis = () => {
@@ -15,7 +16,10 @@ const client = process.env.REDISTOGO_URL ? herokuRedis() : redis.createClient();
 client.on('error', (err) => console.log(`Redis Error: ${err}`));
 client.on('ready', () => console.log('Redis connected'));
 
-client.set('online-users', JSON.stringify({}));
+client.set('online-users', JSON.stringify({
+  byName: {},
+  byID: {}
+}));
 
 // all real-time chat events:
 module.exports = (io) => {
@@ -23,13 +27,20 @@ module.exports = (io) => {
 
     console.log('Socket.io connected');
 
+    client.get('online-users', (err, data) => {
+      if (!err) {
+        const users = JSON.parse(data);
+        socket.emit('populate-online-users', { users: users.byName });
+      };
+    });
+
     socket.on('user-online', ({ user }) => {
       if (user) {
         client.get('online-users', (err, data) => {
           if (!err) {
             const users = JSON.parse(data);
-            users[socket.id] = user;
-            users[user] = socket.id;
+            users.byID[socket.id] = user;
+            users.byName[user] = socket.id;
             client.set('online-users', JSON.stringify(users));
             socket.broadcast.emit('user-online', { user });
           }
@@ -54,12 +65,21 @@ module.exports = (io) => {
     // private chat:
     socket.on('private-submission', (data) => {
       const { reciepient } = data;
+      const { author } = data.message;
       client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
-          if (reciepient in users) {
-            socket.broadcast.to(users[reciepient])
+          if (reciepient in users.byName) {
+            socket.broadcast.to(users.byName[reciepient])
               .emit('broadcast-private-submission', data);
+          } else {
+            PrivateChat.findOne({ $and: [{members: author}, {members: reciepient}] }, (err, conversation) => {
+              if (!err) {
+                conversation.notifications[reciepient]++;
+                conversation.markModified('notifications');
+                conversation.save();
+              }
+            });
           }
         }
       });
@@ -69,8 +89,8 @@ module.exports = (io) => {
       client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
-          if (reciepient in users) {
-            socket.broadcast.to(users[reciepient])
+          if (reciepient in users.byName) {
+            socket.broadcast.to(users.byName[reciepient])
               .emit('broadcast-private-update', data);
           }
         }
@@ -81,8 +101,8 @@ module.exports = (io) => {
       client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
-          if (reciepient in users) {
-            socket.broadcast.to(users[reciepient])
+          if (reciepient in users.byName) {
+            socket.broadcast.to(users.byName[reciepient])
               .emit('broadcast-private-like', data);
           }
         }
@@ -93,8 +113,8 @@ module.exports = (io) => {
       client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
-          if (reciepient in users) {
-            socket.broadcast.to(users[reciepient])
+          if (reciepient in users.byName) {
+            socket.broadcast.to(users.byName[reciepient])
               .emit('broadcast-private-delete', data);
           }
         }
@@ -105,9 +125,9 @@ module.exports = (io) => {
       client.get('online-users', (err, data) => {
         if (!err) {
           const users = JSON.parse(data);
-          const disconnectedUser = users[socket.id];
-          delete users[socket.id];
-          delete users[disconnectedUser];
+          const disconnectedUser = users.byID[socket.id];
+          delete users.byID[socket.id];
+          delete users.byName[disconnectedUser];
           client.set('online-users', JSON.stringify(users));
           socket.broadcast.emit('user-offline', { user: disconnectedUser} );
         };

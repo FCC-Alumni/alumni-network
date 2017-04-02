@@ -1,16 +1,21 @@
 /* eslint-disable */
-import { USER_ONLINE, USER_OFFLINE } from '../actions/onlineStatus';
+import { POPULATE_ONLINE_USERS, USER_ONLINE, USER_OFFLINE } from '../actions/onlineStatus';
 import { Set } from 'immutable';
 
 export default (state = Set(), action) => {
-  const { type, user } = action;
+  const { type, payload } = action;
   switch (type) {
 
-    case USER_ONLINE:
+    case POPULATE_ONLINE_USERS:
+    return payload.reduce((state, user) => {
       return state.add(user);
+    }, state);
+
+    case USER_ONLINE:
+      return state.add(payload);
 
     case USER_OFFLINE:
-      return state.remove(user);
+      return state.remove(payload);
 
     default: return state;
   }

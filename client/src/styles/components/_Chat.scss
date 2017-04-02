@@ -17,9 +17,9 @@
     span {
       text-decoration: underline;
     }
-  }
-  .linkHome:hover {
-    color: rgb(0,225,225);
+    &:hover {
+      color: rgb(0,225,225);
+    }
   }
   .conversant {
     color: #00b5ad;
@@ -30,10 +30,19 @@
     width: 35px;
     height: 35px;
     border-radius: 50%;
+    &:hover {
+      cursor: pointer;
+      color: rgb(0,225,225);
+    }
   }
-  .author-link:hover {
-    cursor: pointer;
-    color: rgb(0,225,225);
+  .notifications {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: red;
+    font-size: 13px;
+    text-align: center;
+    padding-top: 5x;
   }
   #infoIcon {
     position: absolute;
@@ -41,29 +50,38 @@
     right: 5px;
     top: 10px;
     transition: color 250ms ease-in-out;
+    &:hover {
+      cursor: pointer;
+      color: rgb(0,225,225) !important;
+      transition: color 250ms ease-in-out;
+    }
   }
-  #infoIcon:hover {
-    cursor: pointer;
-    color: rgb(0,225,225) !important;
+  #privateChatIconWrapper {
     transition: color 250ms ease-in-out;
+    &:hover {
+      cursor: pointer;
+      color: rgb(0,225,225) !important;
+      transition: color 250ms ease-in-out;
+    }
   }
   #privateChatIcon {
     position: absolute;
     font-size: 22px;
     right: 32px;
     top: 9px;
-    transition: color 250ms ease-in-out;
   }
-  #privateChatIcon:hover {
-    cursor: pointer;
-    color: rgb(0,225,225) !important;
-    transition: color 250ms ease-in-out;
+  .totalNotifications {
+    position: absolute;
+    top: 3px;
+    right: 30px;
+    font-weight: bold;
   }
   #privateChatChannels {
+    z-index: 15;
     position: absolute;
     top: 5px;
     right: 65px;
-    width: 225px;
+    width: 250px;
     min-height: 35px;
     padding: 10px;
     color: black;
@@ -71,17 +89,44 @@
     background: rgba(0,225,225, 0.95);
     h3 {
       text-decoration: underline;
-      margin-bottom: 7px;
+      margin-bottom: 20px;
     }
     .privateChannel {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
       font-weight: bold;
       color: black;
+      font-size: 22px;
       transition: color 150ms ease-in-out;
+      img {
+        width: 25px;
+        height: 25px;
+      }
+      .privateNotifications {
+        position: relative;
+        top: -12px;
+        right: 12px;
+        z-index: 20;
+      }
+      .privateUsername {
+        margin-left: 3px;
+      }
+      &:hover {
+        cursor: pointer;
+        color: white;
+        transition: color 150ms ease-in-out;
+      }
     }
-    .privateChannel:hover {
-      cursor: pointer;
-      color: white;
-      transition: color 150ms ease-in-out;
+    #closePrivateChat {
+      position: absolute;
+      top: 6px;
+      right: -2px;
+      font-size: 24px;
+      &:hover {
+        cursor: pointer;
+        color: white;
+      }
     }
   }
   #chatInput {
@@ -95,6 +140,10 @@
     overflow-y: auto;
   }
   .chatMessage {
+    .author-link:hover {
+      cursor: pointer;
+      color: rgb(0,225,225);
+    }
     .mentorIcon {
       margin-left: 5px;
       font-size: 16px;
@@ -124,8 +173,8 @@
     right: 0px;
     top: 10px;
     font-size: 20px;
-  }
-  #smiles:hover {
-    cursor: pointer;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
