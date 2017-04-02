@@ -88,7 +88,8 @@
     padding-right: 35px;
   }
   #messageContainer {
-    width: 63.5vw;
+    width: 100%;
+    min-width: 63.5vw;
     min-height: 25vh;
     max-height: 45vh;
     overflow-y: auto;

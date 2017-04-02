@@ -92,12 +92,12 @@ export default class Emoji extends React.Component {
           placeholder={this.props.placeholder}
           ref={(input) => { this.chatInput = input }}
           type={this.state.showEmojiPicker ? "search" : "text"} />
-        <i
+        {this.props.screen.isDesktop && <i
           id="smiles"
           className="smile icon"
           onClick={this.toggleEmojiPicker}>
-        </i>
-        {this.state.showEmojiPicker &&
+        </i>}
+        {this.state.showEmojiPicker && this.props.screen.isDesktop &&
           <EmojiPicker
             query={this.state.emoji}
             onSelect={this.setEmoji}
@@ -109,6 +109,7 @@ export default class Emoji extends React.Component {
 };
 
 Emoji.propTypes = {
+  screen: React.PropTypes.object.isRequired,
   submit: React.PropTypes.func.isRequired,
   placeholder: React.PropTypes.string.isRequired
 }

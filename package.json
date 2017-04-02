@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec babel-node -- ./server.js",
+    "dev": "nodemon --ignore ./client --exec babel-node -- ./server.js",
     "start": "babel-node ./server.js",
     "deploy": "git push heroku master",
     "postinstall": "cd client/ && npm install && npm run build"

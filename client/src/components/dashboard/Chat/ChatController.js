@@ -2,6 +2,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, NavLink } from 'react-router-dom';
+import { connectScreenSize } from 'react-screen-size';
+import { mapScreenSizeToProps } from '../../Navbar';
 import axios from 'axios';
 import { List, Set } from 'immutable';
 import Modal from './ChatModal';
@@ -29,18 +31,16 @@ class ChatController extends React.Component {
       privateChannels: false,
       scroll: true
     };
-    // this sucks when screen resized smaller... will need to deal with that:
-    document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
-    // scroll to bottom of chats when component mounts:
-    this.timeout(() => {
-      if (this.chatContainer) {
-        this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
-      }
-    }, 50);
-
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.screen.isDesktop) {
+      document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
+    } else {
+      document.body.style.backgroundImage = null;
+    }
   }
   componentDidMount() {
-    document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
+    if (this.props.screen.isDesktop) document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
     this.chatContainer = document.getElementById('messageContainer');
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
 
@@ -52,18 +52,20 @@ class ChatController extends React.Component {
       this.props.fetchPrivateChat(this.props.user.username);
     }
   }
+  componentDidUpdate(prevProps) {
+    if (this.props.chat.size > prevProps.chat.size) {
+      this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+    }
+  }
   componentWillUnmount() {
     document.body.style.backgroundImage = null;
     document.removeEventListener('mousedown', this.handleClick, false);
-    clearTimeout(this.timeout);
   }
   // safeguard timeouts within a method so we can clear when component unmounts:
-  timeout = (fn, d) => setTimeout(() => fn(), d);
   submitMessage = (text) => {
     const { conversant } = this.props;
     this.setState({ text: '' });
     this.props.addMessage({ author: this.props.user, text, conversant });
-    this.timeout(() => this.chatContainer.scrollTop = this.chatContainer.scrollHeight, 50);
   }
   setEdit = (id) => {
     if (this.state.editText !== '') {
@@ -128,7 +130,7 @@ class ChatController extends React.Component {
   }
   render() {
 
-    const { conversant, privateChat } = this.props;
+    const { conversant, privateChat, screen } = this.props;
 
     const privateChannels = (
       <div id="privateChatChannels">
@@ -162,8 +164,10 @@ class ChatController extends React.Component {
               <span>
                 <img src={this.props.conversantAvatar} className='privateAvatar' alt={`${conversant}'s Avatar'`} />
                 Private Chat with <span className='conversant'> {conversant} </span>
+                {screen.isDesktop &&
                 <NavLink to='/dashboard/chat' className='linkHome'>
-                  <i className="fa fa-arrow-left" aria-hidden="true"></i> <span>Back to Mess Hall</span></NavLink>
+                  <i className="fa fa-arrow-left" aria-hidden="true"></i> <span>Back to Mess Hall</span>
+                </NavLink>}
               </span>
 
               :
@@ -199,6 +203,7 @@ class ChatController extends React.Component {
           </div>
         </div>
         <EmojiInput
+          screen={screen}
           submit={this.submitMessage}
           placeholder={
             (this.props.chat.size === 0 ?
@@ -262,4 +267,5 @@ const dispatch = {
   initiatePrivateChat
 };
 
-export default connect(mapStateToProps, dispatch)(ChatController);
+export default connectScreenSize(mapScreenSizeToProps)(
+  connect(mapStateToProps, dispatch)(ChatController));

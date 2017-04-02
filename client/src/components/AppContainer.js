@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { populateChat } from '../actions/chat';
+import { populateChat, fetchPrivateChat } from '../actions/chat';
 import { populateCommunity } from '../actions/community';
 import { saveUser, getUserData } from '../actions/user';
 import { addFlashMessage, clearFlashMessage } from '../actions/flashMessages';
@@ -21,6 +21,8 @@ class AppContainer extends React.Component {
         this.props.saveUser(user);
         this.props.populateCommunity();
         this.props.populateChat();
+        this.props.fetchPrivateChat(user.username);
+
       } else {
         this.props.addFlashMessage({
           type: 'error',
@@ -41,16 +43,17 @@ class AppContainer extends React.Component {
   }
 
   render() {
+    const { url } = this.props.match;
     return (
       <div>
         { this.props.username &&
           <div>
-            <Route exact path={`${this.props.match.url}/`} component={Landing}/>
-            <Route exact path={`${this.props.match.url}/profile`} component={Profile}/>
-            <Route exact path={`${this.props.match.url}/community`} component={Community}/>
-            <Route exact path={`${this.props.match.url}/mentorship`} component={Mentorship}/>
-            <Route exact path={`${this.props.match.url}/chat`} component={Chat}/>
-            <Route exact path={`${this.props.match.url}/chat/:username`} component={Chat}/>
+            <Route exact path={`${url}/`} component={Landing}/>
+            <Route exact path={`${url}/profile`} component={Profile}/>
+            <Route exact path={`${url}/community`} component={Community}/>
+            <Route exact path={`${url}/mentorship`} component={Mentorship}/>
+            <Route exact path={`${url}/chat`} component={Chat}/>
+            <Route exact path={`${url}/chat/:username`} component={Chat}/>
           </div>
         }
       </div>
@@ -78,6 +81,7 @@ const dispatch = {
   addFlashMessage,
   clearFlashMessage,
   populateChat,
+  fetchPrivateChat,
   populateCommunity
 }
 

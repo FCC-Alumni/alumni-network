@@ -1,20 +1,21 @@
+import redis from 'redis';
+import url from 'url';
 
 /*** we will use Redis to maintain a record of
   currently online users: ***/
+const herokuRedis = () => {
+  const HerokuRedis = url.parse(process.env.REDISTOGO_URL);
+  const redisClient = redis.createClient(HerokuRedis.port, HerokuRedis.hostname);
+  redisClient.auth(HerokuRedis.auth.split(":")[1]);
+  return redisClient;
+};
 
-// try to initialize redis
-if (process.env.REDISTOGO_URL) {
-  var HerokuRedis = require("url").parse(process.env.REDISTOGO_URL);
-  var redis = require("redis").createClient(HerokuRedis.port, HerokuRedis.hostname);
-  redis.auth(HerokuRedis.auth.split(":")[1]);
-} else {
-  var redis = require("redis").createClient();
-}
+const client = process.env.REDISTOGO_URL ? herokuRedis() : redis.createClient();
 
-redis.on('error', (err) => console.log(`Redis Error: ${err}`));
-redis.on('ready', () => console.log('Redis connected'));
+client.on('error', (err) => console.log(`Redis Error: ${err}`));
+client.on('ready', () => console.log('Redis connected'));
 
-redis.set('online-users', JSON.stringify({}));
+client.set('online-users', JSON.stringify({}));
 
 // all real-time chat events:
 module.exports = (io) => {
@@ -24,12 +25,12 @@ module.exports = (io) => {
 
     socket.on('user-online', ({ user }) => {
       if (user) {
-        redis.get('online-users', (err, data) => {
+        client.get('online-users', (err, data) => {
           if (!err) {
             const users = JSON.parse(data);
             users[socket.id] = user;
             users[user] = socket.id;
-            redis.set('online-users', JSON.stringify(users));
+            client.set('online-users', JSON.stringify(users));
             socket.broadcast.emit('user-online', { user });
           }
         });
@@ -53,7 +54,7 @@ module.exports = (io) => {
     // private chat:
     socket.on('private-submission', (data) => {
       const { reciepient } = data;
-      redis.get('online-users', (err, onlineUsers) => {
+      client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
           if (reciepient in users) {
@@ -65,7 +66,7 @@ module.exports = (io) => {
     });
     socket.on('private-update', (data) => {
       const { reciepient } = data;
-      redis.get('online-users', (err, onlineUsers) => {
+      client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
           if (reciepient in users) {
@@ -77,7 +78,7 @@ module.exports = (io) => {
     });
     socket.on('private-like', (data) => {
       const { reciepient } = data;
-      redis.get('online-users', (err, onlineUsers) => {
+      client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
           if (reciepient in users) {
@@ -89,7 +90,7 @@ module.exports = (io) => {
     });
     socket.on('private-delete', (data) => {
       const { reciepient } = data;
-      redis.get('online-users', (err, onlineUsers) => {
+      client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
           if (reciepient in users) {
@@ -101,13 +102,13 @@ module.exports = (io) => {
     });
 
     socket.on('disconnect', () => {
-      redis.get('online-users', (err, data) => {
+      client.get('online-users', (err, data) => {
         if (!err) {
           const users = JSON.parse(data);
           const disconnectedUser = users[socket.id];
           delete users[socket.id];
           delete users[disconnectedUser];
-          redis.set('online-users', JSON.stringify(users));
+          client.set('online-users', JSON.stringify(users));
           socket.broadcast.emit('user-offline', { user: disconnectedUser} );
         };
       });
