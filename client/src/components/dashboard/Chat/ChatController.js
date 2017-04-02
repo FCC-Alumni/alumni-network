@@ -104,14 +104,16 @@ class ChatController extends React.Component {
       privateChannels: !this.state.privateChannels
     });
   }
-  initiatePrivateChat = (author, notifcations) => {
-    if (notifcations) {
+  initiatePrivateChat = (reciepient, notifcations) => {
+    if (!this.props.privateChat.has(reciepient)) {
+      this.props.initiatePrivateChat(reciepient);
+    } else if (notifcations) {
       this.props.clearNotifications({
         author: this.props.user.username,
-        reciepient: author
+        reciepient
       });
     }
-    this.props.history.push(`chat/${author}`);
+    this.props.history.push(`chat/${reciepient}`);
   }
   render() {
 
