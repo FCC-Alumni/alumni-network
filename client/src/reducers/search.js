@@ -1,24 +1,24 @@
 import { SAVE_SEARCH_STATE } from '../actions/types';
 
 export const defaultState = {
-  disableClear: true,
   value: '',
   results: [],
-  showFilters: false,
-  dropdownValue: ['all'],
-  isLoading: false,
-  mentorsOnly: false,
   prosOnly: false,
-  frontendOnly: false,
+  isLoading: false,
+  showFilters: false,
+  disableClear: true,
+  mentorsOnly: false,
   backendOnly: false,
   dataVisOnly: false,
+  frontendOnly: false,
+  dropdownValue: ['all'],
   searchCriteria: {
-    skills: false,
+    mentorshipBio: false,
     interests: false,
     location: false,
-    mentorshipBio: false,
-    name: false,
     company: false,
+    skills: false,
+    name: false,
     all: true,
   }
 }

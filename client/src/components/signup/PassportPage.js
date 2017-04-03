@@ -25,7 +25,7 @@ class PassportPage extends React.Component {
               message: 'Welcome back to the app!'
             }
           });
-          this.props.history.push('/dashboard/profile');
+          this.props.history.push('/dashboard/preferences');
           // verification process
         } else if (user.username) {
           const { personal, username, _id } = user;
@@ -57,7 +57,7 @@ class PassportPage extends React.Component {
           message: 'Your account is now verified!'
         }
       });
-      this.props.history.push('/dashboard/profile');
+      this.props.history.push('/dashboard/preferences');
     })
     .catch(err => {
       this.setState({ loading: false });
@@ -78,7 +78,7 @@ class PassportPage extends React.Component {
         <div className="ui text huge loader">Loading</div>
       </div>
     );
-    
+
     const pageContent = (
       <div className='ui container'>
         <h1>{`Welcome ${this.state.displayName}!`}</h1>
@@ -109,12 +109,12 @@ class PassportPage extends React.Component {
         </form>
       </div>
     );
-    
+
     return (
       <div>
-        
+
         { this.state.loading ? loader : pageContent }
-        
+
       </div>
     );
   }

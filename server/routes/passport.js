@@ -99,14 +99,14 @@ passport.use(new TwitterStrategy({
 router.get('/connect/twitter', isAuthenticated, passport.authorize('twitter'));
 
 router.get('/connect/twitter/callback',
-  passport.authorize('twitter', { failureRedirect: `${CLIENT_URL}/dashboard/profile` }), ((req, res) => {
+  passport.authorize('twitter', { failureRedirect: `${CLIENT_URL}/dashboard/preferences` }), ((req, res) => {
     const { user, account } = req;
 
     User.findOne({ githubId: user.githubId }, (err, updatedUser) => {
       if (!err) {
         updatedUser.social.twitter = account.username;
         updatedUser.save();
-        res.redirect(`${CLIENT_URL}/dashboard/profile`);
+        res.redirect(`${CLIENT_URL}/dashboard/preferences`);
         console.log('updated user with twitter handle');
       } else {
         console.log(err);
@@ -126,13 +126,13 @@ passport.use(new LinkedInStrategy({
 router.get('/connect/linkedin', isAuthenticated, passport.authorize('linkedin'));
 
 router.get('/connect/linkedin/callback',
-  passport.authorize('linkedin', { failureRedirect: `${CLIENT_URL}/dashboard/profile` }), ((req, res) => {
+  passport.authorize('linkedin', { failureRedirect: `${CLIENT_URL}/dashboard/preferences` }), ((req, res) => {
 
     User.findOne({ githubId: req.user.githubId }, (err, updatedUser) => {
       if (!err) {
         updatedUser.social.linkedin = req.account.displayName;
         updatedUser.save();
-        res.redirect(`${CLIENT_URL}/dashboard/profile`);
+        res.redirect(`${CLIENT_URL}/dashboard/preferences`);
         console.log('updated user with linkedin handle');
       } else {
         console.log(err);

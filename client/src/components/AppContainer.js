@@ -1,16 +1,17 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { populateChat, fetchPrivateChat } from '../actions/chat';
+import { Route } from 'react-router-dom';
 import { populateCommunity } from '../actions/community';
-import { saveUser, getUserData } from '../actions/user';
+import { populateChat, fetchPrivateChat } from '../actions/chat';
+import { saveUser, getUserData, logoutUser } from '../actions/user';
 import { addFlashMessage, clearFlashMessage } from '../actions/flashMessages';
 
 import Landing from './dashboard/Landing';
-import Profile from './dashboard/Profile';
 import Community from './dashboard/Community';
 import Mentorship from './dashboard/Mentorship';
 import Chat from './dashboard/Chat/ChatController';
+import Profile_Config from './dashboard/Profile_Config';
+import Profile_Public from './dashboard/Profile_Public';
 
 class AppContainer extends React.Component {
 
@@ -24,6 +25,7 @@ class AppContainer extends React.Component {
         this.props.fetchPrivateChat(user.username);
 
       } else {
+        this.props.logoutUser();
         this.props.addFlashMessage({
           type: 'error',
             text: {
@@ -33,7 +35,17 @@ class AppContainer extends React.Component {
           });
         this.props.history.push('/login');
       }
-    }).catch(err => this.props.history.push('/login'));
+    }).catch(err => {
+      this.props.history.push('/login')
+      this.props.logoutUser();
+      this.props.addFlashMessage({
+        type: 'error',
+          text: {
+            header: 'Something went wrong...',
+            message: 'Please sign in again.'
+          }
+        });
+    });
   }
 
   componentDidUpdate() {
@@ -49,7 +61,8 @@ class AppContainer extends React.Component {
         { this.props.username &&
           <div>
             <Route exact path={`${url}/`} component={Landing}/>
-            <Route exact path={`${url}/profile`} component={Profile}/>
+            <Route exact path={`${url}/preferences`} component={Profile_Config}/>
+            <Route exact path={`${url}/profile/:username`} component={Profile_Public}/>
             <Route exact path={`${url}/community`} component={Community}/>
             <Route exact path={`${url}/mentorship`} component={Mentorship}/>
             <Route exact path={`${url}/chat`} component={Chat}/>
@@ -62,11 +75,11 @@ class AppContainer extends React.Component {
 };
 
 AppContainer.propTypes = {
-  username: React.PropTypes.string.isRequired,
   saveUser: React.PropTypes.func.isRequired,
+  username: React.PropTypes.string.isRequired,
+  populateChat: React.PropTypes.func.isRequired,
   addFlashMessage: React.PropTypes.func.isRequired,
   clearFlashMessage: React.PropTypes.func.isRequired,
-  populateChat: React.PropTypes.func.isRequired,
   populateCommunity: React.PropTypes.func.isRequired,
 }
 
@@ -78,11 +91,12 @@ const mapStateToProps = (state) => {
 
 const dispatch = {
   saveUser,
-  addFlashMessage,
-  clearFlashMessage,
+  logoutUser,
   populateChat,
+  addFlashMessage,
   fetchPrivateChat,
-  populateCommunity
+  clearFlashMessage,
+  populateCommunity,
 }
 
 export default connect(mapStateToProps, dispatch)(AppContainer);
