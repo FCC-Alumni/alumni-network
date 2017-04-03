@@ -1,5 +1,6 @@
 import express from 'express';
 import passport from 'passport';
+import mongoose from 'mongoose';
 import GitHubStrategy from 'passport-github2'
 import TwitterStrategy from 'passport-twitter';
 import LinkedInStrategy from 'passport-linkedin';
@@ -23,12 +24,14 @@ export const isAuthenticated = (req, res, next) => {
 
 const router = express.Router();
 
-// we need to use Redis or MongoStore or something
-// for the session here......
+// this may work for session persistence:
+var MongoStore = require('connect-mongo')(Session);
 router.use(Session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET,
+    cookie: { maxAge: 1000 * 60 * 60 * 8 }, // 8 hours
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 
 router.use(passport.initialize());

@@ -12,7 +12,7 @@
   }
   .linkHome {
     position: absolute;
-    right: 15px;
+    right: 50px;
     color: #00b5ad;
     span {
       text-decoration: underline;
@@ -46,9 +46,9 @@
   }
   #infoIcon {
     position: absolute;
-    font-size: 20px;
-    right: 5px;
-    top: 10px;
+    font-size: 30px;
+    right: 38px;
+    top: 13px;
     transition: color 250ms ease-in-out;
     &:hover {
       cursor: pointer;
@@ -60,30 +60,37 @@
     transition: color 250ms ease-in-out;
     &:hover {
       cursor: pointer;
-      color: rgb(0,225,225) !important;
+      color: white;
       transition: color 250ms ease-in-out;
     }
   }
   #privateChatIcon {
     position: absolute;
-    font-size: 22px;
-    right: 32px;
-    top: 9px;
+    font-size: 30px;
+    right: 3px;
+    top: 13px;
+    transition: color 250ms ease-in-out;
+    &:hover {
+      cursor: pointer;
+      color: rgb(0,225,225) !important;
+      transition: color 250ms ease-in-out;
+    }
   }
   .totalNotifications {
     position: absolute;
     top: 3px;
-    right: 30px;
+    right: 6px;
     font-weight: bold;
   }
   #privateChatChannels {
     z-index: 15;
     position: absolute;
     top: 5px;
-    right: 65px;
+    right: 42px;
     width: 250px;
     min-height: 35px;
     padding: 10px;
+    padding-bottom: 25px;
     color: black;
     border-radius: 3px;
     background: rgba(0,225,225, 0.95);
@@ -98,19 +105,20 @@
       font-weight: bold;
       color: black;
       font-size: 22px;
+      padding-left: 10px;
       transition: color 150ms ease-in-out;
       img {
         width: 25px;
         height: 25px;
       }
       .privateNotifications {
-        position: relative;
-        top: -12px;
-        right: 12px;
+        position: absolute;
+        top: 45px;
+        right: 200px;
         z-index: 20;
       }
       .privateUsername {
-        margin-left: 3px;
+        margin-left: 8px;
       }
       &:hover {
         cursor: pointer;

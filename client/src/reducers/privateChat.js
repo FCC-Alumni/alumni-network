@@ -29,7 +29,7 @@ export default (state = Map(), action) => {
       let reciepient;
 
       if (data.length === 0) return state;
-      
+
       // we basically need to do some conversions to the data...
       data.map(data => {
         if (data.members[0] === user) {
@@ -67,7 +67,7 @@ export default (state = Map(), action) => {
       return state.updateIn([reciepient, 'history'], l => {
         return l.map(message => {
           if (message.get('id') === id) {
-            return message.set('text', text);
+            return message.set('text', text).set('edited', true);
           } else {
             return message;
           }
@@ -96,9 +96,20 @@ export default (state = Map(), action) => {
     // real-time update actions:
     case RECEIVED_MESSAGE_PRIVATE: {
       const { reciepient, message } = payload;
-      return state.updateIn([message.author, 'history'], l => {
-        return l.push(Map(message));
-      });
+      if (state.has(message.author)) {
+        return state.updateIn([message.author, 'history'], l => {
+          return l.push(Map(message));
+        });
+      } else { // i.e. if chat history doesn't exist yet:
+        return state.set(message.author, Map({
+          notifications: 0,
+          history: List([Map(message)])
+        })).updateIn([message.author, 'history'], h => h.map(m => {
+          const likes = m.get('likes');
+          m = m.delete('likes');
+          return m.set('likes', Set(likes));
+        }));
+      }
     }
 
     case RECEIVED_UPDATE_PRIVATE: {

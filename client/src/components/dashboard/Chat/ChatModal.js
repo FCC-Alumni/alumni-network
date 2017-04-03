@@ -16,31 +16,27 @@ export default ({ size, close, open }) => {
         <Modal.Header style={{ background: teal, color: 'white' }}>
           <h1>
             <span>Mess Hall Chat &nbsp;</span>
-            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" alt="fire emoji" /></span>
-            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" alt="fire emoji" /></span>
-            <span><img style={fireStyle} src="https://twemoji.maxcdn.com/svg/1f525.svg" alt="fire emoji" /></span>
           </h1>
         </Modal.Header>
 
-
         <Modal.Content>
-
-        <p style={{ fontSize: '20px' }}>
-          <b>Here you can chat with other users in real time!</b>
-        </p>
 
         <p style={{ fontSize: '16px' }}>
 
-          The goal of the Mess Hall is to allow
-          Free Code Camp alumni to discuss anything they want: <i>interviews, algorithms,
-          employment, salary negotiation, new technologies</i> — you name it!
-          This area also serves as a place to cultivate mentorship opportunities between campers.
+          <span style={{ fontSize: '20px' }}>Discuss any coding topics you would like and feel free to explore
+          mentorship opportunities in new technologies you are learning. To begin a new private chat with
+          another member, simply click their name.</span>
 
           <br/><br/>
 
-          All the normal&nbsp;
+          <span>All the normal&nbsp;
           <a target="_blank" href="https://www.freecodecamp.com/code-of-conduct">Code of Conduct</a>
-          &nbsp;guidelines for the Free Code Camp Forum and Gitter channels apply here as well.
+          &nbsp;guidelines for the Free Code Camp Forum and Gitter channels apply here as well.</span>
+
+          <br/><br/>
+
+          <i className="student icon mentorIcon"></i> These people are mentors<br/>
+          <i className="star icon teal onlineIcon"></i> These people are currently online
 
           <br/><br/>
 
@@ -50,21 +46,20 @@ export default ({ size, close, open }) => {
 
         </p>
 
-        <p style={{ fontSize: '14px' }}><b>Note:</b> This is not a fully
-        featured chat and long-term chat history is not saved. We encourage you to continue
-        more in-depth discussions on other platforms.</p>
+        <p style={{ fontSize: '14px' }}><b>Note:</b> While we enjoyed building this chat, we encourage you to continue
+        more in-depth discussions on other platforms that have more robust features.</p>
 
 
         </Modal.Content>
 
-        <Modal.Actions style={{ background: 'rgb(200,200,200)' }}>
+        <Modal.Actions style={{ background: 'rgb(248,248,248)' }}>
           <Button
             positive
+            content='Ok'
             onClick={close}
             icon='checkmark'
             labelPosition='right'
-            style={{ background: teal }}
-            content='Ok' />
+            style={{ background: teal }} />
         </Modal.Actions>
 
       </Modal>

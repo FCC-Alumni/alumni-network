@@ -40,9 +40,14 @@ class ChatController extends React.Component {
     }
   }
   componentDidMount() {
-    if (this.props.screen.isDesktop) document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
     this.chatContainer = document.getElementById('messageContainer');
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+    if (this.props.screen.isDesktop) {
+      document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
+    }
+    if (this.props.conversant) {
+      this.setState({ privateChannels: false });
+    }
   }
   componentDidUpdate(prevProps) {
     if (this.props.chat.size > prevProps.chat.size) {
@@ -123,14 +128,14 @@ class ChatController extends React.Component {
       <div id="privateChatChannels" className='privateChatChannelsBox'>
         <h3 className='privateChannelsTitle'>Private Chat Channels:</h3>
         {privateChat.size > 0 ? privateChat.keySeq().map(username => {
+          if (username === conversant) return;
           const notifications = privateChat.getIn([username, 'notifications']);
           return (
             <div
               key={username}
               className='privateChannel'
               onClick={this.initiatePrivateChat.bind(this, username, notifications)}>
-              <img src={privateChat.getIn([username, 'history'])
-                .find(m => m.get('author') === username).get('avatar')} alt="User Avatar"/>
+              <img src={this.props.community.find(u => u.username === username).personal.avatarUrl} alt="User Avatar"/>
               {notifications > 0 &&
                 <span className="notifications privateNotifications">{notifications}</span>}
               <span className="privateUsername">{username}</span>
@@ -165,21 +170,29 @@ class ChatController extends React.Component {
 
               :
 
-              'The Mess Hall is a place to connect with other members'
+              'Welcome to the Alumni Mess Hall:'
 
             }
 
             </h2>
-            {!conversant && <div>
-              {totalNotifications ? <div onClick={this.togglePrivateChannels} id="privateChatIconWrapper">
+
+            { totalNotifications ?
+
+              <div onClick={this.togglePrivateChannels} id="privateChatIconWrapper">
                 <i className="comments teal icon" id="privateChatIcon"></i>
                 <span className="notifications totalNotifications">{totalNotifications}</span>
-              </div> : <div onClick={this.togglePrivateChannels}>
+              </div>
+
+              :
+
+              <div onClick={this.togglePrivateChannels}>
                 <i className="comments teal icon" id="privateChatIcon"></i>
-              </div>}
-              <i onClick={this.toggleModal} className="info teal circle icon" id="infoIcon"></i>
-            </div>}
+              </div> }
+
+            {!conversant && <i onClick={this.toggleModal} className="info teal circle icon" id="infoIcon"></i>}
+
             {this.state.privateChannels && privateChannels}
+
             <div id='messageContainer'>
               <ChatMessages
                 user={this.props.user}
@@ -203,9 +216,8 @@ class ChatController extends React.Component {
         <EmojiInput
           screen={screen}
           submit={this.submitMessage}
-          placeholder={
-            (this.props.chat.size === 0 ?
-              "Start" : "Join" ) + " the conversation here..."} />
+          placeholder={(this.props.chat.size === 0 ?
+            "Start" : "Join" ) + " the conversation here..."} />
       </div>
     );
   }
@@ -236,10 +248,12 @@ const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, p
     return {
       user,
       onlineStatus,
-      privateChat: [],
       conversant: username,
+      community: community,
+      privateChat: privateChat,
       mentors: findMentors(community),
       chat: privateChat.getIn([username, 'history']),
+      totalNotifications: privateChat.reduce((t,c) => t + c.get('notifications'), 0),
       conversantAvatar: community.find(u => u.username === username).personal.avatarUrl
     }
   } else {
@@ -248,6 +262,7 @@ const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, p
       chat,
       onlineStatus,
       conversant: null,
+      community: community,
       conversantAvatar: null,
       mentors: findMentors(community),
       privateChat: privateChat,
