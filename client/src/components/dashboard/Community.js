@@ -10,7 +10,7 @@ class Community extends React.Component {
         <div className="ui four stackable cards">
           {this.props.users.map(user => {
             return (
-              <UserCard key={user._id} user={user} />
+              <UserCard history={this.props.history} key={user._id} user={user} />
             );
           })}
         </div>

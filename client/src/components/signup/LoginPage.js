@@ -1,14 +1,16 @@
 import React from 'react';
 import { APP_HOST } from '../../actions/chat';
+import { connectScreenSize } from 'react-screen-size';
+import { mapScreenSizeToProps } from '../Navbar';
 
-const LoginPage = () => {
+const LoginPage = ({ screen: { isTablet, isMobile, isDesktop }}) => {
   return (
     <div className="ui center aligned grid">
-      <div id="login-form" className="six wide column">
+      <div id="login-form" className={`${isMobile ? 'twelve' : isTablet ? 'ten' : 'six'} wide column`}>
 
         <div className="ui segment">
           <h2 className="ui teal image header">
-            <i className="huge github icon"/>
+            { !isMobile && <i className="huge github icon"/> }
             <div className="content">Login with GitHub</div>
           </h2>
 
@@ -24,12 +26,14 @@ const LoginPage = () => {
 
       </div>
 
-      <div className="center aligned segment">
-        <i id="arrow-bounce" className="massive teal arrow up icon"/>
-      </div>
+      { isDesktop &&
+        <div className="center aligned segment">
+          <i id="arrow-bounce" className="massive teal arrow up icon"/>
+        </div>
+      }
 
     </div>
   );
 }
 
-export default LoginPage;
+export default connectScreenSize(mapScreenSizeToProps)(LoginPage);

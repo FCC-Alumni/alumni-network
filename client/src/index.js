@@ -1,14 +1,14 @@
 /* eslint-disable */
-import React from 'react';
-import ReactDOM from 'react-dom';
 import App from './App';
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
+import './styles/index.css';
+import thunk from 'redux-thunk';
+import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import rootReducer from './rootReducer';
-import thunk from 'redux-thunk';
-import './styles/index.css';
+import { BrowserRouter } from 'react-router-dom';
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 export const store = createStore(
   rootReducer,

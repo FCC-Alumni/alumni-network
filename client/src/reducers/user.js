@@ -1,16 +1,16 @@
-import { SAVE_USER } from '../actions/types';
+import { SAVE_USER, LOGOUT_USER } from '../actions/types';
 
 const defaultUser = {
+  social: {},
+  career: {},
   githubId: '',
   username: '',
-  verifiedUser: false,
   personal: {},
   fccCerts: {},
-  mentorship: {},
-  skillsAndInterests: {},
   projects: [],
-  social: {},
-  career: {}
+  mentorship: {},
+  verifiedUser: false,
+  skillsAndInterests: {}
 };
 
 export default (state = defaultUser, action) => {
@@ -18,6 +18,9 @@ export default (state = defaultUser, action) => {
 
     case SAVE_USER:
       return action.user;
+
+    case LOGOUT_USER:
+      return defaultUser;
 
     default: return state;
   }

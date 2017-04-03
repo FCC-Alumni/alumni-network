@@ -1,50 +1,49 @@
 import React from 'react';
-
-import MessageBox from '../../common/MessageBox';
-import FormField from '../../common/FormField';
-import RadioButton from '../../common/RadioButton';
 import Ribbon from './common/RibbonHeader';
 import { Dropdown } from 'semantic-ui-react';
+import FormField from '../../common/FormField';
+import MessageBox from '../../common/MessageBox';
+import RadioButton from '../../common/RadioButton';
 
 import { surveyOptions } from '../../../assets/data/dropdownOptions';
 
-const Career = ({ 
-  toggle, 
-  showCareer, 
-  handleInputChange, 
-  handleRadioChange, 
-  handleTenureChange, 
-  working, 
-  company, 
-  tenure, 
-  jobSearch, 
-  subSaveClick, 
-  showPopUp, 
-  errors 
+const Career = ({
+  errors,
+  toggle,
+  tenure,
+  working,
+  company,
+  jobSearch,
+  showPopUp,
+  showCareer,
+  subSaveClick,
+  handleInputChange,
+  handleRadioChange,
+  handleTenureChange
 }) => {
   return (
     <div>
-      <Ribbon 
-        showPopUp={showPopUp} 
+      <Ribbon
+        content="Career"
         id="careerPopUp"
-        subSaveClick={subSaveClick}
         showSave={showCareer}
-        content="Career" 
-        wrapperClass="careerWrapper" 
+        showPopUp={showPopUp}
+        subSaveClick={subSaveClick}
+        wrapperClass="careerWrapper"
         onClick={()=>{toggle('showCareer')}} />
-      <form className={`careerPane ui six wide form ${showCareer ? 'show' : 'hide'}`}>
-        <MessageBox 
+      <div className={`careerPane ui six wide form ${showCareer ? 'show' : 'hide'}`}>
+        <MessageBox
           type="info"
-          message="Please let us know about your career so other members can track your accomplishments in your field."
-          dismissable={true} />
+          dismissable={true}
+          message="Please let us know about your career so other members can track your accomplishments in your field." />
         <div className="inline fields">
           <label>Are you employed as a software developer?</label>
-          <RadioButton 
+          <RadioButton
             label='Yes'
             name="working"
             onChange={handleRadioChange}
             checked={working === 'yes' && true} />
-          <RadioButton 
+          <RadioButton
             label='No'
             name="working"
             onChange={handleRadioChange}
@@ -53,42 +52,42 @@ const Career = ({
         <div className={`surveyPaneWorking ${working === 'yes' ? 'show' : 'hide'}`}>
           <div className="inline field">
             <label>For how long have you been a working software developer?</label>
-            <Dropdown 
-              options={surveyOptions} 
-              onChange={handleTenureChange} 
-              defaultValue={tenure} 
-              placeholder="≤ 5 years"/>
+            <Dropdown
+              defaultValue={tenure}
+              placeholder="≤ 5 years"
+              options={surveyOptions}
+              onChange={handleTenureChange} />
           </div>
-          <FormField 
-            label="Where are you currently employed?"
-            onChange={handleInputChange}
+          <FormField
             name="company"
-            placeholder="Enter Company"
-            inputOptions="mini"
+            errors={errors}
             value={company}
-            errors={errors} />
+            inputOptions="mini"
+            placeholder="Enter Company"
+            onChange={handleInputChange}
+            label="Where are you currently employed?" />
         </div>
         <div className={`surveyPaneWorking ${working === 'no' ? 'show' : 'hide'}`}>
           <div className="inline fields">
             <label>Are you currently looking for full-time employment as a software developer?</label>
-            <RadioButton 
+            <RadioButton
               label='Yes!'
               name="jobSearch"
               onChange={handleRadioChange}
               checked={jobSearch === 'Yes!' && true} />
-            <RadioButton 
+            <RadioButton
+              name="jobSearch"
               label='Not quite ready'
-              name="jobSearch"
-              onChange={handleRadioChange} 
+              onChange={handleRadioChange}
               checked={jobSearch === 'Not quite ready' && true} />
-            <RadioButton 
-              label='I am a hobbyist'
+            <RadioButton
               name="jobSearch"
-              onChange={handleRadioChange} 
+              label='I am a hobbyist'
+              onChange={handleRadioChange}
               checked={jobSearch === 'I am a hobbyist' && true} />
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

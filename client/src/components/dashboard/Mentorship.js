@@ -1,26 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { initiatePrivateChat } from '../../actions/chat';
-import { saveSearchState } from '../../actions/user';
-
 import DropDown from '../common/DropdownMulti';
+import Filters from './Mentorship/SearchFilters';
+import { saveSearchState } from '../../actions/user';
 import SearchResults from './Mentorship/SearchResults';
-import { Checkbox } from 'semantic-ui-react';
+import { initiatePrivateChat } from '../../actions/chat';
 
-import { filterSliders } from '../../assets/data/mapArrays';
-import { searchTypes } from '../../assets/data/dropdownOptions';
-import { defaultState } from '../../reducers/search';
 import isEmpty from 'lodash/isEmpty';
+import { defaultState } from '../../reducers/search';
+import { filterOptions } from '../../assets/data/mapArrays';
+import { searchTypes } from '../../assets/data/dropdownOptions';
 
 const searchApi = {
-  names: (regex, username, name) => {
-    return regex.test(username) || regex.test(name) ? true : false;
+  match: (regex, string) => {
+    return regex.test(string) ? true : false;
   },
   filter: (regex, array) => {
     return array.filter(item => regex.test(item) && item);
   },
-  match: (regex, string) => {
-    return regex.test(string) ? true : false;
+  names: (regex, username, name) => {
+    return regex.test(username) || regex.test(name) ? true : false;
   }
 }
 
@@ -31,24 +30,24 @@ class Mentorship extends React.Component {
     this.state = {
       ...searchState
     // STATE STRUCTURE:
-    // disableClear: true,
     // value: '',
     // results: [],
-    // showFilters: false,
-    // dropdownValue: ['all'],
-    // isLoading: false,
-    // mentorsOnly: false,
     // prosOnly: false,
-    // frontendOnly: false,
+    // isLoading: false,
+    // showFilters: false,
+    // disableClear: true,
+    // mentorsOnly: false,
     // backendOnly: false,
     // dataVisOnly: false,
+    // frontendOnly: false,
+    // dropdownValue: ['all'],
     // searchCriteria: {
-    //   skills: false,
+    //   mentorshipBio: false,
     //   interests: false,
     //   location: false,
-    //   mentorshipBio: false,
-    //   name: false,
     //   company: false,
+    //   skills: false,
+    //   name: false,
     //   all: true,
     // }
     }
@@ -60,11 +59,11 @@ class Mentorship extends React.Component {
 
   isStateless = () => {
     if (!this.state.value &&
-      !this.state.mentorsOnly &&
       !this.state.prosOnly &&
-      !this.state.frontendOnly &&
+      !this.state.dataVisOnly &&
+      !this.state.mentorsOnly &&
       !this.state.backendOnly &&
-      !this.state.dataVisOnly) {
+      !this.state.frontendOnly) {
       return true;
     } else {
       return false;
@@ -95,14 +94,18 @@ class Mentorship extends React.Component {
     this.setState({ isLoading: true });
 
     const { searchCriteria } = this.state;
-    var { community } = this.props,
-    regexArray = searchString && searchString.split(' ').map(escapedRegex => new RegExp(escapedRegex, 'i')),
+
+    var
     matchSkill = [],
+    matchName = false,
     matchInterest = [],
+    matchCompany = false,
     matchLocation = false,
     mentorshipBio = false,
-    matchName = false,
-    matchCompany = false;
+    { community } = this.props,
+    regexArray = searchString && searchString.split(' ').map(escapedRegex => {
+      return new RegExp(escapedRegex, 'i')
+    });
 
     // search filters:
     if (this.state.mentorsOnly) {
@@ -127,37 +130,37 @@ class Mentorship extends React.Component {
 
         const {
           username,
-          personal: { displayName, location },
+          career: { company },
           mentorship: { mentorshipSkills },
-          skillsAndInterests: { coreSkills, codingInterests },
-          career: { company }
+          personal: { displayName, location },
+          skillsAndInterests: { coreSkills, codingInterests }
         } = user;
 
         if (searchCriteria.all) {
-          matchName = searchApi.names(regex, username, displayName);
+          matchCompany = searchApi.match(regex, company);
           matchSkill = searchApi.filter(regex, coreSkills);
-          matchInterest = searchApi.filter(regex, codingInterests);
           matchLocation = searchApi.match(regex, location);
           mentorshipBio = searchApi.match(regex, mentorshipSkills);
-          matchCompany = searchApi.match(regex, company);
+          matchInterest = searchApi.filter(regex, codingInterests);
+          matchName = searchApi.names(regex, username, displayName);
         } else {
           if (searchCriteria.company) {
             matchCompany = searchApi.match(regex, company);
           }
-          if (searchCriteria.mentorshipBio) {
-            mentorshipBio = searchApi.match(regex, mentorshipSkills);
-          }
           if (searchCriteria.location) {
             matchLocation = searchApi.match(regex, location);
-          }
-          if (searchCriteria.name) {
-            matchName = searchApi.names(regex, username, displayName);
           }
           if (searchCriteria.skills) {
             matchSkill = searchApi.filter(regex, coreSkills);
           }
+          if (searchCriteria.mentorshipBio) {
+            mentorshipBio = searchApi.match(regex, mentorshipSkills);
+          }
           if (searchCriteria.interests) {
             matchInterest = searchApi.filter(regex, codingInterests);
+          }
+          if (searchCriteria.name) {
+            matchName = searchApi.names(regex, username, displayName);
           }
         }
 
@@ -238,20 +241,6 @@ class Mentorship extends React.Component {
   render() {
     const { results, value, showFilters } = this.state;
 
-    const searchFilters = filterSliders.map(radio => {
-      return (
-        <div key={radio.name}>
-          <Checkbox
-            slider
-            name={radio.name}
-            checked={this.state[radio.name]}
-            onChange={this.handleSliderChange}
-            label={radio.label} />
-          <div className="spacer" />
-        </div>
-      );
-    });
-
     return (
       <div className="ui container">
 
@@ -268,16 +257,19 @@ class Mentorship extends React.Component {
           </div>
           <div className={`search-filters ${!showFilters ? 'show' : 'hide'}`}>
             <div className="center-sliders">
-              { searchFilters }
+              <Filters
+                state={this.state}
+                filterOptions={filterOptions}
+                handleChange={this.handleSliderChange} />
             </div>
           </div>
 
           <div className="ui inline fields search-fields">
             <div className="field">
               <DropDown
-                value={this.state.dropdownValue}
-                options={searchTypes}
                 fluid={false}
+                options={searchTypes}
+                value={this.state.dropdownValue}
                 onChange={this.handleDropdownChange} />
             </div>
             <div className="field">
@@ -285,9 +277,9 @@ class Mentorship extends React.Component {
                 <div className="ui icon input">
                   <input
                     autoFocus
+                    type="text"
                     value={value}
                     onChange={this.handleChange}
-                    type="text"
                     placeholder="Search Community" />
                   <i className="search icon"></i>
                 </div>
@@ -310,9 +302,9 @@ class Mentorship extends React.Component {
 
         <div className="search-results">
           <SearchResults
+            results={results}
             currentUser={this.props.currentUser}
             initiatePrivateChat={this.initiatePrivateChat}
-            results={results}
             noResults={!isEmpty(value) && isEmpty(results)} />
         </div>
 
@@ -323,9 +315,9 @@ class Mentorship extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    searchState: state.search,
     currentUser: state.user.username,
-    community: state.community.toJS(),
-    searchState: state.search
+    community: state.community.toJS()
   }
 }
 
