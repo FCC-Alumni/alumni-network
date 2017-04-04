@@ -24,6 +24,7 @@
     "shortid": "^2.2.8",
     "socket.io-client": "^1.7.3",
     "socket.io-react": "^1.1.2",
+    "styled-components": "^1.4.4",
     "uuid": "^3.0.1",
     "validator": "^7.0.0"
   },

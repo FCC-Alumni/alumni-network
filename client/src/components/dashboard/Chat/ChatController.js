@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { Route, NavLink } from 'react-router-dom';
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../../Navbar';
-import axios from 'axios';
-import { List, Set } from 'immutable';
-import Modal from './ChatModal';
 import EmojiInput from './EmojiInput';
+import { List, Set } from 'immutable';
 import ChatMessages from './Chat';
+import Modal from './ChatModal';
+import axios from 'axios';
 import {
   addMessage,
   saveEdit,
@@ -125,7 +125,7 @@ class ChatController extends React.Component {
     const { conversant, privateChat, totalNotifications, screen } = this.props;
 
     const privateChannels = (
-      <div id="privateChatChannels" className='privateChatChannelsBox'>
+      <div id="privateChatChannels">
         <h3 className='privateChannelsTitle'>Private Chat Channels:</h3>
         {privateChat.size > 0 ? privateChat.keySeq().map(username => {
           if (username === conversant) return;
@@ -164,7 +164,7 @@ class ChatController extends React.Component {
                 Private Chat with <span className='conversant'> {conversant} </span>
                 {screen.isDesktop &&
                 <NavLink to='/dashboard/chat' className='linkHome'>
-                  <i className="fa fa-arrow-left" aria-hidden="true"></i> <span>Back to Mess Hall</span>
+                  <i className="arrow left icon" aria-hidden="true"></i> <span>Back to Mess Hall</span>
                 </NavLink>}
               </span>
 
