@@ -17,9 +17,15 @@ PublicProfile.propTypes = {
   user: React.PropTypes.object.isRequired
 }
 
-const mapStateToProps = (state) => {
+const findUser = (community, username) => {
+  return community.filter(user =>
+    (user.username === username) && user)[0];
+};
+
+const mapStateToProps = ({ community }, props) => {
+  const { username } = props.match.params;
   return {
-    user: state.viewUser
+    user: findUser(community.toJS(), username)
   }
 }
 

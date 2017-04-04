@@ -36,6 +36,7 @@ class AppContainer extends React.Component {
         this.props.history.push('/login');
       }
     }).catch(err => {
+      console.log(err);
       this.props.history.push('/login')
       this.props.logoutUser();
       this.props.addFlashMessage({

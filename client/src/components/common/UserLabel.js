@@ -8,7 +8,7 @@ const UserLabel = ({ color, size, image, username, label, folder, toggleAll }) =
     <div className={`ui image label ${color} ${size}`}>
       <img src={image} alt="user avatar" />
       {username}
-      <div className="detail">{label}</div>
+      { label && <div className="detail">{label}</div> }
       {
         (typeof folder === 'boolean') &&
         <div
@@ -22,12 +22,12 @@ const UserLabel = ({ color, size, image, username, label, folder, toggleAll }) =
 }
 
 UserLabel.propTypes = {
-  color: React.PropTypes.string,
   size: React.PropTypes.string,
+  label: React.PropTypes.string,
+  color: React.PropTypes.string,
+  toggleAll: React.PropTypes.func,
   image: React.PropTypes.string.isRequired,
   username: React.PropTypes.string.isRequired,
-  label: React.PropTypes.string.isRequired,
-  toggleAll: React.PropTypes.func,
   folder: React.PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.bool
@@ -35,9 +35,10 @@ UserLabel.propTypes = {
 }
 
 UserLabel.defaultProps = {
+  label: '',
+  folder: '',
   color: 'teal',
   size: 'medium',
-  folder: ''
 }
 
 export default UserLabel;
