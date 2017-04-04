@@ -25,7 +25,7 @@ export default ({
   saveEdit,
   editText,
   finishEdit,
-  reciepient,
+  recipient,
   onlineStatus,
   deleteMessage,
   initiatePrivateChat }) => {
@@ -79,13 +79,20 @@ export default ({
                   style={{ marginTop: '10px' }}
                   onSubmit={finishEdit}>
                   <input
-                    id="editInput"
                     autoFocus
                     type="text"
-                    placeholder="You should really type something..."
+                    id="editInput"
+                    autoComplete="off"
                     value={editText}
-                    onChange={saveEdit.bind(this)} />
-                  <button className="ui green button" disabled={!editText} onClick={finishEdit}>Save Edit</button>
+                    onChange={saveEdit.bind(this)}
+                    placeholder="You should really type something..." />
+                  {editText === text ?
+                  <button style={{ width: '140px' }} className="ui yellow button" onClick={finishEdit}>
+                    Cancel
+                  </button> :
+                  <button style={{ width: '140px' }} className="ui teal button" disabled={!editText} onClick={finishEdit}>
+                    Save Message
+                  </button>}
                   <button className="ui red button" onClick={deleteMessage.bind(this, id)}>Delete Message</button>
                 </form>
 
@@ -104,7 +111,7 @@ export default ({
                     <div className="content">
                       <div className="meta">
                         {!likes.has(user.username) ?
-                          <a className="like" onClick={like.bind(this, id, user.username, reciepient)}>
+                          <a className="like" onClick={like.bind(this, id, user.username, recipient)}>
                             <i className="like icon"></i> {likes.size} {likes.size === 1 ? 'Like' : 'Likes'}
                           </a>
                             :
@@ -116,7 +123,6 @@ export default ({
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
             )

@@ -87,7 +87,7 @@
     position: absolute;
     top: 5px;
     right: 42px;
-    width: 250px;
+    width: 315px;
     min-height: 35px;
     padding: 10px;
     padding-bottom: 25px;
@@ -112,13 +112,10 @@
         height: 25px;
       }
       .privateNotifications {
-        position: absolute;
-        top: 45px;
-        right: 200px;
+        position: relative;
+        top: -12px;
+        right: 10px;
         z-index: 20;
-      }
-      .privateUsername {
-        margin-left: 8px;
       }
       &:hover {
         cursor: pointer;

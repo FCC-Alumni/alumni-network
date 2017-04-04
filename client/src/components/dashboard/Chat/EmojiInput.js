@@ -83,7 +83,7 @@ export default class Emoji extends React.Component {
     return (
       <form className="ui form" onSubmit={this.submit}>
         <input
-          autoFocus
+          autoFocus={this.props.screen.isDesktop}
           name="emoji"
           id='chatInput'
           autoComplete="off"

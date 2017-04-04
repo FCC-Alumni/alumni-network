@@ -42,6 +42,7 @@ class ChatController extends React.Component {
   componentDidMount() {
     this.chatContainer = document.getElementById('messageContainer');
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+    document.addEventListener('keydown', this.handleKeyPress);
     if (this.props.screen.isDesktop) {
       document.body.style.backgroundImage = "url('/images/fcc-banner.png')";
     }
@@ -56,6 +57,13 @@ class ChatController extends React.Component {
   }
   componentWillUnmount() {
     document.body.style.backgroundImage = null;
+    document.removeEventListener('keydown', this.handleKeyPress, false);
+  }
+  handleKeyPress = (e) => {
+    // escape key closes private chat channels menu if open:
+    if (e.keyCode === 27 && this.state.privateChannels) {
+      this.setState({ privateChannels: false });
+    }
   }
   submitMessage = (text) => {
     const { conversant } = this.props;
@@ -65,31 +73,29 @@ class ChatController extends React.Component {
   setEdit = (id) => {
     if (this.state.editText !== '') {
       const { edit, editText } = this.state;
-      const { user, conversant } = this.props;
+      const { user, conversant, chat } = this.props;
       if (this.state.edit) this.props.broadcastEdit(edit, editText, conversant, user.username);
       this.setState({
         edit: id,
         editText: this.props.chat.find(m => m.get('id') === id).get('text')
+      }, () => {
+        if (chat.last().get('id') === id) {
+          this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+        }
       });
     };
   }
-  saveEdit = (e) => {
-    const editText = e.target.value;
-    this.setState({ editText });
-    if (editText) {
-      this.props.saveEdit(this.state.edit, this.state.editText, this.props.conversant);
-    }
-  }
+  saveEdit = (e) => this.setState({ editText: e.target.value });
   finishEdit = (e) => {
     e.preventDefault();
-    if (this.state.editText) {
-      const { edit, editText } = this.state;
-      const { user, conversant } = this.props;
-      this.props.broadcastEdit(edit, editText, conversant, user.username);
-      this.setState({
-        edit: null,
-        editText: null
-      });
+    const { edit, editText } = this.state;
+    if (editText) {
+      // only save edit if there is a change, otherwise this 'cancels'
+      if (this.props.chat.find(m => m.get('id') === edit).get('text') !== editText) {
+        const { user, conversant } = this.props;
+        this.props.broadcastEdit(edit, editText, conversant, user.username);
+      }
+      this.setState({ edit: null, editText: null });
     };
   }
   deleteMessage = (id) => {
@@ -109,16 +115,20 @@ class ChatController extends React.Component {
       privateChannels: !this.state.privateChannels
     });
   }
-  initiatePrivateChat = (reciepient, notifcations) => {
-    if (!this.props.privateChat.has(reciepient)) {
-      this.props.initiatePrivateChat(reciepient);
+  initiatePrivateChat = (recipient, notifcations) => {
+    if (!this.props.privateChat.has(recipient)) {
+      this.props.initiatePrivateChat(recipient);
     } else if (notifcations) {
       this.props.clearNotifications({
         author: this.props.user.username,
-        reciepient
+        recipient
       });
     }
-    this.props.history.push(`chat/${reciepient}`);
+    if (this.props.match.params.username) {
+      this.props.history.push(recipient);
+    } else {
+      this.props.history.push(`chat/${recipient}`);
+    }
   }
   render() {
 
@@ -130,6 +140,7 @@ class ChatController extends React.Component {
         {privateChat.size > 0 ? privateChat.keySeq().map(username => {
           if (username === conversant) return;
           const notifications = privateChat.getIn([username, 'notifications']);
+          const style = notifications > 0 ? { marginLeft: '-8px' } : { marginLeft: '8px' };
           return (
             <div
               key={username}
@@ -138,7 +149,7 @@ class ChatController extends React.Component {
               <img src={this.props.community.find(u => u.username === username).personal.avatarUrl} alt="User Avatar"/>
               {notifications > 0 &&
                 <span className="notifications privateNotifications">{notifications}</span>}
-              <span className="privateUsername">{username}</span>
+              <span className="privateUsername" style={style}>{username.slice(0, 25)}</span>
             </div>
           );
         }) :
@@ -159,18 +170,16 @@ class ChatController extends React.Component {
 
             {conversant ?
 
-              <span>
+              <span style={ !screen.isDesktop ? { fontSize: '16px' } : null }>
                 <img src={this.props.conversantAvatar} className='privateAvatar' alt={`${conversant}'s Avatar'`} />
                 Private Chat with <span className='conversant'> {conversant} </span>
-                {screen.isDesktop &&
-                <NavLink to='/dashboard/chat' className='linkHome'>
-                  <i className="arrow left icon" aria-hidden="true"></i> <span>Back to Mess Hall</span>
-                </NavLink>}
               </span>
 
               :
 
-              'Welcome to the Alumni Mess Hall:'
+              <span style={ !screen.isDesktop ? { fontSize: '16px' } : null }>
+                Welcome to the Alumni Mess Hall:
+              </span>
 
             }
 
@@ -189,7 +198,11 @@ class ChatController extends React.Component {
                 <i className="comments teal icon" id="privateChatIcon"></i>
               </div> }
 
-            {!conversant && <i onClick={this.toggleModal} className="info teal circle icon" id="infoIcon"></i>}
+            {conversant ?
+              <NavLink to='/dashboard/chat'>
+                <i className="teal home icon" id="infoIcon"></i>
+              </NavLink> :
+              <i onClick={this.toggleModal} className="info teal circle icon" id="infoIcon"></i>}
 
             {this.state.privateChannels && privateChannels}
 
@@ -204,7 +217,7 @@ class ChatController extends React.Component {
                 mentors={this.props.mentors}
                 like={this.props.likeMessage}
                 editText={this.state.editText}
-                reciepient={this.props.conversant}
+                recipient={this.props.conversant}
                 deleteMessage={this.deleteMessage}
                 onlineStatus={this.props.onlineStatus}
                 initiatePrivateChat={this.initiatePrivateChat}

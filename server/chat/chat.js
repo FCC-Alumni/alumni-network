@@ -64,18 +64,18 @@ module.exports = (io) => {
 
     // private chat:
     socket.on('private-submission', (data) => {
-      const { reciepient } = data;
+      const { recipient } = data;
       const { author } = data.message;
       client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
-          if (reciepient in users.byName) {
-            socket.broadcast.to(users.byName[reciepient])
+          if (recipient in users.byName) {
+            socket.broadcast.to(users.byName[recipient])
               .emit('broadcast-private-submission', data);
           } else {
-            PrivateChat.findOne({ $and: [{members: author}, {members: reciepient}] }, (err, conversation) => {
+            PrivateChat.findOne({ $and: [{members: author}, {members: recipient}] }, (err, conversation) => {
               if (!err) {
-                conversation.notifications[reciepient]++;
+                conversation.notifications[recipient]++;
                 conversation.markModified('notifications');
                 conversation.save();
               }
@@ -85,36 +85,36 @@ module.exports = (io) => {
       });
     });
     socket.on('private-update', (data) => {
-      const { reciepient } = data;
+      const { recipient } = data;
       client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
-          if (reciepient in users.byName) {
-            socket.broadcast.to(users.byName[reciepient])
+          if (recipient in users.byName) {
+            socket.broadcast.to(users.byName[recipient])
               .emit('broadcast-private-update', data);
           }
         }
       });
     });
     socket.on('private-like', (data) => {
-      const { reciepient } = data;
+      const { recipient } = data;
       client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
-          if (reciepient in users.byName) {
-            socket.broadcast.to(users.byName[reciepient])
+          if (recipient in users.byName) {
+            socket.broadcast.to(users.byName[recipient])
               .emit('broadcast-private-like', data);
           }
         }
       });
     });
     socket.on('private-delete', (data) => {
-      const { reciepient } = data;
+      const { recipient } = data;
       client.get('online-users', (err, onlineUsers) => {
         if (!err) {
           const users = JSON.parse(onlineUsers);
-          if (reciepient in users.byName) {
-            socket.broadcast.to(users.byName[reciepient])
+          if (recipient in users.byName) {
+            socket.broadcast.to(users.byName[recipient])
               .emit('broadcast-private-delete', data);
           }
         }

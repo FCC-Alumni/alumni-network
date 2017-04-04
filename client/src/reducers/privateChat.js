@@ -26,7 +26,7 @@ export default (state = Map(), action) => {
 
     case POPULATE_PRIVATE: {
       const { user, data } = payload;
-      let reciepient;
+      let recipient;
 
       if (data.length === 0) return state;
 
@@ -37,13 +37,13 @@ export default (state = Map(), action) => {
         } else {
           data.members.splice(1,1);
         }
-        reciepient = data.members[0];
-        state = state.set(reciepient, Map({
+        recipient = data.members[0];
+        state = state.set(recipient, Map({
           notifications: data.notifications[user],
           history: List(data.history.map(h => Map(h)))
         }));
       });
-      return state.updateIn([reciepient, 'history'], h => h.map(m => {
+      return state.updateIn([recipient, 'history'], h => h.map(m => {
         const likes = m.get('likes');
         m = m.delete('likes');
         return m.set('likes', Set(likes));
@@ -58,13 +58,13 @@ export default (state = Map(), action) => {
     }
 
     case ADD_MESSAGE_PRIVATE: {
-      const { reciepient, message } = payload;
-      return state.updateIn([reciepient, 'history'], l => l.push(message));
+      const { recipient, message } = payload;
+      return state.updateIn([recipient, 'history'], l => l.push(message));
     }
 
     case EDIT_MESSAGE_PRIVATE: {
-      const { id, text, reciepient } = payload;
-      return state.updateIn([reciepient, 'history'], l => {
+      const { id, text, recipient } = payload;
+      return state.updateIn([recipient, 'history'], l => {
         return l.map(message => {
           if (message.get('id') === id) {
             return message.set('text', text).set('edited', true);
@@ -76,8 +76,8 @@ export default (state = Map(), action) => {
     }
 
     case LIKE_MESSAGE_PRIVATE: {
-      const { messageId, liker, reciepient } = payload;
-      return state.updateIn([reciepient, 'history'], l => {
+      const { messageId, liker, recipient } = payload;
+      return state.updateIn([recipient, 'history'], l => {
         return l.map(message => {
           if (message.get('id') === messageId && !message.get('likes').has(liker)) {
               return message.update('likes', likes => likes.add(liker))
@@ -89,13 +89,13 @@ export default (state = Map(), action) => {
     }
 
     case DELETE_MESSAGE_PRIVATE: {
-      return state.updateIn([payload.reciepient, 'history'], l =>
+      return state.updateIn([payload.recipient, 'history'], l =>
         l.filter(message => message.get('id') !== payload.id));
     }
 
     // real-time update actions:
     case RECEIVED_MESSAGE_PRIVATE: {
-      const { reciepient, message } = payload;
+      const { recipient, message } = payload;
       if (state.has(message.author)) {
         return state.updateIn([message.author, 'history'], l => {
           return l.push(Map(message));
@@ -113,7 +113,7 @@ export default (state = Map(), action) => {
     }
 
     case RECEIVED_UPDATE_PRIVATE: {
-      const { author, reciepient, id, text } = payload;
+      const { author, recipient, id, text } = payload;
       return state.updateIn([author, 'history'], l => {
         return l.map(message => {
           if (message.get('id') === id) {
@@ -128,7 +128,7 @@ export default (state = Map(), action) => {
     }
 
     case RECEIVED_LIKE_PRIVATE: {
-      const { liker, reciepient, id } = payload;
+      const { liker, recipient, id } = payload;
       return state.updateIn([liker, 'history'], l => {
         return l.map(message => {
           if (message.get('id') === id) {
@@ -141,7 +141,7 @@ export default (state = Map(), action) => {
     }
 
     case RECEIVED_DELETE_PRIVATE: {
-      const { author, reciepient, id } = payload;
+      const { author, recipient, id } = payload;
       return state.updateIn([author, 'history'], l => {
         return l.filter(m => {
           return m.get('id') !== id;
@@ -150,13 +150,13 @@ export default (state = Map(), action) => {
     }
 
     case PRIVATE_CHAT_NOTIFY: {
-      const { reciepient } = payload;
-      return state.updateIn([reciepient, 'notifications'], n => n + 1);
+      const { recipient } = payload;
+      return state.updateIn([recipient, 'notifications'], n => n + 1);
     }
 
     case CLEAR_NOTICATIONS: {
-      const { reciepient } = payload;
-      return state.updateIn([reciepient, 'notifications'], n => 0);
+      const { recipient } = payload;
+      return state.updateIn([recipient, 'notifications'], n => 0);
     }
 
     default: return state;

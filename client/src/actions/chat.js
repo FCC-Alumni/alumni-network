@@ -43,15 +43,15 @@ import { flashError } from './flashMessages';
 socket.on('broadcast-private-submission', data => {
   console.log('received private message:', data);
 
-  const { reciepient, message } = data;
+  const { recipient, message } = data;
   // if user is not in private chat window, add a notification for them:
   if (!window.location.href.includes(message.author)) {
-    axios.post('/api/private-chat/add-notification', { author: message.author, reciepient })
+    axios.post('/api/private-chat/add-notification', { author: message.author, recipient })
     .then(res => {
       store.dispatch({
         type: PRIVATE_CHAT_NOTIFY,
         payload: {
-          reciepient: message.author
+          recipient: message.author
         }
       });
     }).catch(err => {
@@ -60,13 +60,13 @@ socket.on('broadcast-private-submission', data => {
   }
 
   const user = store.getState().user.username;
-  if (user === reciepient) {
+  if (user === recipient) {
     message.likes = Set(message.likes);
     store.dispatch({
       type: RECEIVED_MESSAGE_PRIVATE,
       payload: {
         message,
-        reciepient
+        recipient
       }
     });
   };
@@ -74,16 +74,16 @@ socket.on('broadcast-private-submission', data => {
 
 socket.on('broadcast-private-update', data => {
   console.log('received private update:', data);
-  const { author, reciepient, id, text } = data;
+  const { author, recipient, id, text } = data;
   const user = store.getState().user.username;
-  if (user === reciepient) {
+  if (user === recipient) {
     store.dispatch({
       type: RECEIVED_UPDATE_PRIVATE,
       payload: {
         id,
         text,
         author,
-        reciepient
+        recipient
       }
     });
   }
@@ -91,15 +91,15 @@ socket.on('broadcast-private-update', data => {
 
 socket.on('broadcast-private-like', data => {
   console.log('received private like:', data);
-  const { liker, reciepient, id } = data;
+  const { liker, recipient, id } = data;
   const user = store.getState().user.username;
-  if (user === reciepient) {
+  if (user === recipient) {
     store.dispatch({
       type: RECEIVED_LIKE_PRIVATE,
       payload: {
         id,
         liker,
-        reciepient
+        recipient
       }
     });
   }
@@ -107,15 +107,15 @@ socket.on('broadcast-private-like', data => {
 
 socket.on('broadcast-private-delete', data => {
   console.log('received private delete:', data);
-  const { author, reciepient, id } = data;
+  const { author, recipient, id } = data;
   const user = store.getState().user.username;
-  if (user === reciepient) {
+  if (user === recipient) {
     store.dispatch({
       type: RECEIVED_DELETE_PRIVATE,
       payload: {
         id,
         author,
-        reciepient
+        recipient
       }
     });
   }
@@ -158,7 +158,7 @@ export const clearNotifications = (data) => {
         dispatch({
           type: CLEAR_NOTICATIONS,
           payload: {
-            reciepient: data.reciepient
+            recipient: data.recipient
           }
         });
       }).catch(err => {
@@ -208,7 +208,7 @@ export const populateChat = () => {
       .then(res => {
         dispatch({
           type: CHAT_INITIALIZE,
-          payload: res.data.history.map(message => {
+          payload: res.data.map(message => {
             message.likes = Set(message.likes);
             return Map(message);
           })
@@ -233,16 +233,16 @@ export const addMessage = payload => {
     id: (author.username + '_' + uuidV1()),
   });
   if (conversant) {
-    message = message.set('reciepient', conversant);
+    message = message.set('recipient', conversant);
     return dispatch => {
       return axios.post('/api/private-chat/add-message', message)
         .then(res => {
-          socket.emit('private-submission', { author: message.author, reciepient: conversant, message });
+          socket.emit('private-submission', { author: message.author, recipient: conversant, message });
           dispatch({
             type: ADD_MESSAGE_PRIVATE,
             payload: {
               message,
-              reciepient: conversant
+              recipient: conversant
             }
           });
        }).catch(err => {
@@ -284,13 +284,13 @@ export const broadcastEdit = (id, text, conversant, author) => {
     return dispatch => {
       return axios.post('/api/private-chat/edit-message', { id, text, conversant })
         .then(res => {
-          socket.emit('private-update', { author, reciepient: conversant, id, text });
+          socket.emit('private-update', { author, recipient: conversant, id, text });
           dispatch({
             type: EDIT_MESSAGE_PRIVATE,
             payload: {
               id,
               text,
-              reciepient: conversant
+              recipient: conversant
             }
           })
         }).catch(err => {
@@ -318,13 +318,13 @@ export const likeMessage = (messageId, liker, conversant) => {
     return dispatch => {
       return axios.post('/api/private-chat/like-message', { id: messageId, conversant })
         .then(res => {
-          socket.emit('private-like', { liker, reciepient: conversant, id: messageId });
+          socket.emit('private-like', { liker, recipient: conversant, id: messageId });
           dispatch({
             type: LIKE_MESSAGE_PRIVATE,
               payload: {
                 liker,
                 messageId,
-                reciepient: conversant
+                recipient: conversant
               }
             });
         }).catch(err => {
@@ -355,12 +355,12 @@ export const deleteMessage = (id, conversant, author) => {
     return dispatch => {
       return axios.post('/api/private-chat/delete-message', { id, conversant })
         .then(res => {
-          socket.emit('private-delete', { author, reciepient: conversant, id });
+          socket.emit('private-delete', { author, recipient: conversant, id });
           dispatch({
             type: DELETE_MESSAGE_PRIVATE,
             payload: {
               id,
-              reciepient: conversant
+              recipient: conversant
             }
           });
         }).catch(err => {

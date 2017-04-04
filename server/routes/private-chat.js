@@ -11,22 +11,30 @@ router.get('/api/private-chat/initialize', isAuthenticated, (req, res) => {
   const { username } = req.user;
   PrivateChat.find({ members: username }, (err, history) => {
     if (err) throw res.sendStatus(500);
-    res.json(history);
+    // we will only return the most recent 100 private chat messages:
+    const abbreviated = history.map(c => {
+      if (c.history.length > 100) {
+        const slicedHistory = c.history.slice(99);
+        c.history = slicedHistory;
+      }
+      return c;
+    });
+    res.json(abbreviated);
   });
 });
 
 // handle new messages
 router.post('/api/private-chat/add-message', isAuthenticated, (req, res) => {
   const { username } = req.user;
-  const { reciepient } = req.body;
-  PrivateChat.findOne({ $and: [{members: username}, {members: reciepient}] }, (err, conversation) => {
+  const { recipient } = req.body;
+  PrivateChat.findOne({ $and: [{members: username}, {members: recipient}] }, (err, conversation) => {
     if (err) res.sendStatus(500);
     if (!conversation) {
       const chat = new PrivateChat({
-        members: [ username, reciepient ],
+        members: [ username, recipient ],
         notifications: {
           [username]: 0,
-          [reciepient]: 0
+          [recipient]: 0
         },
         history: [ req.body ]
       });
@@ -108,11 +116,11 @@ router.post('/api/private-chat/delete-message', isAuthenticated, (req, res) => {
 });
 
 router.post('/api/private-chat/add-notification', isAuthenticated, (req, res) => {
-  const { author, reciepient } = req.body;
-  PrivateChat.findOne({ $and: [{members: author}, {members: reciepient}] }, (err, conversation) => {
+  const { author, recipient } = req.body;
+  PrivateChat.findOne({ $and: [{members: author}, {members: recipient}] }, (err, conversation) => {
     if (err) res.sendStatus(500);
     if (conversation) {
-      conversation.notifications[reciepient]++;
+      conversation.notifications[recipient]++;
       conversation.markModified('notifications');
       conversation.save(e => {
         if (e) res.sendStatus(500);
@@ -125,8 +133,8 @@ router.post('/api/private-chat/add-notification', isAuthenticated, (req, res) =>
 });
 
 router.post('/api/private-chat/clear-notifications', isAuthenticated, (req, res) => {
-  const { author, reciepient } = req.body;
-  PrivateChat.findOne({ $and: [{members: author}, {members: reciepient }] }, (err, conversation) => {
+  const { author, recipient } = req.body;
+  PrivateChat.findOne({ $and: [{members: author}, {members: recipient }] }, (err, conversation) => {
     if (err) res.sendStatus(500);
     if (conversation) {
       conversation.notifications[author] = 0;
