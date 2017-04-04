@@ -7,7 +7,11 @@ import {
   getDataVisCert
 } from './getCerts';
 
-const credentials = `client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_SECRET}`;
+const clientID = process.env.NODE_ENV === 'production' ?
+  process.env.GITHUB_PROD_ID : process.env.GITHUB_CLIENT_ID,
+const clientSecret = process.env.NODE_ENV === 'production' ?
+  process.env.GITHUB_PROD_SECRET : process.env.GITHUB_SECRET,
+const credentials = `client_id=${clientID}&client_secret=${clientSecret}`;
 
 const skills = [
   'Angular',
