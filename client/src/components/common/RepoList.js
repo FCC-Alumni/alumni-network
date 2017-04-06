@@ -1,10 +1,15 @@
 import React from 'react';
-import { Dropdown, Input } from 'semantic-ui-react';
-import Validator from 'validator';
-import { validateGithubRepo, searchGithubCommits, validateOtherRepos } from '../../actions/repoValidations';
 import isEmpty from 'lodash/isEmpty';
-import indexOf from 'lodash/indexOf';
 import { repoOptions } from '../../assets/data/dropdownOptions';
+import { Dropdown, Input } from 'semantic-ui-react';
+import indexOf from 'lodash/indexOf';
+import Validator from 'validator';
+import {
+  validateGithubRepo,
+  searchGithubCommits,
+  validateOtherRepos
+} from '../../actions/repoValidations';
+
 
 /*
 TODO:
@@ -21,32 +26,32 @@ class RepoList extends React.Component {
     icon: 'github',
     isLoading: false
   }
-  
+
   componentWillMount() {
     const items = this.props.prePopulateList;
     if (items.length > 0) {
       this.setState({ items_list: items });
     }
   }
-  
+
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress);
   }
-  
+
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyPress);
   }
-  
+
   handleKeyPress = (e) => {
     if (e.keyCode === 13) {
       this.addItem();
     }
   }
-  
+
   handleChange = (e, data) => {
     this.setState({ item: e.target.value, error: '' });
   }
-  
+
   handleLabelChange = (e) => {
     let icon;
     if (e.target.innerText === 'https://github.com/') icon = 'github'
@@ -54,150 +59,150 @@ class RepoList extends React.Component {
     if (e.target.innerText === 'https://bitbucket.org/') icon = 'bitbucket'
     this.setState({ label: e.target.innerText, icon });
   }
-  
+
   validateGitLab_and_BitBucketRepos = (hostSite) => {
     const { item, items_list, label } = this.state;
     const hostUrl = hostSite === 'BitBucket' ? 'https://bitbucket.org/' : 'https://gitlab.com/';
-    
+
     validateOtherRepos(item, hostUrl).then((res) => {
       if (res) {
         items_list.push({item, label});
-        this.setState({ items_list, item: '', isLoading: false });
+        this.setState({ items_list, item: '', isLoading: false }, () => this.props.saveChanges(false));
       } else {
-        this.setState({ 
+        this.setState({
           error: {
             header: `Repository is private or invalid. Please enter a public, valid ${hostSite} repo.`,
             repo: '',
-            owner: ''
-          }, 
+            namespace: ''
+          },
           item: '',
-          isLoading: false 
+          isLoading: false
         });
       }
     })
     .catch(err => {
-      this.setState({ 
+      this.setState({
         error: {
           header: `Our bad, it seems like we really messed this one up! Try again never. Just kidding, give us a few.`,
           repo: '',
-          owner: ''
-        }, 
+          namespace: ''
+        },
         item: '',
-        isLoading: false 
+        isLoading: false
       });
     });
   }
-  
+
   addItem = () => {
     this.setState({ isLoading: true });
     const { item, items_list, label } = this.state;
     const { saveListToParent } = this.props;
-    const [ owner, repo ] = item.split('/');
-    
+    const [ namespace, repo ] = item.split('/');
+
     if(!item) {
-      this.setState({ isLoading: false }); 
+      this.setState({ isLoading: false });
       return;
     }
-    
+
     // check if item already exists on list
     for (var obj of items_list) {
       if (obj.item === item && obj.label === label) {
-        this.setState({ 
+        this.setState({
           error: {
             header: 'You have already added this repo to your list!',
             repo: '',
-            owner: '',
-          }, 
+            namespace: '',
+          },
           item: '',
           isLoading: false
-        }); 
+        });
         return;
       }
     }
-    
+
     // GITLAB VALIDATIONS:
     if (label === 'https://gitlab.com/') {
-      // CHALLENGE!!! anyone up for the challenge of writing a regex that covers all of this? 
+      // CHALLENGE!!! anyone up for the challenge of writing a regex that covers all of this?
       // I was unable to, would def clean this up. -Pete
       if (
-      repo.endsWith('.git') || 
-      repo.endsWith('.atom') || 
+      repo.endsWith('.git') ||
+      repo.endsWith('.atom') ||
       repo.endsWith('.') ||
       repo.startsWith('-') ||
-      owner.endsWith('.git') || 
-      owner.endsWith('.atom') || 
-      owner.startsWith('-') ||
-      owner.endsWith('.') ||
+      namespace.endsWith('.git') ||
+      namespace.endsWith('.atom') ||
+      namespace.startsWith('-') ||
+      namespace.endsWith('.') ||
       !Validator.matches(item, /[\d\w-.]+\/[\d\w-.]+\/?/)
       ) {
-        this.setState({ 
+        this.setState({
           error: {
             header: 'Please enter a valid GitLab repository path: namespace/repo',
-            repo: "Owner: This value can only contain letters, digits, '_', '-' and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'",
-            owner: "Repo: This value can only contain letters, digits, '_', '-' and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'"
-          }, 
+            repo: "Namespace: This value can only contain letters, digits, '_', '-' and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'",
+            namespace: "Repo: This value can only contain letters, digits, '_', '-' and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'"
+          },
           item: '',
-          isLoading: false 
+          isLoading: false
         });
       } else {
         this.validateGitLab_and_BitBucketRepos('GitLab');
       }
     }
-    
+
     // BITBUCKET VALIDATIONS:
     if (label === 'https://bitbucket.org/') {
       if (
-        (repo.length === 1 && repo.startsWith('.')) || 
+        (repo.length === 1 && repo.startsWith('.')) ||
         !Validator.matches(item, /[\d\w-]+\/[\d\w-.]+\/?/)
       ) {
-        this.setState({ 
-          error: { 
+        this.setState({
+          error: {
             header: 'Please enter a valid BitBucket repository path: namespace/repo',
             repo: 'Repo: This value must contain only ASCII letters, numbers, dashes, underscores and periods.',
-            owner: 'Owner: This value must contain only ASCII letters, numbers, dashes and underscores.'
-          }, 
+            namespace: 'Namespace: This value must contain only ASCII letters, numbers, dashes and underscores.'
+          },
           item: '',
-          isLoading: false 
+          isLoading: false
         });
       } else {
         this.validateGitLab_and_BitBucketRepos('BitBucket');
       }
     }
 
-    // GITHUB VALIDATIONS: 
+    // GITHUB VALIDATIONS:
     if (label === 'https://github.com/') {
       if (
         repo.startsWith('.') ||
-        owner.startsWith('-') ||
-        owner.endsWith('-') ||
-        owner.search(/--/) > -1 || 
+        namespace.startsWith('-') ||
+        namespace.endsWith('-') ||
+        namespace.search(/--/) > -1 ||
         !Validator.matches(item, /[\d\w-.]+\/[\d\w-]+\/?/)
       ) {
-        this.setState({ 
-          error: { 
+        this.setState({
+          error: {
             header: 'Please enter a valid GitHub repository path: namespace/repo',
             repo: 'Repo: This value may only contain alphanumeric characters, periods, and hyphens, and cannot begin with a period.',
-            owner: 'Owner: This value may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.'
-          }, 
+            namespace: 'Namespace: This value may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.'
+          },
           item: '',
-          isLoading: false 
+          isLoading: false
         });
       } else {
         const { username } = this.props;
         // test with FreeCodeCamp/FreeCodeCamp repo
-        // const username = 'tommygebru' // <-- control for testing reject() - has not contributed to repo 
+        // const username = 'tommygebru' // <-- control for testing reject() - has not contributed to repo
         // const username = 'bonham000' // <-- control for testing searchGithubCommits() (bonham000 does not appear in 1st 100 FCC contributors)
-        validateGithubRepo(owner, repo, username)
+        validateGithubRepo(namespace, repo, username)
         .then((res) => {
           const contributors = res.contributorsList;
           let isContributor = false;
-          // first check if user is listed 
+          // first check if user is listed
           // if yes, resolve and continue
           for(var contributor of contributors) {
             if (contributor.author.login === username) {
               isContributor = true;
               items_list.push({item, label});
-              this.setState({ items_list, item: '', isLoading: false });
+              this.setState({ items_list, item: '', isLoading: false }, () => this.props.saveChanges(false));
             }
           }
           // if user is not listed, repo may have > 100 contributors
@@ -205,20 +210,20 @@ class RepoList extends React.Component {
           // prefer to use both checks, becuase this one in "preview"
           // github warns changes could happen at any time with no notice
           if (!isContributor) {
-            searchGithubCommits(owner, repo, username)
+            searchGithubCommits(namespace, repo, username)
             .then((res) => {
               const commits = res.data.items;
               if (commits.length > 0) {
                 isContributor = true;
                 items_list.push({item, label});
-                this.setState({ items_list, item: '', isLoading: false });
-              } 
+                this.setState({ items_list, item: '', isLoading: false }, () => this.props.saveChanges(false));
+              }
             })
             .catch((err) => {
               console.warn('There was a problem with GitHub\'s API: ' + err.message);
             });
-          } 
-          
+          }
+
           if (!isContributor) {
             // if user/repo does not pass either check, reject with error
             this.setState({
@@ -226,12 +231,12 @@ class RepoList extends React.Component {
               error: {
                 header: 'You must be a contributor to the repo you would like to collaborate on.',
                 repo: '',
-                owner: ''
+                namespace: ''
               },
               isLoading: false
             });
           }
-          
+
         })
         .catch((err) => {
           // this should catch on the first axios.get request if repo does not exist
@@ -240,40 +245,40 @@ class RepoList extends React.Component {
             error: {
               header: 'Repository is private or invalid. Please enter a public, valid GitHub repo',
               repo: '',
-              owner: ''
+              namespace: ''
             },
             isLoading: false
           });
         });
       }
     }
-    
+
     if (saveListToParent) {
       saveListToParent(items_list);
     }
   }
-  
+
   removeItem = (item) => {
     const items_list = this.spliceList(item);
-    this.setState({ items_list });
-  
+    this.setState({ items_list }, () => this.props.saveChanges(false));
+
   }
-  
+
   editItem = (item) => {
     const items_list = this.spliceList(item);
     this.setState({ items_list, item: item.item });
   }
-  
+
   spliceList = (item) => {
     const { items_list } = this.state;
     const index = indexOf(items_list, item);
     items_list.splice(index, 1);
     return items_list;
   }
-  
+
   render() {
     const { item, isLoading, icon, error } = this.state;
-    
+
     const listItems = this.state.items_list.map((el, index) => {
       return (
         <div key={index} className="item">
@@ -285,11 +290,11 @@ class RepoList extends React.Component {
         </div>
       );
     });
-    
+
     return (
       <div>
-        
-        <Input 
+
+        <Input
           onChange={this.handleChange}
           label={<Dropdown onChange={this.handleLabelChange} defaultValue="https://github.com/" options={repoOptions} />}
           labelPosition="left"
@@ -298,34 +303,40 @@ class RepoList extends React.Component {
           loading={isLoading}
           icon={icon}
         />
-        
+        { !isEmpty(error) && !error.repo && !error.namespace &&
+          <div className="ui left pointing red basic label">
+            {error.header}
+          </div> }
+
+
         <div className="ui middle aligned divided list">
           {listItems}
         </div>
-        
-        { 
-          !isEmpty(error) && 
+
+        {
+          !isEmpty(error) && error.repo && error.namespace &&
           <div className="ui error message">
             <div className="header">{error.header}</div>
             {
-              error.repo.length > 0 &&
+              error.repo &&
               <ul className="list">
-                <li>{error.owner}</li> 
-                <li>{error.repo}</li> 
+                <li>{error.namespace}</li>
+                <li>{error.repo}</li>
               </ul>
             }
-          </div> 
+          </div>
         }
-        
+
       </div>
     );
   }
 }
 
 RepoList.propTypes = {
-  saveListToParent: React.PropTypes.func.isRequired, 
-  username: React.PropTypes.string.isRequired, 
-  prePopulateList: React.PropTypes.array 
+  prePopulateList: React.PropTypes.array,
+  username: React.PropTypes.string.isRequired,
+  saveChanges: React.PropTypes.func.isRequired,
+  saveListToParent: React.PropTypes.func.isRequired,
 }
 
 RepoList.defaultProps = {

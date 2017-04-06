@@ -1,7 +1,3 @@
-#profile-page-main-container {
-  margin-bottom: 50px;
-}
-
 .saveSection,
 #saveButton {
   float: right;
@@ -31,9 +27,9 @@
   }
 }
 
-.profileWrapper, 
-.fccWrapper, 
-.mentorshipWrapper, 
+.profileWrapper,
+.fccWrapper,
+.mentorshipWrapper,
 .skillsWrapper,
 .socialWrapper,
 .careerWrapper,
@@ -41,9 +37,9 @@
   cursor: pointer;
 }
 
-.profilePane, 
-.fccPane, 
-.mentorshipPane, 
+.profilePane,
+.fccPane,
+.mentorshipPane,
 .skillsPane,
 .socialPane,
 .careerPane,
@@ -53,9 +49,9 @@
   padding-bottom: 8px;
 }
 
-.profilePane.hide, 
-.fccPane.hide, 
-.mentorshipPane.hide, 
+.profilePane.hide,
+.fccPane.hide,
+.mentorshipPane.hide,
 .skillsPane.hide,
 .socialPane.hide,
 .careerPane.hide,
@@ -66,9 +62,9 @@
   @extend .transition-in;
 }
 
-.profilePane.show, 
-.fccPane.show, 
-.mentorshipPane.show, 
+.profilePane.show,
+.fccPane.show,
+.mentorshipPane.show,
 .skillsPane.show,
 .socialPane.show,
 .careerPane.show,
@@ -82,4 +78,3 @@
 .fccPane.show {
   margin-bottom: 8px !important;
 }
-

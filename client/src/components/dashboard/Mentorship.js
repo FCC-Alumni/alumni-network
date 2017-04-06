@@ -1,15 +1,41 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import DropDown from '../common/DropdownMulti';
 import Filters from './Mentorship/SearchFilters';
-import { saveSearchState } from '../../actions/user';
 import SearchResults from './Mentorship/SearchResults';
-import { initiatePrivateChat } from '../../actions/chat';
 
 import isEmpty from 'lodash/isEmpty';
 import { defaultState } from '../../reducers/search';
+import { saveSearchState } from '../../actions/user';
+import { initiatePrivateChat } from '../../actions/chat';
 import { filterOptions } from '../../assets/data/mapArrays';
 import { searchTypes } from '../../assets/data/dropdownOptions';
+import {
+  transitionIn,
+  transitionOut,
+  extendCenterAlignedWrapper,
+  CenterAlignedWrapper as CenteredWrapper,
+} from '../../styles/globalStyles';
+
+const SearchFilters = styled.div`
+  ${ props => props.showFilters ? transitionIn() : transitionOut() }
+  ${ extendCenterAlignedWrapper() }
+`;
+
+const ButtonWrapper = styled.div`
+  ${ extendCenterAlignedWrapper() }
+  padding-bottom: 15px;
+`;
+
+const FiltersSelector = styled.div`
+  width: 230px;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 5px auto;
+  font-weight: bold;
+  text-align: center !important;
+`;
 
 const searchApi = {
   match: (regex, string) => {
@@ -250,21 +276,21 @@ class Mentorship extends React.Component {
 
         <div className="ui form">
           <div className="filters-selector-wrap">
-            <div onClick={this.showFilters} className="text-align-center filters-selector">
+            <FiltersSelector onClick={this.showFilters} >
               <i className={`${!showFilters ? 'teal unhide' : 'brown hide'} icon`} />
               {`${!showFilters ? 'Show' : 'Hide'} Search Filters`}
-            </div>
+            </FiltersSelector>
           </div>
-          <div className={`search-filters ${!showFilters ? 'show' : 'hide'}`}>
+          <SearchFilters showFilters={showFilters} >
             <div className="center-sliders">
               <Filters
                 state={this.state}
                 filterOptions={filterOptions}
                 handleChange={this.handleSliderChange} />
             </div>
-          </div>
+          </SearchFilters>
 
-          <div className="ui inline fields search-fields">
+          <CenteredWrapper className="ui inline fields">
             <div className="field">
               <DropDown
                 fluid={false}
@@ -285,10 +311,11 @@ class Mentorship extends React.Component {
                 </div>
               </div>
             </div>
-          </div>
+          </CenteredWrapper>
+
         </div>
 
-        <div className="button-wrapper">
+        <ButtonWrapper>
           <div
             onClick={this.clearSearch}
             className={`ui labeled button ${this.state.disableClear && 'disabled'}`}>
@@ -298,15 +325,15 @@ class Mentorship extends React.Component {
             </div>
             <div className="ui basic left pointing teal label">{`${results.length} results`}</div>
           </div>
-        </div>
+        </ButtonWrapper>
 
-        <div className="search-results">
+        <CenteredWrapper>
           <SearchResults
             results={results}
             currentUser={this.props.currentUser}
             initiatePrivateChat={this.initiatePrivateChat}
             noResults={!isEmpty(value) && isEmpty(results)} />
-        </div>
+        </CenteredWrapper>
 
       </div>
     );

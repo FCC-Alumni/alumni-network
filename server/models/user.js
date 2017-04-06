@@ -13,7 +13,9 @@ const User = new Schema({
     displayName: { type: String, default: '' },
     email: { type: String, default: '' },
     location: { type: String, default: '' },
-    bio: { type: String, default: '' }
+    bio: { type: String, default: '' },
+    country: { type: String, default: '' },
+    flag: { type: String, default: '' }
   },
   fccCerts: Object,
   mentorship: {

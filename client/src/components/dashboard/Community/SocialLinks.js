@@ -4,7 +4,8 @@ import styled from 'styled-components';
 export const IconLink = styled.a`
 color: grey;
   &:hover {
-    color: #00b5ad !important;
+    color: rgb(0,225,225) !important;
+    transition: color 100ms ease-in-out;
   }
 `;
 

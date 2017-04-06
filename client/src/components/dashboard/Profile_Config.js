@@ -1,23 +1,24 @@
 /* eslint-disable */
 import React from 'react';
 import { connect } from 'react-redux';
-
-import UserLabel from '../common/UserLabel';
-import Modal from './Profile/common/SaveModal';
-
 import Social from './Profile/Social';
-import Career from './Profile/Career';
-import Mentorship from './Profile/Mentorship';
+import UserLabel from '../common/UserLabel';
 import PersonalInfo from './Profile/PersonalInfo';
-import Collaboration from './Profile/Collaboration';
-import Certifications from './Profile/Certifications';
 import SkillsAndInterests from './Profile/SkillsAndInterests';
-
 import { saveUser, updateUser, saveViewState } from '../../actions/user';
+import { ThickPaddedBottom } from '../../styles/globalStyles';
+import { countryCodes } from '../../assets/data/countries';
+import Certifications from './Profile/Certifications';
+import Collaboration from './Profile/Collaboration';
+import Modal from './Profile/common/SaveModal';
+import Mentorship from './Profile/Mentorship';
+import Career from './Profile/Career';
+import Validator from 'validator';
 
 /*
 TODO:
   - we need to look at how users enter location (should have zip code or somehting and get location name by API - for D3 map as well!)
+  - add title and description fields for sharing repos
   - add error popup and modal for error on save
   - folder icon behavior - open when any field expanded
   - add validations for form fields - should be loose validations since nothing is strictly required
@@ -93,6 +94,13 @@ class Profile extends React.Component {
     this.setState({ user });
   }
 
+  handleCountryChange = (e, data) => {
+    var { user } = this.state;
+    user.personal.flag = data.value;
+    user.personal.country = countryCodes[data.value.replace(' ', '_')];
+    this.setState({ user });
+  }
+
   handleTenureChange = (e, data) => {
     var { user } = this.state;
     user.career.tenure = data.value;
@@ -118,21 +126,66 @@ class Profile extends React.Component {
 
   handleInputChange = (e) => {
     var { user } = this.state;
+    var { name, value } = e.target;
 
     if (e.target.name === 'company') {
-      user.career.company = e.target.value;
+      user.career.company = value;
     } else if (
-      e.target.name === 'codepen' ||
-      e.target.name === 'linkedin' ||
-      e.target.name === 'twitter') {
-      user.social[e.target.name] = e.target.value;
-    } else if (e.target.name === 'mentorshipSkills' ) {
-      user.mentorship.mentorshipSkills = e.target.value;
+      name === 'codepen' ||
+      name === 'linkedin' ||
+      name === 'twitter') {
+      user.social[name] = value;
+    } else if (name === 'mentorshipSkills' ) {
+      if (this.isValid(name, value)) {
+        user.mentorship.mentorshipSkills = value;
+      }
     } else {
-      user.personal[e.target.name] = e.target.value;
+      if (this.isValid(name, value)) {
+        user.personal[name] = value;
+      }
     }
 
     this.setState({ user });
+  }
+
+  isValid = (field, str) => {
+    var { errors } = this.state;
+
+    if (field === 'bio') {
+      if (Validator.isLength(str, { min: 0, max: 300 })) {
+        errors.bio = '';
+        this.setState({ errors });
+        return true;
+      } else {
+        errors.bio = "Bio must be 300 characters or less."
+        this.setState({ errors });
+        return false;
+      }
+    }
+    if (field === 'displayName') {
+      if (Validator.isLength(str, { min: 0, max: 40 })) {
+        errors.displayName = '';
+        this.setState({ errors });
+        return true;
+      } else {
+        errors.displayName = "Display name must be 50 characters or less."
+        this.setState({ errors });
+        return false;
+      }
+    }
+    if (field === 'mentorshipSkills') {
+      if (Validator.isLength(str, { min: 0, max: 165 })) {
+        errors.mentorshipSkills = '';
+        this.setState({ errors });
+        return true;
+      } else {
+        errors.mentorshipSkills = "Mentorshio bio must be 150 characters or less."
+        this.setState({ errors });
+        return false;
+      }
+    }
+
+    return true;
   }
 
   toggle = (target) => {
@@ -180,11 +233,11 @@ class Profile extends React.Component {
     this.setState({ viewState });
   }
 
-  saveChanges = () => {
+  saveChanges = (openModal) => {
     updateUser(this.state.user).then(res => {
       const { updatedUser } = res.data;
       this.props.saveUser(updatedUser);
-      this.setState({ modalOpen: true });
+      openModal && this.setState({ modalOpen: true });
     }).catch(err => console.log(err));
   }
 
@@ -218,7 +271,7 @@ class Profile extends React.Component {
     } = this.state;
 
     return (
-      <div id="profile-page-main-container" className="ui container">
+      <ThickPaddedBottom className="ui container">
 
         <UserLabel
           size="huge"
@@ -244,10 +297,12 @@ class Profile extends React.Component {
             errors={errors }
             toggle={this.toggle}
             username={username}
+            country={personal.flag}
             showPopUp={this.state.personalPopUp}
             subSaveClick={this.handleSubSaveClick}
             handleInputChange={this.handleInputChange}
-            showProfile={this.state.viewState.showProfile} />
+            showProfile={this.state.viewState.showProfile}
+            handleCountryChange={this.handleCountryChange} />
 
           <Certifications
             toggle={this.toggle}
@@ -259,6 +314,7 @@ class Profile extends React.Component {
           <Mentorship
             {...mentorship}
             toggle={this.toggle}
+            error={errors.mentorshipSkills}
             subSaveClick={this.handleSubSaveClick}
             showPopUp={this.state.mentorshipPopUp}
             toggleMentorship={this.toggleMentorship}
@@ -278,6 +334,7 @@ class Profile extends React.Component {
           <Collaboration
             username={username}
             toggle={this.toggle}
+            saveChanges={this.saveChanges}
             projects={this.state.user.projects}
             showPopUp={this.state.collaboPopUp}
             subSaveClick={this.handleSubSaveClick}
@@ -306,7 +363,7 @@ class Profile extends React.Component {
             handleTenureChange={this.handleTenureChange} />
 
         </div>
-      </div>
+      </ThickPaddedBottom>
     );
   }
 }

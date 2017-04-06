@@ -214,7 +214,7 @@ export const populateChat = () => {
           })
         });
       }).catch(err => {
-        dispatch(addFlashMessage(flashError('There was an error loading chat history.')));
+        // dispatch(addFlashMessage(flashError('There was an error loading chat history.')));
       });
   }
 };

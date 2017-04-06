@@ -5,6 +5,7 @@ import NavBar from './components/Navbar';
 import HomePage from './components/HomePage';
 import AppContainer from './components/AppContainer';
 import LoginPage from './components/signup/LoginPage';
+import '../node_modules/flag-icon-css/css/flag-icon.css';
 import PassportPage from './components/signup/PassportPage';
 import FlashMessagesList from './components/flash/FlashMessagesList';
 

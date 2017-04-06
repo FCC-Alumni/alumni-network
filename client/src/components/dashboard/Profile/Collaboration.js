@@ -1,18 +1,27 @@
 import React from 'react';
-import MessageBox from '../../common/MessageBox';
-import RepoList from '../../common/RepoList';
 import Ribbon from './common/RibbonHeader';
+import RepoList from '../../common/RepoList';
+import MessageBox from '../../common/MessageBox';
 
-const Collaboration = ({ toggle, showCollaboration, subSaveClick, showPopUp, saveProjectsList, username, projects }) => {
+const Collaboration = ({
+  toggle,
+  projects,
+  username,
+  showPopUp,
+  saveChanges,
+  subSaveClick,
+  saveProjectsList,
+  showCollaboration,
+}) => {
   return (
     <div>
-      <Ribbon 
-        showPopUp={showPopUp} 
+      <Ribbon
         id="collaboPopUp"
-        showSave={showCollaboration}
+        content="Collaboration"
+        showPopUp={showPopUp}
         subSaveClick={subSaveClick}
-        content="Collaboration" 
-        wrapperClass="collaborationWrapper" 
+        showSave={showCollaboration}
+        wrapperClass="collaborationWrapper"
         onClick={()=>{toggle('showCollaboration')}} />
       <div className={`collaborationPane ${showCollaboration ? 'show' : 'hide'}`}>
         <MessageBox
@@ -20,9 +29,10 @@ const Collaboration = ({ toggle, showCollaboration, subSaveClick, showPopUp, sav
           dismissable={true}
           message="Share links to repos for projects that you could use some help with!" />
         <RepoList
-          saveListToParent={saveProjectsList}
           username={username}
-          prePopulateList={projects} />
+          prePopulateList={projects}
+          saveChanges={saveChanges}
+          saveListToParent={saveProjectsList} />
       </div>
     </div>
   );

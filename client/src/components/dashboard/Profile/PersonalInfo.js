@@ -1,20 +1,37 @@
 import React from 'react';
+import Ribbon from './common/RibbonHeader';
+import { Dropdown } from 'semantic-ui-react';
 import ListItem from '../../common/ListItem';
 import FormField from '../../common/FormField';
-import Ribbon from './common/RibbonHeader';
+import { countryOptions } from '../../../assets/data/countries';
 
-const inputOptions = 'small left icon'; 
+const inputOptions = 'small left icon';
 
-const PersonalInfo = ({ username, showProfile, toggle, profileUrl, email, subSaveClick, showPopUp, handleInputChange, location, bio, displayName, errors }) => {
+const PersonalInfo = ({
+  bio,
+  email,
+  errors,
+  toggle,
+  country,
+  username,
+  location,
+  showPopUp,
+  profileUrl,
+  displayName,
+  showProfile,
+  subSaveClick,
+  handleInputChange,
+  handleCountryChange,
+}) => {
   return (
     <div>
-      <Ribbon 
-        showSave={showProfile}
-        showPopUp={showPopUp} 
+      <Ribbon
         id="personalPopUp"
-        subSaveClick={subSaveClick} 
-        content="Personal Info" 
-        wrapperClass="profileWrapper" 
+        content="Personal Info"
+        showPopUp={showPopUp}
+        showSave={showProfile}
+        subSaveClick={subSaveClick}
+        wrapperClass="profileWrapper"
         onClick={()=>{toggle('showProfile')}} />
       <form className={`ui form profilePane ${showProfile ? 'show' : 'hide'}`}>
         <div className="ui list">
@@ -26,47 +43,62 @@ const PersonalInfo = ({ username, showProfile, toggle, profileUrl, email, subSav
           </ListItem>
           <ListItem>
             <FormField
-              onChange={handleInputChange}
-              placeholder="Enter Display Name..."
+              errors={errors}
+              icon='user icon'
               name="displayName"
               value={displayName}
-              errors={errors}
+              tooltip="Display Name"
               inputOptions={inputOptions}
-              icon='user icon'
-              tooltip="Display Name" />
+              onChange={handleInputChange}
+              placeholder="Enter Display Name..." />
           </ListItem>
           <ListItem>
             <FormField
-              onChange={handleInputChange}
-              placeholder="Enter Email..."
               type="email"
               name="email"
               value={email}
+              tooltip="Email"
               errors={errors}
-              inputOptions={inputOptions}
               icon="mail icon"
-              tooltip="Email" />
+              inputOptions={inputOptions}
+              placeholder="Enter Email..."
+              onChange={handleInputChange} />
           </ListItem>
           <ListItem>
             <FormField
-              onChange={handleInputChange}
-              placeholder="Enter Location..."
-              name="location"
-              value={location}
               errors={errors}
-              inputOptions={inputOptions}
+              value={location}
+              name="location"
+              tooltip="Location"
               icon="marker icon"
-              tooltip="Location" />
+              inputOptions={inputOptions}
+              onChange={handleInputChange}
+              placeholder="Enter Location..." />
+          </ListItem>
+          <ListItem>
+            <div className="six wide field">
+              <Dropdown
+                search
+                selection
+                value={country}
+                options={countryOptions}
+                placeholder='Select Country'
+                onChange={handleCountryChange} />
+            </div>
           </ListItem>
           <ListItem>
             <div className="six wide field">
               <textarea
-                onChange={handleInputChange}
-                name='bio'
-                placeholder="Enter a short bio here"
                 rows="3"
-                value={bio} />
+                name='bio'
+                value={bio}
+                onChange={handleInputChange}
+                placeholder="Enter a short bio here" />
             </div>
+            { errors.bio &&
+              <div className="ui red basic label">
+                {errors.bio}
+              </div> }
           </ListItem>
         </div>
       </form>

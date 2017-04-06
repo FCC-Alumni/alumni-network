@@ -1,12 +1,12 @@
 import React from 'react';
 
-const UserLabel = ({ color, size, image, username, label, folder, toggleAll }) => {
+const UserLabel = ({ color, size, image, username, label, folder, toggleAll, showAvatar }) => {
   if (!image) {
     image = '/images/defaultAvatar.gif';
   }
   return (
     <div className={`ui image label ${color} ${size}`}>
-      <img src={image} alt="user avatar" />
+      { showAvatar && <img src={image} alt="user avatar" /> }
       {username}
       { label && <div className="detail">{label}</div> }
       {
@@ -26,7 +26,8 @@ UserLabel.propTypes = {
   label: React.PropTypes.string,
   color: React.PropTypes.string,
   toggleAll: React.PropTypes.func,
-  image: React.PropTypes.string.isRequired,
+  showAvatar: React.PropTypes.bool,
+  image: React.PropTypes.string,
   username: React.PropTypes.string.isRequired,
   folder: React.PropTypes.oneOfType([
     React.PropTypes.string,
@@ -39,6 +40,7 @@ UserLabel.defaultProps = {
   folder: '',
   color: 'teal',
   size: 'medium',
+  showAvatar: true,
 }
 
 export default UserLabel;

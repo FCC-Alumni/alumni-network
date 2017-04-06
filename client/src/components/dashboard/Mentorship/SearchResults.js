@@ -1,20 +1,37 @@
 import React from 'react';
+import styled from 'styled-components';
+import { ThickPaddedBottom } from '../../../styles/globalStyles';
+
+const ResultItem = styled.div`
+  width: 45vw !important;
+`;
+
+const ChatIcon = styled.i`
+  font-size: 20px !important;
+  margin-left: 4px !important;
+  margin-bottom: 2px !important;
+  transition: color 100ms ease-in-out;
+  &:hover {
+    cursor: pointer;
+    color: rgb(0,225,225);
+    transition: color 100ms ease-in-out;
+  }
+`;
 
 const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults }) => {
 
   const listResults = results.map(user => {
     return (
-      <div key={user._id} className="item search-result-item">
+      <ResultItem key={user._id} className="item">
         <div className="ui tiny circular image">
           <img src={user.personal.avatarUrl} alt={`${user.username}'s avatar`}/>
         </div>
         <div className="content">
           <div className="header">{user.username}</div>
             { currentUser !== user.username &&
-              <i
-                className="comments icon chatIcon"
-                onClick={ () => { initiatePrivateChat(user.username) }} />
-            }
+              <ChatIcon
+                className="comments icon"
+                onClick={ () => { initiatePrivateChat(user.username) }} /> }
           <div className="meta">
             <span><strong>{user.personal.displayName}</strong></span>
             <i className="angle double right icon" />
@@ -24,7 +41,7 @@ const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults })
             {user.mentorship.mentorshipSkills}
           </div>
         </div>
-      </div>
+      </ResultItem>
     );
   });
 
@@ -42,9 +59,9 @@ const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults })
   );
 
   return (
-    <div className="ui divided items">
+    <ThickPaddedBottom className="ui divided items">
       { !noResults ? listResults : noResultsMessage }
-    </div>
+    </ThickPaddedBottom>
   );
 }
 

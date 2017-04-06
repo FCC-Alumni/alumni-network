@@ -1,14 +1,25 @@
 import React from 'react';
-import ListItem from '../../common/ListItem';
-import MessageBox from '../../common/MessageBox';
-import FormField from '../../common/FormField';
 import Ribbon from './common/RibbonHeader';
+import ListItem from '../../common/ListItem';
+import FormField from '../../common/FormField';
+import MessageBox from '../../common/MessageBox';
 
 import { APP_HOST } from '../../../actions/chat';
 
 const inputOptions = 'small left icon';
 
-const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepen, twitter, linkedin, toggle, errors, clear }) => {
+const Social = ({
+  clear,
+  toggle,
+  errors,
+  twitter,
+  codepen,
+  linkedin,
+  showPopUp,
+  showSocial,
+  subSaveClick,
+  handleInputChange,
+}) => {
   return (
     <div>
       <Ribbon
@@ -46,8 +57,8 @@ const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepe
               icon='twitter icon'
               placeholder="Enter Twitter"
               disabled={twitter ? false : true}
-              inputOptions={inputOptions + ' corner labeled'}
               actionUrl={`${APP_HOST}/connect/twitter`}
+              inputOptions={inputOptions + ' corner labeled'}
               reactionIcon={<i style={{ cursor: 'pointer' }} className="remove icon" />}
               actionIcon={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
           </ListItem>
@@ -61,8 +72,8 @@ const Social = ({ showSocial, handleInputChange, subSaveClick, showPopUp, codepe
               icon='linkedin icon'
               placeholder="Enter LinkedIn"
               disabled={linkedin ? false : true}
-              inputOptions={inputOptions + ' corner labeled'}
               actionUrl={`${APP_HOST}/connect/linkedin`}
+              inputOptions={inputOptions + ' corner labeled'}
               reactionIcon={<i style={{ cursor: 'pointer' }} className="remove icon" />}
               actionIcon={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
           </ListItem>
