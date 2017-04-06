@@ -37,6 +37,7 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
     if ((frontCert.request._redirectCount +
       backCert.request._redirectCount +
       dataCert.request._redirectCount) >= 3 ) {
+      // NOTE: temporarily allows anyone in for testing:
       return true;
     } else {
       return {
