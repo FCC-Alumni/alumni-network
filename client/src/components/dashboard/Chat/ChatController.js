@@ -208,6 +208,7 @@ class ChatController extends React.Component {
 
             <div id='messageContainer'>
               <ChatMessages
+                history={this.props.history}
                 user={this.props.user}
                 chat={this.props.chat}
                 edit={this.state.edit}

@@ -1,3 +1,5 @@
+$tealColor: rgb(0,225,225);
+
 #chat {
   background: rgba(250,250,250,0.93);
   width: 65vw;
@@ -18,7 +20,7 @@
       text-decoration: underline;
     }
     &:hover {
-      color: rgb(0,225,225);
+      color: $tealColor;
     }
   }
   .conversant {
@@ -32,7 +34,7 @@
     border-radius: 50%;
     &:hover {
       cursor: pointer;
-      color: rgb(0,225,225);
+      color: $tealColor;
     }
   }
   .notifications {
@@ -52,7 +54,7 @@
     transition: color 250ms ease-in-out;
     &:hover {
       cursor: pointer;
-      color: rgb(0,225,225) !important;
+      color: $tealColor !important;
       transition: color 250ms ease-in-out;
     }
   }
@@ -72,7 +74,7 @@
     transition: color 250ms ease-in-out;
     &:hover {
       cursor: pointer;
-      color: rgb(0,225,225) !important;
+      color: $tealColor !important;
       transition: color 250ms ease-in-out;
     }
   }
@@ -145,9 +147,14 @@
     overflow-y: auto;
   }
   .chatMessage {
+    .avatar {
+      &:hover {
+        cursor: pointer;
+      }
+    }
     .author-link:hover {
       cursor: pointer;
-      color: rgb(0,225,225);
+      color: $tealColor;
     }
     .mentorIcon {
       margin-left: 5px;
@@ -156,7 +163,7 @@
     .onlineIcon, {
       margin-left: 3px;
       font-size: 15px;
-      color: rgb(0,225,225);
+      color: $tealColor;
     }
     .timeStamp {
       color: rgb(125,125,125);
@@ -182,4 +189,53 @@
       cursor: pointer;
     }
   }
+}
+
+.avatar-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar-tooltip .avatar-tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgba(5,5,5,0.87);
+    color: $tealColor;
+    text-align: center;
+    border-radius: 3px;
+    padding: 5px 0;
+    font-weight: normal;
+    /* Position the avatar-tooltip */
+    position: absolute;
+    bottom: -20px;
+    left: 15px;
+    z-index: 1;
+}
+
+.avatar-tooltip:hover .avatar-tooltiptext {
+    visibility: visible;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgba(5,5,5,0.87);
+    color: $tealColor;
+    text-align: center;
+    border-radius: 3px;
+    padding: 5px 0;
+    font-weight: normal;
+    /* Position the tooltip */
+    position: absolute;
+    left: 75px;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }

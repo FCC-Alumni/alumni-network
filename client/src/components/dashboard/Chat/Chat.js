@@ -20,6 +20,7 @@ export default ({
   chat,
   user,
   edit,
+  history,
   mentors,
   setEdit,
   saveEdit,
@@ -43,8 +44,9 @@ export default ({
           return (
             <div className="comment" key={id} style={{ paddingTop: '12px' }}>
 
-              <a className="avatar">
+              <a className="avatar-tooltip avatar" onClick={() => history.replace(`/dashboard/profile/${author}`)}>
                 <img src={avatar} alt={`${author}'s Avatar'`} />
+                <span className="avatar-tooltiptext">View my profile!</span>
               </a>
 
               <div className="content">
@@ -52,8 +54,9 @@ export default ({
                 { path && author !== user.username ?
                   <span
                     onClick={initiatePrivateChat.bind(this, author)}
-                    className='author author-link'>
+                    className='tooltip author author-link'>
                     {author}
+                    <span className="tooltiptext">Chat with me!</span>
                     {mentors.has(author) && <i className="student icon mentorIcon"></i>}
                     {onlineStatus.has(author) && <i className="star icon onlineIcon"></i>}
                   </span>
