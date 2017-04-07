@@ -8,6 +8,7 @@ import privateChat from './reducers/privateChat';
 import onlineStatus from './reducers/onlineStatus';
 import flashMessages from './reducers/flashMessages';
 import profileViewState from './reducers/profileViewState';
+import publicProfileStats from './reducers/publicProfileStats';
 
 export default combineReducers({
   user,
@@ -17,5 +18,6 @@ export default combineReducers({
   privateChat,
   onlineStatus,
   flashMessages,
-  profileViewState
+  profileViewState,
+  publicProfileStats
 });

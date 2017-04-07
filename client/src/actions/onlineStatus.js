@@ -1,5 +1,5 @@
 import { socket } from './chat';
-import { store } from '../index.js';
+import { store } from '../index';
 
 export const POPULATE_ONLINE_USERS = 'POPULATE_ONLINE_USERS';
 export const USER_ONLINE = 'USER_ONLINE';

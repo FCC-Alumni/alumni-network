@@ -1,4 +1,4 @@
-import { SAVE_PROFILE_VIEW_STATE } from '../actions/types';
+import { SAVE_PREFERENCES_VIEW_STATE } from '../actions/types';
 
 const defaultState = {
   showAll: true,
@@ -14,19 +14,19 @@ const defaultState = {
 export default (state = defaultState, action) => {
   switch (action.type) {
 
-    case SAVE_PROFILE_VIEW_STATE:
+    case SAVE_PREFERENCES_VIEW_STATE:
       var collapsedAll = true;
-      for (var view in action.profileView) {
-        if (action.profileView[view]) {
+      for (var view in action.preferencesView) {
+        if (action.preferencesView[view]) {
           collapsedAll = false;
           break;
         }
       }
       if (collapsedAll) {
-        action.profileView.showProfile = true;
-        action.profileView.showAll = true;
+        action.preferencesView.showProfile = true;
+        action.preferencesView.showAll = true;
       }
-      return action.profileView;
+      return action.preferencesView;
 
     default: return state;
 
