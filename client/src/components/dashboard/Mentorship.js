@@ -7,7 +7,7 @@ import SearchResults from './Mentorship/SearchResults';
 
 import isEmpty from 'lodash/isEmpty';
 import { defaultState } from '../../reducers/search';
-import { saveSearchState } from '../../actions/user';
+import { saveSearchState } from '../../actions/views';
 import { initiatePrivateChat } from '../../actions/chat';
 import { filterOptions } from '../../assets/data/mapArrays';
 import { searchTypes } from '../../assets/data/dropdownOptions';

@@ -20,8 +20,8 @@ class AppContainer extends React.Component {
       if (user) {
         // fetch user, community, and chat data when dashboard loads:
         this.props.saveUser(user);
-        this.props.populateCommunity();
-        this.props.populateChat();
+        if (!this.props.community) this.props.populateCommunity();
+        if (!this.props.chat) this.props.populateChat();
         this.props.fetchPrivateChat(user.username);
 
       } else {
@@ -86,7 +86,9 @@ AppContainer.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    username: state.user.username
+    username: state.user.username,
+    chat: state.chat.size > 0 ? true : false,
+    community: state.privateChat.size > 0 ? true : false,
   }
 }
 
