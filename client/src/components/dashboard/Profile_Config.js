@@ -5,10 +5,11 @@ import Social from './Profile/Social';
 import UserLabel from '../common/UserLabel';
 import PersonalInfo from './Profile/PersonalInfo';
 import SkillsAndInterests from './Profile/SkillsAndInterests';
-import { saveUser, updateUser, saveViewState } from '../../actions/user';
+import { saveUser, updateUser } from '../../actions/user';
 import { ThickPaddedBottom } from '../../styles/globalStyles';
 import { countryCodes } from '../../assets/data/countries';
 import Certifications from './Profile/Certifications';
+import { savePreferencesViewState } from '../../actions/views';
 import Collaboration from './Profile/Collaboration';
 import Modal from './Profile/common/SaveModal';
 import Mentorship from './Profile/Mentorship';
@@ -17,6 +18,8 @@ import Validator from 'validator';
 
 /*
 TODO:
+  - MENTORSHIP: Looking for mentorship? If so, in what? Add new sliderToggle and textarea to accomodate - would need to modify user model
+  - MENTORSHIP: Revisit copy! Some of this info should be moved to the "about us" public page.
   - we need to look at how users enter location (should have zip code or somehting and get location name by API - for D3 map as well!)
   - add title and description fields for sharing repos
   - add error popup and modal for error on save
@@ -52,7 +55,7 @@ class Profile extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.saveViewState(this.state.viewState);
+    this.props.savePreferencesViewState(this.state.viewState);
   }
 
   handleSubSaveClick = (e) => {
@@ -380,4 +383,4 @@ Profile.propTypes = {
   viewState: React.PropTypes.object
 }
 
-export default connect(mapStateToProps, { saveUser, saveViewState })(Profile);
+export default connect(mapStateToProps, { saveUser, savePreferencesViewState })(Profile);

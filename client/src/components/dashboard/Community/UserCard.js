@@ -3,7 +3,6 @@ import CertLinks from './CertLinks';
 import styled from 'styled-components';
 import SocialLinks from './SocialLinks';
 import Label from '../../common/UserLabel';
-import ListItem from '../../common/ListItem';
 import { connectScreenSize } from 'react-screen-size';
 import DividingHeader from '../../common/DividingHeader';
 

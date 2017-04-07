@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
 export const CenterAlignedWrapper = styled.div`
   display: flex;

@@ -1,9 +1,7 @@
 import axios from 'axios';
 import {
   SAVE_USER,
-  LOGOUT_USER,
-  SAVE_SEARCH_STATE,
-  SAVE_PROFILE_VIEW_STATE,
+  LOGOUT_USER
 } from './types';
 
 export const getUserData = () => {
@@ -30,19 +28,5 @@ export const updateUser = (user) => {
 export const logoutUser = () => {
   return {
     type: LOGOUT_USER
-  }
-}
-
-export const saveSearchState = (searchState) => {
-  return {
-    type: SAVE_SEARCH_STATE,
-    searchState
-  }
-}
-
-export const saveViewState = (profileView) => {
-  return {
-    type: SAVE_PROFILE_VIEW_STATE,
-    profileView
   }
 }
