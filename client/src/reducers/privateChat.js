@@ -30,7 +30,7 @@ export default (state = Map(), action) => {
 
       if (data.length === 0) return state;
 
-      // we basically need to do some conversions to the data...
+      // we need to convert the JS to our Immutable chat history:
       data.map(data => {
         if (data.members[0] === user) {
           data.members.splice(0,1);
