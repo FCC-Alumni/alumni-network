@@ -49,10 +49,11 @@ class AppContainer extends React.Component {
     });
   }
 
-  componentDidUpdate() {
-    // this will clear flash messages when user navigates to a new route...
-    // if this produces other unwanted behavior we can revise
-    this.props.clearFlashMessage();
+  componentDidUpdate(prevProps) {
+    // clear flash messages if the route changes:
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.props.clearFlashMessage();
+    }
   }
 
   render() {
