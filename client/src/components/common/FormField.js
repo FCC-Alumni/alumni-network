@@ -38,7 +38,7 @@ const FormField = ({
           <a href={actionUrl}>
             <div
               style={{ cursor: 'pointer' }}
-              className="ui corner green label"
+              className="ui corner teal label"
               title="Sign in to retrieve your credentials">
               {actionIcon}
             </div>

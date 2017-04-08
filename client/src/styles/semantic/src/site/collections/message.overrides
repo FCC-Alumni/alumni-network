@@ -1,0 +1,21 @@
+/*******************************
+        Site Overrides
+*******************************/
+/*** *** *** freeCodeCamp Theme *** *** ***/
+
+.ui.message.info {
+  border: 1px solid #007E00;
+  background: lighten(#006400, 75%);
+  color: #006400;
+  box-shadow: none !important;
+  .header {
+    color: #006400;
+  }
+}
+
+.ui.error.message {
+  color: #FF6D58;
+  .header {
+    color: #FF4025;
+  }
+}

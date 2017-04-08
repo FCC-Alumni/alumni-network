@@ -1,0 +1,6 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+/*** *** *** freeCodeCamp Theme *** *** ***/
+@primaryColor: @teal;
+@secondaryColor: @green;

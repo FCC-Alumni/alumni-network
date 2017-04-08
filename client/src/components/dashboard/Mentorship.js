@@ -277,7 +277,7 @@ class Mentorship extends React.Component {
         <div className="ui form">
           <div className="filters-selector-wrap">
             <FiltersSelector onClick={this.showFilters} >
-              <i className={`${!showFilters ? 'teal unhide' : 'brown hide'} icon`} />
+              <i className={`${!showFilters ? 'teal unhide' : 'red hide'} icon`} />
               {`${!showFilters ? 'Show' : 'Hide'} Search Filters`}
             </FiltersSelector>
           </div>

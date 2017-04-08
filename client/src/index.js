@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import rootReducer from './rootReducer';
+import './styles/semantic/dist/semantic.min.css';
 import { BrowserRouter } from 'react-router-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
