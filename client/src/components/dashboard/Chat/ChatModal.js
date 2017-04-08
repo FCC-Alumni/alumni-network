@@ -3,7 +3,7 @@ import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 
 export default ({ size, close, open }) => {
-  const green = '#00b5ad';
+  const green = '#007E00';
   const fireStyle = {
     width: "45px",
     height: "45px",

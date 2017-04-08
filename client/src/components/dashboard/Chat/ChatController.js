@@ -172,7 +172,11 @@ class ChatController extends React.Component {
 
               <span style={ !screen.isDesktop ? { fontSize: '16px' } : null }>
                 <img src={this.props.conversantAvatar} className='privateAvatar' alt={`${conversant}'s Avatar'`} />
-                Private Chat with <span className='conversant'> {conversant} </span>
+                Private Chat with&nbsp;
+                <span
+                  className='conversant'
+                  onClick={() => this.props.history.replace(`/dashboard/profile/${conversant}`)}>
+                   {conversant} </span>
               </span>
 
               :
