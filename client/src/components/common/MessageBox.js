@@ -4,18 +4,18 @@ class MessageBox extends React.Component {
   state = {
     style: {}
   }
-
+  
   handleClick = () => {
     this.setState({ style: { display: "none" } });
   }
-
+  
   render() {
     const { header, message, color, dismissable, type } = this.props;
     const dismiss = (
       <i onClick={this.handleClick} className="close icon"></i>
     );
     return (
-      <div style={ this.state.style } className={`ui ${type} message`}>
+      <div style={ this.state.style } className={"ui message " + color + ' ' + type}>
         { dismissable && dismiss }
         <div className="header">{header}</div>
         {message}
@@ -37,7 +37,7 @@ MessageBox.defaultProps = {
 export default MessageBox;
 
 // EXAMPLE USAGE
-// <MessageBox
+// <MessageBox 
 //   header="Would you like to be a mentor?"
 //   message="The primary goal of..."
 //   dismissable={true}

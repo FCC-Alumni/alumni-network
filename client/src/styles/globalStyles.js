@@ -18,16 +18,6 @@ export const extendCenterAlignedWrapper = () => {
   `;
 }
 
-export const hoverTransition = () => {
-  return  `
-    transition: color 200ms ease-in-out !important;
-    cursor: pointer;
-    &:hover {
-      color: #FF4025 !important;
-    }
-  `;
-}
-
 export const transitionIn = () => {
   return `
     overflow: hidden;

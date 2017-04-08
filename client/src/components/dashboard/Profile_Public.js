@@ -1,30 +1,39 @@
+
+
 import React from 'react';
 import { connect } from 'react-redux';
 import UserLabel from '../common/UserLabel';
-import { CenterAlignedWrapper, ThickPaddedBottom } from '../../styles/globalStyles';
+import { CenterAlignedWrapper } from '../../styles/globalStyles';
 import LocationSteps from './Profile/Public/LocationSteps';
 import { saveProfileStats } from '../../actions/views';
 import FCCStatTables from './Profile/Public/FCCTables';
-import CodeProfile from './Profile/Public/CodeProfile';
-import SocialList from './Profile/Public/SocialList';
 import styled from 'styled-components';
 import htmlToJson from 'html-to-json';
 import axios from 'axios';
 
 const ERROR = "Sorry, we encountered an error.";
 
-const HeaderWrapper = styled.div`
+const LogoWrapper = styled.div`
   background-color: #006400 !important;
-  color: white;
 `;
 
-const FCCLogo = styled.img`
+const FCCLogo = styled.img `
   max-width: 200px !important;
   margin-top: 10px;
 `;
 
 const Loader = styled.div`
   height: 200px !important;Loader
+`;
+
+const SocialIcon = styled.i`
+  font-size: 25px !important;
+  margin-bottom: 5px !important;
+  transition: color 100ms ease-in-out;
+  &:hover {
+    cursor: pointer;
+    color: rgb(0,225,225);
+  }
 `;
 
 class PublicProfile extends React.Component {
@@ -165,7 +174,7 @@ class PublicProfile extends React.Component {
     );
 
     return (
-      <ThickPaddedBottom>
+      <div>
         <div className="ui celled stackable grid container">
           <div className="row">
 
@@ -189,10 +198,34 @@ class PublicProfile extends React.Component {
                   {user.personal.bio}
                 </div>
               </div>
-              <SocialList
-                social={user.social}
-                username={user.username}
-                profileUrl={user.personal.profileUrl} />
+              <div className="ui center aligned segment">
+                <ui className="ui horizontal list">
+                  <div className="item">
+                    <SocialIcon className="fa fa-free-code-camp fa-2x" />
+                    <div className="header">
+                      freeCodeCamp
+                    </div>
+                  </div>
+                  <div className="item">
+                    <SocialIcon className="twitter icon large" />
+                    <div className="header">
+                      Twitter
+                    </div>
+                  </div>
+                  <div className="item">
+                    <SocialIcon className="github icon large" />
+                    <div className="header">
+                      Github
+                    </div>
+                  </div>
+                  <div className="item">
+                    <SocialIcon className="linkedin icon large" />
+                    <div className="header">
+                      LinkedIn
+                    </div>
+                  </div>
+                </ui>
+              </div>
             </div>
 
           </div>
@@ -200,25 +233,15 @@ class PublicProfile extends React.Component {
 
         <div className="ui celled stackable grid container">
           <div className="row">
-            <HeaderWrapper className="sixteen wide center aligned column">
-              <h2 className="ui">freeCodeCamp <i className="fa fa-free-code-camp" /></h2>
-            </HeaderWrapper>
+            <LogoWrapper className="sixteen wide center aligned column">
+              <FCCLogo src="/images/fcc-logo-green.jpg" alt="freeCodeCamp logo"/>
+            </LogoWrapper>
           </div>
           { this.isLoading()
             ? <div className="row">{loader}</div>
-            : <FCCStatTables { ...this.state } username={user.username} fccCerts={user.fccCerts} /> }
+            : <FCCStatTables { ...this.state } fccCerts={user.fccCerts} /> }
         </div>
-
-        <div className="ui celled stackable grid container">
-          <div className="row">
-            <HeaderWrapper className="sixteen wide center aligned column">
-              <h2 className="ui">Coding Profile <i className="code icon" /></h2>
-            </HeaderWrapper>
-          </div>
-          <CodeProfile career={user.career} skillsAndInterests={user.skillsAndInterests} />
-        </div>
-
-      </ThickPaddedBottom>
+      </div>
     );
   }
 }

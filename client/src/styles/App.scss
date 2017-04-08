@@ -7,9 +7,9 @@
 .App {
   text-align: center;
   .App-logo {
-    height: 200px;
     animation: App-logo-spin infinite 15s linear;
     margin-top: 100px;
+    margin-bottom: 20px;
   }
 }
 
@@ -39,5 +39,5 @@
 }
 
 .flash-message {
-  margin-top: 80px !important;
+  margin-top: 70px !important;
 }

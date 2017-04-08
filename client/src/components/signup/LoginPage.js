@@ -18,7 +18,7 @@ const LoginPage = ({ screen: { isTablet, isMobile, isDesktop }}) => {
             <a className="ui teal button" href={`${APP_HOST}/auth/github`}>Login</a>
           </div>
 
-          <div className="ui info message">
+          <div className="ui teal message">
             <div className="header">Joining the freeCodeCamp Alumni Network requires both freeCodeCamp and GitHub credentials.</div>
           </div>
         </div>
