@@ -93,7 +93,7 @@ export default ({
                   <button style={{ width: '140px' }} className="ui yellow button" onClick={finishEdit}>
                     Cancel
                   </button> :
-                  <button style={{ width: '140px' }} className="ui teal button" disabled={!editText} onClick={finishEdit}>
+                  <button style={{ width: '140px' }} className="ui green button" disabled={!editText} onClick={finishEdit}>
                     Save Message
                   </button>}
                   <button className="ui red button" onClick={deleteMessage.bind(this, id)}>Delete Message</button>

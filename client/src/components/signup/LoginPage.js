@@ -9,16 +9,16 @@ const LoginPage = ({ screen: { isTablet, isMobile, isDesktop }}) => {
       <div id="login-form" className={`${isMobile ? 'twelve' : isTablet ? 'ten' : 'six'} wide column`}>
 
         <div className="ui segment">
-          <h2 className="ui teal image header">
+          <h2 className="ui green image header">
             { !isMobile && <i className="huge github icon"/> }
             <div className="content">Login with GitHub</div>
           </h2>
 
           <div className="ui segment">
-            <a className="ui teal button" href={`${APP_HOST}/auth/github`}>Login</a>
+            <a className="ui green button" href={`${APP_HOST}/auth/github`}>Login</a>
           </div>
 
-          <div className="ui teal message">
+          <div className="ui info message">
             <div className="header">Joining the freeCodeCamp Alumni Network requires both freeCodeCamp and GitHub credentials.</div>
           </div>
         </div>
@@ -28,7 +28,7 @@ const LoginPage = ({ screen: { isTablet, isMobile, isDesktop }}) => {
 
       { isDesktop &&
         <div className="center aligned segment">
-          <i id="arrow-bounce" className="massive teal arrow up icon"/>
+          <i id="arrow-bounce" className="massive green arrow up icon"/>
         </div>
       }
 

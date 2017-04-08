@@ -1,21 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ThickPaddedBottom } from '../../../styles/globalStyles';
+import {
+  ThickPaddedBottom,
+  hoverTransition
+} from '../../../styles/globalStyles';
 
 const ResultItem = styled.div`
   width: 45vw !important;
 `;
 
 const ChatIcon = styled.i`
+  ${ hoverTransition() }
   font-size: 20px !important;
   margin-left: 4px !important;
   margin-bottom: 2px !important;
-  transition: color 100ms ease-in-out;
-  &:hover {
-    cursor: pointer;
-    color: rgb(0,225,225);
-    transition: color 100ms ease-in-out;
-  }
 `;
 
 const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults }) => {
@@ -48,7 +46,7 @@ const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults })
   const noResultsMessage = (
     <div className="item">
       <div className="ui tiny image">
-        <i className="huge teal warning circle icon" />
+        <i className="huge green warning circle icon" />
       </div>
       <div className="middle aligned content">
         <div className="header">

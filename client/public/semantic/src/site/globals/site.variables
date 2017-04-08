@@ -1,0 +1,21 @@
+/*******************************
+     User Global Variables
+*******************************/
+
+/*** *** *** freeCodeCamp Theme *** *** ***/
+
+// REBUILD AS THIS AT SOME POINT - THIS WILL FIX GREEN ISSUES!!!
+
+@pink           : #FF6D58; // Light Red
+@orange         : #FFAD25; // Light Orange
+@yellow         : #FFEE18; // Yellow
+@olive          : #FF9C2A; // Orange
+@green          : #007E00; // Dark Green
+@teal           : #006400; // Green
+@blue           : #2DB9FF; // Light-Blue
+@violet         : #3949AB; // Blue
+@purple         : #BA68C8; // Purple
+@red            : #FF4025; // Red
+@brown          : #A4755F; // Brown
+@grey           : #E0E0E0; // Grey
+@black          : #939393; // Dark Grey

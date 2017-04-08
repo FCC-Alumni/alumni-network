@@ -4,7 +4,7 @@ import {
   CenterAlignedWrapper
 } from '../../../../styles/globalStyles';
 
-const Flag = styled.div `
+const Flag = styled.a `
   width: 40px;
   height: 40px;
   margin-bottom: 5px;
@@ -22,7 +22,10 @@ const Steps = ({ personal }) => {
       <div className="step">
         <div className="content">
           <CenterAlignedWrapper>
-            <Flag className={`flag-icon-background flag-icon-${personal.flag.replace(' ', '-')}`}></Flag>
+            <Flag
+              target="_blank"
+              href={`https://wikipedia.org/wiki/${personal.country.replace(' ', '_')}`}
+              className={`flag-icon-background flag-icon-${personal.flag.replace(' ', '-')}`} />
           </CenterAlignedWrapper>
           <div className="description">{personal.country}</div>
         </div>

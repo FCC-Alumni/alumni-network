@@ -1,9 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { connectScreenSize } from 'react-screen-size';
 
 import { APP_HOST } from '../actions/chat';
+
+const Logo = styled.img`
+  margin-right: 10px !important;
+`;
 
 class NavBar extends React.Component {
   state = {
@@ -24,8 +29,8 @@ class NavBar extends React.Component {
 
   render() {
     const guestNav = (
-      <div className="ui huge fixed stackable teal pointing menu">
-        <NavLink className="item" activeClassName="item active" exact to="/"><i className="fa fa-free-code-camp" />freeCodeCamp Alumni Network</NavLink>
+      <div className="ui huge fixed stackable inverted borderless green menu">
+        <NavLink className="item" activeClassName="item active" exact to="/"><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</NavLink>
         <div className="right menu">
           <NavLink className="item" activeClassName="item active" exact to="/login">Login</NavLink>
         </div>
@@ -35,11 +40,11 @@ class NavBar extends React.Component {
     const userNav = (
       <div>
         {!this.state.nav ?
-          <div className="ui huge fixed stackable teal pointing menu">
-            <div className="item" onClick={this.toggleNav}><i className="fa fa-free-code-camp"></i>freeCodeCamp Alumni Network</div>
+          <div className="ui huge fixed stackable inverted borderless green menu">
+            <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</div>
           </div> :
-          <div className="ui huge fixed stackable teal pointing menu">
-            <div className="item" onClick={this.toggleNav}><i className="fa fa-free-code-camp"></i>freeCodeCamp Alumni Network</div>
+          <div className="ui huge fixed stackable inverted borderless green menu">
+            <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</div>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard">Dashboard</NavLink>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/preferences">Profile</NavLink>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/community">Community</NavLink>

@@ -3,7 +3,7 @@ import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 
 export default ({ size, close, open }) => {
-  const teal = '#00b5ad';
+  const green = '#00b5ad';
   const fireStyle = {
     width: "45px",
     height: "45px",
@@ -13,7 +13,7 @@ export default ({ size, close, open }) => {
     <div>
       <Modal size={size} open={open} onClose={close}>
 
-        <Modal.Header style={{ background: teal, color: 'white' }}>
+        <Modal.Header style={{ background: green, color: 'white' }}>
           <h1>
             <span>Mess Hall Chat &nbsp;</span>
           </h1>
@@ -36,7 +36,7 @@ export default ({ size, close, open }) => {
           <br/><br/>
 
           <i className="student icon mentorIcon"></i> These people are mentors<br/>
-          <i className="star icon teal onlineIcon"></i> These people are currently online
+          <i className="star icon green onlineIcon"></i> These people are currently online
 
           <br/><br/>
 
@@ -59,7 +59,7 @@ export default ({ size, close, open }) => {
             onClick={close}
             icon='checkmark'
             labelPosition='right'
-            style={{ background: teal }} />
+            style={{ background: green }} />
         </Modal.Actions>
 
       </Modal>

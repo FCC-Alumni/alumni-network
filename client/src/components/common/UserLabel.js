@@ -38,7 +38,7 @@ UserLabel.propTypes = {
 UserLabel.defaultProps = {
   label: '',
   folder: '',
-  color: 'teal',
+  color: 'green',
   size: 'medium',
   showAvatar: true,
 }

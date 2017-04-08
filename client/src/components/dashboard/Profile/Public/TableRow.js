@@ -18,17 +18,16 @@ const TableRow = ({ icon, content, header }) => {
 
 TableRow.propTypes = {
   icon: React.PropTypes.string.isRequired,
-  header: React.PropTypes.string.isRequired,
+  header: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.element,
+  ]),
   content: React.PropTypes.oneOfType([
-    React.PropTypes: string,
-    React.PropTypes: object,
-    React.PropTypes: element,
-    React.PropTypes: number,
+    React.PropTypes.string,
+    React.PropTypes.object,
+    React.PropTypes.element,
+    React.PropTypes.number,
   ])
-}
-
-TableRow.defaultProps = {
-  left: false
 }
 
 export default TableRow;

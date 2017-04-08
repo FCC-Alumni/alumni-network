@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 
 const SaveModal = ({ size, close, open }) => {
-  const teal = '#00b5ad';
+  const green = '#00b5ad';
   return(
     <div>
       <Modal size={size} open={open} onClose={close}>
@@ -19,7 +19,7 @@ const SaveModal = ({ size, close, open }) => {
             onClick={close}
             icon='checkmark'
             labelPosition='right'
-            style={{ background: teal }} />
+            style={{ background: green }} />
         </Modal.Actions>
       </Modal>
     </div>

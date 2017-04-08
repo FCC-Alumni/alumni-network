@@ -155,12 +155,12 @@ class Profile extends React.Component {
     var { errors } = this.state;
 
     if (field === 'bio') {
-      if (Validator.isLength(str, { min: 0, max: 300 })) {
+      if (Validator.isLength(str, { min: 0, max: 380 })) {
         errors.bio = '';
         this.setState({ errors });
         return true;
       } else {
-        errors.bio = "Bio must be 300 characters or less."
+        errors.bio = "Bio must be 380 characters or less."
         this.setState({ errors });
         return false;
       }
@@ -284,7 +284,7 @@ class Profile extends React.Component {
           folder={this.state.viewState.showAll}
           label={mentorship.mentor ? 'Mentor' : 'Member'} />
 
-        <div onClick={this.saveChanges} id="saveButton" className="ui huge teal label">
+        <div onClick={this.saveChanges} id="saveButton" className="ui huge green label">
           Save
           <div className="detail">
             <i className="save icon" />
