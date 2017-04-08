@@ -1,4 +1,4 @@
-$lightRed: rgb(255, 109, 88);
+$tealColor: rgb(0,225,225);
 
 #chat {
   background: rgba(250,250,250,0.93);
@@ -12,8 +12,19 @@ $lightRed: rgb(255, 109, 88);
   h2 {
     padding-right: 40px;
   }
+  .linkHome {
+    position: absolute;
+    right: 50px;
+    color: #00b5ad;
+    span {
+      text-decoration: underline;
+    }
+    &:hover {
+      color: $tealColor;
+    }
+  }
   .conversant {
-    color: #2DB9FF;
+    color: #00b5ad;
   }
   .privateAvatar {
     margin-right: 7px;
@@ -23,14 +34,14 @@ $lightRed: rgb(255, 109, 88);
     border-radius: 50%;
     &:hover {
       cursor: pointer;
-      color: $lightRed;
+      color: $tealColor;
     }
   }
   .notifications {
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: #FF4025;
+    background: red;
     font-size: 13px;
     text-align: center;
     padding-top: 5x;
@@ -43,7 +54,7 @@ $lightRed: rgb(255, 109, 88);
     transition: color 250ms ease-in-out;
     &:hover {
       cursor: pointer;
-      color: $lightRed !important;
+      color: $tealColor !important;
       transition: color 250ms ease-in-out;
     }
   }
@@ -63,7 +74,7 @@ $lightRed: rgb(255, 109, 88);
     transition: color 250ms ease-in-out;
     &:hover {
       cursor: pointer;
-      color: $lightRed !important;
+      color: $tealColor !important;
       transition: color 250ms ease-in-out;
     }
   }
@@ -84,7 +95,7 @@ $lightRed: rgb(255, 109, 88);
     padding-bottom: 25px;
     color: black;
     border-radius: 3px;
-    background: rgba(255, 109, 88, 0.95);
+    background: rgba(0,225,225, 0.95);
     h3 {
       text-decoration: underline;
       margin-bottom: 20px;
@@ -145,7 +156,7 @@ $lightRed: rgb(255, 109, 88);
     }
     .author-link:hover {
       cursor: pointer;
-      color: $lightRed;
+      color: $tealColor;
     }
     .mentorIcon {
       margin-left: 5px;
@@ -154,7 +165,7 @@ $lightRed: rgb(255, 109, 88);
     .onlineIcon, {
       margin-left: 3px;
       font-size: 15px;
-      color: $lightRed;
+      color: $tealColor;
     }
     .timeStamp {
       color: rgb(125,125,125);
@@ -191,7 +202,7 @@ $lightRed: rgb(255, 109, 88);
     visibility: hidden;
     width: 120px;
     background-color: rgba(5,5,5,0.87);
-    color: $lightRed;
+    color: $tealColor;
     text-align: center;
     border-radius: 3px;
     padding: 5px 0;
@@ -216,7 +227,7 @@ $lightRed: rgb(255, 109, 88);
     visibility: hidden;
     width: 120px;
     background-color: rgba(5,5,5,0.87);
-    color: $lightRed;
+    color: $tealColor;
     text-align: center;
     border-radius: 3px;
     padding: 5px 0;

@@ -296,7 +296,7 @@ class RepoList extends React.Component {
 
         <Input
           onChange={this.handleChange}
-          label={<Dropdown className="basic teal" onChange={this.handleLabelChange} defaultValue="https://github.com/" options={repoOptions} />}
+          label={<Dropdown onChange={this.handleLabelChange} defaultValue="https://github.com/" options={repoOptions} />}
           labelPosition="left"
           placeholder="Namespace / Repo"
           value={item}

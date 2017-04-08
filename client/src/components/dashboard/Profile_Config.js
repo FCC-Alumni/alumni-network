@@ -155,12 +155,12 @@ class Profile extends React.Component {
     var { errors } = this.state;
 
     if (field === 'bio') {
-      if (Validator.isLength(str, { min: 0, max: 380 })) {
+      if (Validator.isLength(str, { min: 0, max: 300 })) {
         errors.bio = '';
         this.setState({ errors });
         return true;
       } else {
-        errors.bio = "Bio must be 380 characters or less."
+        errors.bio = "Bio must be 300 characters or less."
         this.setState({ errors });
         return false;
       }

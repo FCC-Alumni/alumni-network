@@ -1,50 +1,52 @@
 import React from 'react';
 import styled from 'styled-components';
-import { hoverTransition } from '../../../styles/globalStyles';
 
-export const Icon = styled.i`
-  color: grey;
-  ${ hoverTransition() }
+export const IconLink = styled.a`
+color: grey;
+  &:hover {
+    color: rgb(0,225,225) !important;
+    transition: color 100ms ease-in-out;
+  }
 `;
 
 const IconLinks = ({ user, handleClick }) => {
   const { social } = user;
   return(
     <div>
-      <a
+      <IconLink
         target="_blank"
         onClick={handleClick}
         href={user.personal.profileUrl}>
-        <Icon className="github icon"/>
-      </a>
-      <a
+        <i className="github icon"/>
+      </IconLink>
+      <IconLink
         target="_blank"
         onClick={handleClick}
         href={`https://www.freecodecamp.com/${user.username}`}>
-        <Icon className="fa fa-free-code-camp"/>
-      </a>
+        <i className="fa fa-free-code-camp"/>
+      </IconLink>
       {/* will only render the following links if user has entered info for these fields */}
       { social.codepen &&
-        <a
+        <IconLink
           target="_blank"
           onClick={handleClick}
           href={`https://www.codepen.io/${social.codepen}`}>
-          <Icon className="codepen icon"/>
-        </a> }
+          <i className="codepen icon"/>
+        </IconLink> }
       { social.linkedin &&
-        <a
+        <IconLink
           target="_blank"
           onClick={handleClick}
           href={`https://www.linkedin.com/search/results/index/?keywords=${encodeURIComponent(social.linkedin)}&origin=GLOBAL_SEARCH_HEADER`}>
-          <Icon className="linkedin icon"/>
-        </a> }
+          <i className="linkedin icon"/>
+        </IconLink> }
       { social.twitter &&
-        <a
+        <IconLink
           target="_blank"
           onClick={handleClick}
           href={`https://www.twitter.com/${social.twitter}`}>
-          <Icon className="twitter icon"/>
-        </a> }
+          <i className="twitter icon"/>
+        </IconLink> }
     </div>
   );
 }

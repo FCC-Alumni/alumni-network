@@ -8,7 +8,7 @@ class SliderToggle extends React.Component {
     on: false,
     style: OFF_POSITION
   }
-
+  
   componentWillMount() {
     if (this.props.defaultOn) {
       this.setState({ style: ON_POSITION, on: true });
@@ -24,15 +24,15 @@ class SliderToggle extends React.Component {
       this.props.saveStateToParent(false);
     }
   }
-
+  
   render() {
     return (
-      <div className="slider-toggle-container">
-        <div onClick={this.handleClick} className="slider-toggle">
+      <div className="slider-toggle-container">  
+        <div onClick={this.handleClick} className="slider-toggle">  
           <div style={this.state.style} className="toggler" />
-        </div>
-        <label className="ui label teal slider-label">{this.props.label}</label>
-      </div>
+        </div>  
+        <label className="ui label slider-label">{this.props.label}</label>
+      </div>  
     );
   }
 }
