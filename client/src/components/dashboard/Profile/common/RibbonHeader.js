@@ -3,7 +3,7 @@ import React from 'react';
 const RibbonHeader = ({ content, onClick, wrapperClass, showPopUp, subSaveClick, id, showSave }) => {
   return(
     <div>
-      <div className={`ui teal large ribbon label ${wrapperClass}`} onClick={onClick}>
+      <div className={`ui green large ribbon label ${wrapperClass}`} onClick={onClick}>
         {content}
         { 
           showSave && 

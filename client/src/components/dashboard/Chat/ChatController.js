@@ -188,21 +188,21 @@ class ChatController extends React.Component {
             { totalNotifications ?
 
               <div onClick={this.togglePrivateChannels} id="privateChatIconWrapper">
-                <i className="comments teal icon" id="privateChatIcon"></i>
+                <i className="comments green icon" id="privateChatIcon"></i>
                 <span className="notifications totalNotifications">{totalNotifications}</span>
               </div>
 
               :
 
               <div onClick={this.togglePrivateChannels}>
-                <i className="comments teal icon" id="privateChatIcon"></i>
+                <i className="comments green icon" id="privateChatIcon"></i>
               </div> }
 
             {conversant ?
               <NavLink to='/dashboard/chat'>
-                <i className="teal home icon" id="infoIcon"></i>
+                <i className="green home icon" id="infoIcon"></i>
               </NavLink> :
-              <i onClick={this.toggleModal} className="info teal circle icon" id="infoIcon"></i>}
+              <i onClick={this.toggleModal} className="info green circle icon" id="infoIcon"></i>}
 
             {this.state.privateChannels && privateChannels}
 

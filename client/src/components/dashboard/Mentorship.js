@@ -277,7 +277,7 @@ class Mentorship extends React.Component {
         <div className="ui form">
           <div className="filters-selector-wrap">
             <FiltersSelector onClick={this.showFilters} >
-              <i className={`${!showFilters ? 'teal unhide' : 'brown hide'} icon`} />
+              <i className={`${!showFilters ? 'green unhide' : 'red hide'} icon`} />
               {`${!showFilters ? 'Show' : 'Hide'} Search Filters`}
             </FiltersSelector>
           </div>
@@ -319,11 +319,11 @@ class Mentorship extends React.Component {
           <div
             onClick={this.clearSearch}
             className={`ui labeled button ${this.state.disableClear && 'disabled'}`}>
-            <div className="ui basic teal button">
+            <div className="ui basic green button">
               <i className="remove icon"></i>
               Clear All Fields
             </div>
-            <div className="ui basic left pointing teal label">{`${results.length} results`}</div>
+            <div className="ui basic left pointing green label">{`${results.length} results`}</div>
           </div>
         </ButtonWrapper>
 

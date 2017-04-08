@@ -5,15 +5,21 @@ import findIndex from 'lodash/findIndex';
 export default (state = [], action) => {
   switch(action.type) {
     case ADD_FLASH_MESSAGE:
-      return [
-        ...state,
-        {
-          id: shortid.generate(),
-          type: action.message.type,
-          text: action.message.text
-        }
-      ];
-      
+      // prevent duplicate messages
+      const exists = findIndex(state, { text: action.message.text });
+      if (exists >= 0) {
+        return state;
+      } else {
+        return [
+          ...state,
+          {
+            id: shortid.generate(),
+            type: action.message.type,
+            text: action.message.text
+          }
+        ];
+      }
+
     case DELETE_FLASH_MESSAGE:
       const index = findIndex(state, { id: action.id });
       if (index >= 0) {
@@ -23,10 +29,10 @@ export default (state = [], action) => {
         ];
       }
       return state;
-      
+
     case CLEAR_FLASH_MESSAGE:
       return []
-      
+
     default: return state;
   }
 }

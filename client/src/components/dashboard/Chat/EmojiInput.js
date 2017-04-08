@@ -102,7 +102,7 @@ export default class Emoji extends React.Component {
             query={this.state.emoji}
             onSelect={this.setEmoji}
             style={emojiPickerStyles} />}
-        <button className="ui teal button" onClick={this.submit}>Submit Message</button>
+        <button className="ui green button" onClick={this.submit}>Submit Message</button>
       </form>
     );
   }
