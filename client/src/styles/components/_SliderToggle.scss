@@ -2,10 +2,10 @@
   width: 310px;
   margin: 20px 0 20px 0px;
   padding-top: 5px;
-  padding-left: 5px; 
+  padding-left: 5px;
   margin-bottom: 0;
   .slider-label {
-    vertical-align: top;
+    vertical-align: top !important;
   }
   .slider-toggle {
     display: inline-block;
@@ -18,7 +18,7 @@
     box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
     &:after {
       content: 'OFF';
-      color: red;
+      color: #FF4025;
       position: absolute;
       right: 10px;
       z-index: 0;
@@ -27,7 +27,7 @@
     }
     &:before {
       content: 'ON';
-      color: #00b5ad;
+      color: #007E00;
       position: absolute;
       left: 10px;
       z-index: 0;
@@ -46,6 +46,6 @@
       border-radius: 50px;
       transition: all 0.2s ease;
       box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
-    }   
+    }
   }
 }

@@ -1,21 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ThickPaddedBottom } from '../../../styles/globalStyles';
+import {
+  ThickPaddedBottom,
+  hoverTransition
+} from '../../../styles/globalStyles';
 
 const ResultItem = styled.div`
   width: 45vw !important;
 `;
 
 const ChatIcon = styled.i`
+  ${ hoverTransition() }
   font-size: 20px !important;
   margin-left: 4px !important;
   margin-bottom: 2px !important;
-  transition: color 100ms ease-in-out;
-  &:hover {
-    cursor: pointer;
-    color: rgb(0,225,225);
-    transition: color 100ms ease-in-out;
-  }
 `;
 
 const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults }) => {

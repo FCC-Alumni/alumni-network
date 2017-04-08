@@ -58,7 +58,7 @@ class AppContainer extends React.Component {
   render() {
     const { url } = this.props.match;
     return (
-      <div>
+      <div id="appContainer">
         { this.props.username &&
           <div>
             <Route exact path={`${url}/`} component={Landing}/>

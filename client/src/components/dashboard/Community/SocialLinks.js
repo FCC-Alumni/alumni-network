@@ -1,52 +1,50 @@
 import React from 'react';
 import styled from 'styled-components';
+import { hoverTransition } from '../../../styles/globalStyles';
 
-export const IconLink = styled.a`
-color: grey;
-  &:hover {
-    color: rgb(0,225,225) !important;
-    transition: color 100ms ease-in-out;
-  }
+export const Icon = styled.i`
+  color: grey;
+  ${ hoverTransition() }
 `;
 
 const IconLinks = ({ user, handleClick }) => {
   const { social } = user;
   return(
     <div>
-      <IconLink
+      <a
         target="_blank"
         onClick={handleClick}
         href={user.personal.profileUrl}>
-        <i className="github icon"/>
-      </IconLink>
-      <IconLink
+        <Icon className="github icon"/>
+      </a>
+      <a
         target="_blank"
         onClick={handleClick}
         href={`https://www.freecodecamp.com/${user.username}`}>
-        <i className="fa fa-free-code-camp"/>
-      </IconLink>
+        <Icon className="fa fa-free-code-camp"/>
+      </a>
       {/* will only render the following links if user has entered info for these fields */}
       { social.codepen &&
-        <IconLink
+        <a
           target="_blank"
           onClick={handleClick}
           href={`https://www.codepen.io/${social.codepen}`}>
-          <i className="codepen icon"/>
-        </IconLink> }
+          <Icon className="codepen icon"/>
+        </a> }
       { social.linkedin &&
-        <IconLink
+        <a
           target="_blank"
           onClick={handleClick}
           href={`https://www.linkedin.com/search/results/index/?keywords=${encodeURIComponent(social.linkedin)}&origin=GLOBAL_SEARCH_HEADER`}>
-          <i className="linkedin icon"/>
-        </IconLink> }
+          <Icon className="linkedin icon"/>
+        </a> }
       { social.twitter &&
-        <IconLink
+        <a
           target="_blank"
           onClick={handleClick}
           href={`https://www.twitter.com/${social.twitter}`}>
-          <i className="twitter icon"/>
-        </IconLink> }
+          <Icon className="twitter icon"/>
+        </a> }
     </div>
   );
 }

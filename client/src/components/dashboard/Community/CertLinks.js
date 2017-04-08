@@ -1,31 +1,33 @@
 import React from 'react';
-import { IconLink } from './SocialLinks';
+import { Icon } from './SocialLinks';
+
+const URL = "https://freeCodeCamp.com/";
 
 const CertLinks = ({ handleClick, fccCerts, username }) => {
   return(
     <div className="right floated">
         <span>
           { fccCerts.Front_End &&
-            <IconLink
+            <a
               target="_blank"
               onClick={handleClick}
-              href={`https://freeCodeCamp.com/${username}/front-end-certification`}>
-              <i title="Frontend Certified" className="desktop small icon" />
-            </IconLink> }
+              href={`${URL + username}/front-end-certification`}>
+              <Icon title="Frontend Certified" className="desktop small icon" />
+            </a> }
           { fccCerts.Data_Visualization &&
-            <IconLink
+            <a
               target="_blank"
               onClick={handleClick}
-              href={`https://freeCodeCamp.com/${username}/back-end-certification`}>
-              <i title="Data Visualization Certified" className="bar chart small icon" />
-            </IconLink> }
+              href={`${URL + username}/back-end-certification`}>
+              <Icon title="Data Visualization Certified" className="bar chart small icon" />
+            </a> }
           { fccCerts.Back_End &&
-            <IconLink
+            <a
               target="_blank"
               onClick={handleClick}
-              href={`https://freeCodeCamp.com/${username}/data-visualization-certification`}>
-              <i title="Backend Certified" className="database small icon" />
-            </IconLink> }
+              href={`${URL + username}/data-visualization-certification`}>
+              <Icon title="Backend Certified" className="database small icon" />
+            </a> }
         </span>
     </div>
   );
