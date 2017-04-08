@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/api/private-chat/initialize', isAuthenticated, (req, res) => {
   const { username } = req.user;
   PrivateChat.find({ members: username }, (err, history) => {
-    if (err) throw res.sendStatus(500);
+    if (err) res.sendStatus(500);
     // we will only return the most recent 100 private chat messages:
     const abbreviated = history.map(c => {
       if (c.history.length > 100) {
