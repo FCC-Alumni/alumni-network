@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import { Checkbox } from 'semantic-ui-react';
 
 const Filters = ({ filterOptions, handleChange, state }) => {
@@ -24,9 +25,9 @@ const Filters = ({ filterOptions, handleChange, state }) => {
 }
 
 Filters.propTypes = {
-  state: React.PropTypes.object.isRequired,
-  handleChange: React.PropTypes.func.isRequired,
-  filterOptions: React.PropTypes.array.isRequired
+  state: propTypes.object.isRequired,
+  handleChange: propTypes.func.isRequired,
+  filterOptions: propTypes.array.isRequired
 }
 
 export default Filters;

@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
@@ -71,8 +72,8 @@ const mapStateToProps = (state) => {
 }
 
 NavBar.propTypes = {
-  user: React.PropTypes.object.isRequired,
-  screen: React.PropTypes.object.isRequired
+  user: propTypes.object.isRequired,
+  screen: propTypes.object.isRequired
 }
 
 export const mapScreenSizeToProps = (screenSize) => {

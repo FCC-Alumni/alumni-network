@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import styled from 'styled-components';
 import { hoverTransition } from '../../../../styles/globalStyles';
 
@@ -66,9 +67,9 @@ const SocialList = ({ profileUrl, username, social }) => {
 }
 
 SocialList.propTypes = {
-  social: React.PropTypes.object.isRequired,
-  username: React.PropTypes.string.isRequired,
-  profileUrl: React.PropTypes.string.isRequired,
+  social: propTypes.object.isRequired,
+  username: propTypes.string.isRequired,
+  profileUrl: propTypes.string.isRequired,
 }
 
 export default SocialList;

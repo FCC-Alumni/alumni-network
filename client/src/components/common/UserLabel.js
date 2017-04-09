@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 
 const UserLabel = ({ color, size, image, username, label, folder, toggleAll, showAvatar }) => {
   if (!image) {
@@ -22,16 +23,16 @@ const UserLabel = ({ color, size, image, username, label, folder, toggleAll, sho
 }
 
 UserLabel.propTypes = {
-  size: React.PropTypes.string,
-  label: React.PropTypes.string,
-  color: React.PropTypes.string,
-  toggleAll: React.PropTypes.func,
-  showAvatar: React.PropTypes.bool,
-  image: React.PropTypes.string,
-  username: React.PropTypes.string.isRequired,
-  folder: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.bool
+  size: propTypes.string,
+  label: propTypes.string,
+  color: propTypes.string,
+  toggleAll: propTypes.func,
+  showAvatar: propTypes.bool,
+  image: propTypes.string,
+  username: propTypes.string.isRequired,
+  folder: propTypes.oneOfType([
+    propTypes.string,
+    propTypes.bool
   ])
 }
 

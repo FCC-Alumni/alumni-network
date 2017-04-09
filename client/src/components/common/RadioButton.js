@@ -1,14 +1,15 @@
 import React from 'react';
+import propTypes from 'prop-types';
 
 const RadioButton = ({ onChange, name, label, checked }) => {
   return (
     <div>
       <div className="field">
         <div className="ui radio checkbox">
-          <input 
-            onChange={onChange} 
-            type="radio" 
-            id={label.replace(/\s/g, '_')} 
+          <input
+            onChange={onChange}
+            type="radio"
+            id={label.replace(/\s/g, '_')}
             name={name}
             checked={checked} />
           <label>{label}</label>
@@ -19,10 +20,10 @@ const RadioButton = ({ onChange, name, label, checked }) => {
 }
 
 RadioButton.propTypes = {
-  onChange: React.PropTypes.func.isRequired,
-  name: React.PropTypes.string.isRequired,
-  label: React.PropTypes.string,
-  checked: React.PropTypes.bool.isRequired
+  onChange: propTypes.func.isRequired,
+  name: propTypes.string.isRequired,
+  label: propTypes.string,
+  checked: propTypes.bool.isRequired
 }
 
 export default RadioButton;

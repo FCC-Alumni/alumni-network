@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import { Icon } from './SocialLinks';
 
 const URL = "https://freeCodeCamp.com/";
@@ -34,8 +35,8 @@ const CertLinks = ({ handleClick, fccCerts, username }) => {
 }
 
 CertLinks.propTypes = {
-  fccCerts: React.PropTypes.object.isRequired,
-  username: React.PropTypes.string.isRequired
+  fccCerts: propTypes.object.isRequired,
+  username: propTypes.string.isRequired
 }
 
 export default CertLinks;

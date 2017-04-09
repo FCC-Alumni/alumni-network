@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import { Dropdown } from 'semantic-ui-react';
 
 const DropdownMulti = (props) => (
@@ -9,13 +10,13 @@ const DropdownMulti = (props) => (
 );
 
 DropdownMulti.propTypes = {
-  options: React.PropTypes.array.isRequired,
-  onChange: React.PropTypes.func.isRequired,
-  placeholder: React.PropTypes.string,
-  search: React.PropTypes.bool,
-  noResultsMessage: React.PropTypes.string,
-  fluid: React.PropTypes.bool,
-  value: React.PropTypes.array.isRequired
+  options: propTypes.array.isRequired,
+  onChange: propTypes.func.isRequired,
+  placeholder: propTypes.string,
+  search: propTypes.bool,
+  noResultsMessage: propTypes.string,
+  fluid: propTypes.bool,
+  value: propTypes.array.isRequired
 }
 
 DropdownMulti.defaultProps = {

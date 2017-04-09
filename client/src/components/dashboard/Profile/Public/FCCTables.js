@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import Table from './Table';
 import styled from 'styled-components';
 import TableRow from './TableRow';
@@ -87,12 +88,12 @@ const FccTables = ({
 }
 
 FccTables.propTypes = {
-  fccCerts: React.PropTypes.object.isRequired,
-  longestStreak: React.PropTypes.string.isRequired,
-  currentStreak: React.PropTypes.string.isRequired,
-  browniePoints: React.PropTypes.string.isRequired,
-  firstChallenge: React.PropTypes.string.isRequired,
-  totalChallneges: React.PropTypes.number.isRequired,
+  fccCerts: propTypes.object.isRequired,
+  longestStreak: propTypes.string.isRequired,
+  currentStreak: propTypes.string.isRequired,
+  browniePoints: propTypes.string.isRequired,
+  firstChallenge: propTypes.string.isRequired,
+  totalChallneges: propTypes.number.isRequired,
 }
 
 export default FccTables;

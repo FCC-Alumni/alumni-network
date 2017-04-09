@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 
 const ON_POSITION = { left: 43 };
 const OFF_POSITION = { left: 3 };
@@ -38,9 +39,9 @@ class SliderToggle extends React.Component {
 }
 
 SliderToggle.propTypes = {
-  saveStateToParent: React.PropTypes.func.isRequired,
-  label: React.PropTypes.string,
-  defaultOn: React.PropTypes.bool.isRequired
+  saveStateToParent: propTypes.func.isRequired,
+  label: propTypes.string,
+  defaultOn: propTypes.bool.isRequired
 }
 
 export default SliderToggle;

@@ -1,7 +1,8 @@
 import React from 'react';
+import propTypes from 'prop-types';
 
 /*
-TODO: 
+TODO:
   - Make this use Semantics "dividing header" class instead
   - allow for passing in which size as props
   - this will make component more reusable and robust
@@ -57,8 +58,8 @@ const DividingHeader = ({ icon, content, size }) => {
 }
 
 DividingHeader.propTypes = {
-  content: React.PropTypes.string.isRequired,
-  icon: React.PropTypes.string
+  content: propTypes.string.isRequired,
+  icon: propTypes.string
 }
 
 DividingHeader.defaultProps = {

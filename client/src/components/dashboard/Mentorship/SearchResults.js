@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import styled from 'styled-components';
 import {
   ThickPaddedBottom,
@@ -64,10 +65,10 @@ const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults })
 }
 
 SearchResults.propTypes = {
-  initiatePrivateChat: React.PropTypes.func.isRequired,
-  currentUser: React.PropTypes.string.isRequired,
-  results: React.PropTypes.array.isRequired,
-  noResults: React.PropTypes.bool.isRequired
+  initiatePrivateChat: propTypes.func.isRequired,
+  currentUser: propTypes.string.isRequired,
+  results: propTypes.array.isRequired,
+  noResults: propTypes.bool.isRequired
 }
 
 export default SearchResults;
