@@ -48,6 +48,11 @@ module.exports = (io) => {
       }
     });
 
+    // this allows a new user to be added to the community in any connected clients:
+    socket.on('announce-new-user', (user) => {
+      socket.broadcast.emit('new-user-joined', user);
+    });
+
     // global chat:
   	socket.on('submission', (data) => {
       socket.broadcast.emit('broadcast-message', data);

@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 
 const FormField = ({
   icon,
@@ -64,20 +65,20 @@ const FormField = ({
 }
 
 FormField.propTypes = {
-  icon: React.PropTypes.string,
-  type: React.PropTypes.string,
-  label: React.PropTypes.string,
-  disabled: React.PropTypes.bool,
-  onChange: React.PropTypes.func,
-  tooltip: React.PropTypes.string,
-  actionUrl: React.PropTypes.string,
-  actionIcon: React.PropTypes.object,
-  placeholder: React.PropTypes.string,
-  inputOptions: React.PropTypes.string,
-  reactionIcon: React.PropTypes.object,
-  name: React.PropTypes.string.isRequired,
-  value: React.PropTypes.string.isRequired,
-  errors: React.PropTypes.object.isRequired
+  icon: propTypes.string,
+  type: propTypes.string,
+  label: propTypes.string,
+  disabled: propTypes.bool,
+  onChange: propTypes.func,
+  tooltip: propTypes.string,
+  actionUrl: propTypes.string,
+  actionIcon: propTypes.object,
+  placeholder: propTypes.string,
+  inputOptions: propTypes.string,
+  reactionIcon: propTypes.object,
+  name: propTypes.string.isRequired,
+  value: propTypes.string.isRequired,
+  errors: propTypes.object.isRequired
 }
 
 FormField.defaultProps = {

@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 import { repoOptions } from '../../assets/data/dropdownOptions';
 import { Dropdown, Input } from 'semantic-ui-react';
@@ -333,10 +334,10 @@ class RepoList extends React.Component {
 }
 
 RepoList.propTypes = {
-  prePopulateList: React.PropTypes.array,
-  username: React.PropTypes.string.isRequired,
-  saveChanges: React.PropTypes.func.isRequired,
-  saveListToParent: React.PropTypes.func.isRequired,
+  prePopulateList: propTypes.array,
+  username: propTypes.string.isRequired,
+  saveChanges: propTypes.func.isRequired,
+  saveListToParent: propTypes.func.isRequired,
 }
 
 RepoList.defaultProps = {

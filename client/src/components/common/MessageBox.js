@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 
 class MessageBox extends React.Component {
   state = {
@@ -25,9 +26,9 @@ class MessageBox extends React.Component {
 }
 
 MessageBox.propTypes = {
-  header: React.PropTypes.string,
-  message: React.PropTypes.string.isRequired,
-  color: React.PropTypes.string
+  header: propTypes.string,
+  message: propTypes.string.isRequired,
+  color: propTypes.string
 }
 
 MessageBox.defaultProps = {

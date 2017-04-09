@@ -1,5 +1,6 @@
 /* eslint-disable */
 import React from 'react';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, NavLink } from 'react-router-dom';
 import { connectScreenSize } from 'react-screen-size';
@@ -242,16 +243,16 @@ class ChatController extends React.Component {
 };
 
 ChatController.propTypes = {
-  user: React.PropTypes.object.isRequired,
-  chat: React.PropTypes.object.isRequired,
-  addMessage: React.PropTypes.func.isRequired,
-  saveEdit: React.PropTypes.func.isRequired,
-  likeMessage: React.PropTypes.func.isRequired,
-  deleteMessage: React.PropTypes.func.isRequired,
-  broadcastEdit: React.PropTypes.func.isRequired,
-  clearNotifications: React.PropTypes.func.isRequired,
-  mentors: React.PropTypes.object.isRequired,
-  onlineStatus: React.PropTypes.object.isRequired
+  user: propTypes.object.isRequired,
+  chat: propTypes.object.isRequired,
+  addMessage: propTypes.func.isRequired,
+  saveEdit: propTypes.func.isRequired,
+  likeMessage: propTypes.func.isRequired,
+  deleteMessage: propTypes.func.isRequired,
+  broadcastEdit: propTypes.func.isRequired,
+  clearNotifications: propTypes.func.isRequired,
+  mentors: propTypes.object.isRequired,
+  onlineStatus: propTypes.object.isRequired
 };
 
 export const findMentors = (community) => {

@@ -1,5 +1,6 @@
 /* eslint-disable */
 import React from 'react';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Social from './Profile/Social';
 import UserLabel from '../common/UserLabel';
@@ -379,8 +380,8 @@ const mapStateToProps = (state) => {
 }
 
 Profile.propTypes = {
-  user: React.PropTypes.object.isRequired,
-  viewState: React.PropTypes.object
+  user: propTypes.object.isRequired,
+  viewState: propTypes.object
 }
 
 export default connect(mapStateToProps, { saveUser, savePreferencesViewState })(Profile);

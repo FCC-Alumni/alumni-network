@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import EmojiPicker from 'react-emoji-picker';
 import emojiMap from 'react-emoji-picker/lib/emojiMap';
 
@@ -109,7 +110,7 @@ export default class Emoji extends React.Component {
 };
 
 Emoji.propTypes = {
-  screen: React.PropTypes.object.isRequired,
-  submit: React.PropTypes.func.isRequired,
-  placeholder: React.PropTypes.string.isRequired
+  screen: propTypes.object.isRequired,
+  submit: propTypes.func.isRequired,
+  placeholder: propTypes.string.isRequired
 }
