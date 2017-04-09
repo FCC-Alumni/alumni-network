@@ -93,6 +93,10 @@ $lightRed: rgb(255, 109, 88);
       text-decoration: underline;
       margin-bottom: 20px;
     }
+    .noChannelsMessage {
+      margin-top: 5px;
+      max-width: 175px;
+    }
     .privateChannel {
       display: flex;
       flex-direction: row;
@@ -101,8 +105,8 @@ $lightRed: rgb(255, 109, 88);
       color: black;
       font-size: 22px;
       padding-left: 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      margin-top: 16px;
+      margin-bottom: 16px;
       transition: color 150ms ease-in-out;
       img {
         width: 25px;
@@ -127,7 +131,7 @@ $lightRed: rgb(255, 109, 88);
       font-size: 24px;
       &:hover {
         cursor: pointer;
-        color: white;
+        color: $lightRed;
       }
     }
   }
