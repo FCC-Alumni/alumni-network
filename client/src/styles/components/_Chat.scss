@@ -25,10 +25,6 @@ $lightRed: rgb(255, 109, 88);
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    &:hover {
-      // cursor: pointer;
-      // color: $lightRed;
-    }
   }
   .notifications {
     width: 18px;
@@ -85,7 +81,7 @@ $lightRed: rgb(255, 109, 88);
     width: 315px;
     min-height: 35px;
     padding: 10px;
-    padding-bottom: 25px;
+    padding-bottom: 5px;
     color: black;
     border-radius: 3px;
     background: #2DB9FF;
@@ -105,12 +101,13 @@ $lightRed: rgb(255, 109, 88);
       color: black;
       font-size: 22px;
       padding-left: 10px;
-      margin-top: 16px;
+      margin-top: 17px;
       margin-bottom: 16px;
       transition: color 150ms ease-in-out;
       img {
         width: 25px;
         height: 25px;
+        border-radius: 4px;
       }
       .privateNotifications {
         position: relative;
@@ -120,15 +117,15 @@ $lightRed: rgb(255, 109, 88);
       }
       &:hover {
         cursor: pointer;
-        color: white;
+        color: $lightRed;
         transition: color 150ms ease-in-out;
       }
     }
     #closePrivateChat {
       position: absolute;
-      top: 6px;
-      right: -2px;
-      font-size: 24px;
+      top: 7px;
+      right: -4px;
+      font-size: 30px;
       &:hover {
         cursor: pointer;
         color: $lightRed;
