@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import Ribbon from './common/RibbonHeader';
 import MessageBox from '../../common/MessageBox';
 import RadioButton from '../../common/RadioButton';
@@ -70,15 +71,15 @@ const Mentorship = ({
 }
 
 Mentorship.propTypes = {
-  error: React.PropTypes.string,
-  toggle: React.PropTypes.func.isRequired,
-  isMentor: React.PropTypes.bool.isRequired,
-  showPopUp: React.PropTypes.bool.isRequired,
-  subSaveClick: React.PropTypes.func.isRequired,
-  showMentorship: React.PropTypes.bool.isRequired,
-  toggleMentorship: React.PropTypes.func.isRequired,
-  handleInputChange: React.PropTypes.func.isRequired,
-  mentorshipSkills: React.PropTypes.string.isRequired,
+  error: propTypes.string,
+  toggle: propTypes.func.isRequired,
+  isMentor: propTypes.bool.isRequired,
+  showPopUp: propTypes.bool.isRequired,
+  subSaveClick: propTypes.func.isRequired,
+  showMentorship: propTypes.bool.isRequired,
+  toggleMentorship: propTypes.func.isRequired,
+  handleInputChange: propTypes.func.isRequired,
+  mentorshipSkills: propTypes.string.isRequired,
 }
 
 Mentorship.defaultProps = {

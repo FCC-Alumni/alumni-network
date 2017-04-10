@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import UserLabel from '../common/UserLabel';
 import LocationSteps from './Profile/Public/LocationSteps';
@@ -272,7 +273,7 @@ class PublicProfile extends React.Component {
 import { defaultUser } from '../../reducers/user';
 
 PublicProfile.propTypes = {
-  user: React.PropTypes.object.isRequired
+  user: propTypes.object.isRequired
 }
 
 const findUser = (community, username) => {

@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import styled from 'styled-components';
 import {
   CenterAlignedWrapper
@@ -46,7 +47,7 @@ const Steps = ({ personal }) => {
 }
 
 Steps.propTypes = {
-  personal: React.PropTypes.object.isRequired
+  personal: propTypes.object.isRequired
 }
 
 export default Steps;

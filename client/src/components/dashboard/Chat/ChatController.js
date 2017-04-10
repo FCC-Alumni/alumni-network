@@ -1,11 +1,12 @@
 /* eslint-disable */
 import React from 'react';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, NavLink } from 'react-router-dom';
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../../Navbar';
 import EmojiInput from './EmojiInput';
-import { List, Set } from 'immutable';
+import { List, Set, Map } from 'immutable';
 import ChatMessages from './Chat';
 import Modal from './ChatModal';
 import axios from 'axios';
@@ -155,7 +156,7 @@ class ChatController extends React.Component {
         }) :
           <span>
             <b>No Private Chats yet!</b><br/>
-            Click another user's name to start a chat with them.
+            <p className='noChannelsMessage'>Click another user's name to start a chat with them.</p>
           </span>}
           <i className="remove icon" id="closePrivateChat" onClick={this.togglePrivateChannels}></i>
       </div>
@@ -172,7 +173,11 @@ class ChatController extends React.Component {
 
               <span style={ !screen.isDesktop ? { fontSize: '16px' } : null }>
                 <img src={this.props.conversantAvatar} className='privateAvatar' alt={`${conversant}'s Avatar'`} />
-                Private Chat with <span className='conversant'> {conversant} </span>
+                Private Chat with&nbsp;
+                <span
+                  className='conversant'
+                  onClick={() => this.props.history.replace(`/dashboard/profile/${conversant}`)}>
+                   {conversant} </span>
               </span>
 
               :
@@ -238,16 +243,16 @@ class ChatController extends React.Component {
 };
 
 ChatController.propTypes = {
-  user: React.PropTypes.object.isRequired,
-  chat: React.PropTypes.object.isRequired,
-  addMessage: React.PropTypes.func.isRequired,
-  saveEdit: React.PropTypes.func.isRequired,
-  likeMessage: React.PropTypes.func.isRequired,
-  deleteMessage: React.PropTypes.func.isRequired,
-  broadcastEdit: React.PropTypes.func.isRequired,
-  clearNotifications: React.PropTypes.func.isRequired,
-  mentors: React.PropTypes.object.isRequired,
-  onlineStatus: React.PropTypes.object.isRequired
+  user: propTypes.object.isRequired,
+  chat: propTypes.object.isRequired,
+  addMessage: propTypes.func.isRequired,
+  saveEdit: propTypes.func.isRequired,
+  likeMessage: propTypes.func.isRequired,
+  deleteMessage: propTypes.func.isRequired,
+  broadcastEdit: propTypes.func.isRequired,
+  clearNotifications: propTypes.func.isRequired,
+  mentors: propTypes.object.isRequired,
+  onlineStatus: propTypes.object.isRequired
 };
 
 export const findMentors = (community) => {
@@ -259,16 +264,45 @@ export const findMentors = (community) => {
 const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, props) => {
   const { username } = props.match.params;
   if (username) {
+    /* This is all to account for this component mounting before the parent AppContainer
+       has finished fetching chat history from the server... (i.e. user refreshes on a
+       private chat route. This isn't ideal but the alternative is implement a lot of
+       loading state and conditional rendering in the components for all of the
+       dispatches for chat, community, private chat, etc.) For now this will do: ******/
+    let chat = List();
+    let conversantAvatar = '';
+    let totalNotifications = 0;
+    let mentors = Set();
+    try {
+      chat = privateChat.getIn([username, 'history']);
+    } catch(e) {
+      console.warn('Chat Controller waiting on props...');
+    }
+    try {
+      conversantAvatar = community.find(u => u.username === username).personal.avatarUrl;
+    } catch (e) {
+      console.warn('Chat Controller waiting on props...');
+    }
+    try {
+      totalNotifications = privateChat.reduce((t,c) => t + c.get('notifications'), 0);
+    } catch (e) {
+      console.warn('Chat Controller waiting on props...');
+    }
+    try {
+      mentors = findMentors(community);
+    } catch(e) {
+      console.warn('Chat Controller waiting on props...');
+    }
     return {
       user,
+      mentors,
       onlineStatus,
+      conversantAvatar,
+      totalNotifications,
       conversant: username,
       community: community,
       privateChat: privateChat,
-      mentors: findMentors(community),
-      chat: privateChat.getIn([username, 'history']),
-      totalNotifications: privateChat.reduce((t,c) => t + c.get('notifications'), 0),
-      conversantAvatar: community.find(u => u.username === username).personal.avatarUrl
+      chat: chat ? chat : List()
     }
   } else {
     return {

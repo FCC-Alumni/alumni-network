@@ -26,28 +26,24 @@ export default (state = Map(), action) => {
 
     case POPULATE_PRIVATE: {
       const { user, data } = payload;
-      let recipient;
+      let recipient, likes;
 
       if (data.length === 0) return state;
 
-      // we basically need to do some conversions to the data...
+      /* we need to convert the JS to our Immutable chat history,
+         this is a little messy but works: */
       data.map(data => {
-        if (data.members[0] === user) {
-          data.members.splice(0,1);
-        } else {
-          data.members.splice(1,1);
-        }
-        recipient = data.members[0];
+        recipient = data.members.filter(m => m !== user)[0];
         state = state.set(recipient, Map({
           notifications: data.notifications[user],
           history: List(data.history.map(h => Map(h)))
+        })).updateIn([recipient, 'history'], h => h.map(m => {
+          likes = m.get('likes');
+          m = m.delete('likes');
+          return m.set('likes', Set(likes));
         }));
       });
-      return state.updateIn([recipient, 'history'], h => h.map(m => {
-        const likes = m.get('likes');
-        m = m.delete('likes');
-        return m.set('likes', Set(likes));
-      }));
+      return state;
     }
 
     case INITIALIZE_PRIVATE: {

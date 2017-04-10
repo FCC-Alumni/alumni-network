@@ -7,9 +7,11 @@ const router = express.Router();
 
 router.get('/api/chat-history', isAuthenticated, (req, res) => {
   Chat.findOne({}, (err, chat) => {
-    if (!err && chat) {
+    if (!err) {
       // we will only serve the most recent 250 messages:
-      if (chat.history.length > 250) {
+      if (chat === null) {
+        res.send([]);
+      } else if (chat.history.length > 250) {
         res.send(chat.history.slice(249));
       } else {
         res.send(chat.history);

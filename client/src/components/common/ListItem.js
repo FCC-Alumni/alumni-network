@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 
 const ListItem = ({ icon, children }) => {
   return (
@@ -12,8 +13,8 @@ const ListItem = ({ icon, children }) => {
 }
 
 ListItem.propTypes = {
-  icon: React.PropTypes.string,
-  children: React.PropTypes.node.isRequired
+  icon: propTypes.string,
+  children: propTypes.node.isRequired
 }
 
 ListItem.defaultProps = {

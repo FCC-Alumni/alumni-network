@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 
 const TableRow = ({ icon, content, header }) => {
   return(
@@ -17,16 +18,16 @@ const TableRow = ({ icon, content, header }) => {
 }
 
 TableRow.propTypes = {
-  icon: React.PropTypes.string,
-  header: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.element,
+  icon: propTypes.string.isRequired,
+  header: propTypes.oneOfType([
+    propTypes.string,
+    propTypes.element,
   ]),
-  content: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.object,
-    React.PropTypes.element,
-    React.PropTypes.number,
+  content: propTypes.oneOfType([
+    propTypes.string,
+    propTypes.object,
+    propTypes.element,
+    propTypes.number,
   ])
 }
 

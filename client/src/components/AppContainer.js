@@ -1,6 +1,8 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
+import { socket } from '../actions/chat';
 import { populateCommunity } from '../actions/community';
 import { populateChat, fetchPrivateChat } from '../actions/chat';
 import { saveUser, getUserData, logoutUser } from '../actions/user';
@@ -20,9 +22,13 @@ class AppContainer extends React.Component {
       if (user) {
         // fetch user, community, and chat data when dashboard loads:
         this.props.saveUser(user);
+        // only fetch chat and community if none exists
         if (!this.props.community) this.props.populateCommunity();
         if (!this.props.chat) this.props.populateChat();
         this.props.fetchPrivateChat(user.username);
+
+        // announce this user is now online, should refresh status if user reloads page:
+        socket.emit('user-online', { user: user.username });
 
       } else {
         this.props.logoutUser();
@@ -49,10 +55,11 @@ class AppContainer extends React.Component {
     });
   }
 
-  componentDidUpdate() {
-    // this will clear flash messages when user navigates to a new route...
-    // if this produces other unwanted behavior we can revise
-    this.props.clearFlashMessage();
+  componentDidUpdate(prevProps) {
+    // clear flash messages if the route changes:
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.props.clearFlashMessage();
+    }
   }
 
   render() {
@@ -76,12 +83,12 @@ class AppContainer extends React.Component {
 };
 
 AppContainer.propTypes = {
-  saveUser: React.PropTypes.func.isRequired,
-  username: React.PropTypes.string.isRequired,
-  populateChat: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired,
-  clearFlashMessage: React.PropTypes.func.isRequired,
-  populateCommunity: React.PropTypes.func.isRequired,
+  saveUser: propTypes.func.isRequired,
+  username: propTypes.string.isRequired,
+  populateChat: propTypes.func.isRequired,
+  addFlashMessage: propTypes.func.isRequired,
+  clearFlashMessage: propTypes.func.isRequired,
+  populateCommunity: propTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => {

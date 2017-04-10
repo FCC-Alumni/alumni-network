@@ -1,7 +1,9 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import { getUserData, verifyUser, saveUser } from '../../actions/user';
 import { addFlashMessage } from '../../actions/flashMessages';
 import { connect } from 'react-redux';
+import { socket } from '../../actions/chat';
 
 class PassportPage extends React.Component {
   state = {
@@ -57,6 +59,7 @@ class PassportPage extends React.Component {
           message: 'Your account is now verified!'
         }
       });
+      socket.emit('announce-new-user', { user });
       this.props.history.push('/dashboard/preferences');
     })
     .catch(err => {
@@ -121,8 +124,8 @@ class PassportPage extends React.Component {
 }
 
 PassportPage.propTypes = {
-  saveUser: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired
+  saveUser: propTypes.func.isRequired,
+  addFlashMessage: propTypes.func.isRequired
 }
 
 export default connect(null, { saveUser, addFlashMessage })(PassportPage);
