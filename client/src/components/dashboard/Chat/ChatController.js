@@ -156,7 +156,7 @@ class ChatController extends React.Component {
         }) :
           <span>
             <b>No Private Chats yet!</b><br/>
-            Click another user's name to start a chat with them.
+            <p className='noChannelsMessage'>Click another user's name to start a chat with them.</p>
           </span>}
           <i className="remove icon" id="closePrivateChat" onClick={this.togglePrivateChannels}></i>
       </div>

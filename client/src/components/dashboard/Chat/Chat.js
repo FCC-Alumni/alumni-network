@@ -90,7 +90,7 @@ export default ({
                     onChange={saveEdit.bind(this)}
                     placeholder="You should really type something..." />
                   {editText === text ?
-                  <button style={{ width: '140px' }} className="ui orange button" onClick={finishEdit}>
+                  <button style={{ width: '140px', color: 'black' }} className="ui yellow button" onClick={finishEdit}>
                     Cancel
                   </button> :
                   <button style={{ width: '140px' }} className="ui green button" disabled={!editText} onClick={finishEdit}>
