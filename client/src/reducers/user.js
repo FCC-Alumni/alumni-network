@@ -1,6 +1,6 @@
 import { SAVE_USER, LOGOUT_USER } from '../actions/types';
 
-const defaultUser = {
+export const defaultUser = {
   social: {},
   career: {},
   githubId: '',

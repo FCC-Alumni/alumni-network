@@ -62,6 +62,10 @@
   @extend .transition-in;
 }
 
+.mentorshipSkillsPane.hide {
+  display: none;
+}
+
 .profilePane.show,
 .fccPane.show,
 .mentorshipPane.show,

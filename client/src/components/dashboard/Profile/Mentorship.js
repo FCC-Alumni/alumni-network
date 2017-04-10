@@ -1,18 +1,21 @@
 import React from 'react';
 import Ribbon from './common/RibbonHeader';
 import MessageBox from '../../common/MessageBox';
+import RadioButton from '../../common/RadioButton';
 import SliderToggle from '../../common/SliderToggle';
 
 const Mentorship = ({
   error,
   toggle,
   isMentor,
+  isMentee,
   showPopUp,
   subSaveClick,
   showMentorship,
   mentorshipSkills,
   toggleMentorship,
   handleInputChange,
+  handleRadioChange,
 }) => {
   return (
     <div>
@@ -45,6 +48,21 @@ const Mentorship = ({
             <div style={{ marginTop: 10 }} className="ui red basic label">
               {error}
             </div> }
+        </div>
+        <div className={`ui eight wide field mentorshipSkillsPane ${isMentor ? 'hide' : 'show'}`}>
+          <div className="inline fields">
+            <label>Are you open to being mentored by other users?</label>
+            <RadioButton
+              label='Yes'
+              name="isMentee"
+              onChange={handleRadioChange}
+              checked={isMentee && true} />
+            <RadioButton
+              label='No'
+              name="isMentee"
+              onChange={handleRadioChange}
+              checked={!isMentee && true}  />
+          </div>
         </div>
       </form>
     </div>

@@ -3,10 +3,13 @@ import { connect } from 'react-redux';
 import UserLabel from '../common/UserLabel';
 import LocationSteps from './Profile/Public/LocationSteps';
 import { ThickPaddedBottom } from '../../styles/globalStyles';
+import SkillsAndInterests from './Profile/Public/SkillsRow';
+import TableRow from '../dashboard/Profile/Public/TableRow';
 import { saveProfileStats } from '../../actions/views';
 import FCCStatTables from './Profile/Public/FCCTables';
-import CodeProfile from './Profile/Public/CodeProfile';
+import Table from '../dashboard/Profile/Public/Table';
 import SocialList from './Profile/Public/SocialList';
+import Career from './Profile/Public/CareerRow';
 import styled from 'styled-components';
 import htmlToJson from 'html-to-json';
 import axios from 'axios';
@@ -23,6 +26,10 @@ const Loader = styled.div`
   padding-bottom:  !important;
 `;
 
+const ColumnNoTopPadding = styled.div`
+  padding-top: 0 !important;
+`;
+
 class PublicProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -33,6 +40,7 @@ class PublicProfile extends React.Component {
   }
 
   componentDidMount() {
+    document.body.scrollTop = 0;
     if (this.state.firstLoad) {
       this.longestStreak();
       this.currentStreak();
@@ -165,7 +173,7 @@ class PublicProfile extends React.Component {
     );
 
     return (
-      <ThickPaddedBottom>
+      <ThickPaddedBottom id="public-profile-container">
         <div className="ui celled stackable grid container">
           <div className="row">
 
@@ -184,7 +192,7 @@ class PublicProfile extends React.Component {
             <div className="twelve wide column">
               <LocationSteps personal={user.personal} />
               <div className="ui center aligned segment">
-                <div className="ui horizontal divider">About Me:</div>
+                <div className="ui horizontal divider">Bio:</div>
                 <div className="ui segment">
                   {user.personal.bio}
                 </div>
@@ -209,13 +217,51 @@ class PublicProfile extends React.Component {
             : <FCCStatTables { ...this.state } username={user.username} fccCerts={user.fccCerts} /> }
         </div>
 
-        <div className="ui celled stackable grid container">
+        <div className="ui celled stackable center aligned grid container">
           <div className="row">
             <HeaderWrapper className="sixteen wide center aligned column">
               <h2 className="ui">Coding Profile <i className="code icon" /></h2>
             </HeaderWrapper>
           </div>
-          <CodeProfile career={user.career} skillsAndInterests={user.skillsAndInterests} />
+          <SkillsAndInterests skillsAndInterests={user.skillsAndInterests} />
+        </div>
+
+        <div className="ui celled stackable center aligned grid container">
+          <div className="row">
+            <HeaderWrapper className="sixteen wide center aligned column">
+              <h2 className="ui">Career <i className="suitcase icon" /></h2>
+            </HeaderWrapper>
+          </div>
+          <Career career={user.career} />
+        </div>
+
+        <div className="ui celled stackable center aligned grid container">
+          <div className="row">
+            <HeaderWrapper className="sixteen wide center aligned column">
+              <h2 className="ui">Mentorship <i className="student icon" /></h2>
+            </HeaderWrapper>
+          </div>
+
+          <div className="row">
+            <Table columnWidth="sixteen">
+              <TableRow
+                header="I am a freeCodeCamp Alumni Network Mentor"
+                content={ user.mentorship.isMentor
+                  ? <i title="I am a mentor" className="large green check mark icon"/>
+                : <i title="I am a member / mentee" className="large red remove icon"/> } />
+              </Table>
+
+            { user.mentorship.isMentor &&
+              <ColumnNoTopPadding className="sixteen wide center aligned column">
+              <div className="ui segment">
+                <div className="ui horizontal divider">Contact:</div>
+                For mentorship requests I can be reached by email at:
+                <a href={`mailto:${user.personal.email}?subject=fCC%20Alumni%20Network%20/%20Mentorship%20Request`}>{` ${user.personal.email}`}</a>
+                <div className="ui horizontal divider">Mentorship Skills:</div>
+                { user.mentorship.mentorshipSkills }
+              </div>
+            </ColumnNoTopPadding> }
+          </div>
         </div>
 
       </ThickPaddedBottom>
@@ -223,19 +269,33 @@ class PublicProfile extends React.Component {
   }
 }
 
+import { defaultUser } from '../../reducers/user';
+
 PublicProfile.propTypes = {
   user: React.PropTypes.object.isRequired
 }
 
 const findUser = (community, username) => {
-  return community.filter(user => (user.username === username) && user)[0];
+  return community ? community.filter(user =>
+    (user.username === username) && user)[0] : '';
 };
 
 const mapStateToProps = ({ community, publicProfileStats }, props) => {
   const { username } = props.match.params;
+  let initialState, user = '';
+  try {
+    initialState = publicProfileStats[username];
+  } catch (e) {
+    console.log(e)
+  }
+  try {
+    user = findUser(community.toJS(), username);
+  } catch (e) {
+    console.log(e)
+  }
   return {
-    initialState: publicProfileStats[username],
-    user: findUser(community.toJS(), username),
+    user: user ? user : defaultUser,
+    initialState
   }
 }
 

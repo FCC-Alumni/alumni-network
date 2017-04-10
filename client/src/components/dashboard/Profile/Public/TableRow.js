@@ -5,7 +5,7 @@ const TableRow = ({ icon, content, header }) => {
     <tr>
       <td>
         <h4 className="ui image header">
-          <i className={`${icon} icon`}/>
+          { icon &&  <i className={`${icon} icon`}/> }
           <div className="content">{header}</div>
         </h4>
       </td>
@@ -17,7 +17,7 @@ const TableRow = ({ icon, content, header }) => {
 }
 
 TableRow.propTypes = {
-  icon: React.PropTypes.string.isRequired,
+  icon: React.PropTypes.string,
   header: React.PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.element,
@@ -28,6 +28,10 @@ TableRow.propTypes = {
     React.PropTypes.element,
     React.PropTypes.number,
   ])
+}
+
+TableRow.defaultProps = {
+  icon: ''
 }
 
 export default TableRow;

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
+import { darkGreen } from '../styles/globalStyles';
 import { connectScreenSize } from 'react-screen-size';
 
 import { APP_HOST } from '../actions/chat';
@@ -29,7 +30,7 @@ class NavBar extends React.Component {
 
   render() {
     const guestNav = (
-      <div className="ui huge fixed stackable inverted borderless green menu">
+      <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
         <NavLink className="item" activeClassName="item active" exact to="/"><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</NavLink>
         <div className="right menu">
           <NavLink className="item" activeClassName="item active" exact to="/login">Login</NavLink>
@@ -40,10 +41,10 @@ class NavBar extends React.Component {
     const userNav = (
       <div>
         {!this.state.nav ?
-          <div className="ui huge fixed stackable inverted borderless green menu">
+          <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
             <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</div>
           </div> :
-          <div className="ui huge fixed stackable inverted borderless green menu">
+          <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
             <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</div>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard">Dashboard</NavLink>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/preferences">Profile</NavLink>

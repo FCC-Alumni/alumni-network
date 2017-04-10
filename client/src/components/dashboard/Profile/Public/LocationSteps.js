@@ -24,8 +24,8 @@ const Steps = ({ personal }) => {
           <CenterAlignedWrapper>
             <Flag
               target="_blank"
-              href={`https://wikipedia.org/wiki/${personal.country.replace(' ', '_')}`}
-              className={`flag-icon-background flag-icon-${personal.flag.replace(' ', '-')}`} />
+              href={`https://wikipedia.org/wiki/${personal.country && personal.country.replace(' ', '_')}`}
+              className={`flag-icon-background flag-icon-${personal.flag && personal.flag.replace(' ', '-')}`} />
           </CenterAlignedWrapper>
           <div className="description">{personal.country}</div>
         </div>

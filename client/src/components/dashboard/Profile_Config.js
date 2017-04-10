@@ -121,9 +121,16 @@ class Profile extends React.Component {
         user.career.company = '';
         user.career.working = 'no';
       }
-    } else if (e.target.name === 'jobSearch') {
+    }
+
+    if (e.target.name === 'jobSearch') {
       user.career.jobSearch = e.target.id.replace(/_/g, ' ');
     }
+
+    if (e.target.name === 'isMentee') {
+      user.mentorship.isMentee = e.target.id === 'Yes' ? true : false;
+    }
+
     this.setState({ user });
   }
 
@@ -322,6 +329,7 @@ class Profile extends React.Component {
             showPopUp={this.state.mentorshipPopUp}
             toggleMentorship={this.toggleMentorship}
             handleInputChange={this.handleInputChange}
+            handleRadioChange={this.handleRadioChange}
             showMentorship={this.state.viewState.showMentorship} />
 
           {/* Think about allowing additions by user to dropdowns */}

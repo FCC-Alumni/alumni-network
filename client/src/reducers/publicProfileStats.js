@@ -15,7 +15,7 @@ const defaultStats = {
   firstLoad: true,
 }
 
-export default (state = {}, action) => {
+export default (state = defaultStats, action) => {
   switch (action.type) {
 
     case POPULATE_DEFAULT_STATS:

@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+export const darkGreen = 'teal'; // semantic color reassignment
+
 export const CenterAlignedWrapper = styled.div`
   display: flex;
   flex-direction: row;

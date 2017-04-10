@@ -3,9 +3,9 @@ import {
   CenterAlignedWrapper
 } from '../../../../styles/globalStyles';
 
-const Table = ({ children }) => {
-  return(
-    <div className="eight wide middle aligned column">
+const Table = ({ children, columnWidth }) => {
+  return (
+    <div className={`${columnWidth} wide column`}>
       <CenterAlignedWrapper>
         <table className="ui very basic unstackable celled striped table">
           <tbody>
