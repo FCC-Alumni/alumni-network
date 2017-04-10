@@ -53,8 +53,8 @@ const Career = ({
           <div className="inline field">
             <label>For how long have you been a working software developer?</label>
             <Dropdown
-              defaultValue={tenure}
-              placeholder="≤ 5 years"
+              value={tenure}
+              placeholder="≤ 1 year"
               options={surveyOptions}
               onChange={handleTenureChange} />
           </div>
@@ -77,14 +77,22 @@ const Career = ({
               checked={jobSearch === 'Yes!' && true} />
             <RadioButton
               name="jobSearch"
-              label='Not quite ready'
+              label="No, I'm not quite ready"
               onChange={handleRadioChange}
-              checked={jobSearch === 'Not quite ready' && true} />
+              checked={jobSearch === "No, I'm not quite ready" && true} />
             <RadioButton
               name="jobSearch"
-              label='I am a hobbyist'
+              label='No, I am a hobbyist'
               onChange={handleRadioChange}
-              checked={jobSearch === 'I am a hobbyist' && true} />
+              checked={jobSearch === 'No, I am a hobbyist' && true} />
+          </div>
+          <div className="inline field">
+            <label>For how long have you been coding / learning to code?</label>
+            <Dropdown
+              placeholder="≤ 1 year"
+              options={surveyOptions}
+              value={tenure}
+              onChange={handleTenureChange} />
           </div>
         </div>
       </div>

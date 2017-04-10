@@ -20,6 +20,7 @@ const User = new Schema({
   fccCerts: Object,
   mentorship: {
     isMentor: { type: Boolean, default: false },
+    isMentee: { type: Boolean, default: false },
     mentorshipSkills: { type: String, default: '' },
   },
   skillsAndInterests: {

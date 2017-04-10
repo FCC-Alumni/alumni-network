@@ -29,7 +29,7 @@ const FccTables = ({
 }) => {
   return (
     <div className="row">
-      <Table>
+      <Table columnWidth="eight">
         <TableRow
           icon="desktop"
           header={ fccCerts.Front_End
@@ -65,7 +65,7 @@ const FccTables = ({
                 title="This value includes the total number of all projects, algorithms, and challenges combined." />
             </div> } />
       </Table>
-      <Table>
+      <Table columnWidth="eight">
         <TableRow
           icon="history"
           header="First Challenge Completed"

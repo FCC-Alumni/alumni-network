@@ -6,7 +6,7 @@ const TableRow = ({ icon, content, header }) => {
     <tr>
       <td>
         <h4 className="ui image header">
-          <i className={`${icon} icon`}/>
+          { icon &&  <i className={`${icon} icon`}/> }
           <div className="content">{header}</div>
         </h4>
       </td>
@@ -29,6 +29,10 @@ TableRow.propTypes = {
     propTypes.element,
     propTypes.number,
   ])
+}
+
+TableRow.defaultProps = {
+  icon: ''
 }
 
 export default TableRow;
