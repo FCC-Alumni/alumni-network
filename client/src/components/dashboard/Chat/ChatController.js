@@ -6,7 +6,7 @@ import { Route, NavLink } from 'react-router-dom';
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../../Navbar';
 import EmojiInput from './EmojiInput';
-import { List, Set } from 'immutable';
+import { List, Set, Map } from 'immutable';
 import ChatMessages from './Chat';
 import Modal from './ChatModal';
 import axios from 'axios';
@@ -264,16 +264,45 @@ export const findMentors = (community) => {
 const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, props) => {
   const { username } = props.match.params;
   if (username) {
+    /* This is all to account for this component mounting before the parent AppContainer
+       has finished fetching chat history from the server... (i.e. user refreshes on a
+       private chat route. This isn't ideal but the alternative is implement a lot of
+       loading state and conditional rendering in the components for all of the
+       dispatches for chat, community, private chat, etc.) For now this will do: ******/
+    let chat = List();
+    let conversantAvatar = '';
+    let totalNotifications = 0;
+    let mentors = Set();
+    try {
+      chat = privateChat.getIn([username, 'history']);
+    } catch(e) {
+      console.warn('Chat Controller waiting on props...');
+    }
+    try {
+      conversantAvatar = community.find(u => u.username === username).personal.avatarUrl;
+    } catch (e) {
+      console.warn('Chat Controller waiting on props...');
+    }
+    try {
+      totalNotifications = privateChat.reduce((t,c) => t + c.get('notifications'), 0);
+    } catch (e) {
+      console.warn('Chat Controller waiting on props...');
+    }
+    try {
+      mentors = findMentors(community);
+    } catch(e) {
+      console.warn('Chat Controller waiting on props...');
+    }
     return {
       user,
+      mentors,
       onlineStatus,
+      conversantAvatar,
+      totalNotifications,
       conversant: username,
       community: community,
       privateChat: privateChat,
-      mentors: findMentors(community),
-      chat: privateChat.getIn([username, 'history']),
-      totalNotifications: privateChat.reduce((t,c) => t + c.get('notifications'), 0),
-      conversantAvatar: community.find(u => u.username === username).personal.avatarUrl
+      chat: chat ? chat : List()
     }
   } else {
     return {
