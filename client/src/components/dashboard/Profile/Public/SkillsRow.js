@@ -20,7 +20,7 @@ const LabelDark = styled.div`
   }
 `;
 
-const Header = styled.div`
+export const Header = styled.div`
   background: #939393 !important;
   color: white !important;
   margin-bottom: 5px !important;

@@ -15,6 +15,7 @@ const Mentorship = ({
   showMentorship,
   mentorshipSkills,
   toggleMentorship,
+  toggleMenteeship,
   handleInputChange,
   handleRadioChange,
 }) => {
@@ -36,34 +37,23 @@ const Mentorship = ({
         <SliderToggle
           defaultOn={isMentor ? true : false}
           saveStateToParent={toggleMentorship}
-          label="Sign me up! I want to be a mentor!" />
-        <div className={`ui six wide field mentorshipSkillsPane ${isMentor ? 'show' : 'hide'}`}>
-          <label>Mentorship Skills</label>
+          label="I would like to be a mentor." />
+        <SliderToggle
+          defaultOn={isMentee ? true : false}
+          saveStateToParent={toggleMenteeship}
+          label="I would like to be mentored." />
+        <div className={`ui six wide field mentorshipSkillsPane ${isMentor || isMentee ? 'show' : 'hide'}`}>
+          <label>Mentorship Bio</label>
           <textarea
             rows="3"
             name="mentorshipSkills"
             value={mentorshipSkills}
             onChange={handleInputChange}
-            placeholder="Please provide a short description of the skills you feel comfortable providing mentorship for." />
+            placeholder="Please provide a short description of the skills you feel comfortable providing mentorship for and / or the areas you are looking for mentorship in." />
           { error &&
             <div style={{ marginTop: 10 }} className="ui red basic label">
               {error}
             </div> }
-        </div>
-        <div className={`ui eight wide field mentorshipSkillsPane ${isMentor ? 'hide' : 'show'}`}>
-          <div className="inline fields">
-            <label>Are you open to being mentored by other users?</label>
-            <RadioButton
-              label='Yes'
-              name="isMentee"
-              onChange={handleRadioChange}
-              checked={isMentee && true} />
-            <RadioButton
-              label='No'
-              name="isMentee"
-              onChange={handleRadioChange}
-              checked={!isMentee && true}  />
-          </div>
         </div>
       </form>
     </div>
@@ -78,6 +68,7 @@ Mentorship.propTypes = {
   subSaveClick: propTypes.func.isRequired,
   showMentorship: propTypes.bool.isRequired,
   toggleMentorship: propTypes.func.isRequired,
+  toggleMenteeship: propTypes.func.isRequired,
   handleInputChange: propTypes.func.isRequired,
   mentorshipSkills: propTypes.string.isRequired,
 }

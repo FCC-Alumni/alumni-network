@@ -2,10 +2,12 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import UserLabel from '../common/UserLabel';
+import { Header } from './Profile/Public/SkillsRow';
 import LocationSteps from './Profile/Public/LocationSteps';
 import { ThickPaddedBottom } from '../../styles/globalStyles';
 import SkillsAndInterests from './Profile/Public/SkillsRow';
 import TableRow from '../dashboard/Profile/Public/TableRow';
+import { SocialIcon } from './Profile/Public/SocialList';
 import { saveProfileStats } from '../../actions/views';
 import FCCStatTables from './Profile/Public/FCCTables';
 import Table from '../dashboard/Profile/Public/Table';
@@ -27,8 +29,10 @@ const Loader = styled.div`
   padding-bottom:  !important;
 `;
 
-const ColumnNoTopPadding = styled.div`
-  padding-top: 0 !important;
+const A = styled.a`
+  color: black !important;
+  font-weight: bold;
+  margin-left: 5px;
 `;
 
 class PublicProfile extends React.Component {
@@ -41,7 +45,10 @@ class PublicProfile extends React.Component {
   }
 
   componentDidMount() {
-    document.body.scrollTop = 0;
+    // document.body.scrollTop = 0;
+    // *** *** *** *** *** *** *** *** *** ***
+    //                    ==> UNCOMMENT WHEN DONE WORKING ON COMPONENT <==
+    // *** *** *** *** *** *** *** *** *** ***
     if (this.state.firstLoad) {
       this.longestStreak();
       this.currentStreak();
@@ -51,6 +58,20 @@ class PublicProfile extends React.Component {
       this.setState({
         firstLoad: false
       });
+    }
+  }
+
+  componentDidUpdate() {
+    // dynamically determine height of div with less content
+    // & keep side by side divs equal height to keep ui clean
+    const bioDiv = document.getElementById('mentorshipBioDiv');
+    const contactDiv = document.getElementById('contactDiv');
+    const bioHeight = bioDiv && window.getComputedStyle(bioDiv).getPropertyValue('height');
+    const contactHeight = contactDiv && window.getComputedStyle(contactDiv).getPropertyValue('height');
+    if (parseInt(bioHeight) > parseInt(contactHeight)) {
+      this.dynamicHeight = bioHeight;
+    } else {
+      this.dynamicHeight = contactHeight;
     }
   }
 
@@ -173,11 +194,17 @@ class PublicProfile extends React.Component {
       </Loader>
     );
 
+    // dynamically set height of divs per CDM logic
+    const DynamicHeightDiv = styled.div`
+      height: ${ this.dynamicHeight }
+    `;
+
     return (
       <ThickPaddedBottom id="public-profile-container">
+
+        {/* AVATAR & INTRO */}
         <div className="ui celled stackable grid container">
           <div className="row">
-
             <div className="four wide center aligned column">
               <img
                 src={user.personal.avatarUrl}
@@ -189,7 +216,6 @@ class PublicProfile extends React.Component {
                 username={user.username}
                 label={user.mentorship.isMentor ? "Mentor" : "Member"}/>
             </div>
-
             <div className="twelve wide column">
               <LocationSteps personal={user.personal} />
               <div className="ui center aligned segment">
@@ -198,19 +224,21 @@ class PublicProfile extends React.Component {
                   {user.personal.bio}
                 </div>
               </div>
-              <SocialList
-                social={user.social}
-                username={user.username}
-                profileUrl={user.personal.profileUrl} />
+              <div className="ui center aligned segment">
+                <SocialList
+                  social={user.social}
+                  username={user.username}
+                  profileUrl={user.personal.profileUrl} />
+              </div>
             </div>
-
           </div>
         </div>
 
+        {/* FCC PROFILE */}
         <div className="ui celled stackable grid container">
           <div className="row">
             <HeaderWrapper className="sixteen wide center aligned column">
-              <h2 className="ui">freeCodeCamp <i className="fa fa-free-code-camp" /></h2>
+              <h2 className="ui">freeCodeCamp Profile <i className="fa fa-free-code-camp" /></h2>
             </HeaderWrapper>
           </div>
           { this.isLoading()
@@ -218,6 +246,7 @@ class PublicProfile extends React.Component {
             : <FCCStatTables { ...this.state } username={user.username} fccCerts={user.fccCerts} /> }
         </div>
 
+        {/* CODING PROFILE */}
         <div className="ui celled stackable center aligned grid container">
           <div className="row">
             <HeaderWrapper className="sixteen wide center aligned column">
@@ -227,6 +256,7 @@ class PublicProfile extends React.Component {
           <SkillsAndInterests skillsAndInterests={user.skillsAndInterests} />
         </div>
 
+        {/* CAREER */}
         <div className="ui celled stackable center aligned grid container">
           <div className="row">
             <HeaderWrapper className="sixteen wide center aligned column">
@@ -236,32 +266,50 @@ class PublicProfile extends React.Component {
           <Career career={user.career} />
         </div>
 
+        {/* MENTORSHIP */}
         <div className="ui celled stackable center aligned grid container">
           <div className="row">
             <HeaderWrapper className="sixteen wide center aligned column">
               <h2 className="ui">Mentorship <i className="student icon" /></h2>
             </HeaderWrapper>
           </div>
-
           <div className="row">
             <Table columnWidth="sixteen">
               <TableRow
                 header="I am a freeCodeCamp Alumni Network Mentor"
                 content={ user.mentorship.isMentor
-                  ? <i title="I am a mentor" className="large green check mark icon"/>
-                : <i title="I am a member / mentee" className="large red remove icon"/> } />
-              </Table>
-
-            { user.mentorship.isMentor &&
-              <ColumnNoTopPadding className="sixteen wide center aligned column">
-              <div className="ui segment">
-                <div className="ui horizontal divider">Contact:</div>
-                For mentorship requests I can be reached by email at:
-                <a href={`mailto:${user.personal.email}?subject=fCC%20Alumni%20Network%20/%20Mentorship%20Request`}>{` ${user.personal.email}`}</a>
-                <div className="ui horizontal divider">Mentorship Skills:</div>
+                  ? <i className="large green check mark icon"/>
+                  : <i className="large red remove icon"/> } />
+              <TableRow
+                header="I am open to being Mentored by other Members"
+                content={ user.mentorship.isMentee
+                  ? <i className="large green check mark icon"/>
+                  : <i className="large red remove icon"/> } />
+            </Table>
+          </div>
+          <div className="row">
+          { user.mentorship.mentorshipSkills &&
+            <div className="eight wide center aligned column">
+              <Header className="ui top attached header">
+                Mentorship Bio
+              </Header>
+              <DynamicHeightDiv id="mentorshipBioDiv" className="ui attached segment">
                 { user.mentorship.mentorshipSkills }
-              </div>
-            </ColumnNoTopPadding> }
+              </DynamicHeightDiv>
+            </div> }
+            <div className={`${user.mentorship.mentorshipSkills ? 'eight' : 'sixteen'} wide center aligned column`}>
+              <Header className="ui top attached header">
+                Contact for Mentorship & Other Requests
+              </Header>
+              <DynamicHeightDiv id="contactDiv" className="ui attached segment">
+                <SocialList
+                  contactsOnly={true}
+                  social={user.social}
+                  username={user.username}
+                  email={user.personal.email}
+                  profileUrl={user.personal.profileUrl} />
+              </DynamicHeightDiv>
+            </div>
           </div>
         </div>
 

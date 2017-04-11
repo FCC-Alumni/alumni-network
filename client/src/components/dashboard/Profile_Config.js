@@ -19,15 +19,17 @@ import Validator from 'validator';
 
 /*
 TODO:
-  - MENTORSHIP: Looking for mentorship? If so, in what? Add new sliderToggle and textarea to accomodate - would need to modify user model
+  - MENTORSHIP / VALIDATION: Require mentorship bio if either slider is toggled!
   - MENTORSHIP: Revisit copy! Some of this info should be moved to the "about us" public page.
-  - we need to look at how users enter location (should have zip code or somehting and get location name by API - for D3 map as well!)
+  - PERSONAL: Add info icon to email field, saying email will be publicly displayed if you provide it
   - add title and description fields for sharing repos
   - add error popup and modal for error on save
   - folder icon behavior - open when any field expanded
   - add validations for form fields - should be loose validations since nothing is strictly required
-  - use passport to pull in LinkedIn and Twitter handles
   - error handling if save to server fails?
+  - use passport to pull in LinkedIn and Twitter handles √
+  - we need to look at how users enter location (should have zip code or somehting and get location name by API - for D3 map as well!) √
+  - MENTORSHIP: Looking for mentorship? If so, in what? Add new sliderToggle √
   - save individual section √
   - save all √
   - connect to DB √
@@ -86,6 +88,12 @@ class Profile extends React.Component {
     this.setState({ user });
   }
 
+  toggleMenteeship = (bool) => {
+    var { user } = this.state;
+    user.mentorship.isMentee = bool;
+    this.setState({ user });
+  }
+
   handleSkillsChange = (e, data) => {
     var { user } = this.state;
     user.skillsAndInterests.coreSkills = data.value;
@@ -126,10 +134,6 @@ class Profile extends React.Component {
 
     if (e.target.name === 'jobSearch') {
       user.career.jobSearch = e.target.id.replace(/_/g, ' ');
-    }
-
-    if (e.target.name === 'isMentee') {
-      user.mentorship.isMentee = e.target.id === 'Yes' ? true : false;
     }
 
     this.setState({ user });
@@ -185,12 +189,12 @@ class Profile extends React.Component {
       }
     }
     if (field === 'mentorshipSkills') {
-      if (Validator.isLength(str, { min: 0, max: 165 })) {
+      if (Validator.isLength(str, { min: 0, max: 200 })) {
         errors.mentorshipSkills = '';
         this.setState({ errors });
         return true;
       } else {
-        errors.mentorshipSkills = "Mentorshio bio must be 150 characters or less."
+        errors.mentorshipSkills = "Mentorshio bio must be 200 characters or less."
         this.setState({ errors });
         return false;
       }
@@ -329,6 +333,7 @@ class Profile extends React.Component {
             subSaveClick={this.handleSubSaveClick}
             showPopUp={this.state.mentorshipPopUp}
             toggleMentorship={this.toggleMentorship}
+            toggleMenteeship={this.toggleMenteeship}
             handleInputChange={this.handleInputChange}
             handleRadioChange={this.handleRadioChange}
             showMentorship={this.state.viewState.showMentorship} />
