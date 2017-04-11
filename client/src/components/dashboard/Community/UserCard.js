@@ -49,12 +49,6 @@ class UserCard extends React.Component {
     const { user, screen } = this.props;
     const joinedOn = user.personal.memberSince.split('-').slice(0, 2);
     const prettyDate = convertMonthToString(...joinedOn);
-    var certs = [];
-    for (var cert in user.fccCerts) {
-      if (user.fccCerts[cert]) {
-        certs.push(cert.replace(/_/g, ' '));
-      }
-    }
 
     return (
       <ClickableCard onClick={() => { this.handleClick(user) }} className='ui raised card'>

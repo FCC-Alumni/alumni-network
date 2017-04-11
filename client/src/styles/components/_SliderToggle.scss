@@ -27,7 +27,7 @@
     }
     &:before {
       content: 'ON';
-      color: #007E00;
+      color: lighten(#006400, 60%);
       position: absolute;
       left: 10px;
       z-index: 0;
@@ -48,4 +48,8 @@
       box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
     }
   }
+}
+
+.slider-toggle-container:nth-of-type(3) {
+  margin: 5px 0 0 0;
 }
