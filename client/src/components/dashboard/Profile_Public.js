@@ -2,9 +2,10 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import UserLabel from '../common/UserLabel';
-import { Header } from './Profile/Public/SkillsRow';
+import { SubHeader } from './Profile/Public/SkillsRow';
 import LocationSteps from './Profile/Public/LocationSteps';
-import { ThickPaddedBottom } from '../../styles/globalStyles';
+import { ThickPaddedBottom, StyledItem, extendCenterAlignedWrapper } from '../../styles/globalStyles';
+import MainHeader from '../dashboard/Profile/Public/ProfileHeader';
 import SkillsAndInterests from './Profile/Public/SkillsRow';
 import TableRow from '../dashboard/Profile/Public/TableRow';
 import { SocialIcon } from './Profile/Public/SocialList';
@@ -19,20 +20,22 @@ import axios from 'axios';
 
 const ERROR = "Sorry, we encountered an error.";
 
-const HeaderWrapper = styled.div`
-  background-color: #006400 !important;
-  color: white;
-`;
-
 const Loader = styled.div`
   height: 200px !important;
   padding-bottom:  !important;
 `;
 
-const A = styled.a`
+const OneColumnRepoList = styled.div`
+  margin-top: 0 !important;
+  margin-bottom: 14px !important;
+`;
+
+const CenteredList = styled.div`
+  ${ extendCenterAlignedWrapper() }
+`;
+
+const A = styled.div`
   color: black !important;
-  font-weight: bold;
-  margin-left: 5px;
 `;
 
 class PublicProfile extends React.Component {
@@ -68,7 +71,7 @@ class PublicProfile extends React.Component {
     const contactDiv = document.getElementById('contactDiv');
     const bioHeight = bioDiv && window.getComputedStyle(bioDiv).getPropertyValue('height');
     const contactHeight = contactDiv && window.getComputedStyle(contactDiv).getPropertyValue('height');
-    if (parseInt(bioHeight) > parseInt(contactHeight)) {
+    if (parseInt(bioHeight, 10) > parseInt(contactHeight, 10)) {
       this.dynamicHeight = bioHeight;
     } else {
       this.dynamicHeight = contactHeight;
@@ -185,8 +188,21 @@ class PublicProfile extends React.Component {
     }
   }
 
+  mapRepoList = (array) => {
+    return array.map(project => {
+      return (
+        <StyledItem href={project.label + project.item} target="_blank" key={project.item} className="item">
+          <i className={`${project.label.slice(8, -5)} large icon`} />
+          <div className="content">
+            { project.label + project.item }
+          </div>
+        </StyledItem>
+      )
+    });
+  }
+
   render() {
-    const {user} = this.props;
+    const { user } = this.props;
 
     const loader = (
       <Loader className="ui active inverted dimmer">
@@ -198,6 +214,12 @@ class PublicProfile extends React.Component {
     const DynamicHeightDiv = styled.div`
       height: ${ this.dynamicHeight }
     `;
+
+    if (user.projects.length > 3) {
+      const sliceAt = Math.ceil(user.projects.length / 2);
+      this.projectColumnA = user.projects.slice(0, sliceAt);
+      this.projectColumnB = user.projects.slice(sliceAt);
+    }
 
     return (
       <ThickPaddedBottom id="public-profile-container">
@@ -236,71 +258,53 @@ class PublicProfile extends React.Component {
 
         {/* FCC PROFILE */}
         <div className="ui celled stackable grid container">
-          <div className="row">
-            <HeaderWrapper className="sixteen wide center aligned column">
-              <h2 className="ui">freeCodeCamp Profile <i className="fa fa-free-code-camp" /></h2>
-            </HeaderWrapper>
-          </div>
-          { this.isLoading()
-            ? <div style={{ marginBottom: 200 }} className="row">{loader}</div>
-            : <FCCStatTables { ...this.state } username={user.username} fccCerts={user.fccCerts} /> }
+          <MainHeader text="freeCodeCamp Profile" icon="fa fa-free-code-camp" />
+        { this.isLoading()
+          ? <div style={{ marginBottom: 200 }} className="row">{loader}</div>
+          : <FCCStatTables { ...this.state } username={user.username} fccCerts={user.fccCerts} /> }
         </div>
 
         {/* CODING PROFILE */}
         <div className="ui celled stackable center aligned grid container">
-          <div className="row">
-            <HeaderWrapper className="sixteen wide center aligned column">
-              <h2 className="ui">Coding Profile <i className="code icon" /></h2>
-            </HeaderWrapper>
-          </div>
+          <MainHeader text="Coding Profile" icon="code" />
           <SkillsAndInterests skillsAndInterests={user.skillsAndInterests} />
         </div>
 
         {/* CAREER */}
         <div className="ui celled stackable center aligned grid container">
-          <div className="row">
-            <HeaderWrapper className="sixteen wide center aligned column">
-              <h2 className="ui">Career <i className="suitcase icon" /></h2>
-            </HeaderWrapper>
-          </div>
+          <MainHeader text="Career" icon="suitcase" />
           <Career career={user.career} />
         </div>
 
         {/* MENTORSHIP */}
         <div className="ui celled stackable center aligned grid container">
-          <div className="row">
-            <HeaderWrapper className="sixteen wide center aligned column">
-              <h2 className="ui">Mentorship <i className="student icon" /></h2>
-            </HeaderWrapper>
-          </div>
-          <div className="row">
-            <Table columnWidth="sixteen">
-              <TableRow
-                header="I am a freeCodeCamp Alumni Network Mentor"
-                content={ user.mentorship.isMentor
-                  ? <i className="large green check mark icon"/>
-                  : <i className="large red remove icon"/> } />
-              <TableRow
-                header="I am open to being Mentored by other Members"
-                content={ user.mentorship.isMentee
-                  ? <i className="large green check mark icon"/>
-                  : <i className="large red remove icon"/> } />
-            </Table>
-          </div>
+          <MainHeader text="Mentorship" icon="student" />
+          <Table columnWidth="sixteen">
+            <TableRow
+              header="I am a freeCodeCamp Alumni Network Mentor"
+              content={ user.mentorship.isMentor
+                ? <i className="large green check mark icon"/>
+                : <i className="large red remove icon"/> } />
+            <TableRow
+              header="I am open to being Mentored by other Members"
+              content={ user.mentorship.isMentee
+                ? <i className="large green check mark icon"/>
+                : <i className="large red remove icon"/> } />
+          </Table>
           <div className="row">
           { user.mentorship.mentorshipSkills &&
             <div className="eight wide center aligned column">
-              <Header className="ui top attached header">
+              <SubHeader className="ui top attached header">
                 Mentorship Bio
-              </Header>
+              </SubHeader>
               <DynamicHeightDiv id="mentorshipBioDiv" className="ui attached segment">
                 { user.mentorship.mentorshipSkills }
               </DynamicHeightDiv>
             </div> }
             <div className={`${user.mentorship.mentorshipSkills ? 'eight' : 'sixteen'} wide center aligned column`}>
-              <Header className="ui top attached header">
+              <SubHeader className="ui top attached header">
                 Contact for Mentorship & Other Requests
-              </Header>
+              </SubHeader>
               <DynamicHeightDiv id="contactDiv" className="ui attached segment">
                 <SocialList
                   contactsOnly={true}
@@ -312,6 +316,34 @@ class PublicProfile extends React.Component {
             </div>
           </div>
         </div>
+
+        {/* COLLABORATION */}
+        { user.projects.length &&
+        <div className="ui celled stackable center aligned grid container">
+          <MainHeader text="Collaboration" icon="users" />
+          <div className="sixteen wide column">
+            <div className="ui segment">
+              <i className="large info circle icon" />
+              The following open source projects are projects that {<strong>{ user.username }</strong>} either contributes to or is the owner of. If they are posted here, these projects welcome other open source contributions. Visit the repos, check out the projects, and start collaborating! Please remember to be respectful, and to carefully read any contribution guidelines before opening an issue or making a PR. Happy coding!
+            </div>
+          </div>
+        { user.projects.length <= 3
+        ? <OneColumnRepoList className="ui middle aligned selection list">
+            { this.mapRepoList(user.projects) }
+          </OneColumnRepoList>
+        : <div className="row">
+            <div className="eight wide column">
+              <div className="ui middle aligned selection list">
+                { this.mapRepoList(this.projectColumnA) }
+              </div>
+            </div>
+            <div className="eight wide column">
+              <div className="ui middle aligned selection list">
+                { this.mapRepoList(this.projectColumnB) }
+              </div>
+            </div>
+          </div> }
+        </div> }
 
       </ThickPaddedBottom>
     );

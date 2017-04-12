@@ -1,13 +1,13 @@
 import React from 'react';
-import ListItem from '../../common/ListItem';
-import Ribbon from './common/RibbonHeader';
 import styled from 'styled-components';
+import Ribbon from './common/RibbonHeader';
+import ListItem from '../../common/ListItem';
 
 const Item = styled.h5`
   margin-top: 2px !important;
 `;
 
-const Certifications = ({ toggle, fccCerts, subSaveClick, showPopUp, showFCC }) => {
+const Certifications = ({ toggle, fccCerts, showPopUp, showFCC }) => {
   var certs = [];
   for (var cert in fccCerts) {
     if (fccCerts[cert]) {
@@ -26,12 +26,11 @@ const Certifications = ({ toggle, fccCerts, subSaveClick, showPopUp, showFCC }) 
   return (
     <div>
       <Ribbon
-        showPopUp={showPopUp}
         id="fccPopUp"
-        showSave={showFCC}
-        subSaveClick={subSaveClick}
-        content="freeCodeCamp Certifications"
+        showSave={false}
+        showPopUp={showPopUp}
         wrapperClass="fccWrapper"
+        content="freeCodeCamp Certifications"
         onClick={() => { toggle('showFCC')}} />
       <div className={`ui list fccPane ${showFCC ? 'show' : 'hide'}`}>
         {certificates}

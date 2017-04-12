@@ -14,11 +14,27 @@ export const ThickPaddedBottom = styled.div`
 
 export const extendCenterAlignedWrapper = () => {
   return `
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
   `;
 }
+
+export const StyledItem = styled.a`
+  color: black !important;
+  font-weight: bold !important;
+  .icon {
+    color: black !important;
+  }
+  cursor: pointer;
+  &:hover {
+    background: #E0E0E0 !important;
+    .fa,
+    .icon {
+      color: #FF4025 !important;
+    }
+  }
+`;
 
 export const hoverTransition = () => {
   return  `

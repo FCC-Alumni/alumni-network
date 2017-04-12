@@ -323,7 +323,6 @@ class Profile extends React.Component {
             toggle={this.toggle}
             showPopUp={this.state.fccPopUp}
             fccCerts={this.state.user.fccCerts}
-            subSaveClick={this.handleSubSaveClick}
             showFCC={this.state.viewState.showFCC} />
 
           <Mentorship

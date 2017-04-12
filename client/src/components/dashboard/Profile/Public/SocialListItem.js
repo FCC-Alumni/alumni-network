@@ -1,35 +1,40 @@
 import React from 'react';
 import styled from 'styled-components';
-import { hoverTransition } from '../../../../styles/globalStyles';
+import { hoverTransition, StyledItem } from '../../../../styles/globalStyles';
+// import { Item } from '../../Profile_Public';
 
 export const SocialIcon = styled.i`
   font-size: 22px !important;
   color: black !important;
-  ${ hoverTransition() }
 `;
 
 const FCCIcon = styled.i`
-font-size: 20px !important;
-color: black !important;
-padding: 0 .75em 0 0 !important;
-vertical-align: middle !important;
-${ hoverTransition() }
+  font-size: 20px !important;
+  color: black !important;
+  padding: 0 .75em 0 0 !important;
+  vertical-align: middle !important;
 `;
 
 const InlineContent = styled.div`
   display: inline-block !important;
 `;
 
+const Item = styled(StyledItem)`
+  &:hover {
+    background: white !important;
+  }
+`;
+
 const SocialListItem = ({ href, icon, text }) => {
   return (
-    <a href={href} className="item">
+    <Item href={href} className="item">
       { icon === 'fcc'
         ? <FCCIcon className="fa fa-free-code-camp" />
         : <SocialIcon className={`${icon} icon`} /> }
       <InlineContent className="content">
         <div className="header">{text}</div>
       </InlineContent>
-    </a>
+    </Item>
   );
 }
 

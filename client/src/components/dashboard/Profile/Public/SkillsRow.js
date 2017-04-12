@@ -20,7 +20,7 @@ const LabelDark = styled.div`
   }
 `;
 
-export const Header = styled.div`
+export const SubHeader = styled.div`
   background: #939393 !important;
   color: white !important;
   margin-bottom: 5px !important;
@@ -30,9 +30,9 @@ const SkillsRow = ({ skillsAndInterests }) => {
   return (
     <div className="row">
       <div className="eight wide center aligned column">
-        <Header className="ui top attached header">
+        <SubHeader className="ui top attached header">
           Core Skills
-        </Header>
+        </SubHeader>
         { skillsAndInterests.coreSkills && skillsAndInterests.coreSkills.map((skill, i) =>
           i % 2 === 0
           ? <a
@@ -51,9 +51,9 @@ const SkillsRow = ({ skillsAndInterests }) => {
             </a> )}
       </div>
       <div className="eight wide center aligned column">
-        <Header className="ui top attached header">
+        <SubHeader className="ui top attached header">
           Coding Interests
-        </Header>
+        </SubHeader>
         { skillsAndInterests.codingInterests && skillsAndInterests.codingInterests.map((interest, i) =>
           i % 2 === 0
           ? <a
