@@ -17,13 +17,17 @@ const ChatIcon = styled.i`
   margin-bottom: 2px !important;
 `;
 
+const IMG = styled.img`
+  border-radius: 100px !important;
+`;
+
 const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults }) => {
 
   const listResults = results.map(user => {
     return (
       <ResultItem key={user._id} className="item">
-        <div className="ui tiny circular image">
-          <img src={user.personal.avatarUrl} alt={`${user.username}'s avatar`}/>
+        <div className="ui tiny image">
+          <IMG src={user.personal.avatarUrl} alt={`${user.username}'s avatar`}/>
         </div>
         <div className="content">
           <div className="header">{user.username}</div>
