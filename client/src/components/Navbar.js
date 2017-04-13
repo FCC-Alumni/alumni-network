@@ -12,6 +12,11 @@ const Logo = styled.img`
   margin-right: 10px !important;
 `;
 
+const MenuRight = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 class NavBar extends React.Component {
   state = {
     nav: this.props.screen.isDesktop
@@ -34,7 +39,10 @@ class NavBar extends React.Component {
       <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
         <NavLink className="item" activeClassName="item active" exact to="/"><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</NavLink>
         <div className="right menu">
-          <NavLink className="item" activeClassName="item active" exact to="/login">Login</NavLink>
+          <MenuRight>
+            <NavLink className="item" activeClassName="item active" exact to="/about">About</NavLink>
+            <NavLink className="item" activeClassName="item active" exact to="/login">Login</NavLink>
+          </MenuRight>
         </div>
       </div>
     );
