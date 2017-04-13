@@ -1,13 +1,14 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { socket } from '../actions/chat';
 import { populateCommunity } from '../actions/community';
 import { populateChat, fetchPrivateChat } from '../actions/chat';
 import { saveUser, getUserData, logoutUser } from '../actions/user';
 import { addFlashMessage, clearFlashMessage } from '../actions/flashMessages';
 
+import { CatchAll } from '../App';
 import Landing from './dashboard/Landing';
 import Community from './dashboard/Community';
 import Mentorship from './dashboard/Mentorship';
@@ -67,7 +68,7 @@ class AppContainer extends React.Component {
     return (
       <div id="appContainer">
         { this.props.username &&
-          <div>
+          <Switch>
             <Route exact path={`${url}/`} component={Landing}/>
             <Route exact path={`${url}/preferences`} component={Profile_Config}/>
             <Route exact path={`${url}/profile/:username`} component={Profile_Public}/>
@@ -75,8 +76,8 @@ class AppContainer extends React.Component {
             <Route exact path={`${url}/mentorship`} component={Mentorship}/>
             <Route exact path={`${url}/chat`} component={Chat}/>
             <Route exact path={`${url}/chat/:username`} component={Chat}/>
-          </div>
-        }
+            <Route component={CatchAll} />
+          </Switch> }
       </div>
     );
   }
