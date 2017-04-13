@@ -11,6 +11,7 @@ import { saveSearchState } from '../../actions/views';
 import { initiatePrivateChat } from '../../actions/chat';
 import { filterOptions } from '../../assets/data/mapArrays';
 import { searchTypes } from '../../assets/data/dropdownOptions';
+
 import {
   transitionIn,
   transitionOut,

@@ -50,7 +50,7 @@ const PersonalInfo = ({
               tooltip="Display Name"
               inputOptions={inputOptions}
               onChange={handleInputChange}
-              placeholder="Enter Display Name..." />
+              placeholder="Enter Display Name" />
           </ListItem>
           <ListItem>
             <FormField
@@ -61,7 +61,7 @@ const PersonalInfo = ({
               errors={errors}
               icon="mail icon"
               inputOptions={inputOptions}
-              placeholder="Enter Email..."
+              placeholder="Enter Email"
               onChange={handleInputChange} />
           </ListItem>
           <ListItem>
@@ -73,7 +73,7 @@ const PersonalInfo = ({
               icon="marker icon"
               inputOptions={inputOptions}
               onChange={handleInputChange}
-              placeholder="Enter Location..." />
+              placeholder="Enter City / State" />
           </ListItem>
           <ListItem>
             <div className="six wide field">

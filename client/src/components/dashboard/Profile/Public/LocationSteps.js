@@ -23,12 +23,14 @@ const Steps = ({ personal }) => {
       <div className="step">
         <div className="content">
           <CenterAlignedWrapper>
-            <Flag
+            { personal.country
+            ? <Flag
               target="_blank"
               href={`https://wikipedia.org/wiki/${personal.country && personal.country.replace(' ', '_')}`}
               className={`flag-icon-background flag-icon-${personal.flag && personal.flag.replace(' ', '-')}`} />
+            : <div className="title"><i className="large help icon" /></div> }
           </CenterAlignedWrapper>
-          <div className="description">{personal.country}</div>
+          <div className="description">{personal.country && personal.country}</div>
         </div>
       </div>
       <div className="step">
@@ -39,7 +41,9 @@ const Steps = ({ personal }) => {
       </div>
       <div className="step">
         <div className="content">
-          <div className="title">{personal.location}</div>
+          <CenterAlignedWrapper>
+            <div className="title">{personal.location ? personal.location : <i className="large help icon" />}</div>
+          </CenterAlignedWrapper>
         </div>
       </div>
     </div>

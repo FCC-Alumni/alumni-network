@@ -19,6 +19,7 @@ const A = styled.a`
 `;
 
 const FccTables = ({
+  width,
   fccCerts,
   username,
   longestStreak,
@@ -29,7 +30,7 @@ const FccTables = ({
 }) => {
   return (
     <div className="row">
-      <Table columnWidth="eight">
+      <Table columnWidth={width}>
         <TableRow
           icon="desktop"
           header={ fccCerts.Front_End
@@ -65,7 +66,7 @@ const FccTables = ({
                 title="This value includes the total number of all projects, algorithms, and challenges combined." />
             </div> } />
       </Table>
-      <Table columnWidth="eight">
+      <Table columnWidth={width}>
         <TableRow
           icon="history"
           header="First Challenge Completed"
@@ -88,6 +89,7 @@ const FccTables = ({
 }
 
 FccTables.propTypes = {
+  width: propTypes.string.isRequired,
   fccCerts: propTypes.object.isRequired,
   longestStreak: propTypes.string.isRequired,
   currentStreak: propTypes.string.isRequired,
