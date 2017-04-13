@@ -167,7 +167,7 @@ class ChatController extends React.Component {
         <Modal size="large" open={this.state.modal} close={this.toggleModal} />
         <div>
           <div className="ui comments">
-            <h2 className="ui dividing header">
+            <h2 className="ui dividing header" style={ !screen.isDesktop ? { width: '200px' } : null }>
 
             {conversant ?
 
