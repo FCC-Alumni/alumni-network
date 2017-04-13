@@ -369,7 +369,7 @@ export const deleteMessage = (id, conversant, author) => {
       }
   } else {
     return dispatch => {
-      return axios.post('/api/chat-delete-message', id)
+      return axios.post('/api/chat-delete-message', { id })
         .then(res => {
           socket.emit('delete-message', id);
           dispatch({

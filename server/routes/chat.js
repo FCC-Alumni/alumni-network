@@ -85,11 +85,12 @@ router.post('/api/chat-like-message', isAuthenticated, (req, res ) => {
 });
 
 router.post('/api/chat-delete-message', isAuthenticated, (req, res) => {
+  const { id } = req.body;
   Chat.findOne({}, (err, chat) => {
     if (err) res.sendStatus(500);
     if (chat) {
       chat.history = chat.history.filter(m => {
-        return (m.id !== req.body);
+        return (m.id !== id);
       });
       chat.save(e => {
         if (e) res.sendStatus(500);
