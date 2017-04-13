@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { hoverTransition, StyledItem } from '../../../../styles/globalStyles';
+import { StyledItem } from '../../../../styles/globalStyles';
 // import { Item } from '../../Profile_Public';
 
 export const SocialIcon = styled.i`

@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import UserLabel from '../common/UserLabel';
 import { SubHeader } from './Profile/Public/SkillsRow';
 import LocationSteps from './Profile/Public/LocationSteps';
-import { ThickPaddedBottom, StyledItem, extendCenterAlignedWrapper } from '../../styles/globalStyles';
+import { ThickPaddedBottom, StyledItem } from '../../styles/globalStyles';
 import MainHeader from '../dashboard/Profile/Public/ProfileHeader';
 import SkillsAndInterests from './Profile/Public/SkillsRow';
 import TableRow from '../dashboard/Profile/Public/TableRow';
-import { SocialIcon } from './Profile/Public/SocialList';
 import { saveProfileStats } from '../../actions/views';
 import FCCStatTables from './Profile/Public/FCCTables';
 import Table from '../dashboard/Profile/Public/Table';
@@ -16,27 +15,28 @@ import SocialList from './Profile/Public/SocialList';
 import Career from './Profile/Public/CareerRow';
 import styled from 'styled-components';
 import htmlToJson from 'html-to-json';
+import isEmpty from 'lodash/isEmpty';
 import axios from 'axios';
 
 const ERROR = "Sorry, we encountered an error.";
 
+// STYLED COMPONENTS:
+const IMG = styled.img`
+  margin-top: 8px !important;`
+
 const Loader = styled.div`
   height: 200px !important;
-  padding-bottom:  !important;
-`;
+  padding-bottom:  !important;`
 
 const OneColumnRepoList = styled.div`
   margin-top: 0 !important;
-  margin-bottom: 14px !important;
-`;
+  margin-bottom: 14px !important;`
 
-const CenteredList = styled.div`
-  ${ extendCenterAlignedWrapper() }
-`;
+const NoPadding = styled.div`
+  padding: 0 !important;`
 
-const A = styled.div`
-  color: black !important;
-`;
+const StyledSubHeader = styled(SubHeader)`
+  margin-bottom: 0 !important;`
 
 class PublicProfile extends React.Component {
   constructor(props) {
@@ -202,7 +202,18 @@ class PublicProfile extends React.Component {
   }
 
   render() {
-    const { user } = this.props;
+    const {
+      user,
+      user: {
+        personal: {
+          bio
+        },
+        skillsAndInterests: {
+          coreSkills,
+          codingInterests
+        }
+      }
+    } = this.props;
 
     const loader = (
       <Loader className="ui active inverted dimmer">
@@ -210,10 +221,16 @@ class PublicProfile extends React.Component {
       </Loader>
     );
 
+    const NoTopPadding = styled.div`
+      ${ document.getElementById('userBio') && 'padding-top: 0 !important;'}`;
+
+    const NoBottomMargin = styled.div`
+      margin-bottom: 0 !important;
+      ${ !user.personal.flag && 'margin-top: 20px !important' }`
+
     // dynamically set height of divs per CDM logic
     const DynamicHeightDiv = styled.div`
-      height: ${ this.dynamicHeight }
-    `;
+      min-height: ${ this.dynamicHeight }`;
 
     if (user.projects.length > 3) {
       const sliceAt = Math.ceil(user.projects.length / 2);
@@ -224,57 +241,70 @@ class PublicProfile extends React.Component {
     return (
       <ThickPaddedBottom id="public-profile-container">
 
-        {/* AVATAR & INTRO */}
+        {/* AVATAR & FCCDATA */}
         <div className="ui celled stackable grid container">
-          <div className="row">
-            <div className="four wide center aligned column">
-              <img
-                src={user.personal.avatarUrl}
-                alt={`${user.username}'s avatar'`}
-                className="ui fluid circular bordered image" />
-              <div className="ui horizontal divider">{user.personal.displayName}</div>
-              <UserLabel
-                showAvatar={false}
-                username={user.username}
-                label={user.mentorship.isMentor ? "Mentor" : "Member"}/>
-            </div>
-            <div className="twelve wide column">
-              <LocationSteps personal={user.personal} />
-              <div className="ui center aligned segment">
-                <div className="ui horizontal divider">Bio:</div>
-                <div className="ui segment">
-                  {user.personal.bio}
-                </div>
-              </div>
-              <div className="ui center aligned segment">
-                <SocialList
-                  social={user.social}
-                  username={user.username}
-                  profileUrl={user.personal.profileUrl} />
-              </div>
-            </div>
+          <div className="four wide center aligned column">
+            <IMG
+              src={user.personal.avatarUrl}
+              alt={`${user.username}'s avatar'`}
+              className="ui fluid circular bordered image" />
+            <div className="ui horizontal divider">{user.personal.displayName}</div>
+            <UserLabel
+              showAvatar={false}
+              username={user.username}
+              label={user.mentorship.isMentor ? "Mentor" : "Member"}/>
+          </div>
+          <div className="twelve wide column">
+            <LocationSteps personal={user.personal} />
+            <NoBottomMargin className="ui celled stackable grid">
+              <NoPadding className="sixteen wide center aligned column">
+                <StyledSubHeader className="ui top attached header">
+                  freeCodeCamp Profile <i className="fa fa-free-code-camp" />
+                </StyledSubHeader>
+              </NoPadding>
+              { this.isLoading()
+                ? <div className="row">{loader}</div>
+                : <FCCStatTables { ...this.state } width="eight" username={user.username} fccCerts={user.fccCerts} /> }
+            </NoBottomMargin>
           </div>
         </div>
 
-        {/* FCC PROFILE */}
-        <div className="ui celled stackable grid container">
-          <MainHeader text="freeCodeCamp Profile" icon="fa fa-free-code-camp" />
-        { this.isLoading()
-          ? <div style={{ marginBottom: 200 }} className="row">{loader}</div>
-          : <FCCStatTables { ...this.state } username={user.username} fccCerts={user.fccCerts} /> }
+        {/* ABOUT & SOCIAL */}
+        <div className="ui celled stackable center aligned grid container">
+          <MainHeader text={`Find Me ${bio && '/ Bio'}`} icon="user icon" />
+        { bio &&
+          <div className="row">
+            <div className="fourteen wide column">
+              <div id="userBio" className="ui segment">
+                <div className="ui horizontal divider">Bio:</div>
+                {bio}
+              </div>
+            </div>
+          </div> }
+          <NoTopPadding className="sixteen wide column">
+            <div className="ui padded segment">
+              <SocialList
+                social={user.social}
+                username={user.username}
+                profileUrl={user.personal.profileUrl} />
+            </div>
+          </NoTopPadding>
         </div>
 
         {/* CODING PROFILE */}
+      { (!isEmpty(coreSkills) || !isEmpty(codingInterests)) &&
         <div className="ui celled stackable center aligned grid container">
           <MainHeader text="Coding Profile" icon="code" />
           <SkillsAndInterests skillsAndInterests={user.skillsAndInterests} />
-        </div>
+        </div> }
 
         {/* CAREER */}
+      { !isEmpty(user.career.working) &&
         <div className="ui celled stackable center aligned grid container">
           <MainHeader text="Career" icon="suitcase" />
           <Career career={user.career} />
         </div>
+      }
 
         {/* MENTORSHIP */}
         <div className="ui celled stackable center aligned grid container">
@@ -318,7 +348,7 @@ class PublicProfile extends React.Component {
         </div>
 
         {/* COLLABORATION */}
-        { user.projects.length &&
+      { !isEmpty(user.projects) &&
         <div className="ui celled stackable center aligned grid container">
           <MainHeader text="Collaboration" icon="users" />
           <div className="sixteen wide column">

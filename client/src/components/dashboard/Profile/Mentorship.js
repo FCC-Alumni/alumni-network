@@ -2,7 +2,6 @@ import React from 'react';
 import propTypes from 'prop-types';
 import Ribbon from './common/RibbonHeader';
 import MessageBox from '../../common/MessageBox';
-import RadioButton from '../../common/RadioButton';
 import SliderToggle from '../../common/SliderToggle';
 
 const Mentorship = ({

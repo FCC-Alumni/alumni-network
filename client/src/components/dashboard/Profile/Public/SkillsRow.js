@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import isEmpty from 'lodash/isEmpty';
 
 const Label = styled.div`
   margin: 5px !important;
@@ -27,13 +28,17 @@ export const SubHeader = styled.div`
 `;
 
 const SkillsRow = ({ skillsAndInterests }) => {
+
+  const { coreSkills, codingInterests } = skillsAndInterests;
+
   return (
     <div className="row">
-      <div className="eight wide center aligned column">
+      { !isEmpty(coreSkills) &&
+      <div className={`${ isEmpty(codingInterests) ? 'sixteen' : 'eight' } wide center aligned column`}>
         <SubHeader className="ui top attached header">
           Core Skills
         </SubHeader>
-        { skillsAndInterests.coreSkills && skillsAndInterests.coreSkills.map((skill, i) =>
+        { coreSkills && coreSkills.map((skill, i) =>
           i % 2 === 0
           ? <a
               key={skill}
@@ -49,12 +54,13 @@ const SkillsRow = ({ skillsAndInterests }) => {
               href={`https://en.wikipedia.org/w/index.php?search=${skill}`}>
               <LabelDark className="ui label">{skill}</LabelDark>
             </a> )}
-      </div>
-      <div className="eight wide center aligned column">
+      </div> }
+      { !isEmpty(codingInterests) &&
+      <div className={`${ isEmpty(coreSkills) ? 'sixteen' : 'eight' } wide center aligned column`}>
         <SubHeader className="ui top attached header">
           Coding Interests
         </SubHeader>
-        { skillsAndInterests.codingInterests && skillsAndInterests.codingInterests.map((interest, i) =>
+        { codingInterests && codingInterests.map((interest, i) =>
           i % 2 === 0
           ? <a
               key={interest}
@@ -70,7 +76,7 @@ const SkillsRow = ({ skillsAndInterests }) => {
               href={`https://en.wikipedia.org/w/index.php?search=${interest}`}>
               <LabelDark className="ui label">{interest}</LabelDark>
             </a> )}
-      </div>
+      </div> }
     </div>
   );
 }
