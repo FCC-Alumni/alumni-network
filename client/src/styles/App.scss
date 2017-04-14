@@ -27,13 +27,6 @@
   margin: 20px 0;
 }
 
-// login page:
-#login-form {
-  @extend .middle-aligned;
-  height: 500px;
-  position: absolute;
-}
-
 // need media query to remove arrow at width/height of approx 850 X 725
 #arrow-bounce {
   animation: bouncey-arrow 1.5s infinite;
@@ -41,4 +34,10 @@
 
 .flash-message {
   margin-top: 80px !important;
+}
+
+#navMenu {
+  .link {
+    width: 50vw !important;
+  }
 }
