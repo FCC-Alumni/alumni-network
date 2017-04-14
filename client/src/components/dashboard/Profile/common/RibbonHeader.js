@@ -13,7 +13,7 @@ const RibbonHeader = ({ content, onClick, wrapperClass, showPopUp, subSaveClick,
           </div>
         }
       </div>
-      <div className={`ui left pointing basic green label savedPopUp ${showPopUp ? 'show' : 'hide'}`}>Saved</div>
+      <div className={`ui left pointing basic green label savedPopUp ${showPopUp ? 'show' : 'hide'}`}>Section Saved</div>
     </div>
   );
 }

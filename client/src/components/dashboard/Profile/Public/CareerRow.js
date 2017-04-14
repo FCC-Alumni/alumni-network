@@ -3,6 +3,7 @@ import Table from './Table';
 import TableRow from './TableRow';
 
 const CareerRow = ({ career }) => {
+  console.log(career)
   const TableToRender = career.working === "no"
     ? <Table columnWidth="sixteen">
         <TableRow

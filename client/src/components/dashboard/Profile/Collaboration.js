@@ -16,7 +16,7 @@ const Collaboration = ({
   return (
     <div>
       <Ribbon
-        id="collaboPopUp"
+        id="projectsPopUp"
         content="Collaboration"
         showPopUp={showPopUp}
         subSaveClick={subSaveClick}

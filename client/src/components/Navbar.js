@@ -41,10 +41,10 @@ class NavBar extends React.Component {
     const guestNav = (
       <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
         <NavLink className="item" activeClassName="item active" exact to="/"><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</NavLink>
-        <div className="right menu" id={isDesktop ? '' : 'navMenu'}>
+        <div className="right menu" id={!isDesktop && 'navMenu'}>
           <MenuRight>
-            <NavLink className="item link" activeClassName="item active" exact to="/about">About</NavLink>
-            <NavLink className="item link" activeClassName="item active" exact to="/login">Login</NavLink>
+            <NavLink className="item" activeClassName="item active" exact to="/about">About</NavLink>
+            <NavLink className="item" activeClassName="item active" exact to="/login">Login</NavLink>
           </MenuRight>
         </div>
       </div>
