@@ -5,8 +5,8 @@ import { mapScreenSizeToProps } from '../Navbar';
 
 const LoginPage = ({ screen: { isTablet, isMobile, isDesktop }}) => {
   return (
-    <div className="ui center aligned grid">
-      <div id="login-form" className={`${isMobile ? 'twelve' : isTablet ? 'ten' : 'six'} wide column`}>
+    <div className="ui center aligned grid" style={{ marginTop: `${isDesktop ? '175px' : '125px' }`}}>
+      <div className={`${isMobile ? 'twelve' : isTablet ? 'ten' : 'six'} wide column`}>
 
         <div className="ui segment">
           <h2 className="ui green image header">
@@ -23,15 +23,13 @@ const LoginPage = ({ screen: { isTablet, isMobile, isDesktop }}) => {
           </div>
         </div>
 
+        { isDesktop &&
+          <div className="center aligned segment">
+            <i id="arrow-bounce" className="massive green arrow up icon"/>
+          </div>
+        }
 
       </div>
-
-      { isDesktop &&
-        <div className="center aligned segment">
-          <i id="arrow-bounce" className="massive green arrow up icon"/>
-        </div>
-      }
-
     </div>
   );
 }
