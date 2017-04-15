@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import Ribbon from './common/RibbonHeader';
 import { Dropdown } from 'semantic-ui-react';
 import FormField from '../../common/FormField';
@@ -6,6 +7,15 @@ import MessageBox from '../../common/MessageBox';
 import RadioButton from '../../common/RadioButton';
 
 import { surveyOptions } from '../../../assets/data/dropdownOptions';
+
+const Error = styled.div`
+  margin-bottom: 10px !important;
+  cursor: pointer;Error
+`;
+
+const Button = styled.div`
+  margin-top: -10px !important;
+`;
 
 const Career = ({
   errors,
@@ -15,6 +25,7 @@ const Career = ({
   company,
   jobSearch,
   showPopUp,
+  clearForm,
   showCareer,
   subSaveClick,
   handleInputChange,
@@ -36,6 +47,10 @@ const Career = ({
           type="info"
           dismissable={true}
           message="Please let us know about your career so other members can track your accomplishments in your field." />
+        { errors.career &&
+          <Error className="ui red basic label">
+            {errors.career}
+          </Error> }
         <div className="inline fields">
           <label>Are you employed as a software developer?</label>
           <RadioButton
@@ -66,6 +81,7 @@ const Career = ({
             placeholder="Enter Company"
             onChange={handleInputChange}
             label="Where are you currently employed?" />
+          <Button onClick={clearForm} className="ui tiny green basic button">Clear Form</Button>
         </div>
         <div className={`surveyPaneWorking ${working === 'no' ? 'show' : 'hide'}`}>
           <div className="inline fields">
@@ -94,6 +110,7 @@ const Career = ({
               value={tenure}
               onChange={handleTenureChange} />
           </div>
+          <Button onClick={clearForm} className="ui tiny green basic button">Clear Form</Button>
         </div>
       </div>
     </div>

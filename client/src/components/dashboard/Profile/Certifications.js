@@ -7,7 +7,7 @@ const Item = styled.h5`
   margin-top: 2px !important;
 `;
 
-const Certifications = ({ toggle, fccCerts, showPopUp, showFCC }) => {
+const Certifications = ({ toggle, fccCerts, showFCC }) => {
   var certs = [];
   for (var cert in fccCerts) {
     if (fccCerts[cert]) {
@@ -26,9 +26,7 @@ const Certifications = ({ toggle, fccCerts, showPopUp, showFCC }) => {
   return (
     <div>
       <Ribbon
-        id="fccPopUp"
         showSave={false}
-        showPopUp={showPopUp}
         wrapperClass="fccWrapper"
         content="freeCodeCamp Certifications"
         onClick={() => { toggle('showFCC')}} />

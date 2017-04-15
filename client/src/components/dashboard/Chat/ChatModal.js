@@ -3,17 +3,11 @@ import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 
 export default ({ size, close, open }) => {
-  const green = '#007E00';
-  const fireStyle = {
-    width: "45px",
-    height: "45px",
-    marginBottom: "-5px"
-  }
-  return(
+  return (
     <div>
       <Modal size={size} open={open} onClose={close}>
 
-        <Modal.Header style={{ background: green, color: 'white' }}>
+        <Modal.Header style={{ background: '#007E00', color: 'white' }}>
           <h1>
             <span>Mess Hall Chat &nbsp;</span>
           </h1>
@@ -52,14 +46,14 @@ export default ({ size, close, open }) => {
 
         </Modal.Content>
 
-        <Modal.Actions style={{ background: 'rgb(248,248,248)' }}>
+        <Modal.Actions>
           <Button
             positive
             content='Ok'
             onClick={close}
             icon='checkmark'
             labelPosition='right'
-            style={{ background: green }} />
+            color="green" />
         </Modal.Actions>
 
       </Modal>

@@ -68,7 +68,7 @@ class RepoList extends React.Component {
     validateOtherRepos(item, hostUrl).then((res) => {
       if (res) {
         items_list.push({item, label});
-        this.setState({ items_list, item: '', isLoading: false }, () => this.props.saveChanges(false));
+        this.setState({ items_list, item: '', isLoading: false }, () => this.props.saveChanges());
       } else {
         this.setState({
           error: {
@@ -203,7 +203,7 @@ class RepoList extends React.Component {
             if (contributor.author.login === username) {
               isContributor = true;
               items_list.push({item, label});
-              this.setState({ items_list, item: '', isLoading: false }, () => this.props.saveChanges(false));
+              this.setState({ items_list, item: '', isLoading: false }, () => this.props.saveChanges());
             }
           }
           // if user is not listed, repo may have > 100 contributors
@@ -217,7 +217,7 @@ class RepoList extends React.Component {
               if (commits.length > 0) {
                 isContributor = true;
                 items_list.push({item, label});
-                this.setState({ items_list, item: '', isLoading: false }, () => this.props.saveChanges(false));
+                this.setState({ items_list, item: '', isLoading: false }, () => this.props.saveChanges());
               }
             })
             .catch((err) => {
@@ -261,7 +261,7 @@ class RepoList extends React.Component {
 
   removeItem = (item) => {
     const items_list = this.spliceList(item);
-    this.setState({ items_list }, () => this.props.saveChanges(false));
+    this.setState({ items_list }, () => this.props.saveChanges());
 
   }
 

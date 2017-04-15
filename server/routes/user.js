@@ -98,4 +98,20 @@ router.post('/api/update-user', (req, res) => {
   });
 });
 
+router.post('/api/update-user-partial', (req, res) => {
+  const { id, section, sectionData } = req.body;
+  
+  User.findById(id, (err, updatedUser) => {
+    if (!err) {
+      updatedUser[section] = sectionData;
+
+      updatedUser.save();
+
+      res.json({ updatedUser })
+    } else {
+      res.status(401).json({ error: 'User could not be saved' });
+    }
+  });
+});
+
 export default router;

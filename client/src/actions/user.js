@@ -25,6 +25,10 @@ export const updateUser = (user) => {
   return axios.post('/api/update-user', { user });
 }
 
+export const updateUserPartial = (id, section, sectionData) => {
+  return axios.post('/api/update-user-partial', { id, section, sectionData });
+}
+
 export const logoutUser = () => {
   return {
     type: LOGOUT_USER
