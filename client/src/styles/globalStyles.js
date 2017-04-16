@@ -29,9 +29,9 @@ export const StyledItem = styled.a`
   cursor: pointer;
   &:hover {
     background: #E0E0E0 !important;
-    .fa,
     .icon {
       color: #FF4025 !important;
+      transition: color 200ms ease-in-out !important;
     }
   }
 `;

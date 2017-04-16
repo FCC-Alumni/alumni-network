@@ -11,7 +11,7 @@ const ProfileHeader = ({ text, icon }) => {
   return (
     <div className="row">
       <HeaderWrapper className="sixteen wide center aligned column">
-        <h2 className="ui">{text} <i className={`${icon} ${icon !== 'fa fa-free-code-camp' && 'icon'}`} /></h2>
+        <h2 className="ui">{text} <i className={`${icon} icon`} /></h2>
       </HeaderWrapper>
     </div>
   );

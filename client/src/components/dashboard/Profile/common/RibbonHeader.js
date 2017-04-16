@@ -6,23 +6,21 @@ const RibbonHeader = ({ content, onClick, wrapperClass, showPopUp, subSaveClick,
     <div>
       <div className={`ui green large ribbon label ${wrapperClass}`} onClick={onClick}>
         {content}
-        {
-          showSave &&
-          <div className="detail">
-            <i onClick={subSaveClick} id={id} className="saveSection save icon" />
-          </div>
-        }
+      { showSave &&
+        <div className="detail">
+          <i onClick={subSaveClick} id={id} className="saveSection save icon" />
+        </div> }
       </div>
-      <div className={`ui left pointing basic green label savedPopUp ${showPopUp ? 'show' : 'hide'}`}>Section Saved</div>
+    { showSave && <div className={`ui left pointing basic green label savedPopUp ${showPopUp ? 'show' : 'hide'}`}>Section Saved</div> }
     </div>
   );
 }
 
 RibbonHeader.propTypes = {
-  content: propTypes.string.isRequired,
   onClick: propTypes.func.isRequired,
+  showSave: propTypes.bool.isRequired,
+  content: propTypes.string.isRequired,
   wrapperClass: propTypes.string.isRequired,
-  showSave: propTypes.bool.isRequired
 }
 
 export default RibbonHeader;

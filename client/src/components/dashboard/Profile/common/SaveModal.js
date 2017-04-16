@@ -1,12 +1,12 @@
 import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 
-const SaveModal = ({ size, close, open, isValid }) => {
+const SaveModal = ({ size, close, open, warning, isValid }) => {
 
   const context = {
-    header: isValid ? 'Success' : 'Error',
+    header: isValid ? 'Success' : 'Error(s)',
     headerColor: isValid ? '#007E00' : '#FF4025',
-    text: isValid ? 'Your profile has been successfully updated!' : 'Please correct the errors and try again.',
+    text: isValid ? 'Your profile has been successfully updated!' : 'Please review the page, correct any errors, and then try again.',
     buttonColor: isValid ? 'green' : 'red'
   }
 
@@ -17,11 +17,19 @@ const SaveModal = ({ size, close, open, isValid }) => {
           { context.header }
         </Modal.Header>
         <Modal.Content>
-          <h4 className="ui header">{context.text}</h4>
+          <h3 className="ui header">{context.text}</h3>
+        { warning &&
+          <div>
+          { !warning.startsWith('Nice') &&
+            <h4 className="ui header">
+              <i className="small red warning sign icon" />
+              But, your profile looks a bit bare...
+            </h4> }
+            <p>{warning}</p>
+          </div> }
         </Modal.Content>
         <Modal.Actions>
           <Button
-            positive
             content='Ok'
             onClick={close}
             icon='checkmark'

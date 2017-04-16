@@ -1,10 +1,12 @@
 import React from 'react';
+import Validator from 'validator';
 import propTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
-import { repoOptions } from '../../assets/data/dropdownOptions';
-import { Dropdown, Input } from 'semantic-ui-react';
 import indexOf from 'lodash/indexOf';
-import Validator from 'validator';
+import { Dropdown, Input } from 'semantic-ui-react';
+import { connectScreenSize } from 'react-screen-size';
+import { repoOptions } from '../../assets/data/dropdownOptions';
+import { mapScreenSizeToProps } from '../dashboard/Community/UserCard';
 import {
   validateGithubRepo,
   searchGithubCommits,
@@ -280,6 +282,8 @@ class RepoList extends React.Component {
   render() {
     const { item, isLoading, icon, error } = this.state;
 
+    const { isMobile } = this.props.screen;
+
     const listItems = this.state.items_list.map((el, index) => {
       return (
         <div key={index} className="item">
@@ -296,37 +300,34 @@ class RepoList extends React.Component {
       <div>
 
         <Input
-          onChange={this.handleChange}
-          label={<Dropdown className="basic green" onChange={this.handleLabelChange} defaultValue="https://github.com/" options={repoOptions} />}
-          labelPosition="left"
-          placeholder="Namespace / Repo"
+          icon={icon}
           value={item}
           loading={isLoading}
-          icon={icon}
-        />
-        { !isEmpty(error) && !error.repo && !error.namespace &&
-          <div className="ui left pointing red basic label">
-            {error.header}
-          </div> }
+          labelPosition="left"
+          onChange={this.handleChange}
+          placeholder="Namespace / Repo"
+          fluid={isMobile ? true : false}
+          label={<Dropdown className="basic green" onChange={this.handleLabelChange} defaultValue="https://github.com/" options={repoOptions} />} />
+
+      { !isEmpty(error) && !error.repo && !error.namespace &&
+        <div className="ui left pointing red basic label">
+          {error.header}
+        </div> }
 
 
         <div className="ui middle aligned divided list">
           {listItems}
         </div>
 
-        {
-          !isEmpty(error) && error.repo && error.namespace &&
-          <div className="ui error message">
-            <div className="header">{error.header}</div>
-            {
-              error.repo &&
-              <ul className="list">
-                <li>{error.namespace}</li>
-                <li>{error.repo}</li>
-              </ul>
-            }
-          </div>
-        }
+      { !isEmpty(error) && error.repo && error.namespace &&
+        <div className="ui error message">
+          <div className="header">{error.header}</div>
+        { error.repo &&
+          <ul className="list">
+            <li>{error.namespace}</li>
+            <li>{error.repo}</li>
+          </ul> }
+        </div> }
 
       </div>
     );
@@ -344,4 +345,4 @@ RepoList.defaultProps = {
   prePopulateList: []
 }
 
-export default RepoList;
+export default connectScreenSize(mapScreenSizeToProps)(RepoList);

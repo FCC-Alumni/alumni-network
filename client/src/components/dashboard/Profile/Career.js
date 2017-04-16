@@ -5,6 +5,8 @@ import { Dropdown } from 'semantic-ui-react';
 import FormField from '../../common/FormField';
 import MessageBox from '../../common/MessageBox';
 import RadioButton from '../../common/RadioButton';
+import { mapScreenSizeToProps } from '../../Navbar';
+import { connectScreenSize } from 'react-screen-size';
 
 import { surveyOptions } from '../../../assets/data/dropdownOptions';
 
@@ -15,6 +17,7 @@ const Error = styled.div`
 
 const Button = styled.div`
   margin-top: -10px !important;
+  margin-bottom: 45px !important;
 `;
 
 const Career = ({
@@ -30,7 +33,8 @@ const Career = ({
   subSaveClick,
   handleInputChange,
   handleRadioChange,
-  handleTenureChange
+  handleTenureChange,
+  screen: { isMobile },
 }) => {
   return (
     <div>
@@ -84,7 +88,7 @@ const Career = ({
           <Button onClick={clearForm} className="ui tiny green basic button">Clear Form</Button>
         </div>
         <div className={`surveyPaneWorking ${working === 'no' ? 'show' : 'hide'}`}>
-          <div className="inline fields">
+          <div className={`${isMobile ? 'grouped' : 'inline'} fields`}>
             <label>Are you currently looking for full-time employment as a software developer?</label>
             <RadioButton
               label='Yes!'
@@ -117,4 +121,4 @@ const Career = ({
   );
 }
 
-export default Career;
+export default connectScreenSize(mapScreenSizeToProps)(Career);

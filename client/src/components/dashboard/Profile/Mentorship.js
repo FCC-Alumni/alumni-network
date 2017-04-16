@@ -1,8 +1,11 @@
 import React from 'react';
 import propTypes from 'prop-types';
+import styled from 'styled-components';
 import Ribbon from './common/RibbonHeader';
 import MessageBox from '../../common/MessageBox';
+import { mapScreenSizeToProps } from '../../Navbar';
 import SliderToggle from '../../common/SliderToggle';
+import { connectScreenSize } from 'react-screen-size';
 
 const Mentorship = ({
   error,
@@ -17,9 +20,17 @@ const Mentorship = ({
   toggleMenteeship,
   handleInputChange,
   handleRadioChange,
+  screen: { isMobile, isTablet },
 }) => {
+
+  // In Chrome's preview for mobile views, this works in both Galaxy S5 and iPhone6, not iPhone5 and big margin in iPhone6
+  // not sure how accurate this all is... ok for now...
+  const DynamicContainer = styled.div`
+    ${isMobile && (isMentor || isMentee) && 'margin-bottom: 120px !important;'}
+  `;
+
   return (
-    <div>
+    <DynamicContainer>
       <Ribbon
         id="mentorshipPopUp"
         showPopUp={showPopUp}
@@ -41,7 +52,7 @@ const Mentorship = ({
           defaultOn={isMentee ? true : false}
           saveStateToParent={toggleMenteeship}
           label="I would like to be mentored." />
-        <div className={`ui six wide field mentorshipSkillsPane ${isMentor || isMentee ? 'show' : 'hide'}`}>
+        <div className={`ui ${isMobile ? 'fluid' : isTablet ? 'eight wide' : 'six wide'} field mentorshipSkillsPane ${isMentor || isMentee ? 'show' : 'hide'}`}>
           <label>Mentorship Bio</label>
           <textarea
             rows="3"
@@ -55,12 +66,14 @@ const Mentorship = ({
             </div> }
         </div>
       </form>
-    </div>
+    </DynamicContainer>
   );
 }
 
 Mentorship.propTypes = {
   error: propTypes.string,
+  isMobile: propTypes.bool,
+  isTablet: propTypes.bool,
   toggle: propTypes.func.isRequired,
   isMentor: propTypes.bool.isRequired,
   showPopUp: propTypes.bool.isRequired,
@@ -76,4 +89,4 @@ Mentorship.defaultProps = {
   error: ''
 }
 
-export default Mentorship;
+export default connectScreenSize(mapScreenSizeToProps)(Mentorship);

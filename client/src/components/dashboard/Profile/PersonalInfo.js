@@ -3,9 +3,12 @@ import Ribbon from './common/RibbonHeader';
 import { Dropdown } from 'semantic-ui-react';
 import ListItem from '../../common/ListItem';
 import FormField from '../../common/FormField';
+import { mapScreenSizeToProps } from '../../Navbar';
+import { connectScreenSize } from 'react-screen-size';
 import { countryOptions } from '../../../assets/data/countries';
 
-const inputOptions = 'small left icon';
+const INPUT_OPTIONS = 'small left icon';
+const INFO_MESSAGE = 'Don\'t worry, no junkmail. We are asking for your email in order to help you and your fellow community members stay better connected. If you decide to share your email address, please be aware that it will be publicly visible on your profile page.';
 
 const PersonalInfo = ({
   bio,
@@ -21,6 +24,7 @@ const PersonalInfo = ({
   showProfile,
   subSaveClick,
   handleInputChange,
+  screen: { isMobile, isTablet },
   handleCountryChange,
 }) => {
   return (
@@ -35,12 +39,6 @@ const PersonalInfo = ({
         onClick={()=>{toggle('showProfile')}} />
       <form className={`ui form profilePane ${showProfile ? 'show' : 'hide'}`}>
         <div className="ui list">
-          <ListItem icon="spy icon">
-            {username}
-          </ListItem>
-          <ListItem icon="github icon">
-            <a href={profileUrl} target="_blank">GitHub Profile</a>
-          </ListItem>
           <ListItem>
             <FormField
               errors={errors}
@@ -48,7 +46,7 @@ const PersonalInfo = ({
               name="displayName"
               value={displayName}
               tooltip="Display Name"
-              inputOptions={inputOptions}
+              inputOptions={INPUT_OPTIONS}
               onChange={handleInputChange}
               placeholder="Enter Display Name" />
           </ListItem>
@@ -60,8 +58,10 @@ const PersonalInfo = ({
               tooltip="Email"
               errors={errors}
               icon="mail icon"
-              inputOptions={inputOptions}
               placeholder="Enter Email"
+              infoMessage={INFO_MESSAGE}
+              inputOptions={INPUT_OPTIONS}
+              info={!errors.email && true}
               onChange={handleInputChange} />
           </ListItem>
           <ListItem>
@@ -71,7 +71,7 @@ const PersonalInfo = ({
               name="location"
               tooltip="Location"
               icon="marker icon"
-              inputOptions={inputOptions}
+              inputOptions={INPUT_OPTIONS}
               onChange={handleInputChange}
               placeholder="Enter City / State" />
           </ListItem>
@@ -87,7 +87,7 @@ const PersonalInfo = ({
             </div>
           </ListItem>
           <ListItem>
-            <div className="six wide field">
+            <div className={`${isMobile ? 'fluid' : isTablet ? 'eight wide' : 'six wide' } field`}>
               <textarea
                 rows="3"
                 name='bio'
@@ -106,4 +106,4 @@ const PersonalInfo = ({
   );
 }
 
-export default PersonalInfo;
+export default connectScreenSize(mapScreenSizeToProps)(PersonalInfo);
