@@ -2,9 +2,8 @@ import React from 'react';
 import CertLinks from './CertLinks';
 import styled from 'styled-components';
 import SocialLinks from './SocialLinks';
-import Label from '../../common/UserLabel';
 import { connectScreenSize } from 'react-screen-size';
-import DividingHeader from '../../common/DividingHeader';
+import { hoverTransition } from '../../../styles/globalStyles';
 
 import convertMonthToString from '../../../actions/convertMonth';
 
@@ -16,14 +15,14 @@ TODO:
   - add deeper responsiveness for mobile - we will need to render a different card that shows less info for small devices
 */
 
-// STYLES:
-const ClickableCard = styled.div`
+const Clickable = styled.div`
   cursor: pointer;
-`;
-
-const SummaryWrapper = styled.div`
-  text-align: center !important;
-  font-size: 12px !important;
+  &:hover {
+    .user {
+      color: #FF4025;
+      transition: color 300ms ease-in-out;
+    }
+  }
 `;
 
 const CenteredWrapper = styled.div`
@@ -31,7 +30,12 @@ const CenteredWrapper = styled.div`
   flex-direction: row;
   justify-content: center;
   padding-top: .7em;
-  padding-bottom: 1em;
+`;
+
+const SummaryWrapper = styled.div`
+  text-align: center !important;
+  font-size: 12px !important;
+  padding: 7px 5px 0 5px;
 `;
 
 class UserCard extends React.Component {
@@ -51,43 +55,35 @@ class UserCard extends React.Component {
     const prettyDate = convertMonthToString(...joinedOn);
 
     return (
-      <ClickableCard onClick={() => { this.handleClick(user) }} className='ui raised card'>
+      <div className='ui raised card'>
 
-        { (screen.isDesktop || screen.isMobile) ?
-          <div className="ui slide masked reveal image">
-            <img src={user.personal.avatarUrl} className="visible content" alt="user avatar"/>
-            <div className="hidden content">
-              <CenteredWrapper>
-                <Label
-                  image={user.personal.avatarUrl}
-                  size="large"
-                  username={user.username} />
-              </CenteredWrapper>
-              <SummaryWrapper>
-                <DividingHeader size="h6" icon="checkmark box icon" content="Core Skills" />
-                <div className="ui list">
-                  { user.skillsAndInterests.coreSkills.length > 0 ?
-                    user.skillsAndInterests.coreSkills.map((item, i) => i < 3 && <div className="item" key={i}>{item}</div>) :
-                    'User has not entered any skills yet!' }
-                  </div>
-                  <DividingHeader size="h6" icon="checkmark box icon" content="Coding Interests" />
-                  <div className="ui list">
-                    { user.skillsAndInterests.codingInterests.length > 0 ?
-                      user.skillsAndInterests.codingInterests.map((item, i) => i < 3 && <div className="item" key={i}>{item}</div>) :
-                      'User has not entered any interests yet!' }
-                    </div>
-                  </SummaryWrapper>
-                </div>
+      { (screen.isDesktop || screen.isMobile)
+      ? <div className="ui slide masked reveal image">
+          <img src={user.personal.avatarUrl} className="visible content" alt="user avatar"/>
+          <div className="hidden content">
+            <SummaryWrapper>
+              <div className="ui horizontal divider">Core Skills</div>
+              <div className="ui list">
+              { user.skillsAndInterests.coreSkills.length > 0 ?
+                user.skillsAndInterests.coreSkills.map((item, i) => i < 3 && <div className="item" key={i}>{item}</div>) :
+                'Not defined yet!' }
               </div>
-          :
-          <div className="image">
-            <img src={user.personal.avatarUrl} className="visible content" alt="user avatar"/>
+              <div className="ui horizontal divider">Coding Interests</div>
+              <div className="ui list">
+              { user.skillsAndInterests.codingInterests.length > 0 ?
+                user.skillsAndInterests.codingInterests.map((item, i) => i < 3 && <div className="item" key={i}>{item}</div>) :
+                'Not defined yet!' }
+              </div>
+            </SummaryWrapper>
           </div>
-        }
+        </div>
+      : <div className="image">
+          <img src={user.personal.avatarUrl} className="visible content" alt="user avatar"/>
+        </div> }
 
-        <div className="content">
+        <Clickable onClick={() => { this.handleClick(user) }} className="content">
           <div className="header">
-            {user.username}
+              <span className="user">{user.username}</span>
             { (screen.isDesktop || screen.isMobile) &&
               <CertLinks
                 username={user.username}
@@ -97,7 +93,8 @@ class UserCard extends React.Component {
           <div className="meta">
             {user.mentorship.isMentor ? 'Mentor' : 'Member'}
           </div>
-        </div>
+        </Clickable>
+
         <div className="extra content">
           { (screen.isDesktop || screen.isMobile) ?
             <span className="right floated">
@@ -113,12 +110,13 @@ class UserCard extends React.Component {
               handleClick={this.handleInnerClick} />
           </span>
         </div>
-      </ClickableCard>
+
+      </div>
     );
   }
 }
 
-const mapScreenSizeToProps = (screenSize) => {
+export const mapScreenSizeToProps = (screenSize) => {
   return { screen: {
     isTablet: screenSize['small'],
     isMobile: screenSize['mobile'],

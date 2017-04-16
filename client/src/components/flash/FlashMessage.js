@@ -10,7 +10,7 @@ class FlashMessage extends React.Component {
   render() {
     const { type, text } = this.props.message;
     return (
-      <div className={ type === 'error' ? 'ui error message' : 'ui info message' }>
+      <div className={`${type === 'error' ? 'ui error' : 'ui info'} message flashMessage`}>
         <i onClick={this.handleClick} className="close icon"></i>
         <div className="header">
           {text.header}

@@ -18,26 +18,20 @@
   font-size: large;
 }
 
-// fcc FA icon in navbar
-.menu .fa-free-code-camp {
-  margin-right: 8px;
-}
-
 .flash-message {
   margin: 20px 0;
 }
 
-// need media query to remove arrow at width/height of approx 850 X 725
 #arrow-bounce {
   animation: bouncey-arrow 1.5s infinite;
-}
-
-.flash-message {
-  margin-top: 80px !important;
 }
 
 #navMenu {
   .item {
     width: 50vw !important;
   }
+}
+
+.free.code.camp.icon {
+  margin-right: .3rem !important;
 }

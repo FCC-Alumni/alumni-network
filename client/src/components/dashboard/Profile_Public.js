@@ -259,7 +259,7 @@ class PublicProfile extends React.Component {
             <NoBottomMargin className="ui celled stackable grid">
               <NoPadding className="sixteen wide center aligned column">
                 <StyledSubHeader className="ui top attached header">
-                  freeCodeCamp Profile <i className="fa fa-free-code-camp" />
+                  freeCodeCamp Profile <i className="free code camp icon" />
                 </StyledSubHeader>
               </NoPadding>
               { this.isLoading()

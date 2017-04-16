@@ -7,7 +7,7 @@ import styled from 'styled-components';
 const LoginPage = ({ screen: { isTablet, isMobile, isDesktop }}) => {
 
   const LoginContainer = styled.div`
-    margin-top: ${isDesktop ? '200px' : '175px' } !important;
+    margin-top: ${document.getElementsByClassName('flashMessage').length > 0 ? '10px' : isDesktop ? '200px' : '175px' } !important;
   `;
 
   return (

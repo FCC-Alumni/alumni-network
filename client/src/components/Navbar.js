@@ -39,7 +39,7 @@ class NavBar extends React.Component {
     const { isDesktop } = this.props.screen;
 
     const guestNav = (
-      <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
+      <div id={!isDesktop && 'navMenuContainer'} className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
         <NavLink className="item" activeClassName="item active" exact to="/"><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</NavLink>
         <div className="right menu" id={!isDesktop && 'navMenu'}>
           <MenuRight>

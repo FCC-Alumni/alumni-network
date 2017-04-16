@@ -7,27 +7,29 @@ import UserLabel from '../common/UserLabel';
 import PersonalInfo from './Profile/PersonalInfo';
 import SkillsAndInterests from './Profile/SkillsAndInterests';
 import { saveUser, updateUser, updateUserPartial } from '../../actions/user';
+import { savePreferencesViewState } from '../../actions/views';
 import { ThickPaddedBottom } from '../../styles/globalStyles';
 import { countryCodes } from '../../assets/data/countries';
 import Certifications from './Profile/Certifications';
-import { savePreferencesViewState } from '../../actions/views';
 import Collaboration from './Profile/Collaboration';
+import { connectScreenSize } from 'react-screen-size';
+import { mapScreenSizeToProps } from '../Navbar';
 import Modal from './Profile/common/SaveModal';
 import Mentorship from './Profile/Mentorship';
+import { Button } from 'semantic-ui-react';
+import styled from 'styled-components';
 import Career from './Profile/Career';
 import isEmpty from 'lodash/isEmpty';
 import Validator from 'validator';
 
 /*
 TODO:
-  - MENTORSHIP / VALIDATION: Require mentorship bio if either slider is toggled!
+  - MENTORSHIP / VALIDATION: Require mentorship bio if either slider is toggled! √
   - MENTORSHIP: Revisit copy! Some of this info should be moved to the "about us" public page.
-  - PERSONAL: Add info icon to email field, saying email will be publicly displayed if you provide it
-  - add title and description fields for sharing repos
-  - add error popup and modal for error on save
+  - PERSONAL: Add info icon to email field, saying email will be publicly displayed if you provide it √
   - folder icon behavior - open when any field expanded
-  - add validations for form fields - should be loose validations since nothing is strictly required
-  - error handling if save to server fails?
+  - add validations for form fields - should be loose validations since nothing is strictly required √
+  - error handling if save to server fails? √
   - use passport to pull in LinkedIn and Twitter handles √
   - we need to look at how users enter location (should have zip code or somehting and get location name by API - for D3 map as well!) √
   - MENTORSHIP: Looking for mentorship? If so, in what? Add new sliderToggle √
@@ -39,6 +41,11 @@ TODO:
   - areas of mentorship √
 */
 
+const BottomButton = styled(Button)`
+  right: 0;
+  bottom: 35px;
+`;
+
 class Profile extends React.Component {
   constructor(props) {
     super(props);
@@ -47,19 +54,37 @@ class Profile extends React.Component {
       user,
       viewState,
       errors: {},
+      scrollTop: '',
       modalOpen: false,
+      isPageValid: true,
+      profileWarning: '',
       socialPopUp: false,
       careerPopUp: false,
       projectsPopUp: false,
       personalPopUp: false,
       mentorshipPopUp: false,
-      isValidAndComplete: true,
       skillsAndInterestsPopUp: false,
     }
+    // SHARED ERRORS:
+    this.EMAIL_ERROR = "Please enter a valid email address."
+    this.CAREER_ERROR = "Please complete the entire section or clear the form."
+    this.CODEPEN_ERROR = "Please enter your username only, not your profile url.";
+    this.MENTORSHIP_ERROR = "To complete your mentorship prorgram enrollment, please fill out the section above.";
+    this.scrollTop = 0;
+  }
+
+  componentWillMount() {
+    window.addEventListener('scroll', this.handleScroll);
   }
 
   componentWillUnmount() {
     this.props.savePreferencesViewState(this.state.viewState);
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll = (e) => {
+    let scrollTop = e ? e.srcElement.body.scrollTop : 0;
+    this.scrollTop = scrollTop;
   }
 
   saveProjectsList = (items_list) => {
@@ -137,11 +162,11 @@ class Profile extends React.Component {
       name === 'twitter') {
       user.social[name] = value;
     } else if (name === 'mentorshipSkills' ) {
-      if (this.isValid(name, value)) {
+      if (this.isSectionValid(name, value)) {
         user.mentorship.mentorshipSkills = value;
       }
     } else {
-      if (this.isValid(name, value)) {
+      if (this.isSectionValid(name, value)) {
         user.personal[name] = value;
       }
     }
@@ -195,7 +220,7 @@ class Profile extends React.Component {
   }
 
   saveChanges = (modal) => {
-    if (this.isValidAndComplete()) {
+    if (this.isPageValid()) {
       updateUser(this.state.user).then(res => {
         const { updatedUser } = res.data;
         this.props.saveUser(updatedUser);
@@ -231,7 +256,7 @@ class Profile extends React.Component {
     const { user, user: { _id } } = this.state;
     const section = e.target.id.slice(0, -5);
 
-    if (this.isValid(section)) {
+    if (this.isSectionValid(section)) {
       updateUserPartial(_id, section, user[section]).then(res => {
         const { updatedUser } = res.data;
         this.props.saveUser(updatedUser);
@@ -250,48 +275,43 @@ class Profile extends React.Component {
     this.setState({ [id]: false });
   }
 
-  isValid = (field, str) => {
+  isSectionValid = (section, str) => {
     this.setState({ errors: {} });
     var errors = {};
 
     const {
       user: {
+        social: { codepen },
         personal: { email },
-        mentorship: {
-          isMentor,
-          isMentee,
-          mentorshipSkills
-        },
-        career: {
-          working,
-          tenure,
-          company,
-          jobSearch
-        }
+        mentorship: { isMentor, isMentee, mentorshipSkills },
+        career: { working, tenure, company, jobSearch },
       }
     } = this.state;
 
-    if (field === 'career') {
+    if (section === 'social' && codepen && Validator.isURL(codepen)) {
+      errors.codepen = this.CODEPEN_ERROR;
+    }
+    if (section === 'career') {
       if (working && working === 'no' && !tenure && !jobSearch) {
-        errors.career = "Please complete the entire section or clear the form."
+        errors.career = this.CAREER_ERROR;
       }
       if (working && working === 'yes' && !tenure && !company) {
-        errors.career = "Please complete the entire section or clear the form."
+        errors.career = this.CAREER_ERROR;
       }
     }
-    if (field === 'personal' && email && !Validator.isEmail(email)) {
-      errors.email = "Please enter a valid email address";
+    if (section === 'personal' && email && !Validator.isEmail(email)) {
+      errors.email = this.EMAIL_ERROR;
     }
-    if (field === 'mentorship' && (isMentee || isMentor) && !mentorshipSkills) {
-      errors.mentorshipSkills = "To complete your mentorship prorgram enrollment, please fill out the section above."
+    if (section === 'mentorship' && (isMentee || isMentor) && !mentorshipSkills) {
+      errors.mentorshipSkills = this.MENTORSHIP_ERROR;
     }
-    if (field === 'bio' && !Validator.isLength(str, { min: 0, max: 380 })) {
+    if (section === 'bio' && !Validator.isLength(str, { min: 0, max: 380 })) {
       errors.bio = "Bio must be 380 characters or less."
     }
-    if (field === 'displayName' && !Validator.isLength(str, { min: 0, max: 40 })) {
+    if (section === 'displayName' && !Validator.isLength(str, { min: 0, max: 40 })) {
       errors.displayName = "Display name must be 40 characters or less."
     }
-    if (field === 'mentorshipSkills' && !Validator.isLength(str, { min: 0, max: 200 })) {
+    if (section === 'mentorshipSkills' && !Validator.isLength(str, { min: 0, max: 200 })) {
       errors.mentorshipSkills = "Mentorshio bio must be 200 characters or less."
     }
 
@@ -303,45 +323,53 @@ class Profile extends React.Component {
     }
   }
 
-  isValidAndComplete = () => {
+  isPageValid = () => {
     this.setState({ errors: {} });
     var errors = {};
+    var profileStrength = 0;
 
-    const {
-      user: {
-        personal: { email },
-        mentorship: {
-          isMentor,
-          isMentee,
-          mentorshipSkills
-        },
-        career: {
-          working,
-          tenure,
-          company,
-          jobSearch
-        }
+    const { user: {
+        social: { codepen },
+        personal: { email, bio, country, location },
+        career: { working, tenure, company, jobSearch },
+        skillsAndInterests: { codingInterests, coreSkills },
+        mentorship: { isMentor, isMentee, mentorshipSkills },
       }
     } = this.state;
 
+    if (codepen && Validator.isURL(codepen)) {
+      errors.codepen = this.CODEPEN_ERROR;
+    }
     if (email && !Validator.isEmail(email)) {
-      errors.email = "Please enter a valid email address";
+      errors.email = this.EMAIL_ERROR;
     }
     if ((isMentee || isMentor) && !mentorshipSkills) {
-      errors.mentorshipSkills = "To complete your mentorship prorgram enrollment, please fill out the section above."
+      errors.mentorshipSkills = this.MENTORSHIP_ERROR;
     }
     if (working && working === 'no' && !tenure && !jobSearch) {
-      errors.career = "Please complete the entire section."
+      errors.career = this.CAREER_ERROR;
     }
     if (working && working === 'yes' && !tenure && !company) {
-      errors.career = "Please complete the entire section."
+      errors.career = this.CAREER_ERROR;
+    }
+
+    if (bio) profileStrength++;
+    if (country) profileStrength++;
+    if (location) profileStrength++;
+
+    if (isEmpty(codingInterests) && isEmpty(coreSkills)) {
+      this.setState({ profileWarning: 'Stronger profiles make for a stronger and more effective community — consider telling us about your skills and interests so other members know what you rock at!' });
+    } else if (!working) {
+      this.setState({ profileWarning: 'Stronger profiles make for a stronger and more effective community — consider telling us about where you are in your programming career so other members will know how long you\'ve been coding for!' });
+    } else if (profileStrength < 3) {
+      this.setState({ profileWarning: 'Nice work! Your profile is looking pretty strong. Why not round it off with some information about yourself (bio, region, etc.) so other members can learn more about you?' });
     }
 
     if (isEmpty(errors)) {
-      this.setState({ isValidAndComplete: true });
+      this.setState({ isPageValid: true });
       return true;
     } else {
-      this.setState({ errors, isValidAndComplete: false });
+      this.setState({ errors, isPageValid: false });
       return false;
     }
   }
@@ -381,33 +409,46 @@ class Profile extends React.Component {
         personal,
         username,
         mentorship,
-        skillsAndInterests
-      }
+        skillsAndInterests,
+      },
+      dismissedMessages
     } = this.state;
 
+    const { isDesktop, isMobile } = this.props.screen;
+
+    const TopButton = styled(Button)`
+      height: 42px !important;
+      padding: 10px !important;
+      ${ !isDesktop && 'margin-top: 10px !important;'}
+    `;
+
+    const Container = styled(ThickPaddedBottom)`
+      ${isMobile && 'padding: 0 10px !important;'}
+    `;
+
     return (
-      <ThickPaddedBottom className="ui container">
+      <Container className="ui container">
+        <Modal
+          size="small"
+          close={this.closeModal}
+          open={this.state.modalOpen}
+          isValid={this.state.isPageValid}
+          warning={this.state.isPageValid && this.state.profileWarning} />
         <UserLabel
           size="huge"
           username={username}
           image={personal.avatarUrl}
           toggleAll={this.toggleAll}
-          folder={this.state.viewState.showAll}
-          label={mentorship.mentor ? 'Mentor' : 'Member'} />
-
-        <div onClick={this.saveChanges} id="saveButton" className="ui huge green label">
-          Save
-          <div className="detail">
-            <i className="save icon" />
-          </div>
-        </div>
-
-        <Modal
-          size="small"
-          close={this.closeModal}
-          open={this.state.modalOpen}
-          isValid={this.state.isValidAndComplete} />
-
+          folder={isDesktop ? this.state.viewState.showAll : ''}
+          label={!isDesktop ? '' : mentorship.mentor ? 'Mentor' : 'Member'} />
+        <TopButton
+          icon="save"
+          size="large"
+          color="green"
+          content="Save"
+          floated={isDesktop && "right"}
+          labelPosition="right"
+          onClick={this.saveChanges} />
         <div className="ui raised segment">
           <PersonalInfo
             {...personal}
@@ -473,8 +514,15 @@ class Profile extends React.Component {
             handleRadioChange={this.handleRadioChange}
             showCareer={this.state.viewState.showCareer}
             handleTenureChange={this.handleTenureChange} />
+          <BottomButton
+            icon="save"
+            color="green"
+            content="Save"
+            floated="right"
+            labelPosition="right"
+            onClick={this.saveChanges} />
         </div>
-      </ThickPaddedBottom>
+      </Container>
     );
   }
 }
@@ -491,4 +539,6 @@ Profile.propTypes = {
   viewState: propTypes.object
 }
 
-export default connect(mapStateToProps, { saveUser, savePreferencesViewState })(Profile);
+export default connectScreenSize(mapScreenSizeToProps)(
+  connect(mapStateToProps, { saveUser, savePreferencesViewState })(Profile)
+);

@@ -13,15 +13,9 @@ class Community extends React.Component {
     const CommunityWrapper = screen.isMobile ?
     styled.div`
     padding: 0 12vw 5vh 12vw;
-    .fa-free-code-camp {
-      margin-right: 5px;
-    }
     ` :
     styled.div`
-    padding: 0 3vw 5vh 3vw;
-    .fa-free-code-camp {
-      margin-right: 5px;
-    }
+    padding: 0 7vw 5vh 7vw;
     `;
     return (
       <CommunityWrapper>

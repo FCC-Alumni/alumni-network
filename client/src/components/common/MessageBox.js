@@ -1,4 +1,5 @@
 import React from 'react';
+import shortid from 'shortid';
 import propTypes from 'prop-types';
 
 class MessageBox extends React.Component {
@@ -6,14 +7,14 @@ class MessageBox extends React.Component {
     style: {}
   }
 
-  handleClick = () => {
+  handleClick = (e) => {
     this.setState({ style: { display: "none" } });
   }
 
   render() {
     const { header, message, dismissable, type } = this.props;
     const dismiss = (
-      <i onClick={this.handleClick} className="close icon"></i>
+      <i onClick={this.handleClick} className="close icon" />
     );
     return (
       <div style={ this.state.style } className={`ui ${type} message`}>

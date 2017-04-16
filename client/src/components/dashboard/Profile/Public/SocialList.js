@@ -12,7 +12,7 @@ const SocialList = ({ profileUrl, username, social, email, contactsOnly }) => {
         href={`mailto:${email}?subject=fCC%20Alumni%20Network%20/%20Contact%20Request`} /> }
     { !contactsOnly &&
       <Item
-        icon="fcc"
+        icon="free code camp"
         text="freeCodeCamp"
         href={`https://freeCodeCamp.com/${username}`} /> }
       <Item

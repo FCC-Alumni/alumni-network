@@ -21,7 +21,7 @@ const IconLinks = ({ user, handleClick }) => {
         target="_blank"
         onClick={handleClick}
         href={`https://www.freecodecamp.com/${user.username}`}>
-        <Icon className="fa fa-free-code-camp"/>
+        <Icon className="free code camp icon"/>
       </a>
       {/* will only render the following links if user has entered info for these fields */}
       { social.codepen &&

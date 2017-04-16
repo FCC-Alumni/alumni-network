@@ -1,15 +1,20 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+
 import NavBar from './components/Navbar';
 import HomePage from './components/HomePage';
-import PublicLanding from './components/PublicLanding';
-import LoginPage from './components/signup/LoginPage';
-import PassportPage from './components/signup/PassportPage';
-import FlashMessagesList from './components/flash/FlashMessagesList';
 import AppContainer from './components/AppContainer';
+import LoginPage from './components/signup/LoginPage';
+import PublicLanding from './components/PublicLanding';
+import PassportPage from './components/signup/PassportPage';
+import createStringPolyfills from './assets/polyfills/string';
+import FlashMessagesList from './components/flash/FlashMessagesList';
 
 import './styles/App.css';
 import '../node_modules/flag-icon-css/css/flag-icon.css';
+
+// create global polyfills for ES6 String Methods
+createStringPolyfills();
 
 export const CatchAll = () => (
   <div style={{ textAlign: 'center', marginTop: '125px' }}>
