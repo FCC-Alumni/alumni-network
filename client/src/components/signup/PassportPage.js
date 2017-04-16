@@ -27,7 +27,7 @@ class PassportPage extends React.Component {
               message: 'Welcome back to the app!'
             }
           });
-          this.props.history.push('/dashboard/preferences');
+          this.props.history.push('/dashboard');
           // verification process
         } else if (user.username) {
           const { personal, username, _id } = user;
@@ -60,7 +60,7 @@ class PassportPage extends React.Component {
         }
       });
       socket.emit('announce-new-user', { user });
-      this.props.history.push('/dashboard/preferences');
+      this.props.history.push('/dashboard');
     })
     .catch(err => {
       this.setState({ loading: false });

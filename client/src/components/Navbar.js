@@ -57,8 +57,13 @@ class NavBar extends React.Component {
             <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</div>
           </div> :
           <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
-            <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</div>
-            <NavLink className="item" activeClassName="active item" exact to="/dashboard">Dashboard</NavLink>
+            {isDesktop ?
+              <NavLink className="item" activeClassName="active item" exact to="/dashboard">
+                <Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</NavLink> :
+                <div>
+                  <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</div>
+                  <NavLink className="item" activeClassName="active item" exact to="/dashboard">Dashboard</NavLink>
+                </div>}
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/preferences">Profile</NavLink>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/community">Community</NavLink>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/mentorship">Mentorship</NavLink>
