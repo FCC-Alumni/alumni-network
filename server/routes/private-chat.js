@@ -1,6 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import axios from 'axios';
+import User from '../models/user';
 import PrivateChat from '../models/private-chat';
 import { isAuthenticated } from './passport';
 
@@ -29,26 +30,30 @@ router.post('/api/private-chat/add-message', isAuthenticated, (req, res) => {
   const { recipient } = req.body;
   PrivateChat.findOne({ $and: [{members: username}, {members: recipient}] }, (err, conversation) => {
     if (err) res.sendStatus(500);
-    if (!conversation) {
-      const chat = new PrivateChat({
-        members: [ username, recipient ],
-        notifications: {
-          [username]: 0,
-          [recipient]: 0
-        },
-        history: [ req.body ]
-      });
-      chat.save(e => {
-        if (e) res.sendStatus(500);
-        res.sendStatus(200);
-      });
-    } else {
-      conversation.history.push(req.body);
-      conversation.save(e => {
-        if (e) res.sendStatus(500);
-        res.sendStatus(200);
-      });
-    }
+    User.find({ username: recipient }, (err, user) => {
+      if (err || user.length === 0) {
+        res.sendStatus(404);
+      } else if (!conversation) {
+        const chat = new PrivateChat({
+          members: [ username, recipient ],
+          notifications: {
+            [username]: 0,
+            [recipient]: 0
+          },
+          history: [ req.body ]
+        });
+        chat.save(e => {
+          if (e) res.sendStatus(500);
+          res.sendStatus(200);
+        });
+      } else {
+        conversation.history.push(req.body);
+        conversation.save(e => {
+          if (e) res.sendStatus(500);
+          res.sendStatus(200);
+        });
+      }
+    });
   });
 });
 

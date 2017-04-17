@@ -15,6 +15,7 @@ import Mentorship from './dashboard/Mentorship';
 import Chat from './dashboard/Chat/ChatController';
 import Profile_Config from './dashboard/Profile_Config';
 import Profile_Public from './dashboard/Profile_Public';
+import Account from './dashboard/Account';
 
 class AppContainer extends React.Component {
 
@@ -76,6 +77,7 @@ class AppContainer extends React.Component {
             <Route exact path={`${url}/mentorship`} component={Mentorship}/>
             <Route exact path={`${url}/chat`} component={Chat}/>
             <Route exact path={`${url}/chat/:username`} component={Chat}/>
+            <Route exact path={`${url}/account`} component={Account}/>
             <Route component={CatchAll} />
           </Switch> }
       </div>
