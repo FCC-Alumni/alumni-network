@@ -53,10 +53,15 @@ class NavBar extends React.Component {
     const userNav = (
       <div>
         {!this.state.nav ?
+
           <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
             <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</div>
-          </div> :
+          </div>
+
+          :
+
           <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
+
             {isDesktop ?
               <NavLink className="item" activeClassName="active item" exact to="/dashboard">
                 <Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</NavLink> :
@@ -64,14 +69,22 @@ class NavBar extends React.Component {
                   <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</div>
                   <NavLink className="item" activeClassName="active item" exact to="/dashboard">Dashboard</NavLink>
                 </div>}
+
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/preferences">Profile</NavLink>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/community">Community</NavLink>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/mentorship">Mentorship</NavLink>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/chat">Mess Hall</NavLink>
-            <div className="right menu">
+
+            <div className={`${isDesktop ? 'right menu' : ''}`}>
+              <NavLink className ="item" activeClassName="active item" exact to="/dashboard/account">
+                {isDesktop ? <i className="setting icon"></i> : 'Account'}
+              </NavLink>
               <a className="item" href={`${APP_HOST}/logout`}>Logout</a>
             </div>
-          </div> }
+
+          </div>
+
+        }
       </div>
     );
     return (

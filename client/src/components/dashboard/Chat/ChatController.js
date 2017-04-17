@@ -281,7 +281,12 @@ const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, p
     try {
       conversantAvatar = community.find(u => u.username === username).personal.avatarUrl;
     } catch (e) {
-      console.warn('Chat Controller waiting on props...');
+      if (community.size) {
+        console.log('Community exists but there is no such user, redirect:')
+        props.history.push('/dashboard/chat');
+      } else {
+        console.warn('Chat Controller waiting on props...');
+      }
     }
     try {
       totalNotifications = privateChat.reduce((t,c) => t + c.get('notifications'), 0);

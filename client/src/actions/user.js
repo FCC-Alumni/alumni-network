@@ -34,3 +34,5 @@ export const logoutUser = () => {
     type: LOGOUT_USER
   }
 }
+
+export const deleteUser = () => axios.post('/api/delete-user');

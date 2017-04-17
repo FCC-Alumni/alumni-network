@@ -3,6 +3,8 @@ import passport from 'passport';
 import axios from 'axios';
 import _merge from 'lodash/merge';
 import User from '../models/user';
+import Chat from '../models/chat';
+import PrivateChat from '../models/private-chat';
 import { isAuthenticated } from './passport';
 import {
   getFrontEndCert,
@@ -37,8 +39,8 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
     if ((frontCert.request._redirectCount +
       backCert.request._redirectCount +
       dataCert.request._redirectCount) >= 3 ) {
-      // NOTE: temporarily allows anyone in for testing:
-      return true;
+      // NOTE: temporarily set to true to allow anyone in:
+      return false;
     } else {
       return {
         Front_End: frontCert.request._redirectCount === 0 ? true : false,
@@ -100,7 +102,7 @@ router.post('/api/update-user', (req, res) => {
 
 router.post('/api/update-user-partial', (req, res) => {
   const { id, section, sectionData } = req.body;
-  
+
   User.findById(id, (err, updatedUser) => {
     if (!err) {
       updatedUser[section] = sectionData;
@@ -110,6 +112,39 @@ router.post('/api/update-user-partial', (req, res) => {
       res.json({ updatedUser })
     } else {
       res.status(401).json({ error: 'User could not be saved' });
+    }
+  });
+});
+
+/* if a user deletes their account we need to remove them from chat and private chats as well
+   because these rely on user data derived from the community in some places. And presumably
+   we can assume if they want to remove their account they want their chat history removed as
+   well. */
+router.post('/api/delete-user', (req, res) => {
+  const { username } = req.user;
+  console.log('deleting', username)
+  User.findByIdAndRemove(req.user._id, (err, user) => {
+    if (!err) {
+      console.log(`${username} deleted`);
+      Chat.findOne({}, (err, chat) => {
+        if (!err) {
+          if (chat) {
+            console.log(`${username} removed from Global Chat`);
+            chat.history = chat.history.filter(m => m.author !== username);
+            chat.markModified('history');
+            chat.save();
+          }
+        }
+        PrivateChat.remove({ members: username }, (err, history) => {
+          if (!err) {
+            console.log(`${username}'s Private Chat deleted`);
+            req.session.destroy();
+            res.sendStatus(200);
+          };
+        });
+      });
+    } else {
+      res.sendStatus(500);
     }
   });
 });
