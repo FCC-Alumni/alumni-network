@@ -4,7 +4,7 @@ import propTypes from 'prop-types';
 class FlashMessage extends React.Component {
 
   handleClick = () => {
-    this.props.deleteFlashMessage(this.props.message.id)
+    this.props.clearFlashMessage()
   }
 
   render() {
@@ -25,7 +25,7 @@ class FlashMessage extends React.Component {
 
 FlashMessage.propTypes = {
   message: propTypes.object.isRequired,
-  deleteFlashMessage: propTypes.func.isRequired
+  clearFlashMessage: propTypes.func.isRequired
 }
 
 export default FlashMessage;

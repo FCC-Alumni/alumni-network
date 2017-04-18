@@ -5,13 +5,13 @@ import styled from 'styled-components';
 import FlashMessage from './FlashMessage';
 import { mapScreenSizeToProps } from '../Navbar';
 import { connectScreenSize } from 'react-screen-size';
-import { deleteFlashMessage } from '../../actions/flashMessages';
+import { clearFlashMessage } from '../../actions/flashMessages';
 
 
 class FlashMessagesList extends React.Component {
   render() {
 
-    const { deleteFlashMessage, location: { pathname }, screen: { isDesktop } } = this.props;
+    const { clearFlashMessage, location: { pathname }, screen: { isDesktop } } = this.props;
 
     const Container = !isDesktop && (pathname === '/about' || pathname === '/login' || pathname === '/')
       ? styled.div`
@@ -23,8 +23,8 @@ class FlashMessagesList extends React.Component {
           margin-bottom: 20px;
         `;
 
-    const messages = this.props.messages.map(message =>
-      <FlashMessage key={message.id} message={message} deleteFlashMessage={deleteFlashMessage}/>
+    const messages = this.props.messages.map((message, i) =>
+      <FlashMessage key={i} message={message} clearFlashMessage={clearFlashMessage}/>
     );
 
     return (
@@ -35,7 +35,7 @@ class FlashMessagesList extends React.Component {
 
 FlashMessagesList.propTypes = {
   messages: propTypes.array.isRequired,
-  deleteFlashMessage: propTypes.func.isRequired
+  clearFlashMessage: propTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {
@@ -45,5 +45,5 @@ const mapStateToProps = (state) => {
 }
 
 export default connectScreenSize(mapScreenSizeToProps)(
-  connect(mapStateToProps, { deleteFlashMessage })(FlashMessagesList)
+  connect(mapStateToProps, { clearFlashMessage })(FlashMessagesList)
 );
