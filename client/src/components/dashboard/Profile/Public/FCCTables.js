@@ -4,6 +4,7 @@ import Table from './Table';
 import styled from 'styled-components';
 import TableRow from './TableRow';
 import { hoverTransition } from '../../../../styles/globalStyles';
+import { Popup } from 'semantic-ui-react';
 
 const URL = "https://freeCodeCamp.com/";
 
@@ -61,9 +62,14 @@ const FccTables = ({
           content={
             <div>
               {totalChallneges}
-              <InfoIcon
-                className="info circle icon"
-                title="This value includes the total number of all projects, algorithms, and challenges combined." />
+              <Popup
+                inverted
+                wide
+                position="top center"
+                trigger={<InfoIcon
+                  className="info circle icon" />}>
+                  This value includes the total number of all projects, algorithms, and challenges combined.
+              </Popup>
             </div> } />
       </Table>
       <Table columnWidth={width}>
