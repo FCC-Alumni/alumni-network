@@ -28,7 +28,7 @@ export default () => {
     <div>
 
       <Route path="/" component={NavBar} />
-      <FlashMessagesList />
+      <Route path="/" component={FlashMessagesList} />
 
       <Switch>
         <Route exact path="/" component={HomePage} />

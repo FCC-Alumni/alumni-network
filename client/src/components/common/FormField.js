@@ -41,6 +41,7 @@ const FormField = ({
         <Popup
           wide
           inverted
+          offset={5}
           position="top center"
           trigger={<a href={actionUrl}><div style={{ cursor: 'pointer' }} className="ui corner green label">{actionIcon}</div></a>}>
           Sign in to your account to populate this field. We will not utilize your account in any way.
