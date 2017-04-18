@@ -48,9 +48,9 @@ class PublicProfile extends React.Component {
   }
 
   componentDidMount() {
-    // document.body.scrollTop = 0;
+    document.body.scrollTop = 0;
     // *** *** *** *** *** *** *** *** *** ***
-    //                    ==> UNCOMMENT WHEN DONE WORKING ON COMPONENT <==
+    //  ==> ^^ UNCOMMENT WHEN DONE WORKING ON COMPONENT ^^ <==
     // *** *** *** *** *** *** *** *** *** ***
     if (this.state.firstLoad) {
       this.longestStreak();

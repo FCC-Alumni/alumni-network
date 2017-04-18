@@ -1,9 +1,19 @@
 /* eslint-disable */
 import React from 'react';
 import { connect } from 'react-redux';
-import { deleteUser, logoutUser } from '../../actions/user';
+import styled from 'styled-components';
 import { Modal, Button } from 'semantic-ui-react';
+import { mapScreenSizeToProps } from '../Navbar';
+import { connectScreenSize } from 'react-screen-size';
+import { deleteUser, logoutUser } from '../../actions/user';
 import { addFlashMessage, clearFlashMessage } from '../../actions/flashMessages';
+
+const Input = styled.input`
+  width: 100%;
+  border: 1px solid rgba(5,5,5,0.25);
+  padding: 4px 6px !important;
+  font-size: 22px !important;
+`;
 
 const ConfirmModal = ({ open, input, handleInput, deleteUser, close }) => {
   return (
@@ -17,7 +27,7 @@ const ConfirmModal = ({ open, input, handleInput, deleteUser, close }) => {
 
       <Modal.Content>
         <form onSubmit={deleteUser}>
-          <input
+          <Input
             autoFocus
             autoComplete='off'
             id="deleteInput"
@@ -50,8 +60,9 @@ const ConfirmModal = ({ open, input, handleInput, deleteUser, close }) => {
 
 class Account extends React.Component {
   state = {
+    input: '',
     modal: false,
-    input: ''
+    flashMessageCleared: false
   }
   deleteUser = (e) => {
     if (e) e.preventDefault();
@@ -91,9 +102,33 @@ class Account extends React.Component {
   }
   handleInput = (e) => this.setState({ input: e.target.value });
   toggleModal = () => this.setState({ modal: !this.state.modal });
+  componentDidMount = () => document.addEventListener('click', this.handleClick);
+  componentWillUnmount = () => document.removeEventListener('click', this.handleClick);
+  // 'close' is className of close icon in flash message
+  handleClick = (e) => e.target.classList.contains('close')
+    ? this.setState({ flashMessageCleared: true })
+    : this.setState({ flashMessageCleared: false });
+
   render() {
+    const { isDesktop } = this.props.screen;
+    const { flashMessageCleared } = this.state;
+    console.log(document.getElementsByClassName('flashMessage'))
+    // handles margins when flash messages are rendered and
+    // also when subsequently removed. handleClick and flashMessageCleared state of
+    // this component are all related to this.
+    const Container = styled.div`
+      margin-top: ${document.getElementsByClassName('flashMessage').length > 0
+        && !flashMessageCleared
+        ? '53px' : isDesktop
+        ? '200px': '175px' } !important;
+    `;
+    // still a slight issue with this route / component ^^
+    // when flash message gets cleared by AppContainer (if user does not clear before changing routes)
+    // even though it does not appear, it is not fully removed from the DOM by the time this
+    // component renders, so document.getElementsByClassName('flashMessage').length is still > 0
+    // and component renders with a 53px margin. Not ideal.
     return (
-      <div className="ui main text container" id="accountSettings">
+      <Container className="ui main text center aligned container">
         <div className='ui segment' style={{ padding: '25px' }}>
           <h1 className="ui header">Account Settings for: {this.props.user}</h1>
           <button className="ui red button" onClick={this.toggleModal}>Delete My Account</button>
@@ -106,7 +141,7 @@ class Account extends React.Component {
             deleteUser={this.deleteUser}
             close={this.toggleModal} />
         </div>
-      </div>
+      </Container>
     );
   }
 };
@@ -121,4 +156,6 @@ const dispatchProps = {
   logoutUser
 };
 
-export default connect(mapStateToProps, dispatchProps)(Account);
+export default connectScreenSize(mapScreenSizeToProps)(
+  connect(mapStateToProps, dispatchProps)(Account)
+);
