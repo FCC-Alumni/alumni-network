@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -54,7 +54,6 @@ class Profile extends React.Component {
       user,
       viewState,
       errors: {},
-      scrollTop: '',
       modalOpen: false,
       isPageValid: true,
       profileWarning: '',
@@ -70,21 +69,10 @@ class Profile extends React.Component {
     this.CAREER_ERROR = "Please complete the entire section or clear the form."
     this.CODEPEN_ERROR = "Please enter your username only, not your profile url.";
     this.MENTORSHIP_ERROR = "To complete your mentorship prorgram enrollment, please fill out the section above.";
-    this.scrollTop = 0;
-  }
-
-  componentWillMount() {
-    window.addEventListener('scroll', this.handleScroll);
   }
 
   componentWillUnmount() {
     this.props.savePreferencesViewState(this.state.viewState);
-    window.removeEventListener('scroll', this.handleScroll);
-  }
-
-  handleScroll = (e) => {
-    let scrollTop = e ? e.srcElement.body.scrollTop : 0;
-    this.scrollTop = scrollTop;
   }
 
   saveProjectsList = (items_list) => {
@@ -228,19 +216,17 @@ class Profile extends React.Component {
       }).catch(err => console.log(err));
     } else {
       modal && this.setState({ modalOpen: true }, () => {
+        var { viewState } = this.state;
         // open sections that have errors if they are closed
         if (this.state.errors.mentorshipSkills) {
-          var { viewState } = this.state;
           viewState.showMentorship = true;
           this.setState({ viewState });
         }
         if (this.state.errors.email) {
-          var { viewState } = this.state;
           viewState.showProfile = true;
           this.setState({ viewState });
         }
         if (this.state.errors.career) {
-          var { viewState } = this.state;
           viewState.showCareer = true;
           this.setState({ viewState });
         }
@@ -422,12 +408,10 @@ class Profile extends React.Component {
       ${ !isDesktop && 'margin-top: 10px !important;'}
     `;
 
-    const Container = styled(ThickPaddedBottom)`
-      ${isMobile && 'padding: 0 10px !important;'}
-    `;
+    const mobilePadding = isMobile ? { padding: '0 10px' } : {};
 
     return (
-      <Container className="ui container">
+      <ThickPaddedBottom style={mobilePadding} className="ui container">
         <Modal
           size="small"
           close={this.closeModal}
@@ -522,7 +506,7 @@ class Profile extends React.Component {
             labelPosition="right"
             onClick={this.saveChanges} />
         </div>
-      </Container>
+      </ThickPaddedBottom>
     );
   }
 }

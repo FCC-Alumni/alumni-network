@@ -3,22 +3,33 @@ import Validator from 'validator';
 import propTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 import indexOf from 'lodash/indexOf';
+import styled from 'styled-components';
 import { Dropdown, Input } from 'semantic-ui-react';
 import { connectScreenSize } from 'react-screen-size';
-import { repoOptions } from '../../assets/data/dropdownOptions';
-import { mapScreenSizeToProps } from '../dashboard/Community/UserCard';
-import {
-  validateGithubRepo,
-  searchGithubCommits,
-  validateOtherRepos
-} from '../../actions/repoValidations';
-
+import { StyledItem } from '../../../styles/globalStyles';
+import { mapScreenSizeToProps } from '../Community/UserCard';
+import { repoOptions } from '../../../assets/data/dropdownOptions';
+import { validateGithubRepo, searchGithubCommits, validateOtherRepos } from '../../../actions/repoValidations';
 
 /*
 TODO:
   1) Refactor addItem() code
   2) Create RegExp's to replace long if statements in addItem()
 */
+
+export const Container = styled.div`
+  margin: 16px 0 !important;
+`;
+
+const List = styled.div`
+  margin: 8px 0 0 0 !important;
+`;
+
+const Item = styled(StyledItem)`
+  .icon {
+    color: #007E00 !important;
+  }
+`;
 
 class RepoList extends React.Component {
   state = {
@@ -51,7 +62,8 @@ class RepoList extends React.Component {
     }
   }
 
-  handleChange = (e, data) => {
+  handleChange = (e) => {
+    console.log(e.target.value)
     this.setState({ item: e.target.value, error: '' });
   }
 
@@ -102,8 +114,21 @@ class RepoList extends React.Component {
     const { saveListToParent } = this.props;
     const [ namespace, repo ] = item.split('/');
 
-    if(!item) {
+    // check if nothing entered
+    if (!item) {
       this.setState({ isLoading: false });
+      return;
+      // or if format is not: NAME_SPACE/REPO
+    } else if (!repo) {
+      this.setState({
+        error: {
+          header: 'Entry invalid. Plese enter a valid repo in the format: namespace/repo.',
+          repo: '',
+          namespace: '',
+        },
+        item: '',
+        isLoading: false
+      });
       return;
     }
 
@@ -286,18 +311,18 @@ class RepoList extends React.Component {
 
     const listItems = this.state.items_list.map((el, index) => {
       return (
-        <div key={index} className="item">
+        <Item key={index} className="item">
           <div className="right floated content">
             <a><i onClick={this.removeItem.bind(this, el)} className="remove icon"/></a>
             <a><i onClick={this.editItem.bind(this, el)} className="edit icon"/></a>
           </div>
           <a href={`${el.label}${el.item}`} target="_blank" className="content">{`${el.label}${el.item}`}</a>
-        </div>
+        </Item>
       );
     });
 
     return (
-      <div>
+      <Container>
 
         <Input
           icon={icon}
@@ -307,29 +332,31 @@ class RepoList extends React.Component {
           onChange={this.handleChange}
           placeholder="Namespace / Repo"
           fluid={isMobile ? true : false}
-          label={<Dropdown className="basic green" onChange={this.handleLabelChange} defaultValue="https://github.com/" options={repoOptions} />} />
+          label={<Dropdown
+            options={repoOptions}
+            className="basic green"
+            defaultValue="https://github.com/"
+            onChange={this.handleLabelChange} />} />
 
       { !isEmpty(error) && !error.repo && !error.namespace &&
         <div className="ui left pointing red basic label">
           {error.header}
         </div> }
 
-
-        <div className="ui middle aligned divided list">
+        <List className="ui middle aligned divided selection list">
           {listItems}
-        </div>
+        </List>
 
       { !isEmpty(error) && error.repo && error.namespace &&
         <div className="ui error message">
           <div className="header">{error.header}</div>
-        { error.repo &&
           <ul className="list">
             <li>{error.namespace}</li>
             <li>{error.repo}</li>
-          </ul> }
+          </ul>
         </div> }
 
-      </div>
+      </Container>
     );
   }
 }

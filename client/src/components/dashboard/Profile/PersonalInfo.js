@@ -1,4 +1,5 @@
 import React from 'react';
+import { Container } from './RepoList';
 import Ribbon from './common/RibbonHeader';
 import { Dropdown } from 'semantic-ui-react';
 import ListItem from '../../common/ListItem';
@@ -37,8 +38,8 @@ const PersonalInfo = ({
         subSaveClick={subSaveClick}
         wrapperClass="profileWrapper"
         onClick={()=>{toggle('showProfile')}} />
-      <form className={`ui form profilePane ${showProfile ? 'show' : 'hide'}`}>
-        <div className="ui list">
+      <div className={`ui form profilePane ${showProfile ? 'show' : 'hide'}`}>
+        <Container className="ui list">
           <ListItem>
             <FormField
               errors={errors}
@@ -100,8 +101,8 @@ const PersonalInfo = ({
                 {errors.bio}
               </div> }
           </ListItem>
-        </div>
-      </form>
+        </Container>
+      </div>
     </div>
   );
 }

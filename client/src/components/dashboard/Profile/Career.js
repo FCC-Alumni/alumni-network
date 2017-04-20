@@ -1,4 +1,5 @@
 import React from 'react';
+import { Container } from './RepoList';
 import styled from 'styled-components';
 import Ribbon from './common/RibbonHeader';
 import { Dropdown } from 'semantic-ui-react';
@@ -55,67 +56,69 @@ const Career = ({
           <Error className="ui red basic label">
             {errors.career}
           </Error> }
-        <div className="inline fields">
-          <label>Are you employed as a software developer?</label>
-          <RadioButton
-            label='Yes'
-            name="working"
-            onChange={handleRadioChange}
-            checked={working === 'yes' && true} />
-          <RadioButton
-            label='No'
-            name="working"
-            onChange={handleRadioChange}
-            checked={working === 'no' && true}  />
-        </div>
-        <div className={`surveyPaneWorking ${working === 'yes' ? 'show' : 'hide'}`}>
-          <div className="inline field">
-            <label>For how long have you been a working software developer?</label>
-            <Dropdown
-              value={tenure}
-              placeholder="≤ 1 year"
-              options={surveyOptions}
-              onChange={handleTenureChange} />
-          </div>
-          <FormField
-            name="company"
-            errors={errors}
-            value={company}
-            inputOptions="small"
-            placeholder="Enter Company"
-            onChange={handleInputChange}
-            label="Where are you currently employed?" />
-          <Button onClick={clearForm} className="ui tiny green basic button">Clear Form</Button>
-        </div>
-        <div className={`surveyPaneWorking ${working === 'no' ? 'show' : 'hide'}`}>
-          <div className={`${isMobile ? 'grouped' : 'inline'} fields`}>
-            <label>Are you currently looking for full-time employment as a software developer?</label>
+        <Container>
+          <div className="inline fields">
+            <label>Are you employed as a software developer?</label>
             <RadioButton
-              label='Yes!'
-              name="jobSearch"
+              label='Yes'
+              name="working"
               onChange={handleRadioChange}
-              checked={jobSearch === 'Yes!' && true} />
+              checked={working === 'yes' && true} />
             <RadioButton
-              name="jobSearch"
-              label="No, I'm not quite ready"
+              label='No'
+              name="working"
               onChange={handleRadioChange}
-              checked={jobSearch === "No, I'm not quite ready" && true} />
-            <RadioButton
-              name="jobSearch"
-              label='No, I am a hobbyist'
-              onChange={handleRadioChange}
-              checked={jobSearch === 'No, I am a hobbyist' && true} />
+              checked={working === 'no' && true}  />
           </div>
-          <div className="inline field">
-            <label>For how long have you been coding / learning to code?</label>
-            <Dropdown
-              placeholder="≤ 1 year"
-              options={surveyOptions}
-              value={tenure}
-              onChange={handleTenureChange} />
+          <div className={`surveyPaneWorking ${working === 'yes' ? 'show' : 'hide'}`}>
+            <div className="inline field">
+              <label>For how long have you been a working software developer?</label>
+              <Dropdown
+                value={tenure}
+                placeholder="≤ 1 year"
+                options={surveyOptions}
+                onChange={handleTenureChange} />
+            </div>
+            <FormField
+              name="company"
+              errors={errors}
+              value={company}
+              inputOptions="small"
+              placeholder="Enter Company"
+              onChange={handleInputChange}
+              label="Where are you currently employed?" />
+            <Button onClick={clearForm} className="ui tiny green basic button">Clear Form</Button>
           </div>
-          <Button onClick={clearForm} className="ui tiny green basic button">Clear Form</Button>
-        </div>
+          <div className={`surveyPaneWorking ${working === 'no' ? 'show' : 'hide'}`}>
+            <div className={`${isMobile ? 'grouped' : 'inline'} fields`}>
+              <label>Are you currently looking for full-time employment as a software developer?</label>
+              <RadioButton
+                label='Yes!'
+                name="jobSearch"
+                onChange={handleRadioChange}
+                checked={jobSearch === 'Yes!' && true} />
+              <RadioButton
+                name="jobSearch"
+                label="No, I'm not quite ready"
+                onChange={handleRadioChange}
+                checked={jobSearch === "No, I'm not quite ready" && true} />
+              <RadioButton
+                name="jobSearch"
+                label='No, I am a hobbyist'
+                onChange={handleRadioChange}
+                checked={jobSearch === 'No, I am a hobbyist' && true} />
+            </div>
+            <div className="inline field">
+              <label>For how long have you been coding / learning to code?</label>
+              <Dropdown
+                placeholder="≤ 1 year"
+                options={surveyOptions}
+                value={tenure}
+                onChange={handleTenureChange} />
+            </div>
+            <Button onClick={clearForm} className="ui tiny green basic button">Clear Form</Button>
+          </div>
+        </Container>
       </div>
     </div>
   );

@@ -1,48 +1,38 @@
 import React from 'react';
-import shortid from 'shortid';
 import propTypes from 'prop-types';
+import styled from 'styled-components';
 
 class MessageBox extends React.Component {
   state = {
-    style: {}
+    hidden: false
   }
 
   handleClick = (e) => {
-    this.setState({ style: { display: "none" } });
+    this.setState({ hidden: true });
   }
 
   render() {
-    const { header, message, dismissable, type } = this.props;
-    const dismiss = (
-      <i onClick={this.handleClick} className="close icon" />
-    );
+    const { header, message, dismissable, type, hide } = this.props;
+    const { hidden } = this.state;
+    const Message = styled.div`
+      ${ (hidden || hide) && 'display: none !important;'}
+    `;
     return (
-      <div style={ this.state.style } className={`ui ${type} message`}>
-        { dismissable && dismiss }
+      <Message className={`ui ${type} message`}>
+        { dismissable && <i onClick={this.handleClick} className="close icon" /> }
         <div className="header">{header}</div>
         {message}
-      </div>
+      </Message>
     );
   }
 }
 
 MessageBox.propTypes = {
+  hide: propTypes.bool,
+  type: propTypes.string,
   header: propTypes.string,
+  dismissable: propTypes.bool,
   message: propTypes.string.isRequired,
-  color: propTypes.string
-}
-
-MessageBox.defaultProps = {
-  color: 'green'
 }
 
 export default MessageBox;
-
-// EXAMPLE USAGE
-// <MessageBox
-//   header="Would you like to be a mentor?"
-//   message="The green goal of..."
-//   dismissable={true}
-//   color="red",
-//   type="info"
-// />

@@ -1,9 +1,15 @@
 import React from 'react';
 import propTypes from 'prop-types';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+`;
 
 const RibbonHeader = ({ content, onClick, wrapperClass, showPopUp, subSaveClick, id, showSave }) => {
-  return(
-    <div>
+  return (
+    <Container>
       <div className={`ui green large ribbon label ${wrapperClass}`} onClick={onClick}>
         {content}
       { showSave &&
@@ -12,7 +18,7 @@ const RibbonHeader = ({ content, onClick, wrapperClass, showPopUp, subSaveClick,
         </div> }
       </div>
     { showSave && <div className={`ui left pointing basic green label savedPopUp ${showPopUp ? 'show' : 'hide'}`}>Saved</div> }
-    </div>
+  </Container>
   );
 }
 
