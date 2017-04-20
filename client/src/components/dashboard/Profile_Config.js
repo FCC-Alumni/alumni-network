@@ -447,7 +447,6 @@ class Profile extends React.Component {
             handleCountryChange={this.handleCountryChange} />
           <Certifications
             toggle={this.toggle}
-            showPopUp={this.state.fccPopUp}
             fccCerts={this.state.user.fccCerts}
             showFCC={this.state.viewState.showFCC} />
           <Mentorship
@@ -464,17 +463,17 @@ class Profile extends React.Component {
           <SkillsAndInterests
             toggle={this.toggle}
             {...skillsAndInterests}
-            showPopUp={this.state.skillsPopUp}
             subSaveClick={this.handleSubSaveClick}
             showSkills={this.state.viewState.showSkills}
             handleSkillsChange={this.handleSkillsChange}
+            showPopUp={this.state.skillsAndInterestsPopUp}
             handleInterestsChange={this.handleInterestsChange} />
           <Collaboration
             username={username}
             toggle={this.toggle}
             saveChanges={this.saveChanges}
             projects={this.state.user.projects}
-            showPopUp={this.state.collaboPopUp}
+            showPopUp={this.state.projectsPopUp}
             subSaveClick={this.handleSubSaveClick}
             saveProjectsList={this.saveProjectsList}
             showCollaboration={this.state.viewState.showCollaboration} />

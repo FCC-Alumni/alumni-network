@@ -31,7 +31,6 @@ const Certifications = ({ toggle, fccCerts, showFCC }) => {
     <div>
       <Ribbon
         showSave={false}
-        wrapperClass="fccWrapper"
         content="freeCodeCamp Certifications"
         onClick={() => { toggle('showFCC')}} />
       <List className={`ui list fccPane ${showFCC ? 'show' : 'hide'}`}>

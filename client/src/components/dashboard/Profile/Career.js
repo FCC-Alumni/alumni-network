@@ -45,11 +45,11 @@ const Career = ({
         showSave={showCareer}
         showPopUp={showPopUp}
         subSaveClick={subSaveClick}
-        wrapperClass="careerWrapper"
         onClick={()=>{toggle('showCareer')}} />
       <div className={`careerPane ui six wide form ${showCareer ? 'show' : 'hide'}`}>
         <MessageBox
           type="info"
+          hide={working ? true : false}
           dismissable={true}
           message="Please let us know about your career so other members can track your accomplishments in your field." />
         { errors.career &&

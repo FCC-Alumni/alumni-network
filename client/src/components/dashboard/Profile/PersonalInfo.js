@@ -36,7 +36,6 @@ const PersonalInfo = ({
         showPopUp={showPopUp}
         showSave={showProfile}
         subSaveClick={subSaveClick}
-        wrapperClass="profileWrapper"
         onClick={()=>{toggle('showProfile')}} />
       <div className={`ui form profilePane ${showProfile ? 'show' : 'hide'}`}>
         <Container className="ui list">
