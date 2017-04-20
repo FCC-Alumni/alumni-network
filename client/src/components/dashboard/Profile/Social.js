@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import Ribbon from './common/RibbonHeader';
 import ListItem from '../../common/ListItem';
 import FormField from '../../common/FormField';
@@ -7,6 +8,10 @@ import MessageBox from '../../common/MessageBox';
 import { APP_HOST } from '../../../actions/chat';
 
 const inputOptions = 'small left icon';
+
+const List = styled.div`
+  margin-bottom: 16px !important;
+`;
 
 const Social = ({
   clear,
@@ -35,7 +40,7 @@ const Social = ({
           type="info"
           dismissable={true}
           message="Stay connected with campers on other networks! Let us know where your profiles live." />
-        <div className="ui list">
+        <List className="ui list">
           <ListItem>
             <FormField
               name="codepen"
@@ -77,7 +82,7 @@ const Social = ({
               reactionIcon={<i style={{ cursor: 'pointer' }} className="remove icon" />}
               actionIcon={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
           </ListItem>
-        </div>
+        </List>
       </div>
     </div>
   );

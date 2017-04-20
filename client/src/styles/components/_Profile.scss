@@ -38,18 +38,6 @@
   cursor: pointer;
 }
 
-.profilePane,
-.fccPane,
-.mentorshipPane,
-.skillsPane,
-.socialPane,
-.careerPane,
-.collaborationPane,
-.mentorshipSkillsPane {
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
 .profilePane.hide,
 .fccPane.hide,
 .mentorshipPane.hide,
@@ -63,10 +51,6 @@
   @extend .transition-in;
 }
 
-.mentorshipSkillsPane.hide {
-  display: none;
-}
-
 .profilePane.show,
 .fccPane.show,
 .mentorshipPane.show,
@@ -78,8 +62,4 @@
 .surveyPaneWorking.show,
 .surveyPaneLooking.show {
   @extend .transition-out;
-}
-
-.fccPane.show {
-  margin-bottom: 8px !important;
 }

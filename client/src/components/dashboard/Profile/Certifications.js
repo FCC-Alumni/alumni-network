@@ -7,6 +7,10 @@ const Item = styled.h5`
   margin-top: 2px !important;
 `;
 
+const List = styled.div`
+  margin: 0 !important;
+`;
+
 const Certifications = ({ toggle, fccCerts, showFCC }) => {
   var certs = [];
   for (var cert in fccCerts) {
@@ -30,9 +34,9 @@ const Certifications = ({ toggle, fccCerts, showFCC }) => {
         wrapperClass="fccWrapper"
         content="freeCodeCamp Certifications"
         onClick={() => { toggle('showFCC')}} />
-      <div className={`ui list fccPane ${showFCC ? 'show' : 'hide'}`}>
+      <List className={`ui list fccPane ${showFCC ? 'show' : 'hide'}`}>
         {certificates}
-      </div>
+      </List>
     </div>
   );
 }

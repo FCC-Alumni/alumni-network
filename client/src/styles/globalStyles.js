@@ -60,7 +60,7 @@ export const transitionIn = () => {
 export const transitionOut = () => {
   return  `
     opacity: 1.0;
-    max-height: 700px;
+    max-height: 1000px;
     transition:
       opacity 500ms ease-in,
       max-height 400ms ease-out;

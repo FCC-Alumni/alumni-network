@@ -1,6 +1,7 @@
 import React from 'react';
+import isEmpty from 'lodash/isEmpty';
 import Ribbon from './common/RibbonHeader';
-import RepoList from '../../common/RepoList';
+import RepoList from './RepoList';
 import MessageBox from '../../common/MessageBox';
 
 const Collaboration = ({
@@ -27,6 +28,7 @@ const Collaboration = ({
         <MessageBox
           type="info"
           dismissable={true}
+          hide={!isEmpty(projects) ? true : false}
           message="Share links to repos for projects that you could use some help with!" />
         <RepoList
           username={username}
