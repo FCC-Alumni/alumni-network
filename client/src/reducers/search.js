@@ -5,7 +5,7 @@ export const defaultState = {
   results: [],
   prosOnly: false,
   isLoading: false,
-  showFilters: false,
+  showFilters: true,
   disableClear: true,
   mentorsOnly: false,
   backendOnly: false,

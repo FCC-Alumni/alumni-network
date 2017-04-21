@@ -1,16 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import DropDown from '../common/DropdownMulti';
+import { Popup } from 'semantic-ui-react';
 import Filters from './Mentorship/SearchFilters';
 import SearchResults from './Mentorship/SearchResults';
-
-import isEmpty from 'lodash/isEmpty';
-import { defaultState } from '../../reducers/search';
-import { saveSearchState } from '../../actions/views';
-import { initiatePrivateChat } from '../../actions/chat';
-import { filterOptions } from '../../assets/data/mapArrays';
+import { connectScreenSize } from 'react-screen-size';
 import { searchTypes } from '../../assets/data/dropdownOptions';
+import { addFlashMessage } from '../../actions/flashMessages';
+import { filterOptions } from '../../assets/data/mapArrays';
+import { initiatePrivateChat } from '../../actions/chat';
+import { saveSearchState } from '../../actions/views';
+import { defaultState } from '../../reducers/search';
+import { mapScreenSizeToProps } from '../Navbar';
+import DropDown from '../common/DropdownMulti';
+import isEmpty from 'lodash/isEmpty';
 
 import {
   transitionIn,
@@ -18,25 +21,6 @@ import {
   extendCenterAlignedWrapper,
   CenterAlignedWrapper as CenteredWrapper,
 } from '../../styles/globalStyles';
-
-const SearchFilters = styled.div`
-  ${ props => props.showFilters ? transitionIn() : transitionOut() }
-  ${ extendCenterAlignedWrapper() }
-`;
-
-const ButtonWrapper = styled.div`
-  ${ extendCenterAlignedWrapper() }
-  padding-bottom: 15px;
-`;
-
-const FiltersSelector = styled.div`
-  width: 230px;
-  font-size: 20px;
-  cursor: pointer;
-  margin: 5px auto;
-  font-weight: bold;
-  text-align: center !important;
-`;
 
 const searchApi = {
   match: (regex, string) => {
@@ -48,6 +32,28 @@ const searchApi = {
   names: (regex, username, name) => {
     return regex.test(username) || regex.test(name) ? true : false;
   }
+}
+
+const FiltersHeader = ({ onClick, icon }) => {
+  const cursor = !onClick ? { cursor: 'default ' } : {};
+  return (
+    <CenteredWrapper style={{ marginBottom: 14 }}>
+      <div
+        style={cursor}
+        className="ui right labeled basic large green icon button"
+        onClick={onClick ? onClick : () => {}}>
+        Search Filters
+        <Popup
+          wide
+          inverted
+          trigger={<i
+            style={{ background: 'none', borderLeft: '1px solid green' }}
+            className={`${icon} icon`} />}>
+          Define your search filters here. Results will update as you select or deselect filters.
+        </Popup>
+      </div>
+    </CenteredWrapper>
+  );
 }
 
 class Mentorship extends React.Component {
@@ -80,6 +86,15 @@ class Mentorship extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.props.addFlashMessage({
+      type: 'info',
+        text: {
+          header: 'Welcome to Mentorship Search!',
+          message: 'Utilize our mentorship match engine to identify the right mentor for you. Narrow down your results by searching a specific category or by enabling filters.'
+        }
+    });
+  }
   componentWillUnmount() {
     this.props.saveSearchState(this.state);
   }
@@ -267,29 +282,41 @@ class Mentorship extends React.Component {
 
   render() {
     const { results, value, showFilters } = this.state;
+    const { isDesktop } = this.props.screen;
 
     return (
-      <div className="ui container">
-
-        <h1 className="text-align-center">
-          Search for a mentorship match here!
-        </h1>
+      <div>
+        <FiltersContainer media="max-width">
+          <SlideAway showFilters={showFilters}>
+            <div className="position: relative">
+              <FiltersDesktop className="ui padded compact green raised segment">
+                <FiltersHeader icon="red info circle" />
+                <Filters
+                  state={this.state}
+                  filterOptions={filterOptions}
+                  handleChange={this.handleSliderChange} />
+              </FiltersDesktop>
+              <Tab onClick={this.showFilters} className="ui label">
+                <i className={`large green ${!showFilters ? 'right' : 'left'} arrow icon`} />
+              </Tab>
+            </div>
+          </SlideAway>
+        </FiltersContainer>
+        <div className="ui container">
 
         <div className="ui form">
-          <div className="filters-selector-wrap">
-            <FiltersSelector onClick={this.showFilters} >
-              <i className={`${!showFilters ? 'green unhide' : 'red hide'} icon`} />
-              {`${!showFilters ? 'Show' : 'Hide'} Search Filters`}
-            </FiltersSelector>
-          </div>
-          <SearchFilters showFilters={showFilters} >
-            <div className="center-sliders">
-              <Filters
-                state={this.state}
-                filterOptions={filterOptions}
-                handleChange={this.handleSliderChange} />
-            </div>
-          </SearchFilters>
+
+          <FiltersContainer media="min-width">
+            <FiltersHeader icon={`${showFilters ? 'red hide' : 'green unhide'}`} onClick={this.showFilters}/>
+            <FiltersMobile showFilters={showFilters}>
+              <div style={{ marginBottom: 5 }}>
+                <Filters
+                  state={this.state}
+                  filterOptions={filterOptions}
+                  handleChange={this.handleSliderChange} />
+              </div>
+            </FiltersMobile>
+          </FiltersContainer>
 
           <CenteredWrapper className="ui inline fields">
             <div className="field">
@@ -299,7 +326,7 @@ class Mentorship extends React.Component {
                 value={this.state.dropdownValue}
                 onChange={this.handleDropdownChange} />
             </div>
-            <div className="field">
+            <SearchInput className="field">
               <div className={`ui fluid search ${this.state.isLoading && 'loading'}`}>
                 <div className="ui icon input">
                   <input
@@ -311,7 +338,7 @@ class Mentorship extends React.Component {
                   <i className="search icon"></i>
                 </div>
               </div>
-            </div>
+            </SearchInput>
           </CenteredWrapper>
 
         </div>
@@ -337,6 +364,7 @@ class Mentorship extends React.Component {
         </CenteredWrapper>
 
       </div>
+      </div>
     );
   }
 };
@@ -349,4 +377,61 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { initiatePrivateChat, saveSearchState })(Mentorship);
+const dispatchProps = {
+  addFlashMessage,
+  saveSearchState,
+  initiatePrivateChat,
+};
+
+export default connectScreenSize(mapScreenSizeToProps)(
+  connect(mapStateToProps, dispatchProps)(Mentorship)
+);
+
+
+/*
+===============    ***   =================
+*** *** *** <==== STYLES ====> *** *** ***
+===============    ***   =================
+*/
+
+const ButtonWrapper = styled.div`
+  ${ extendCenterAlignedWrapper() }
+  padding-bottom: 15px;
+`;
+
+const SlideAway = styled.div`
+  position: absolute !important;
+  left: -291px;
+  ${ props => props.showFilters && 'left: 0 !important' }
+  transition: .5s;
+`;
+
+const FiltersContainer = styled.div`
+  @media (${props => props.media}: 1265px) {
+    display: none;
+  }
+`;
+
+const FiltersDesktop = styled.div`
+  display: inline-block !important;
+`;
+
+const FiltersMobile = styled.div`
+  ${ props => props.showFilters ? transitionOut() : transitionIn() }
+  ${ extendCenterAlignedWrapper() }
+`;
+
+const SearchInput = styled.div`
+  @media (max-width: 452px) {
+    margin-top: 13px !important;
+  }
+`;
+
+const Tab = styled.div`
+  position: absolute !important;
+  top: 70px;
+  cursor: pointer;
+  padding: 50px 5px 50px 15px !important;
+  margin-left: 0 !important;
+  box-shadow: 0 2px 4px 0 rgba(34,36,38,.12), 0 2px 10px 0 rgba(34,36,38,.15);
+`;
