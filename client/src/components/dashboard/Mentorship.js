@@ -4,16 +4,18 @@ import styled from 'styled-components';
 import { Popup } from 'semantic-ui-react';
 import Filters from './Mentorship/SearchFilters';
 import SearchResults from './Mentorship/SearchResults';
-import { connectScreenSize } from 'react-screen-size';
 import { searchTypes } from '../../assets/data/dropdownOptions';
 import { addFlashMessage } from '../../actions/flashMessages';
 import { filterOptions } from '../../assets/data/mapArrays';
-import { initiatePrivateChat } from '../../actions/chat';
 import { saveSearchState } from '../../actions/views';
 import { defaultState } from '../../reducers/search';
-import { mapScreenSizeToProps } from '../Navbar';
 import DropDown from '../common/DropdownMulti';
 import isEmpty from 'lodash/isEmpty';
+
+import {
+  initiatePrivateChat,
+  clearNotifications
+} from '../../actions/chat';
 
 import {
   transitionIn,
@@ -278,9 +280,16 @@ class Mentorship extends React.Component {
     });
   }
 
-  initiatePrivateChat = (user) => {
-    this.props.initiatePrivateChat(user);
-    this.props.history.push(`chat/${user}`);
+  initiatePrivateChat = (recipient, notifications) => {
+    if (!this.props.privateChat.has(recipient)) {
+      this.props.initiatePrivateChat(recipient);
+    } else if (notifications) {
+      this.props.clearNotifications({
+        author: this.props.currentUser,
+        recipient
+      });
+    }
+    this.props.history.push(`chat/${recipient}`);
   }
 
   handleClick = (user) => {
@@ -289,7 +298,6 @@ class Mentorship extends React.Component {
 
   render() {
     const { results, value, showFilters } = this.state;
-    const { isDesktop } = this.props.screen;
     return (
       <div className="ui container">
         {/* Disappears under 1265px viewport width */}
@@ -364,6 +372,7 @@ class Mentorship extends React.Component {
             results={results}
             handleClick={this.handleClick}
             currentUser={this.props.currentUser}
+            privateChat={this.props.privateChat}
             initiatePrivateChat={this.initiatePrivateChat}
             noResults={!isEmpty(value) && isEmpty(results)} />
         </CenteredWrapper>
@@ -375,20 +384,20 @@ class Mentorship extends React.Component {
 const mapStateToProps = (state) => {
   return {
     searchState: state.search,
+    privateChat: state.privateChat,
     currentUser: state.user.username,
     community: state.community.toJS()
   }
 }
 
-const dispatchProps = {
+const dispatch = {
   addFlashMessage,
   saveSearchState,
+  clearNotifications,
   initiatePrivateChat,
 };
 
-export default connectScreenSize(mapScreenSizeToProps)(
-  connect(mapStateToProps, dispatchProps)(Mentorship)
-);
+export default connect(mapStateToProps, dispatch)(Mentorship);
 
 /*
 ===============    ***   =================

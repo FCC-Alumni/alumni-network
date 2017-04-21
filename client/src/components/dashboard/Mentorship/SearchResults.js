@@ -26,9 +26,10 @@ const IMG = styled.img`
   cursor: pointer;
 `;
 
-const SearchResults = ({ initiatePrivateChat, currentUser, results, handleClick, noResults }) => {
+const SearchResults = ({ privateChat, initiatePrivateChat, currentUser, results, handleClick, noResults }) => {
   const listResults = results.map(user => {
     const { username, mentorship: { isMentor, mentorshipSkills }, personal: { bio } } = user;
+    const notifications = privateChat.getIn([username, 'notifications']);
     return (
       <ResultItem key={user._id} className="item">
         <div className="ui tiny image">
@@ -49,7 +50,7 @@ const SearchResults = ({ initiatePrivateChat, currentUser, results, handleClick,
           <ChatIcon
             className="comments icon"
             title={`Start a chat with ${username}`}
-            onClick={ () => { initiatePrivateChat(username) }} /> }
+            onClick={ () => { initiatePrivateChat(username, notifications) }} /> }
           <div className="meta">
             <span><strong>{user.personal.displayName}</strong></span>
             <i className="angle double right icon" />
