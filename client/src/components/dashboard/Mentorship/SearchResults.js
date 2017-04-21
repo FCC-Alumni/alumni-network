@@ -22,8 +22,8 @@ const IMG = styled.img`
 `;
 
 const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults }) => {
-
   const listResults = results.map(user => {
+    const { mentorship: { isMentor, mentorshipSkills }, personal: { bio } } = user;
     return (
       <ResultItem key={user._id} className="item">
         <div className="ui tiny image">
@@ -41,7 +41,7 @@ const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults })
             <span>{user.mentorship.isMentor ? 'Mentor' : 'Member'}</span>
           </div>
           <div className="description">
-            {user.mentorship.mentorshipSkills}
+            { isMentor ? mentorshipSkills : bio ? bio : 'User has not yet created a bio' }
           </div>
         </div>
       </ResultItem>

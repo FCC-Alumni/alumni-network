@@ -291,8 +291,8 @@ class Profile extends React.Component {
     if (section === 'mentorship' && (isMentee || isMentor) && !mentorshipSkills) {
       errors.mentorshipSkills = this.MENTORSHIP_ERROR;
     }
-    if (section === 'bio' && !Validator.isLength(str, { min: 0, max: 380 })) {
-      errors.bio = "Bio must be 380 characters or less."
+    if (section === 'bio' && !Validator.isLength(str, { min: 0, max: 300 })) {
+      errors.bio = "Bio must be 300 characters or less."
     }
     if (section === 'displayName' && !Validator.isLength(str, { min: 0, max: 40 })) {
       errors.displayName = "Display name must be 40 characters or less."
