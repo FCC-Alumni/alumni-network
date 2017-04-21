@@ -33,11 +33,11 @@ const Social = ({
         showSave={showSocial}
         showPopUp={showPopUp}
         subSaveClick={subSaveClick}
-        wrapperClass="socialWrapper"
         onClick={()=>{toggle('showSocial')}} />
       <div className={`socialPane ${showSocial ? 'show' : 'hide'}`}>
         <MessageBox
           type="info"
+          hide={!codepen && !twitter && !linkedin ? false : true}
           dismissable={true}
           message="Stay connected with campers on other networks! Let us know where your profiles live." />
         <List className="ui list">

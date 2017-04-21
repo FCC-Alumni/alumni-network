@@ -34,7 +34,6 @@ const Mentorship = ({
         showSave={showMentorship}
         content="Mentorship Program"
         subSaveClick={subSaveClick}
-        wrapperClass="mentorshipWrapper"
         onClick={()=>{toggle('showMentorship')}} />
       <div className={`mentorshipPane ${showMentorship ? 'show' : 'hide'}`}>
         <MessageBox

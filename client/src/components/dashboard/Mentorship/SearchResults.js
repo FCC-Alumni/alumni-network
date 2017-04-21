@@ -18,7 +18,7 @@ const ChatIcon = styled.i`
 `;
 
 const IMG = styled.img`
-  border-radius: 100px !important;
+  border-radius: 100% !important;
 `;
 
 const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults }) => {

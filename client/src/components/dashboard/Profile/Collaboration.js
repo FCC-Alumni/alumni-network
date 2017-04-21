@@ -22,7 +22,6 @@ const Collaboration = ({
         showPopUp={showPopUp}
         subSaveClick={subSaveClick}
         showSave={showCollaboration}
-        wrapperClass="collaborationWrapper"
         onClick={()=>{toggle('showCollaboration')}} />
       <div className={`collaborationPane ${showCollaboration ? 'show' : 'hide'}`}>
         <MessageBox

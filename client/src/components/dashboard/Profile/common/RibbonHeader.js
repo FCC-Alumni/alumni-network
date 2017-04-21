@@ -5,16 +5,17 @@ import styled from 'styled-components';
 const Container = styled.div`
   margin-top: 8px !important;
   margin-bottom: 8px !important;
+  cursor: pointer;
 `;
 
 const RibbonHeader = ({ content, onClick, wrapperClass, showPopUp, subSaveClick, id, showSave }) => {
   return (
     <Container>
-      <div className={`ui green large ribbon label ${wrapperClass}`} onClick={onClick}>
+      <div className="ui green large ribbon label" onClick={onClick}>
         {content}
       { showSave &&
         <div className="detail">
-          <i onClick={subSaveClick} id={id} className="saveSection save icon" />
+          <i onClick={subSaveClick} id={id} title="Save Section" className="saveSection save icon" />
         </div> }
       </div>
     { showSave && <div className={`ui left pointing basic green label savedPopUp ${showPopUp ? 'show' : 'hide'}`}>Saved</div> }

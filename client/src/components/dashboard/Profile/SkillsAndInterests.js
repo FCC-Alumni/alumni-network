@@ -19,7 +19,6 @@ const SkillsAndInterests = ({ showSkills, subSaveClick, showPopUp, toggle, handl
         showSave={showSkills}
         subSaveClick={subSaveClick}
         content="Skills & Interests"
-        wrapperClass="skillsWrapper"
         onClick={()=>{toggle('showSkills')}} />
       <div className={`skillsPane ${showSkills ? 'show' : 'hide'}`}>
         <div className="ui horizontal divider">Core Skills</div>
