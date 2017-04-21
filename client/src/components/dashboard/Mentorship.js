@@ -283,11 +283,15 @@ class Mentorship extends React.Component {
     this.props.history.push(`chat/${user}`);
   }
 
+  handleClick = (user) => {
+    this.props.history.push(`/dashboard/profile/${user.username}`)
+  }
+
   render() {
     const { results, value, showFilters } = this.state;
     const { isDesktop } = this.props.screen;
     return (
-      <div>
+      <div className="ui container">
         {/* Disappears under 1265px viewport width */}
         <FiltersContainer media="max-width">
           <SlideAway showFilters={showFilters}>
@@ -306,66 +310,63 @@ class Mentorship extends React.Component {
           </SlideAway>
         </FiltersContainer>
 
-        <div className="ui container">
-
-          <div className="ui form">
-            {/* Disappears over 1265px viewport width */}
-            <FiltersContainer media="min-width">
-              <FiltersHeader icon={`${showFilters ? 'red hide' : 'green unhide'}`} onClick={this.showFilters}/>
-              <FiltersMobile showFilters={showFilters}>
-                <div style={{ marginBottom: 5 }}>
-                  <Filters
-                    state={this.state}
-                    filterOptions={filterOptions}
-                    handleChange={this.handleSliderChange} />
-                </div>
-              </FiltersMobile>
-            </FiltersContainer>
-            <CenteredWrapper className="ui inline fields">
-              <div className="field">
-                <DropDown
-                  fluid={false}
-                  options={searchTypes}
-                  value={this.state.dropdownValue}
-                  onChange={this.handleDropdownChange} />
+        <div className="ui form">
+          {/* Disappears over 1265px viewport width */}
+          <FiltersContainer media="min-width">
+            <FiltersHeader icon={`${showFilters ? 'red hide' : 'green unhide'}`} onClick={this.showFilters}/>
+            <FiltersMobile showFilters={showFilters}>
+              <div style={{ marginBottom: 5 }}>
+                <Filters
+                  state={this.state}
+                  filterOptions={filterOptions}
+                  handleChange={this.handleSliderChange} />
               </div>
-              <SearchInput className="field">
-                <div className={`ui fluid search ${this.state.isLoading && 'loading'}`}>
-                  <div className="ui icon input">
-                    <input
-                      autoFocus
-                      type="text"
-                      value={value}
-                      onChange={this.handleChange}
-                      placeholder="Search Community" />
-                    <i className="search icon"></i>
-                  </div>
-                </div>
-              </SearchInput>
-            </CenteredWrapper>
-          </div>
-
-          <ButtonWrapper>
-            <div
-              onClick={this.clearSearch}
-              className={`ui labeled button ${this.state.disableClear && 'disabled'}`}>
-              <div className="ui basic green button">
-                <i className="remove icon"></i>
-                Clear All Fields
-              </div>
-              <div className="ui basic left pointing green label">{`${results.length} results`}</div>
+            </FiltersMobile>
+          </FiltersContainer>
+          <CenteredWrapper className="ui inline fields">
+            <div className="field">
+              <DropDown
+                fluid={false}
+                options={searchTypes}
+                value={this.state.dropdownValue}
+                onChange={this.handleDropdownChange} />
             </div>
-          </ButtonWrapper>
-
-          <CenteredWrapper>
-            <SearchResults
-              results={results}
-              currentUser={this.props.currentUser}
-              initiatePrivateChat={this.initiatePrivateChat}
-              noResults={!isEmpty(value) && isEmpty(results)} />
+            <SearchInput className="field">
+              <div className={`ui fluid search ${this.state.isLoading && 'loading'}`}>
+                <div className="ui icon input">
+                  <input
+                    autoFocus
+                    type="text"
+                    value={value}
+                    onChange={this.handleChange}
+                    placeholder="Search Community" />
+                  <i className="search icon"></i>
+                </div>
+              </div>
+            </SearchInput>
           </CenteredWrapper>
-
         </div>
+
+        <ButtonWrapper>
+          <div
+            onClick={this.clearSearch}
+            className={`ui labeled button ${this.state.disableClear && 'disabled'}`}>
+            <div className="ui basic green button">
+              <i className="remove icon"></i>
+              Clear All Fields
+            </div>
+            <div className="ui basic left pointing green label">{`${results.length} results`}</div>
+          </div>
+        </ButtonWrapper>
+
+        <CenteredWrapper>
+          <SearchResults
+            results={results}
+            handleClick={this.handleClick}
+            currentUser={this.props.currentUser}
+            initiatePrivateChat={this.initiatePrivateChat}
+            noResults={!isEmpty(value) && isEmpty(results)} />
+        </CenteredWrapper>
       </div>
     );
   }
@@ -401,7 +402,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const SlideAway = styled.div`
-  position: absolute !important;
+  position: fixed !important;
   left: -291px;
   ${ props => props.showFilters && 'left: 0 !important' }
   transition: .5s;
