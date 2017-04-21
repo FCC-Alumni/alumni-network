@@ -58,8 +58,10 @@ class AppContainer extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    // clear flash messages if the route changes:
-    if (prevProps.location.pathname !== this.props.location.pathname) {
+    // clear flash messages if the route changes, except if going to
+    // mentorship, which is meant to load with it's own flash message
+    if (this.props.location.pathname === '/dashboard/mentorship') return;
+    else if (prevProps.location.pathname !== this.props.location.pathname) {
       this.props.clearFlashMessage();
     }
   }

@@ -95,6 +95,7 @@ class Mentorship extends React.Component {
         }
     });
   }
+
   componentWillUnmount() {
     this.props.saveSearchState(this.state);
   }
@@ -174,23 +175,25 @@ class Mentorship extends React.Component {
           username,
           career: { company },
           mentorship: { mentorshipSkills },
-          personal: { displayName, location },
+          personal: { displayName, location, country },
           skillsAndInterests: { coreSkills, codingInterests }
         } = user;
 
         if (searchCriteria.all) {
           matchCompany = searchApi.match(regex, company);
           matchSkill = searchApi.filter(regex, coreSkills);
-          matchLocation = searchApi.match(regex, location);
           mentorshipBio = searchApi.match(regex, mentorshipSkills);
           matchInterest = searchApi.filter(regex, codingInterests);
           matchName = searchApi.names(regex, username, displayName);
+          matchLocation = searchApi.match(regex, location)
+            || searchApi.match(regex, country);
         } else {
           if (searchCriteria.company) {
             matchCompany = searchApi.match(regex, company);
           }
           if (searchCriteria.location) {
-            matchLocation = searchApi.match(regex, location);
+            matchLocation = searchApi.match(regex, country)
+              || searchApi.match(regex, location);
           }
           if (searchCriteria.skills) {
             matchSkill = searchApi.filter(regex, coreSkills);
