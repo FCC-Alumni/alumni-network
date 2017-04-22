@@ -4,9 +4,12 @@ import {
   LOGOUT_USER
 } from './types';
 
+// we post to avoid browser caching
 export const getUserData = () => {
-  return axios.get('/api/user')
-    .then(res =>  res.data)
+  return axios.post('/api/user')
+    .then(res =>  {
+      return res.data;
+    })
     .catch(err => null);
 }
 

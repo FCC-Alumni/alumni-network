@@ -373,8 +373,7 @@ class Mentorship extends React.Component {
             handleClick={this.handleClick}
             currentUser={this.props.currentUser}
             privateChat={this.props.privateChat}
-            initiatePrivateChat={this.initiatePrivateChat}
-            noResults={!isEmpty(value) && isEmpty(results)} />
+            initiatePrivateChat={this.initiatePrivateChat} />
         </CenteredWrapper>
       </div>
     );

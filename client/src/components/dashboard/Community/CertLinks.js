@@ -35,7 +35,7 @@ const CertLinks = ({ handleClick, fccCerts, username }) => {
 }
 
 CertLinks.propTypes = {
-  fccCerts: propTypes.object.isRequired,
+  fccCerts: (propTypes.object || propTypes.bool),
   username: propTypes.string.isRequired
 }
 

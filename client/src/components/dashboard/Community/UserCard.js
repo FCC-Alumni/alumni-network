@@ -8,7 +8,6 @@ import { hoverTransition } from '../../../styles/globalStyles';
 import convertMonthToString from '../../../actions/convertMonth';
 import { initiatePrivateChat, clearNotifications } from '../../../actions/chat';
 
-
 /*
 TODO:
   - make sure social links work, user.social.SOCIAL_SITE should just be the username for this to work

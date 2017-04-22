@@ -24,7 +24,7 @@ export const isAuthenticated = (req, res, next) => {
 
 const router = express.Router();
 
-// this may work for session persistence:
+// use MongoStore to persist sessions
 var MongoStore = require('connect-mongo')(Session);
 router.use(Session({
     resave: false,
