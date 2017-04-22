@@ -14,7 +14,8 @@ import {
 
 const router = express.Router();
 
-router.get('/api/user', (req, res) => {
+// we post to avoid browser caching
+router.post('/api/user', (req, res) => {
   if (req.user) {
     User.findOne({ username: req.user.username }, (err, user) => {
       if (!err) {

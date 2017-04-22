@@ -36,7 +36,13 @@ class NavBar extends React.Component {
 
   render() {
 
-    const { isDesktop } = this.props.screen;
+    /* NOTE: the NavBar rendering logic is pretty arbitrarily contrived
+     around the React screen-size package's props and Semantic UI's menu
+     in order to provide the correct responsiveness. The logic is not ideal
+     but works pretty well for all screen sizes.
+    */
+
+    const { isMobile, isTablet, isDesktop } = this.props.screen;
 
     const guestNav = (
       <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
@@ -55,18 +61,18 @@ class NavBar extends React.Component {
         {!this.state.nav ?
 
           <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
-            <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</div>
+            <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />{isTablet ? 'FCC' : 'freeCodeCamp'} Alumni Network</div>
           </div>
 
           :
 
           <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
 
-            {isDesktop ?
+            {(isDesktop || isTablet) ?
               <NavLink className="item" activeClassName="active item" exact to="/dashboard">
-                <Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</NavLink> :
+                <Logo src="/images/fcc_high_five_logo.svg" />{isTablet ? 'FCC' : 'freeCodeCamp'} Alumni Network</NavLink> :
                 <div>
-                  <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</div>
+                  <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />{isTablet ? 'FCC' : 'freeCodeCamp'} Alumni Network</div>
                   <NavLink className="item" activeClassName="active item" exact to="/dashboard">Dashboard</NavLink>
                 </div>}
 
@@ -75,12 +81,18 @@ class NavBar extends React.Component {
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/mentorship">Mentorship</NavLink>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/chat">Mess Hall</NavLink>
 
-            <div className={`${isDesktop ? 'right menu' : ''}`}>
-              <NavLink className ="item" activeClassName="active item" exact to="/dashboard/account">
-                {isDesktop ? <i className="setting icon"></i> : 'Account'}
+            {isDesktop &&
+            <div className='menu right'>
+              <NavLink className="item" activeClassName="active item" exact to="/dashboard/account">
+                {!isMobile ? <i className="setting icon"></i> : 'Account'}
               </NavLink>
               <a className="item" href={`${APP_HOST}/logout`}>Logout</a>
-            </div>
+            </div>}
+
+            {!isDesktop && <NavLink className="item" activeClassName="active item" exact to="/dashboard/account">
+              {!isMobile ? <i className="setting icon"></i> : 'Account'}
+            </NavLink>}
+            {!isDesktop && <a className={isTablet ? 'item right' : 'item'} href={`${APP_HOST}/logout`}>Logout</a>}
 
           </div>
 
