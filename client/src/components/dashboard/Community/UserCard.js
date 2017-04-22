@@ -1,11 +1,13 @@
 import React from 'react';
 import CertLinks from './CertLinks';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SocialLinks from './SocialLinks';
 import { connectScreenSize } from 'react-screen-size';
 import { hoverTransition } from '../../../styles/globalStyles';
-
 import convertMonthToString from '../../../actions/convertMonth';
+import { initiatePrivateChat, clearNotifications } from '../../../actions/chat';
+
 
 /*
 TODO:
@@ -38,10 +40,31 @@ const SummaryWrapper = styled.div`
   padding: 7px 5px 0 5px;
 `;
 
+const ChatIcon = styled.i`
+  font-size: 16px !important;
+  margin-left: 4px !important;
+  transition: color 200ms ease-in-out !important;
+  &:hover {
+    color: #007E00;
+  }
+`;
+
 class UserCard extends React.Component {
 
-  handleClick = (user) => {
-    this.props.history.push(`/dashboard/profile/${user.username}`)
+  initiatePrivateChat = (recipient, notifications) => {
+    if (!this.props.privateChat.has(recipient)) {
+      this.props.initiatePrivateChat(recipient);
+    } else if (notifications) {
+      this.props.clearNotifications({
+        author: this.props.currentUser,
+        recipient
+      });
+    }
+    this.props.history.push(`chat/${recipient}`);
+  }
+
+  handleClick = (username) => {
+    this.props.history.push(`/dashboard/profile/${username}`)
   }
 
   handleInnerClick = (e) => {
@@ -49,11 +72,10 @@ class UserCard extends React.Component {
   }
 
   render() {
-
-    const { user, screen } = this.props;
+    const { user, screen, currentUser, privateChat } = this.props;
     const joinedOn = user.personal.memberSince.split('-').slice(0, 2);
     const prettyDate = convertMonthToString(...joinedOn);
-
+    const notifications = privateChat.getIn([user, 'notifications'])
     return (
       <div className='ui raised card'>
 
@@ -81,9 +103,14 @@ class UserCard extends React.Component {
           <img src={user.personal.avatarUrl} className="visible content" alt="user avatar"/>
         </div> }
 
-        <Clickable onClick={() => { this.handleClick(user) }} className="content">
+        <Clickable onClick={() => { this.handleClick(user.username) }} className="content">
           <div className="header">
               <span className="user">{user.username}</span>
+            { currentUser !== user.username &&
+              <ChatIcon
+                className="comments icon"
+                title={`Start a chat with ${user.username}`}
+                onClick={(e) => { this.initiatePrivateChat(user.username, notifications); e.stopPropagation(); }} /> }
             { (screen.isDesktop || screen.isMobile) &&
               <CertLinks
                 username={user.username}
@@ -124,4 +151,18 @@ export const mapScreenSizeToProps = (screenSize) => {
   }};
 }
 
-export default connectScreenSize(mapScreenSizeToProps)(UserCard);
+const mapStateToProps = (state) => {
+  return {
+    privateChat: state.privateChat,
+    currentUser: state.user.username,
+  }
+}
+
+const dispatch = {
+  clearNotifications,
+  initiatePrivateChat,
+};
+
+export default connectScreenSize(mapScreenSizeToProps)(
+  connect(mapStateToProps, dispatch)(UserCard)
+);

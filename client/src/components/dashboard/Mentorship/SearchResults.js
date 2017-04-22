@@ -10,6 +10,10 @@ const ResultItem = styled.div`
   width: 45vw !important;
 `;
 
+const Username = styled.div`
+  ${ hoverTransition() }
+`;
+
 const ChatIcon = styled.i`
   ${ hoverTransition() }
   font-size: 20px !important;
@@ -19,29 +23,41 @@ const ChatIcon = styled.i`
 
 const IMG = styled.img`
   border-radius: 100% !important;
+  cursor: pointer;
 `;
 
-const SearchResults = ({ initiatePrivateChat, currentUser, results, noResults }) => {
-
+const SearchResults = ({ privateChat, initiatePrivateChat, currentUser, results, handleClick, noResults }) => {
   const listResults = results.map(user => {
+    const { username, mentorship: { isMentor, mentorshipSkills }, personal: { bio } } = user;
+    const notifications = privateChat.getIn([username, 'notifications']);
     return (
       <ResultItem key={user._id} className="item">
         <div className="ui tiny image">
-          <IMG src={user.personal.avatarUrl} alt={`${user.username}'s avatar`}/>
+          <IMG
+            src={user.personal.avatarUrl}
+            alt={`${username}'s avatar`}
+            onClick={() => { handleClick(user) }}
+            title={`View ${username}'s profile`} />
         </div>
         <div className="content">
-          <div className="header">{user.username}</div>
-            { currentUser !== user.username &&
-              <ChatIcon
-                className="comments icon"
-                onClick={ () => { initiatePrivateChat(user.username) }} /> }
+          <Username
+            className="header"
+            onClick={() => { handleClick(user) }}
+            title={`View ${username}'s profile`}>
+            {username}
+          </Username>
+        { currentUser !== username &&
+          <ChatIcon
+            className="comments icon"
+            title={`Start a chat with ${username}`}
+            onClick={ () => { initiatePrivateChat(username, notifications) }} /> }
           <div className="meta">
             <span><strong>{user.personal.displayName}</strong></span>
             <i className="angle double right icon" />
-            <span>{user.mentorship.isMentor ? 'Mentor' : 'Member'}</span>
+            <span>{isMentor ? 'Mentor' : 'Member'}</span>
           </div>
           <div className="description">
-            {user.mentorship.mentorshipSkills}
+            { isMentor ? mentorshipSkills : bio ? bio : 'User has not yet created a bio' }
           </div>
         </div>
       </ResultItem>

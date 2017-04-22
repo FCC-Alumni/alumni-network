@@ -4,16 +4,18 @@ import styled from 'styled-components';
 import { Popup } from 'semantic-ui-react';
 import Filters from './Mentorship/SearchFilters';
 import SearchResults from './Mentorship/SearchResults';
-import { connectScreenSize } from 'react-screen-size';
 import { searchTypes } from '../../assets/data/dropdownOptions';
 import { addFlashMessage } from '../../actions/flashMessages';
 import { filterOptions } from '../../assets/data/mapArrays';
-import { initiatePrivateChat } from '../../actions/chat';
 import { saveSearchState } from '../../actions/views';
 import { defaultState } from '../../reducers/search';
-import { mapScreenSizeToProps } from '../Navbar';
 import DropDown from '../common/DropdownMulti';
 import isEmpty from 'lodash/isEmpty';
+
+import {
+  initiatePrivateChat,
+  clearNotifications
+} from '../../actions/chat';
 
 import {
   transitionIn,
@@ -278,17 +280,27 @@ class Mentorship extends React.Component {
     });
   }
 
-  initiatePrivateChat = (user) => {
-    this.props.initiatePrivateChat(user);
-    this.props.history.push(`chat/${user}`);
+  initiatePrivateChat = (recipient, notifications) => {
+    if (!this.props.privateChat.has(recipient)) {
+      this.props.initiatePrivateChat(recipient);
+    } else if (notifications) {
+      this.props.clearNotifications({
+        author: this.props.currentUser,
+        recipient
+      });
+    }
+    this.props.history.push(`chat/${recipient}`);
+  }
+
+  handleClick = (user) => {
+    this.props.history.push(`/dashboard/profile/${user.username}`)
   }
 
   render() {
     const { results, value, showFilters } = this.state;
-    const { isDesktop } = this.props.screen;
-
     return (
-      <div>
+      <div className="ui container">
+        {/* Disappears under 1265px viewport width */}
         <FiltersContainer media="max-width">
           <SlideAway showFilters={showFilters}>
             <div className="position: relative">
@@ -305,10 +317,9 @@ class Mentorship extends React.Component {
             </div>
           </SlideAway>
         </FiltersContainer>
-        <div className="ui container">
 
         <div className="ui form">
-
+          {/* Disappears over 1265px viewport width */}
           <FiltersContainer media="min-width">
             <FiltersHeader icon={`${showFilters ? 'red hide' : 'green unhide'}`} onClick={this.showFilters}/>
             <FiltersMobile showFilters={showFilters}>
@@ -320,7 +331,6 @@ class Mentorship extends React.Component {
               </div>
             </FiltersMobile>
           </FiltersContainer>
-
           <CenteredWrapper className="ui inline fields">
             <div className="field">
               <DropDown
@@ -343,7 +353,6 @@ class Mentorship extends React.Component {
               </div>
             </SearchInput>
           </CenteredWrapper>
-
         </div>
 
         <ButtonWrapper>
@@ -361,12 +370,12 @@ class Mentorship extends React.Component {
         <CenteredWrapper>
           <SearchResults
             results={results}
+            handleClick={this.handleClick}
             currentUser={this.props.currentUser}
+            privateChat={this.props.privateChat}
             initiatePrivateChat={this.initiatePrivateChat}
             noResults={!isEmpty(value) && isEmpty(results)} />
         </CenteredWrapper>
-
-      </div>
       </div>
     );
   }
@@ -375,21 +384,20 @@ class Mentorship extends React.Component {
 const mapStateToProps = (state) => {
   return {
     searchState: state.search,
+    privateChat: state.privateChat,
     currentUser: state.user.username,
     community: state.community.toJS()
   }
 }
 
-const dispatchProps = {
+const dispatch = {
   addFlashMessage,
   saveSearchState,
+  clearNotifications,
   initiatePrivateChat,
 };
 
-export default connectScreenSize(mapScreenSizeToProps)(
-  connect(mapStateToProps, dispatchProps)(Mentorship)
-);
-
+export default connect(mapStateToProps, dispatch)(Mentorship);
 
 /*
 ===============    ***   =================
@@ -403,7 +411,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const SlideAway = styled.div`
-  position: absolute !important;
+  position: fixed !important;
   left: -291px;
   ${ props => props.showFilters && 'left: 0 !important' }
   transition: .5s;
