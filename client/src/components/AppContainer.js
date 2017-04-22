@@ -37,7 +37,7 @@ class AppContainer extends React.Component {
         this.props.addFlashMessage({
           type: 'error',
             text: {
-              header: 'Access forbiden!',
+              header: 'Access forbidden!',
               message: 'Please signup and/or login to view this page.'
             }
           });
