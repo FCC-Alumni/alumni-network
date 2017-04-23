@@ -1,26 +1,31 @@
 import React from 'react';
 import propTypes from 'prop-types';
+import { isEqual } from 'lodash';
 
-const UserLabel = ({ color, size, image, username, label, folder, toggleAll, showAvatar }) => {
-  if (!image) {
-    image = '/images/defaultAvatar.gif';
+export default class UserLabel extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps);
   }
-  return (
-    <div className={`ui image label ${color} ${size}`}>
-      { showAvatar && <img src={image} alt="user avatar" /> }
-      {username}
-      { label && <div className="detail">{label}</div> }
-      {
-        (typeof folder === 'boolean') &&
-        <div
-          onClick={toggleAll}
-          className="detail folderDetail">
-          {folder ? <i className="folder open icon"></i> : <i className="folder icon"></i>}
-        </div>
-      }
-    </div>
-  );
+  render() {
+    const { color, size, image, username, label, folder, toggleAll, showAvatar } = this.props;
+    return (
+      <div className={`ui image label ${color} ${size}`}>
+        { showAvatar && <img src={image ? image : '/images/defaultAvatar.gif'} alt="user avatar" /> }
+        {username}
+        { label && <div className="detail">{label}</div> }
+        {
+          (typeof folder === 'boolean') &&
+          <div
+            onClick={toggleAll}
+            className="detail folderDetail">
+            {folder ? <i className="folder open icon"></i> : <i className="folder icon"></i>}
+          </div>
+        }
+      </div>
+    );
+  }
 }
+
 
 UserLabel.propTypes = {
   size: propTypes.string,
@@ -43,8 +48,6 @@ UserLabel.defaultProps = {
   size: 'medium',
   showAvatar: true,
 }
-
-export default UserLabel;
 
 // EXAMPLE USAGE (Semantic UI classNames)
 
