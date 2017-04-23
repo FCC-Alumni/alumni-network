@@ -6,7 +6,6 @@ import indexOf from 'lodash/indexOf';
 import styled from 'styled-components';
 import { Dropdown, Input } from 'semantic-ui-react';
 import { connectScreenSize } from 'react-screen-size';
-import { StyledItem } from '../../../styles/globalStyles';
 import { mapScreenSizeToProps } from '../Community/UserCard';
 import { repoOptions } from '../../../assets/data/dropdownOptions';
 import { validateGithubRepo, searchGithubCommits, validateOtherRepos } from '../../../actions/repoValidations';
@@ -25,9 +24,19 @@ const List = styled.div`
   margin: 8px 0 0 0 !important;
 `;
 
-const Item = styled(StyledItem)`
+const StyledItem = styled.div`
+  color: black !important;
+  font-weight: bold !important;
   .icon {
-    color: #007E00 !important;
+    color: black !important;
+  }
+  cursor: pointer;
+  &:hover {Styled
+    background: #E0E0E0 !important;
+    .icon {
+      color: #FF4025 !important;
+      transition: color 200ms ease-in-out !important;
+    }
   }
 `;
 
@@ -311,13 +320,13 @@ class RepoList extends React.Component {
 
     const listItems = this.state.items_list.map((el, index) => {
       return (
-        <Item key={index} className="item">
+        <StyledItem key={index} className="item">
           <div className="right floated content">
             <a><i onClick={this.removeItem.bind(this, el)} className="remove icon"/></a>
             <a><i onClick={this.editItem.bind(this, el)} className="edit icon"/></a>
           </div>
           <a href={`${el.label}${el.item}`} target="_blank" className="content">{`${el.label}${el.item}`}</a>
-        </Item>
+        </StyledItem>
       );
     });
 

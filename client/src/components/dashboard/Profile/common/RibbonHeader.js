@@ -8,7 +8,7 @@ const Container = styled.div`
   cursor: pointer;
 `;
 
-const RibbonHeader = ({ content, onClick, wrapperClass, showPopUp, subSaveClick, id, showSave }) => {
+const RibbonHeader = ({ content, onClick, showPopUp, subSaveClick, id, showSave }) => {
   return (
     <Container>
       <div className="ui green large ribbon label" onClick={onClick}>
@@ -27,7 +27,6 @@ RibbonHeader.propTypes = {
   onClick: propTypes.func.isRequired,
   showSave: propTypes.bool.isRequired,
   content: propTypes.string.isRequired,
-  wrapperClass: propTypes.string.isRequired,
 }
 
 export default RibbonHeader;
