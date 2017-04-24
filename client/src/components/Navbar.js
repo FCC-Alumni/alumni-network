@@ -19,13 +19,32 @@ const MenuRight = styled.div`
 
 class NavBar extends React.Component {
   state = {
-    nav: this.props.screen.isDesktop
+    nav: this.props.screen.isDesktop,
+    clientWidth: ''
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+    this.setState({ clientWidth: window.innerWidth });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  handleResize = (e) => {
+    if (e.target.innerWidth <= 770 && e.target.innerWidth >= 601)
+      this.setState({ nav: false });
+    else if (e.target.innerWidth > 770)
+      this.setState({ nav: true });
+    this.setState({ clientWidth: e.target.innerWidth });
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.screen.isDesktop !== this.state.nav) {
-      this.setState({ nav: !this.state.nav });
-    }
+    if (nextProps.screen.isDesktop || nextProps.screen.isTablet)
+      this.setState({ nav: true });
+    if (nextProps.screen.isMobile)
+      this.setState({ nav: false });
   }
 
   toggleNav = () => {
@@ -37,12 +56,15 @@ class NavBar extends React.Component {
   render() {
 
     /* NOTE: the NavBar rendering logic is pretty arbitrarily contrived
-     around the React screen-size package's props and Semantic UI's menu
+     around the react-screen-size package's props and Semantic UI's menu
      in order to provide the correct responsiveness. The logic is not ideal
      but works pretty well for all screen sizes.
     */
 
     const { isMobile, isTablet, isDesktop } = this.props.screen;
+
+    var TITLE = isTablet ? 'fCC' : 'freeCodeCamp';
+    TITLE += ' Alumni Network';
 
     const guestNav = (
       <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
@@ -58,45 +80,47 @@ class NavBar extends React.Component {
 
     const userNav = (
       <div>
-        {!this.state.nav ?
+      { !this.state.nav
+      ? <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
+          <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />{TITLE}</div>
+        </div>
 
-          <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
-            <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />{isTablet ? 'FCC' : 'freeCodeCamp'} Alumni Network</div>
-          </div>
+      : <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
 
-          :
+      { (isDesktop || (isTablet && this.state.clientWidth > 770))
+        ? <NavLink className="item" activeClassName="active item" exact to="/dashboard">
+            <Logo src="/images/fcc_high_five_logo.svg" />
+            {TITLE}
+          </NavLink>
+        : <div>
+            <div className="item" onClick={this.toggleNav}>
+              <Logo src="/images/fcc_high_five_logo.svg" />
+              {TITLE}
+            </div>
+            <NavLink className="item" activeClassName="active item" exact to="/dashboard">Dashboard</NavLink>
+          </div> }
+          <NavLink className="item" activeClassName="active item" exact to="/dashboard/preferences">Profile</NavLink>
+          <NavLink className="item" activeClassName="active item" exact to="/dashboard/community">Community</NavLink>
+          <NavLink className="item" activeClassName="active item" exact to="/dashboard/mentorship">Mentorship</NavLink>
+          <NavLink className="item" activeClassName="active item" exact to="/dashboard/chat">Mess Hall</NavLink>
 
-          <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
-
-            {(isDesktop || isTablet) ?
-              <NavLink className="item" activeClassName="active item" exact to="/dashboard">
-                <Logo src="/images/fcc_high_five_logo.svg" />{isTablet ? 'FCC' : 'freeCodeCamp'} Alumni Network</NavLink> :
-                <div>
-                  <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />{isTablet ? 'FCC' : 'freeCodeCamp'} Alumni Network</div>
-                  <NavLink className="item" activeClassName="active item" exact to="/dashboard">Dashboard</NavLink>
-                </div>}
-
-            <NavLink className="item" activeClassName="active item" exact to="/dashboard/preferences">Profile</NavLink>
-            <NavLink className="item" activeClassName="active item" exact to="/dashboard/community">Community</NavLink>
-            <NavLink className="item" activeClassName="active item" exact to="/dashboard/mentorship">Mentorship</NavLink>
-            <NavLink className="item" activeClassName="active item" exact to="/dashboard/chat">Mess Hall</NavLink>
-
-            {isDesktop &&
-            <div className='menu right'>
-              <NavLink className="item" activeClassName="active item" exact to="/dashboard/account">
-                {!isMobile ? <i className="setting icon"></i> : 'Account'}
-              </NavLink>
-              <a className="item" href={`${APP_HOST}/logout`}>Logout</a>
-            </div>}
-
-            {!isDesktop && <NavLink className="item" activeClassName="active item" exact to="/dashboard/account">
+        { isDesktop &&
+          <div className='menu right'>
+            <NavLink className="item" activeClassName="active item" exact to="/dashboard/account">
               {!isMobile ? <i className="setting icon"></i> : 'Account'}
-            </NavLink>}
-            {!isDesktop && <a className={isTablet ? 'item right' : 'item'} href={`${APP_HOST}/logout`}>Logout</a>}
+            </NavLink>
+            <a className="item" href={`${APP_HOST}/logout`}>Logout</a>
+          </div> }
 
-          </div>
-
-        }
+        { !isDesktop &&
+          <NavLink title={isTablet && 'Account'} className="item" activeClassName="active item" exact to="/dashboard/account">
+            {isTablet ? <i className="setting icon" /> : 'Account'}
+          </NavLink> }
+        { !isDesktop &&
+          <a title={isTablet && 'Logout'} className={isTablet ? 'item right' : 'item'} href={`${APP_HOST}/logout`}>
+            {isTablet ? <i className="sign out icon" /> : 'Logout'}
+          </a> }
+        </div> }
       </div>
     );
     return (

@@ -41,6 +41,14 @@ TODO:
   - areas of mentorship √
 */
 
+const TopButton = styled(Button)`
+height: 42px !important;
+padding: 10px !important;
+  @media (max-width: 961px) {
+    margin-top: 10px !important;
+  }
+`;
+
 const BottomButton = styled(Button)`
   right: 0;
   bottom: 35px;
@@ -130,81 +138,25 @@ class Profile extends React.Component {
         user.career.working = 'no';
       }
     }
-
     if (e.target.name === 'jobSearch') {
       user.career.jobSearch = e.target.id.replace(/_/g, ' ');
     }
-
     this.setState({ user });
   }
 
   handleInputChange = (e) => {
     var { user } = this.state;
     var { name, value } = e.target;
-
-    if (e.target.name === 'company') {
-      user.career.company = value;
-    } else if (
-      name === 'codepen' ||
-      name === 'linkedin' ||
-      name === 'twitter') {
-      user.social[name] = value;
-    } else if (name === 'mentorshipSkills' ) {
-      if (this.isSectionValid(name, value)) {
+    if (name === 'company') user.career.company = value;
+    else if (name === 'codepen') user.social.codepen = value;
+    else if (name === 'mentorshipSkills' ) {
+      if (this.isSectionValid(name, value))
         user.mentorship.mentorshipSkills = value;
-      }
     } else {
-      if (this.isSectionValid(name, value)) {
+      if (this.isSectionValid(name, value))
         user.personal[name] = value;
-      }
     }
-
     this.setState({ user });
-  }
-
-  toggle = (target) => {
-    const { viewState } = this.state;
-    /* we pass callback to setState to catch state after update
-      in case all the modals are now open or closed */
-    viewState[target] = !viewState[target];
-    this.setState({ viewState }, () => {
-      if (
-        !viewState.showFCC &&
-        !viewState.showSkills &&
-        !viewState.showSocial &&
-        !viewState.showCareer &&
-        !viewState.showProfile &&
-        !viewState.showMentorship &&
-        !viewState.showCollaboration
-      ) {
-          viewState.showAll = false;
-          this.setState({ viewState });
-      } else if (
-        viewState.showFCC &&
-        viewState.showSocial &&
-        viewState.showSkills &&
-        viewState.showCareer &&
-        viewState.showProfile &&
-        viewState.showMentorship &&
-        viewState.showCollaboration
-      ) {
-          viewState.showAll = true;
-          this.setState({ viewState });
-      }
-    });
-  }
-
-  toggleAll = () => {
-    var { viewState, viewState: { showAll } } = this.state;
-    viewState.showAll = !showAll;
-    viewState.showFCC = !showAll;
-    viewState.showCareer = !showAll;
-    viewState.showSkills = !showAll;
-    viewState.showSocial = !showAll;
-    viewState.showProfile = !showAll;
-    viewState.showMentorship = !showAll;
-    viewState.showCollaboration = !showAll;
-    this.setState({ viewState });
   }
 
   saveChanges = (modal) => {
@@ -218,41 +170,35 @@ class Profile extends React.Component {
       modal && this.setState({ modalOpen: true }, () => {
         var { viewState } = this.state;
         // open sections that have errors if they are closed
-        if (this.state.errors.mentorshipSkills) {
-          viewState.showMentorship = true;
-          this.setState({ viewState });
-        }
-        if (this.state.errors.email) {
+        if (this.state.errors.email)
           viewState.showProfile = true;
-          this.setState({ viewState });
-        }
-        if (this.state.errors.career) {
+        if (this.state.errors.career)
           viewState.showCareer = true;
-          this.setState({ viewState });
-        }
+        if (this.state.errors.mentorshipSkills)
+          viewState.showMentorship = true;
+        this.setState({ viewState });
       });
     }
+  }
+
+  closeModal = () => {
+    this.setState({ modalOpen: false });
   }
 
   // now saves only section user clicks button for
   handleSubSaveClick = (e) => {
     e.stopPropagation();
     e.persist();
-
     const { user, user: { _id } } = this.state;
     const section = e.target.id.slice(0, -5);
-
     if (this.isSectionValid(section)) {
       updateUserPartial(_id, section, user[section]).then(res => {
         const { updatedUser } = res.data;
         this.props.saveUser(updatedUser);
-
         // open "Saved" popup
         this.setState({ [e.target.id]: true });
-
         // close popup 1 second later
         setTimeout( _ => this.resetPopUp(e.target.id), 1200);
-
       }).catch(err => console.log(err));
     }
   }
@@ -292,13 +238,13 @@ class Profile extends React.Component {
       errors.mentorshipSkills = this.MENTORSHIP_ERROR;
     }
     if (section === 'bio' && !Validator.isLength(str, { min: 0, max: 300 })) {
-      errors.bio = "Bio must be 300 characters or less."
+      errors.bio = "Bio must be 300 characters or less.";
     }
     if (section === 'displayName' && !Validator.isLength(str, { min: 0, max: 40 })) {
-      errors.displayName = "Display name must be 40 characters or less."
+      errors.displayName = "Display name must be 40 characters or less.";
     }
     if (section === 'mentorshipSkills' && !Validator.isLength(str, { min: 0, max: 200 })) {
-      errors.mentorshipSkills = "Mentorshio bio must be 200 characters or less."
+      errors.mentorshipSkills = "Mentorshio bio must be 200 characters or less.";
     }
 
     if (isEmpty(errors)) {
@@ -381,10 +327,50 @@ class Profile extends React.Component {
     this.setState({ user, errors });
   }
 
-  closeModal = () => {
-    this.setState({ modalOpen: false });
+  toggle = (target) => {
+    const { viewState } = this.state;
+    /* we pass callback to setState to catch state after update
+      in case all the modals are now open or closed */
+    viewState[target] = !viewState[target];
+    this.setState({ viewState }, () => {
+      if (
+        !viewState.showFCC &&
+        !viewState.showSkills &&
+        !viewState.showSocial &&
+        !viewState.showCareer &&
+        !viewState.showProfile &&
+        !viewState.showMentorship &&
+        !viewState.showCollaboration
+      ) {
+          viewState.showAll = false;
+          this.setState({ viewState });
+      } else if (
+        viewState.showFCC &&
+        viewState.showSocial &&
+        viewState.showSkills &&
+        viewState.showCareer &&
+        viewState.showProfile &&
+        viewState.showMentorship &&
+        viewState.showCollaboration
+      ) {
+          viewState.showAll = true;
+          this.setState({ viewState });
+      }
+    });
   }
 
+  toggleAll = () => {
+    var { viewState, viewState: { showAll } } = this.state;
+    viewState.showAll = !showAll;
+    viewState.showFCC = !showAll;
+    viewState.showCareer = !showAll;
+    viewState.showSkills = !showAll;
+    viewState.showSocial = !showAll;
+    viewState.showProfile = !showAll;
+    viewState.showMentorship = !showAll;
+    viewState.showCollaboration = !showAll;
+    this.setState({ viewState });
+  }
   render() {
 
     const {
@@ -397,16 +383,9 @@ class Profile extends React.Component {
         mentorship,
         skillsAndInterests,
       },
-      dismissedMessages
     } = this.state;
 
     const { isDesktop, isMobile } = this.props.screen;
-
-    const TopButton = styled(Button)`
-      height: 42px !important;
-      padding: 10px !important;
-      ${ !isDesktop && 'margin-top: 10px !important;'}
-    `;
 
     const mobilePadding = isMobile ? { padding: '0 10px' } : {};
 
