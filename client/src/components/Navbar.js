@@ -41,15 +41,10 @@ class NavBar extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.screen.isDesktop) {
+    if (nextProps.screen.isDesktop || nextProps.screen.isTablet)
       this.setState({ nav: true });
-    }
-    if (nextProps.screen.isTablet) {
-      this.setState({ nav: true });
-    }
-    if (nextProps.screen.isMobile) {
+    if (nextProps.screen.isMobile)
       this.setState({ nav: false });
-    }
   }
 
   toggleNav = () => {
@@ -61,7 +56,7 @@ class NavBar extends React.Component {
   render() {
 
     /* NOTE: the NavBar rendering logic is pretty arbitrarily contrived
-     around the React screen-size package's props and Semantic UI's menu
+     around the react-screen-size package's props and Semantic UI's menu
      in order to provide the correct responsiveness. The logic is not ideal
      but works pretty well for all screen sizes.
     */

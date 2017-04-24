@@ -50,6 +50,8 @@ const ChatIcon = styled.i`
 
 class UserCard extends React.Component {
 
+  state = { hideImage: false }
+
   initiatePrivateChat = (recipient, notifications) => {
     if (!this.props.privateChat.has(recipient)) {
       this.props.initiatePrivateChat(recipient);
@@ -70,18 +72,32 @@ class UserCard extends React.Component {
     e.stopPropagation();
   }
 
+  hideImage = () => {
+    this.setState({ hideImage: !this.state.hideImage });
+  }
+
   render() {
-    const { user, screen, currentUser, privateChat } = this.props;
+    const { user, screen: { isMobile, isDesktop }, currentUser, privateChat } = this.props;
     const joinedOn = user.personal.memberSince.split('-').slice(0, 2);
     const prettyDate = convertMonthToString(...joinedOn);
     const notifications = privateChat.getIn([user, 'notifications'])
+    const imageStyle = this.state.hideImage ? { display: 'none' } : {};
+    const contentStyle = !this.state.hideImage && isMobile ? { display: 'none' } : { minHeight: 275 };
     return (
       <div className='ui raised card'>
 
-      { (screen.isDesktop || screen.isMobile)
-      ? <div className="ui slide masked reveal image">
-          <img src={user.personal.avatarUrl} className="visible content" alt="user avatar"/>
-          <div className="hidden content">
+      { (isDesktop || isMobile)
+      ? <div className={`ui ${isDesktop && 'slide masked reveal'} image`}>
+          <img
+            style={imageStyle}
+            src={user.personal.avatarUrl}
+            alt={`${user.username} avatar`}
+            onClick={isMobile && this.hideImage}
+            className={`${isDesktop && 'visible content'}`} />
+          <div
+            style={contentStyle}
+            onClick={isMobile && this.hideImage}
+            className={`${(isDesktop || this.state.hideImage) && 'hidden content'}`} >
             <SummaryWrapper>
               <div className="ui horizontal divider">Core Skills</div>
               <div className="ui list">
