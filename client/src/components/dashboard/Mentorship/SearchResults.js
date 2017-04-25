@@ -26,7 +26,7 @@ const IMG = styled.img`
   cursor: pointer;
 `;
 
-const SearchResults = ({ privateChat, initiatePrivateChat, currentUser, results, handleClick }) => {
+const SearchResults = ({ privateChat, initiatePrivateChat, currentUser, results, noResults, handleClick }) => {
   const listResults = results.map(user => {
     const { username, mentorship: { isMentor, mentorshipSkills }, personal: { bio } } = user;
     const notifications = privateChat.getIn([username, 'notifications']);
@@ -71,7 +71,7 @@ const SearchResults = ({ privateChat, initiatePrivateChat, currentUser, results,
       </div>
       <div className="middle aligned content">
         <div className="header">
-          Try searching to find a mentor!
+          Sorry, no results.
         </div>
       </div>
     </div>
@@ -79,7 +79,7 @@ const SearchResults = ({ privateChat, initiatePrivateChat, currentUser, results,
 
   return (
     <ThickPaddedBottom className="ui divided items">
-      { results.length ? listResults : noResultsMessage }
+      { !noResults ? listResults : noResultsMessage }
     </ThickPaddedBottom>
   );
 }
@@ -87,6 +87,7 @@ const SearchResults = ({ privateChat, initiatePrivateChat, currentUser, results,
 SearchResults.propTypes = {
   initiatePrivateChat: propTypes.func.isRequired,
   currentUser: propTypes.string.isRequired,
+  noResults: propTypes.bool.isRequired,
   results: propTypes.array.isRequired,
 }
 

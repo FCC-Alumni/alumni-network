@@ -1,8 +1,58 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import Item from './SocialListItem';
+import styled from 'styled-components';
+import { hoverTransition, StyledItem as StyledLink } from '../../../../styles/globalStyles';
 
-const SocialList = ({ profileUrl, username, social, email, contactsOnly }) => {
+const ChatIcon = styled.i`
+  ${ hoverTransition() }
+  font-size: 20px !important;
+  margin-left: 4px !important;
+  margin-bottom: 2px !important;
+`;
+
+export const SocialIcon = styled.i`
+  font-size: 22px !important;
+  color: black !important;
+`;
+
+const InlineContent = styled.div`
+  display: inline-block !important;
+`;
+
+const Link = styled(StyledLink)`
+  &:hover {
+    background: white !important;
+  }
+`;
+
+const StyledItem = styled.div`
+  color: black !important;
+  font-weight: bold !important;
+  .icon {
+    color: black !important;
+  }
+  cursor: pointer;
+  &:hover {
+    background: white !important;
+    .icon {
+      color: #FF4025 !important;
+      transition: color 200ms ease-in-out !important;
+    }
+  }
+`;
+
+const Item = ({ href, icon, text }) => {
+  return (
+    <Link href={href} target="_blank" className="item">
+      <SocialIcon className={`${icon} icon`} />
+      <InlineContent className="content">
+        <div className="header">{text}</div>
+      </InlineContent>
+    </Link>
+  );
+}
+
+const SocialList = ({ username, social, email, contactsOnly, notifications, currentUser, initiatePrivateChat }) => {
   return (
     <div className="ui relaxed horizontal list">
     { email &&
@@ -15,10 +65,17 @@ const SocialList = ({ profileUrl, username, social, email, contactsOnly }) => {
         icon="free code camp"
         text="freeCodeCamp"
         href={`https://freeCodeCamp.com/${username}`} /> }
+    { contactsOnly && username !== currentUser &&
+      <StyledItem onClick={ () => { initiatePrivateChat(username, notifications) }} className="item">
+        <SocialIcon className="comments icon" />
+        <InlineContent className="content">
+          <div className="header">Mess Hall Chat</div>
+        </InlineContent>
+      </StyledItem> }
       <Item
         icon="github"
-        href={profileUrl}
-        text="GitHub" />
+        text="GitHub"
+        href={`https://github.com/${username}`} />
     { social.codepen && !contactsOnly &&
       <Item
         icon="codepen"
@@ -43,7 +100,6 @@ SocialList.propTypes = {
   contactsOnly: propTypes.bool,
   social: propTypes.object.isRequired,
   username: propTypes.string.isRequired,
-  profileUrl: propTypes.string.isRequired,
 }
 
 SocialList.defaultProps = {

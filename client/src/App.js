@@ -6,14 +6,15 @@ import HomePage from './components/HomePage';
 import AppContainer from './components/AppContainer';
 import LoginPage from './components/signup/LoginPage';
 import PublicLanding from './components/PublicLanding';
-import PassportPage from './components/signup/PassportPage';
 import createStringPolyfills from './assets/polyfills/string';
+import UserVerification from './components/signup/UserVerification';
 import FlashMessagesList from './components/flash/FlashMessagesList';
 
 import './styles/App.css';
 import '../node_modules/flag-icon-css/css/flag-icon.css';
 
-// create global polyfills for ES6 String Methods
+// create global polyfills
+// for ES6 String Methods
 createStringPolyfills();
 
 export const CatchAll = () => (
@@ -34,7 +35,7 @@ export default () => {
         <Route exact path="/" component={HomePage} />
         <Route exact path="/about" component={PublicLanding} />
         <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/verify_account" component={PassportPage} />
+        <Route exact path="/verify_account" component={UserVerification} />
         <Route path="/dashboard" component={AppContainer} />
         <Route component={CatchAll} />
       </Switch>
