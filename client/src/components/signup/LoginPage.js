@@ -1,8 +1,8 @@
 import React from 'react';
-import { APP_HOST } from '../../actions/chat';
-import { connectScreenSize } from 'react-screen-size';
-import { mapScreenSizeToProps } from '../Navbar';
 import styled from 'styled-components';
+import { APP_HOST } from '../../actions/chat';
+import { mapScreenSizeToProps } from '../Navbar';
+import { connectScreenSize } from 'react-screen-size';
 
 class LoginPage extends React.Component {
   state = { flashMessageCleared: false }
@@ -16,11 +16,11 @@ class LoginPage extends React.Component {
     const { flashMessageCleared } = this.state;
     const { isTablet, isMobile, isDesktop } = this.props.screen;
     const Container = styled.div`
-      margin-top: ${document.getElementsByClassName('flashMessage').length > 0
-        && !flashMessageCleared
-        ? '53px' : isDesktop
-        ? '200px': '175px' } !important;
-      `;
+    margin-top: ${document.getElementsByClassName('flashMessage').length > 0
+      && !flashMessageCleared
+      ? '53px' : isDesktop
+      ? '200px': '175px' } !important;
+    `;
     return (
       <Container className={`ui center aligned grid ${isDesktop && 'container'}`}>
         <div className={`${isMobile ? 'twelve' : isTablet ? 'ten' : 'six'} wide column`}>

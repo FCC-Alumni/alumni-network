@@ -10,10 +10,7 @@ import { initiatePrivateChat, clearNotifications } from '../../../actions/chat';
 
 /*
 TODO:
-  - make sure social links work, user.social.SOCIAL_SITE should just be the username for this to work
-  - Add reveal and make cards link to user facing profile
-  - add search feature so user can filter users
-  - add deeper responsiveness for mobile - we will need to render a different card that shows less info for small devices
+  -
 */
 
 const Clickable = styled.div`
@@ -50,7 +47,7 @@ const ChatIcon = styled.i`
 
 class UserCard extends React.Component {
 
-  state = { hideImage: false }
+  state = { reveal: false }
 
   initiatePrivateChat = (recipient, notifications) => {
     if (!this.props.privateChat.has(recipient)) {
@@ -72,32 +69,61 @@ class UserCard extends React.Component {
     e.stopPropagation();
   }
 
-  hideImage = () => {
-    this.setState({ hideImage: !this.state.hideImage });
+  reveal = () => {
+    this.setState({ reveal: !this.state.reveal });
   }
 
   render() {
     const { user, screen: { isMobile, isDesktop }, currentUser, privateChat } = this.props;
     const joinedOn = user.personal.memberSince.split('-').slice(0, 2);
     const prettyDate = convertMonthToString(...joinedOn);
+    const image = document.getElementsByClassName('avatarImg')[0];
     const notifications = privateChat.getIn([user, 'notifications'])
-    const imageStyle = this.state.hideImage ? { display: 'none' } : {};
-    const contentStyle = !this.state.hideImage && isMobile ? { display: 'none' } : { minHeight: 275 };
+    const imageHeight = image && window.getComputedStyle(image).getPropertyValue('height');
+    // used good ol' fashioned inline styles to control the reveal behavior on mobile
+    // resolutions. For whatever reason, had a hard time overriding semantic-ui's transition
+    // rules using styled-components. Trying to keep use of inline vs. styled-components as
+    // consistent as possible, but in certain I am making concessions were necessary
+    const IMAGE_STYLE = isDesktop
+      ? {}
+      : this.state.reveal
+      ? { opacity: 0.01, transition: '.5s' }
+      : { transition: '.5s', opacity: 1 };
+
+    const CONTENT_STYLE = isDesktop
+      ? {}
+      : this.state.reveal && isMobile
+      ? {
+        height: imageHeight,
+        position: 'absolute',
+        transition: '.5s',
+        opacity: 1,
+        left: 0,
+        top: 0
+      }
+      : {
+        position: 'absolute',
+        transition: '.5s',
+        opacity: 0.01,
+        left: 0,
+        top: 0
+      };
+
     return (
       <div className='ui raised card'>
 
       { (isDesktop || isMobile)
-      ? <div className={`ui ${isDesktop && 'slide masked reveal'} image`}>
+      ? <div className={`ui ${isDesktop ? 'slide masked reveal image' : 'image'}`}>
           <img
-            style={imageStyle}
+            style={IMAGE_STYLE}
             src={user.personal.avatarUrl}
             alt={`${user.username} avatar`}
-            onClick={isMobile && this.hideImage}
-            className={`${isDesktop && 'visible content'}`} />
+            onClick={isMobile && this.reveal}
+            className={`${isDesktop ? 'visible content' : 'avatarImg'}`} />
           <div
-            style={contentStyle}
-            onClick={isMobile && this.hideImage}
-            className={`${(isDesktop || this.state.hideImage) && 'hidden content'}`} >
+            style={CONTENT_STYLE}
+            onClick={isMobile && this.reveal}
+            className={`${(isDesktop || this.state.reveal) ? 'hidden content' : ''}`} >
             <SummaryWrapper>
               <div className="ui horizontal divider">Core Skills</div>
               <div className="ui list">

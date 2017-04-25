@@ -131,7 +131,7 @@ class RepoList extends React.Component {
     } else if (!repo) {
       this.setState({
         error: {
-          header: 'Entry invalid. Plese enter a valid repo in the format: namespace/repo.',
+          header: 'Invalid entry. Plese enter a valid repo in the format: namespace/repo.',
           repo: '',
           namespace: '',
         },
