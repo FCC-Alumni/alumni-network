@@ -5,6 +5,7 @@ import UserLabel from '../common/UserLabel';
 import { SubHeader } from './Profile/Public/SkillsRow';
 import LocationSteps from './Profile/Public/LocationSteps';
 import { ThickPaddedBottom, StyledItem } from '../../styles/globalStyles';
+import { initiatePrivateChat, clearNotifications } from '../../actions/chat';
 import MainHeader from '../dashboard/Profile/Public/ProfileHeader';
 import SkillsAndInterests from './Profile/Public/SkillsRow';
 import TableRow from '../dashboard/Profile/Public/TableRow';
@@ -201,6 +202,18 @@ class PublicProfile extends React.Component {
     });
   }
 
+  initiatePrivateChat = (recipient, notifications) => {
+    if (!this.props.privateChat.has(recipient)) {
+      this.props.initiatePrivateChat(recipient);
+    } else if (notifications) {
+      this.props.clearNotifications({
+        author: this.props.currentUser,
+        recipient
+      });
+    }
+    this.props.history.push(`/dashboard/chat/${recipient}`);
+  }
+
   render() {
     const {
       user,
@@ -341,7 +354,9 @@ class PublicProfile extends React.Component {
                   social={user.social}
                   username={user.username}
                   email={user.personal.email}
-                  profileUrl={user.personal.profileUrl} />
+                  currentUser={this.props.currentUser}
+                  initiatePrivateChat={this.initiatePrivateChat}
+                  notifications={this.props.privateChat.getIn([user.username, 'notifications'])} />
               </DynamicHeightDiv>
             </div>
           </div>
@@ -383,7 +398,9 @@ class PublicProfile extends React.Component {
 import { defaultUser } from '../../reducers/user';
 
 PublicProfile.propTypes = {
-  user: propTypes.object.isRequired
+  user: propTypes.object.isRequired,
+  initialState: propTypes.object.isRequired,
+  privateChat: propTypes.object.isRequired,
 }
 
 const findUser = (community, username) => {
@@ -391,7 +408,7 @@ const findUser = (community, username) => {
     (user.username === username) && user)[0] : '';
 };
 
-const mapStateToProps = ({ community, publicProfileStats }, props) => {
+const mapStateToProps = ({ community, publicProfileStats, privateChat, user: currentUser }, props) => {
   const { username } = props.match.params;
   let initialState, user = '';
   try {
@@ -405,9 +422,17 @@ const mapStateToProps = ({ community, publicProfileStats }, props) => {
     console.log(e)
   }
   return {
+    currentUser: currentUser.username,
     user: user ? user : defaultUser,
-    initialState
+    initialState,
+    privateChat
   }
 }
 
-export default connect(mapStateToProps, { saveProfileStats })(PublicProfile);
+const dispatch = {
+  saveProfileStats,
+  clearNotifications,
+  initiatePrivateChat,
+}
+
+export default connect(mapStateToProps, dispatch)(PublicProfile);

@@ -32,7 +32,7 @@ const CenteredWrapper = styled.div`
 
 const SummaryWrapper = styled.div`
   text-align: center !important;
-  font-size: 12px !important;
+  font-size: 13.5px !important;
   padding: 7px 5px 0 5px;
 `;
 
