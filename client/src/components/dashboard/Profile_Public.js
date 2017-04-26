@@ -16,11 +16,10 @@ import SocialList from './Profile/Public/SocialList';
 import { defaultUser } from '../../reducers/user';
 import Career from './Profile/Public/CareerRow';
 import styled from 'styled-components';
-import htmlToJson from 'html-to-json';
 import isEmpty from 'lodash/isEmpty';
 import axios from 'axios';
 
-const ERROR = "Sorry, we encountered an error.";
+import { scrapeFccStats } from '../../actions/scrape-fcc.js';
 
 // STYLED COMPONENTS:
 const IMG = styled.img`
@@ -46,18 +45,6 @@ class PublicProfile extends React.Component {
     const { initialState } = this.props;
     this.state = {
       ...initialState
-   // STATE STRUCTURE:
-   // firstChallenge: '',
-   // totalChallneges: '',
-   // longestStreak: '',
-   // currentStreak: '',
-   // browniePoints: '',
-   // isLoadingA: true,
-   // isLoadingB: true,
-   // isLoadingC: true,
-   // isLoadingD: true,
-   // isLoadingE: true,
-   // firstLoad: true,
     }
   }
 
@@ -66,12 +53,14 @@ class PublicProfile extends React.Component {
     // *** *** *** *** *** *** *** *** *** ***
     //  ==> ^^ UNCOMMENT WHEN DONE WORKING ON COMPONENT ^^ <==
     // *** *** *** *** *** *** *** *** *** ***
-    if (this.state.firstLoad) {
-      this.scrapeFccStats();
-      this.setState({
-        firstLoad: false
-      });
+    if (!this.props.initialState) {
+      this.props.scrapeFccStats(this.props.match.params.username);
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { initialState } = nextProps;
+    if (initialState) this.setState({ ...initialState });
   }
 
   componentDidUpdate() {
@@ -85,107 +74,6 @@ class PublicProfile extends React.Component {
       this.dynamicHeight = bioHeight;
     } else {
       this.dynamicHeight = contactHeight;
-    }
-  }
-
-  componentWillUnmount() {
-    this.props.saveProfileStats({ [this.props.user.username]: this.state });
-  }
-
-  scrapeFccStats = () => {
-    axios.get(`https://www.freecodecamp.com/${this.props.user.username}`).then(html => {
-
-      // FIRST CHALLENGE COMPLETED
-      htmlToJson.parse(html.data, {
-        'text': (doc) => {
-          return doc.find('div').text();
-        }
-      }).done(result => {
-        if (!/Challenges\s*Completed/.test(result.text)) {
-          this.setState({firstChallenge: "Sorry, no data", isLoadingA: false});
-        } else {
-          result = result.text.match(/Challenges\s*Completed.*?\d{4}/)[0];
-          this.setState({firstChallenge: result.slice(-12), isLoadingA: false});
-        }
-      }, err => {
-        this.setState({firstChallenge: ERROR, isLoadingA: false});
-      });
-
-      // TOTAL CHALLENGES COMPLETED
-      htmlToJson.parse(html.data, function() {
-        return this.map('tr .col-xs-5', (item) => {
-          return item.text();
-        });
-      }).done(items => {
-        this.setState({totalChallneges: items.length, isLoadingB: false});
-      }, err => {
-        this.setState({totalChallneges: ERROR, isLoadingB: false});
-      });
-
-      // LONGEST STREAK
-      htmlToJson.parse(html.data, {
-        'text': function(doc) {
-          return doc.find('h4').text();
-        }
-      }).done(result => {
-        result = result.text.match(/Longest\sStreak:\s\d+/)[0];
-        var dayOrDays = result.slice(16) === "1"
-          ? " Day"
-          : " Days";
-        this.setState({
-          longestStreak: result.slice(16) + dayOrDays,
-          isLoadingC: false
-        });
-      }, err => {
-        this.setState({longestStreak: ERROR, isLoadingC: false});
-      });
-
-      // CURRENT STREAK
-      htmlToJson.parse(html.data, {
-        'text': function(doc) {
-          return doc.find('h4').text();
-        }
-      }).done(result => {
-        result = result.text.match(/Current\sStreak:\s\d+/)[0];
-        var dayOrDays = result.slice(16) === "1"
-          ? " Day"
-          : " Days";
-        this.setState({
-          currentStreak: result.slice(16) + dayOrDays,
-          isLoadingD: false
-        });
-      }, err => {
-        this.setState({currentStreak: ERROR, isLoadingD: false});
-      });
-
-      // BROWNIE POINTS
-      htmlToJson.parse(html.data, {
-        'text': function(doc) {
-          return doc.find('h1').text();
-        }
-      }).done(result => {
-        result = result.text.match(/\[\s\d*\s\]/)[0];
-        this.setState({
-          browniePoints: result.slice(2, -2),
-          isLoadingE: false
-        });
-      }, err => {
-        this.setState({browniePoints: ERROR, isLoadingE: false});
-      });
-
-    });
-  }
-
-  isLoading = () => {
-    if (
-      !this.state.isLoadingA &&
-      !this.state.isLoadingB &&
-      !this.state.isLoadingC &&
-      !this.state.isLoadingD &&
-      !this.state.isLoadingE) {
-      return false;
-    } else {
-      return true;
     }
   }
 
@@ -275,7 +163,7 @@ class PublicProfile extends React.Component {
                   freeCodeCamp Profile <i className="free code camp icon" />
                 </StyledSubHeader>
               </NoPadding>
-              { this.isLoading()
+              { !this.props.initialState
                 ? <div className="row">{loader}</div>
                 : <FCCStatTables { ...this.state } width="eight" username={user.username} fccCerts={user.fccCerts} /> }
             </NoBottomMargin>
@@ -397,7 +285,6 @@ class PublicProfile extends React.Component {
 
 PublicProfile.propTypes = {
   user: propTypes.object.isRequired,
-  initialState: propTypes.object.isRequired,
   privateChat: propTypes.object.isRequired,
 }
 
@@ -410,7 +297,7 @@ const mapStateToProps = ({ community, publicProfileStats, privateChat, user: cur
   const { username } = props.match.params;
   let initialState, user = '';
   try {
-    initialState = publicProfileStats[username];
+    initialState = publicProfileStats.get(username);
   } catch (e) {
     console.log(e)
   }
@@ -431,6 +318,7 @@ const dispatch = {
   saveProfileStats,
   clearNotifications,
   initiatePrivateChat,
+  scrapeFccStats,
 }
 
 export default connect(mapStateToProps, dispatch)(PublicProfile);
