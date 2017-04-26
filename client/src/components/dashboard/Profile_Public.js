@@ -13,6 +13,7 @@ import { saveProfileStats } from '../../actions/views';
 import FCCStatTables from './Profile/Public/FCCTables';
 import Table from '../dashboard/Profile/Public/Table';
 import SocialList from './Profile/Public/SocialList';
+import { defaultUser } from '../../reducers/user';
 import Career from './Profile/Public/CareerRow';
 import styled from 'styled-components';
 import htmlToJson from 'html-to-json';
@@ -45,6 +46,18 @@ class PublicProfile extends React.Component {
     const { initialState } = this.props;
     this.state = {
       ...initialState
+   // STATE STRUCTURE:
+   // firstChallenge: '',
+   // totalChallneges: '',
+   // longestStreak: '',
+   // currentStreak: '',
+   // browniePoints: '',
+   // isLoadingA: true,
+   // isLoadingB: true,
+   // isLoadingC: true,
+   // isLoadingD: true,
+   // isLoadingE: true,
+   // firstLoad: true,
     }
   }
 
@@ -54,11 +67,7 @@ class PublicProfile extends React.Component {
     //  ==> ^^ UNCOMMENT WHEN DONE WORKING ON COMPONENT ^^ <==
     // *** *** *** *** *** *** *** *** *** ***
     if (this.state.firstLoad) {
-      this.longestStreak();
-      this.currentStreak();
-      this.browniePoints();
-      this.firstChallenge();
-      this.totalChallneges();
+      this.scrapeFccStats();
       this.setState({
         firstLoad: false
       });
@@ -83,9 +92,11 @@ class PublicProfile extends React.Component {
     this.props.saveProfileStats({ [this.props.user.username]: this.state });
   }
 
-  firstChallenge = () => {
-    axios.get(`https://www.freecodecamp.com/${this.props.user.username}`).then(res => {
-      htmlToJson.parse(res.data, {
+  scrapeFccStats = () => {
+    axios.get(`https://www.freecodecamp.com/${this.props.user.username}`).then(html => {
+
+      // FIRST CHALLENGE COMPLETED
+      htmlToJson.parse(html.data, {
         'text': (doc) => {
           return doc.find('div').text();
         }
@@ -99,26 +110,20 @@ class PublicProfile extends React.Component {
       }, err => {
         this.setState({firstChallenge: ERROR, isLoadingA: false});
       });
-    });
-  }
 
-  totalChallneges = () => {
-    axios.get(`https://www.freecodecamp.com/${this.props.user.username}`).then(res => {
-      htmlToJson.parse(res.data, function() {
+      // TOTAL CHALLENGES COMPLETED
+      htmlToJson.parse(html.data, function() {
         return this.map('tr .col-xs-5', (item) => {
           return item.text();
         });
       }).done(items => {
         this.setState({totalChallneges: items.length, isLoadingB: false});
       }, err => {
-        this.setState({firstChallenge: ERROR, isLoadingB: false});
+        this.setState({totalChallneges: ERROR, isLoadingB: false});
       });
-    });
-  }
 
-  longestStreak = () => {
-    axios.get(`https://www.freecodecamp.com/${this.props.user.username}`).then(res => {
-      htmlToJson.parse(res.data, {
+      // LONGEST STREAK
+      htmlToJson.parse(html.data, {
         'text': function(doc) {
           return doc.find('h4').text();
         }
@@ -134,12 +139,9 @@ class PublicProfile extends React.Component {
       }, err => {
         this.setState({longestStreak: ERROR, isLoadingC: false});
       });
-    });
-  }
 
-  currentStreak = () => {
-    axios.get(`https://www.freecodecamp.com/${this.props.user.username}`).then(res => {
-      htmlToJson.parse(res.data, {
+      // CURRENT STREAK
+      htmlToJson.parse(html.data, {
         'text': function(doc) {
           return doc.find('h4').text();
         }
@@ -155,12 +157,9 @@ class PublicProfile extends React.Component {
       }, err => {
         this.setState({currentStreak: ERROR, isLoadingD: false});
       });
-    });
-  }
 
-  browniePoints = () => {
-    axios.get(`https://www.freecodecamp.com/${this.props.user.username}`).then(res => {
-      htmlToJson.parse(res.data, {
+      // BROWNIE POINTS
+      htmlToJson.parse(html.data, {
         'text': function(doc) {
           return doc.find('h1').text();
         }
@@ -173,6 +172,7 @@ class PublicProfile extends React.Component {
       }, err => {
         this.setState({browniePoints: ERROR, isLoadingE: false});
       });
+
     });
   }
 
@@ -394,8 +394,6 @@ class PublicProfile extends React.Component {
     );
   }
 }
-
-import { defaultUser } from '../../reducers/user';
 
 PublicProfile.propTypes = {
   user: propTypes.object.isRequired,
