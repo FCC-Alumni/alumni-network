@@ -1,31 +1,13 @@
-import { SAVE_PROFILE_STATS } from '../actions/types';
-import { POPULATE_DEFAULT_STATS } from '../actions/community';
 
-const defaultStats = {
-  firstChallenge: '',
-  totalChallneges: '',
-  longestStreak: '',
-  currentStreak: '',
-  browniePoints: '',
-  isLoadingA: true,
-  isLoadingB: true,
-  isLoadingC: true,
-  isLoadingD: true,
-  isLoadingE: true,
-  firstLoad: true,
-}
+import { POPULATE_USER_STATS } from '../actions/scrape-fcc.js';
+import { Map } from 'immutable';
 
-export default (state = defaultStats, action) => {
-  switch (action.type) {
+export default (state = Map(), action) => {
+  const { type, payload } = action;
+  switch (type) {
 
-    case POPULATE_DEFAULT_STATS:
-      var defaultState = {};
-      action.users.forEach(user =>
-        defaultState[user.username] = defaultStats);
-      return defaultState;
-
-    case SAVE_PROFILE_STATS:
-      return Object.assign(state, action.stats);
+    case POPULATE_USER_STATS:
+      return state.set(payload.user, payload.stats);
 
     default: return state;
   }

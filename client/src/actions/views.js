@@ -17,10 +17,3 @@ export const savePreferencesViewState = (preferencesView) => {
     preferencesView
   }
 }
-
-export const saveProfileStats = (stats) => {
-  return {
-    type: SAVE_PROFILE_STATS,
-    stats
-  }
-}
