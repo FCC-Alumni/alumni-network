@@ -1,7 +1,7 @@
 import { SAVE_PREFERENCES_VIEW_STATE } from '../actions/types';
 
 const defaultState = {
-  showAll: true,
+  showAll: false,
   showFCC: false,
   showProfile: true,
   showSkills: false,

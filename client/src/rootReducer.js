@@ -7,7 +7,7 @@ import community from './reducers/community';
 import privateChat from './reducers/privateChat';
 import onlineStatus from './reducers/onlineStatus';
 import flashMessages from './reducers/flashMessages';
-import profileViewState from './reducers/profileViewState';
+import profileViewState from './reducers/preferencesViewState';
 import publicProfileStats from './reducers/publicProfileStats';
 
 export default combineReducers({
