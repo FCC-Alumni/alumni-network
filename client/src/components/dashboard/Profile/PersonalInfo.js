@@ -14,7 +14,7 @@ const INFO_MESSAGE = 'Don\'t worry, no junkmail. We are asking for your email in
 
 class PersonalInfo extends React.Component {
   shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props, nextProps); 
+    return !isEqual(this.props, nextProps);
   }
   render() {
     const {
@@ -79,7 +79,7 @@ class PersonalInfo extends React.Component {
                 icon="marker icon"
                 inputOptions={INPUT_OPTIONS}
                 onChange={handleInputChange}
-                placeholder="Enter City / State" />
+                placeholder="Enter Location" />
             </ListItem>
             <ListItem>
               <div className="six wide field">

@@ -36,7 +36,7 @@ const Steps = ({ personal }) => {
       <div className="step">
         <i className="marker icon"/>
         <div className="content">
-          <div className="title">City/State</div>
+          <div className="title">Location</div>
         </div>
       </div>
       <div className="step">

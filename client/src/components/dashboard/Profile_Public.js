@@ -27,7 +27,8 @@ const IMG = styled.img`
 
 const Loader = styled.div`
   height: 200px !important;
-  padding-bottom:  !important;`
+  padding-bottom:  !important;
+  z-index: 0 !important;`
 
 const OneColumnRepoList = styled.div`
   margin-top: 0 !important;
@@ -50,11 +51,13 @@ class PublicProfile extends React.Component {
 
   componentDidMount() {
     document.body.scrollTop = 0;
-    // *** *** *** *** *** *** *** *** *** ***
-    //  ==> ^^ UNCOMMENT WHEN DONE WORKING ON COMPONENT ^^ <==
-    // *** *** *** *** *** *** *** *** *** ***
+    // redirect to community if url user
+    // entered does not contain a valid username
+    if (!this.props.user.username) {
+      this.props.history.push('/dashboard/community');
+    }
     if (!this.props.initialState) {
-      this.props.scrapeFccStats(this.props.match.params.username);
+      this.props.scrapeFccStats(this.props.user.username);
     }
   }
 
@@ -290,11 +293,12 @@ PublicProfile.propTypes = {
 
 const findUser = (community, username) => {
   return community ? community.filter(user =>
-    (user.username === username) && user)[0] : '';
+    (user.username.toLowerCase() === username.toLowerCase()) && user)[0] : '';
 };
 
 const mapStateToProps = ({ community, publicProfileStats, privateChat, user: currentUser }, props) => {
-  const { username } = props.match.params;
+  let username = findUser(community.toJS(), props.match.params.username);
+  if (username) username = username.username;
   let initialState, user = '';
   try {
     initialState = publicProfileStats.get(username);
