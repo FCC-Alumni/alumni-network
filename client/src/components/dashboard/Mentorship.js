@@ -93,7 +93,10 @@ class Mentorship extends React.Component {
       type: 'info',
         text: {
           header: 'Welcome to Mentorship Search!',
-          message: 'Utilize our mentorship match engine to identify the right mentor for you. Narrow down your results by searching a specific category or by enabling filters.'
+          message: `Utilize our mentorship match engine to identify the right mentor for you.
+                    Narrow down your results by searching a specific category or by enabling
+                    filters. If you think you've found a good match, feel free to reach out
+                    through private chat!`
         }
     });
   }

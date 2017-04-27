@@ -15,7 +15,7 @@ class UserVerification extends React.Component {
     avatarUrl: '',
     loading: true,
   }
-  
+
   componentDidMount() {
     getUserData().then(user => {
     this.setState({ loading: false });
@@ -111,6 +111,7 @@ class UserVerification extends React.Component {
               <li>freeCodeCamp Full Stack Certification</li>
             </ul>
           </div>
+          <br />
           <button onClick={this.handleSubmit} className="ui positive button">Verify freeCodeCamp Certifications for {this.state.username}</button>
           <p style={{ fontSize: 15, marginTop: 15, marginBottom: 15 }}>
             <i className="red warning circle icon" /><strong>Note:</strong> If your freeCodeCamp username is not <strong>{this.state.username}</strong>, please send an email to Pete's Computer.

@@ -30,7 +30,7 @@ export default ({ size, close, open }) => {
           <br/><br/>
 
           <i className="student icon mentorIcon"></i> These people are mentors<br/>
-          <i className="star icon green onlineIcon"></i> These people are currently online
+          <i className="star icon onlineIcon" style={{ color: 'rgb(255, 109, 88)' }}></i> These people are currently online
 
           <br/><br/>
 

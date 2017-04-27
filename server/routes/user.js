@@ -9,8 +9,9 @@ import { isAuthenticated } from './passport';
 import {
   getFrontEndCert,
   getBackEndCert,
-  getDataVisCert
+  getDataVisCert,
 } from '../helpers/getCerts';
+import whitelist from '../helpers/user-whitelist';
 
 const router = express.Router();
 
@@ -30,7 +31,9 @@ router.post('/api/user', (req, res) => {
 });
 
 router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
-  const { username, mongoId } = req.body;
+  // if user is whitelisted, use their alternate username:
+  const username = whitelist[username] ? whitelist[username] : req.body.username;
+  const { mongoId } = req.body;
 
   console.log(`processing verification for ${username}`);
 
@@ -40,7 +43,7 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
     if ((frontCert.request._redirectCount +
       backCert.request._redirectCount +
       dataCert.request._redirectCount) >= 3 ) {
-      // NOTE: temporarily set to true to allow anyone in:
+      // NOTE: temporarily set to true to allow anyone in (for development):
       return false;
     } else {
       return {
@@ -64,6 +67,10 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
       // verified user, proceed
       User.findById(mongoId, (err, user) => {
         if (err) throw err;
+
+        /* we need to overwrite their session username too
+          (only matters for whitelisted users) */
+        req.user.username = username;
 
         user.username = username;
         user.fccCerts = certs;

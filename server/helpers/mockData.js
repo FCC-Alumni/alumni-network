@@ -77,7 +77,6 @@ const fakeUsers = [
   'p1xt',
   'bengitter',
   'josh5231',
-  'bonham000'
 ];
 
 const mentorshipSource = [
