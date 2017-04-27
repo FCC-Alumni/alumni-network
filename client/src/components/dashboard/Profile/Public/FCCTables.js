@@ -27,7 +27,7 @@ const FccTables = ({
   currentStreak,
   browniePoints,
   firstChallenge,
-  totalChallneges,
+  totalChallenges,
 }) => {
   return (
     <div className="row">
@@ -61,7 +61,7 @@ const FccTables = ({
           header="Total Challenges Completed"
           content={
             <div>
-              {totalChallneges}
+              {totalChallenges}
               <Popup
                 inverted
                 wide
@@ -101,7 +101,7 @@ FccTables.propTypes = {
   currentStreak: propTypes.string.isRequired,
   browniePoints: propTypes.string.isRequired,
   firstChallenge: propTypes.string.isRequired,
-  totalChallneges: propTypes.number.isRequired,
+  totalChallenges: propTypes.number.isRequired,
 }
 
 export default FccTables;

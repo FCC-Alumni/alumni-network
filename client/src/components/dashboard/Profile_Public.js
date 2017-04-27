@@ -2,6 +2,8 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import UserLabel from '../common/UserLabel';
+import SocialList from './Profile/Public/SocialList';
+import { connectScreenSize } from 'react-screen-size';
 import { SubHeader } from './Profile/Public/SkillsRow';
 import LocationSteps from './Profile/Public/LocationSteps';
 import { ThickPaddedBottom, StyledItem } from '../../styles/globalStyles';
@@ -12,7 +14,6 @@ import TableRow from '../dashboard/Profile/Public/TableRow';
 import { saveProfileStats } from '../../actions/views';
 import FCCStatTables from './Profile/Public/FCCTables';
 import Table from '../dashboard/Profile/Public/Table';
-import SocialList from './Profile/Public/SocialList';
 import { defaultUser } from '../../reducers/user';
 import Career from './Profile/Public/CareerRow';
 import styled from 'styled-components';
@@ -22,40 +23,52 @@ import axios from 'axios';
 import { scrapeFccStats } from '../../actions/scrape-fcc.js';
 
 // STYLED COMPONENTS:
-const IMG = styled.img`
-  margin-top: 8px !important;`
+const Avatar = styled.img`
+  margin: 8px auto auto !important;
+  max-height: 270px !important;
+  max-width: 270px !important;`;
 
 const Loader = styled.div`
   height: 200px !important;
-  padding-bottom:  !important;`
+  padding-bottom:  !important;
+  z-index: 0 !important;`;
 
 const OneColumnRepoList = styled.div`
   margin-top: 0 !important;
-  margin-bottom: 14px !important;`
+  margin-bottom: 14px !important;`;
 
 const NoPadding = styled.div`
-  padding: 0 !important;`
+  padding: 0 !important;`;
 
 const StyledSubHeader = styled(SubHeader)`
-  margin-bottom: 0 !important;`
+  margin-bottom: 0 !important;`;
 
 class PublicProfile extends React.Component {
   constructor(props) {
     super(props);
     const { initialState } = this.props;
     this.state = {
-      ...initialState
+      ...initialState,
+      isTablet: false
     }
   }
 
   componentDidMount() {
     document.body.scrollTop = 0;
-    // *** *** *** *** *** *** *** *** *** ***
-    //  ==> ^^ UNCOMMENT WHEN DONE WORKING ON COMPONENT ^^ <==
-    // *** *** *** *** *** *** *** *** *** ***
-    if (!this.props.initialState) {
-      this.props.scrapeFccStats(this.props.match.params.username);
+    // redirect to community if url user
+    // entered does not contain a valid username
+    if (!this.props.user.username) {
+      this.props.history.push('/dashboard/community');
     }
+    if (!this.props.initialState) {
+      this.props.scrapeFccStats(this.props.user.username);
+    }
+    
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -74,6 +87,14 @@ class PublicProfile extends React.Component {
       this.dynamicHeight = bioHeight;
     } else {
       this.dynamicHeight = contactHeight;
+    }
+  }
+
+  handleResize = (e) => {
+    if (e.target.innerWidth < 992 && e.target.innerWidth > 767) {
+      this.setState({ isTablet: true });
+    } else {
+      this.setState({ isTablet: false });
     }
   }
 
@@ -144,8 +165,8 @@ class PublicProfile extends React.Component {
 
         {/* AVATAR & FCCDATA */}
         <div className="ui celled stackable grid container">
-          <div className="four wide center aligned column">
-            <IMG
+          <div className={`${this.state.isTablet ? 'sixteen' : 'four'} wide center aligned column`}>
+            <Avatar
               src={user.personal.avatarUrl}
               alt={`${user.username}'s avatar'`}
               className="ui fluid circular bordered image" />
@@ -153,9 +174,9 @@ class PublicProfile extends React.Component {
             <UserLabel
               showAvatar={false}
               username={user.username}
-              label={user.mentorship.isMentor ? "Mentor" : "Member"}/>
+              label={this.props.isTablet ? '' : user.mentorship.isMentor ? "Mentor" : "Member"}/>
           </div>
-          <div className="twelve wide column">
+          <div className={`${this.state.isTablet ? 'sixteen' : 'twelve'} wide column`}>
             <LocationSteps personal={user.personal} />
             <NoBottomMargin className="ui celled stackable grid">
               <NoPadding className="sixteen wide center aligned column">
@@ -290,11 +311,12 @@ PublicProfile.propTypes = {
 
 const findUser = (community, username) => {
   return community ? community.filter(user =>
-    (user.username === username) && user)[0] : '';
+    (user.username.toLowerCase() === username.toLowerCase()) && user)[0] : '';
 };
 
 const mapStateToProps = ({ community, publicProfileStats, privateChat, user: currentUser }, props) => {
-  const { username } = props.match.params;
+  let username = findUser(community.toJS(), props.match.params.username);
+  if (username) username = username.username;
   let initialState, user = '';
   try {
     initialState = publicProfileStats.get(username);
@@ -314,6 +336,12 @@ const mapStateToProps = ({ community, publicProfileStats, privateChat, user: cur
   }
 }
 
+const mapScreenSizeToProps = (screenSize) => {
+  return {
+    isTablet: screenSize['medium'],
+  }
+}
+
 const dispatch = {
   saveProfileStats,
   clearNotifications,
@@ -321,4 +349,5 @@ const dispatch = {
   scrapeFccStats,
 }
 
-export default connect(mapStateToProps, dispatch)(PublicProfile);
+export default connectScreenSize(mapScreenSizeToProps)(
+  connect(mapStateToProps, dispatch)(PublicProfile));

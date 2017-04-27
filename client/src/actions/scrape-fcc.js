@@ -29,7 +29,7 @@ export const scrapeFccStats = (user) => (dispatch) => {
         return item.text();
       });
     }).then(items => {
-      return items.length;
+      return items.length.toString();
     }).catch(err => {
       return null;
     });

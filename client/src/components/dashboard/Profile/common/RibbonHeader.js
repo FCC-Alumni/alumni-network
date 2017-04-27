@@ -6,6 +6,7 @@ const Container = styled.div`
   margin-top: 8px !important;
   margin-bottom: 8px !important;
   cursor: pointer;
+  display: table;
 `;
 
 const RibbonHeader = ({ content, onClick, showPopUp, subSaveClick, id, showSave }) => {

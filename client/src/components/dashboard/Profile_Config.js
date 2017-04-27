@@ -24,21 +24,9 @@ import Validator from 'validator';
 
 /*
 TODO:
-  - MENTORSHIP / VALIDATION: Require mentorship bio if either slider is toggled! √
   - MENTORSHIP: Revisit copy! Some of this info should be moved to the "about us" public page.
-  - PERSONAL: Add info icon to email field, saying email will be publicly displayed if you provide it √
-  - folder icon behavior - open when any field expanded
-  - add validations for form fields - should be loose validations since nothing is strictly required √
-  - error handling if save to server fails? √
-  - use passport to pull in LinkedIn and Twitter handles √
-  - we need to look at how users enter location (should have zip code or somehting and get location name by API - for D3 map as well!) √
-  - MENTORSHIP: Looking for mentorship? If so, in what? Add new sliderToggle √
-  - save individual section √
-  - save all √
-  - connect to DB √
-  - connect to redux √
-  - add career form / questionaire √
-  - areas of mentorship √
+  - PERSONAL INFO: validation to require user to enter country to collect data for D3 map?
+  - GENERAL: Refactor validation code, kind of reduntant and could be improved (isPageValid && isSectionValid)
 */
 
 const TopButton = styled(Button)`
@@ -74,6 +62,8 @@ class Profile extends React.Component {
     }
     // SHARED ERRORS:
     this.EMAIL_ERROR = "Please enter a valid email address."
+    this.LOCATION_ERROR = "Location must be 25 characters or less.";
+    this.DISPLAY_NAME_ERROR = "Display name must be 40 characters or less.";
     this.CAREER_ERROR = "Please complete the entire section or clear the form."
     this.CODEPEN_ERROR = "Please enter your username only, not your profile url.";
     this.MENTORSHIP_ERROR = "To complete your mentorship prorgram enrollment, please fill out the section above.";
@@ -214,15 +204,13 @@ class Profile extends React.Component {
     const {
       user: {
         social: { codepen },
-        personal: { email },
+        personal: { email, location, displayName, country },
         mentorship: { isMentor, isMentee, mentorshipSkills },
         career: { working, tenure, company, jobSearch },
       }
     } = this.state;
 
-    if (section === 'social' && codepen && Validator.isURL(codepen)) {
-      errors.codepen = this.CODEPEN_ERROR;
-    }
+    // SECTION VALIDATIONS (called on handleSubSaveClick)
     if (section === 'career') {
       if (working && working === 'no' && !tenure && !jobSearch) {
         errors.career = this.CAREER_ERROR;
@@ -231,11 +219,29 @@ class Profile extends React.Component {
         errors.career = this.CAREER_ERROR;
       }
     }
-    if (section === 'personal' && email && !Validator.isEmail(email)) {
-      errors.email = this.EMAIL_ERROR;
+    if (section === 'social' && codepen && Validator.isURL(codepen)) {
+      errors.codepen = this.CODEPEN_ERROR;
+    }
+    if (section === 'personal') {
+      if (!Validator.isEmail(email)) {
+        errors.email = this.EMAIL_ERROR;
+      }
+      // these 2 seem reduntant but are needed in case pre-loaded github data
+      // breaks validatiion rules - no onChange error since not manually typed
+      if (!Validator.isLength(location, { min: 0, max: 25 })) {
+        errors.location = this.LOCATION_ERROR;
+      }
+      if (!Validator.isLength(displayName, { min: 0, max: 40 })) {
+        errors.displayName = this.DISPLAY_NAME_ERROR;
+      }
     }
     if (section === 'mentorship' && (isMentee || isMentor) && !mentorshipSkills) {
       errors.mentorshipSkills = this.MENTORSHIP_ERROR;
+    }
+
+    // ONCHANGE VALIDATIONS (called on handleInputChange change)
+    if (section === 'location' && !Validator.isLength(str, { min: 0, max: 25 })) {
+      errors.location = this.LOCATION_ERROR;
     }
     if (section === 'bio' && !Validator.isLength(str, { min: 0, max: 300 })) {
       errors.bio = "Bio must be 300 characters or less.";
@@ -262,27 +268,33 @@ class Profile extends React.Component {
 
     const { user: {
         social: { codepen },
-        personal: { email, bio, country, location },
         career: { working, tenure, company, jobSearch },
         skillsAndInterests: { codingInterests, coreSkills },
         mentorship: { isMentor, isMentee, mentorshipSkills },
+        personal: { displayName, email, bio, country, location },
       }
     } = this.state;
 
-    if (codepen && Validator.isURL(codepen)) {
-      errors.codepen = this.CODEPEN_ERROR;
-    }
     if (email && !Validator.isEmail(email)) {
       errors.email = this.EMAIL_ERROR;
+    }
+    if (codepen && Validator.isURL(codepen)) {
+      errors.codepen = this.CODEPEN_ERROR;
     }
     if ((isMentee || isMentor) && !mentorshipSkills) {
       errors.mentorshipSkills = this.MENTORSHIP_ERROR;
     }
+    if (working && working === 'yes' && !tenure && !company) {
+      errors.career = this.CAREER_ERROR;
+    }
     if (working && working === 'no' && !tenure && !jobSearch) {
       errors.career = this.CAREER_ERROR;
     }
-    if (working && working === 'yes' && !tenure && !company) {
-      errors.career = this.CAREER_ERROR;
+    if (location && !Validator.isLength(location, { min: 0, max: 25 })) {
+      errors.location = this.LOCATION_ERROR;
+    }
+    if (displayName && !Validator.isLength(displayName, { min: 0, max: 40 })) {
+      errors.displayName = this.DISPLAY_NAME_ERROR;
     }
 
     if (bio) profileStrength++;
