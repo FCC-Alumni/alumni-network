@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from './RepoList';
+import { isEqual } from 'lodash';
 import styled from 'styled-components';
 import Ribbon from './common/RibbonHeader';
 import { Dropdown } from 'semantic-ui-react';
@@ -8,19 +8,28 @@ import MessageBox from '../../common/MessageBox';
 import RadioButton from '../../common/RadioButton';
 import { mapScreenSizeToProps } from '../../Navbar';
 import { connectScreenSize } from 'react-screen-size';
-import { isEqual } from 'lodash';
-
+import { Container as InnerContainer } from './RepoList';
+import { TransitionContainer } from '../../../styles/globalStyles';
 import { surveyOptions } from '../../../assets/data/dropdownOptions';
+import { transitionIn, transitionOut } from '../../../styles/globalStyles';
 
 const Error = styled.div`
   margin-bottom: 10px !important;
-  cursor: pointer;Error
+  cursor: pointer;
 `;
 
-const Button = styled.div`
-  margin-top: -10px !important;
-  margin-bottom: 45px !important;
-`;
+const OuterTransitionContainer = styled(TransitionContainer)`
+  ${ props => props.bigBottomMargin &&
+    'margin-bottom: 60px !important' }`;
+
+const ClearButton = ({ onClick }) => (
+  <div
+    style={{ marginTop: -10 }}
+    onClick={onClick}
+    className="ui tiny green basic button">
+    Clear Form
+  </div>
+);
 
 class Career extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -38,6 +47,7 @@ class Career extends React.Component {
       clearForm,
       showCareer,
       subSaveClick,
+      bigBottomMargin,
       handleInputChange,
       handleRadioChange,
       handleTenureChange,
@@ -51,18 +61,21 @@ class Career extends React.Component {
           showSave={showCareer}
           showPopUp={showPopUp}
           subSaveClick={subSaveClick}
-          onClick={()=>{toggle('showCareer')}} />
-        <div className={`careerPane ui six wide form ${showCareer ? 'show' : 'hide'}`}>
+          onClick={() => toggle('showCareer')} />
+        <OuterTransitionContainer
+          isExpanded={showCareer}
+          className="ui six wide form"
+          bigBottomMargin={bigBottomMargin}>
           <MessageBox
             type="info"
             hide={working ? true : false}
             dismissable={true}
-            message="Please let us know about your career so other members can track your accomplishments in your field." />
+            message="Please tell us about your career so other members can track your accomplishments!" />
           { errors.career &&
             <Error className="ui red basic label">
               {errors.career}
             </Error> }
-          <Container>
+          <InnerContainer>
             <div className="inline fields">
               <label>Are you employed as a software developer?</label>
               <RadioButton
@@ -76,7 +89,7 @@ class Career extends React.Component {
                 onChange={handleRadioChange}
                 checked={working === 'no' && true}  />
             </div>
-            <div className={`surveyPaneWorking ${working === 'yes' ? 'show' : 'hide'}`}>
+            <TransitionContainer isExpanded={working === 'yes'}>
               <div className="inline field">
                 <label>For how long have you been a working software developer?</label>
                 <Dropdown
@@ -93,9 +106,9 @@ class Career extends React.Component {
                 placeholder="Enter Company"
                 onChange={handleInputChange}
                 label="Where are you currently employed?" />
-              <Button onClick={clearForm} className="ui tiny green basic button">Clear Form</Button>
-            </div>
-            <div className={`surveyPaneWorking ${working === 'no' ? 'show' : 'hide'}`}>
+              <ClearButton onClick={clearForm} />
+            </TransitionContainer>
+            <TransitionContainer isExpanded={working === 'no'}>
               <div className={`${isMobile ? 'grouped' : 'inline'} fields`}>
                 <label>Are you currently looking for full-time employment as a software developer?</label>
                 <RadioButton
@@ -122,10 +135,10 @@ class Career extends React.Component {
                   value={tenure}
                   onChange={handleTenureChange} />
               </div>
-              <Button onClick={clearForm} className="ui tiny green basic button">Clear Form</Button>
-            </div>
-          </Container>
-        </div>
+              <ClearButton onClick={clearForm} />
+            </TransitionContainer>
+          </InnerContainer>
+        </OuterTransitionContainer>
       </div>
     );
   }

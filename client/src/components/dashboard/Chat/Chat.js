@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactEmoji from 'react-emoji';
+import { Popup } from 'semantic-ui-react';
 
 const parseTime = (timestamp) => {
   let a = new Date(timestamp);
@@ -44,22 +45,32 @@ export default ({
           return (
             <div className="comment" key={id} style={{ paddingTop: '12px' }}>
 
-              <a className="avatar-tooltip avatar" onClick={() => history.replace(`/dashboard/profile/${author}`)}>
-                <img src={avatar} alt={`${author}'s Avatar'`} />
-                <span className="avatar-tooltiptext">View my profile!</span>
-              </a>
+              <Popup
+                inverted
+                position="left center"
+                trigger={
+                  <a className="avatar" onClick={() => history.replace(`/dashboard/profile/${author}`)}>
+                    <img src={avatar} alt={`${author}'s Avatar'`} />
+                  </a>}>
+                View my profile!
+              </Popup>
 
               <div className="content">
 
                 { path && author !== user.username ?
-                  <span
-                    onClick={initiatePrivateChat.bind(this, author)}
-                    className='tooltip author author-link'>
-                    {author}
-                    <span className="tooltiptext">Chat with me!</span>
-                    {mentors.has(author) && <i className="student icon mentorIcon"></i>}
-                    {onlineStatus.has(author) && <i className="star icon onlineIcon"></i>}
-                  </span>
+                  <Popup
+                    inverted
+                    position="top left"
+                    trigger={
+                      <span
+                        onClick={initiatePrivateChat.bind(this, author)}
+                        className='author author-link'>
+                        {author}
+                        {mentors.has(author) && <i className="student icon mentorIcon"></i>}
+                        {onlineStatus.has(author) && <i className="star icon onlineIcon"></i>}
+                      </span>}>
+                    Chat with me!
+                  </Popup>
                     :
                   <span className='author author-link-inactive'>
                     {author}

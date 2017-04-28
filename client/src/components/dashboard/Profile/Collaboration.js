@@ -1,9 +1,10 @@
 import React from 'react';
+import { isEqual } from 'lodash';
+import RepoList from './RepoList';
 import isEmpty from 'lodash/isEmpty';
 import Ribbon from './common/RibbonHeader';
-import RepoList from './RepoList';
 import MessageBox from '../../common/MessageBox';
-import { isEqual } from 'lodash';
+import { TransitionContainer } from '../../../styles/globalStyles';
 
 export default class Collaboration extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -28,8 +29,8 @@ export default class Collaboration extends React.Component {
           showPopUp={showPopUp}
           subSaveClick={subSaveClick}
           showSave={showCollaboration}
-          onClick={()=>{toggle('showCollaboration')}} />
-        <div className={`collaborationPane ${showCollaboration ? 'show' : 'hide'}`}>
+          onClick={() => toggle('showCollaboration')} />
+        <TransitionContainer isExpanded={showCollaboration}>
           <MessageBox
             type="info"
             dismissable={true}
@@ -40,7 +41,7 @@ export default class Collaboration extends React.Component {
             prePopulateList={projects}
             saveChanges={saveChanges}
             saveListToParent={saveProjectsList} />
-        </div>
+        </TransitionContainer>
       </div>
     );
   }

@@ -49,7 +49,7 @@ const FormField = ({
       { (inputOptions.indexOf('corner') > -1 && value) &&
         <div
           style={{ cursor: 'pointer' }}
-          onClick={() => {clear(name)}}
+          onClick={() => clear(name)}
           className="ui corner red label"
           title="Remove account">
           {reactionIcon}

@@ -1,10 +1,11 @@
 import React from 'react';
+import { isEqual } from 'lodash';
 import isEmpty from 'lodash/isEmpty';
 import Ribbon from './common/RibbonHeader';
 import MessageBox from '../../common/MessageBox';
 import DropdownMulti from '../../common/DropdownMulti';
 import DividingHeader from '../../common/DividingHeader';
-import { isEqual } from 'lodash';
+import { TransitionContainer } from '../../../styles/globalStyles';
 
 import {
   skills as skillsOptions,
@@ -34,8 +35,8 @@ export default class SkillsAndInterests extends React.Component {
           showSave={showSkills}
           subSaveClick={subSaveClick}
           content="Skills & Interests"
-          onClick={()=>{toggle('showSkills')}} />
-        <div className={`skillsPane ${showSkills ? 'show' : 'hide'}`}>
+          onClick={() => toggle('showSkills')} />
+        <TransitionContainer isExpanded={showSkills}>
           <div className="ui horizontal divider">Core Skills</div>
           <MessageBox
             type="info"
@@ -61,7 +62,7 @@ export default class SkillsAndInterests extends React.Component {
             search={true}
             value={codingInterests} />
           <div className="spacer" />
-        </div>
+        </TransitionContainer>
       </div>
     );
   }

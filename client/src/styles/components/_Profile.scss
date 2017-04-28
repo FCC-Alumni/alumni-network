@@ -1,10 +1,11 @@
-.saveSection,
-#saveButton {
+$hoverDarkGreen: darken(#006400, 8%);
+
+.saveSection {
   float: right;
   cursor: pointer;
   transition: color 150ms ease-in-out;
   &:hover {
-    color:  lighten(#007E00, 60%) !important;
+    color:  $hoverDarkGreen !important;
   }
 }
 
@@ -21,35 +22,13 @@
   animation: bounceUp 200ms;
 }
 
+.folderDetail {
+  background: #007E00 !important;
+}
+
 .folderDetail:hover {
   cursor: pointer;
   i.folder.icon {
-    color: white !important;
+    color:  $hoverDarkGreen !important;
   }
-}
-
-.profilePane.hide,
-.fccPane.hide,
-.mentorshipPane.hide,
-.skillsPane.hide,
-.socialPane.hide,
-.careerPane.hide,
-.collaborationPane.hide,
-.mentorshipSkillsPane.hide,
-.surveyPaneWorking.hide,
-.surveyPaneLooking.hide {
-  @extend .transition-in;
-}
-
-.profilePane.show,
-.fccPane.show,
-.mentorshipPane.show,
-.skillsPane.show,
-.socialPane.show,
-.careerPane.show,
-.collaborationPane.show,
-.mentorshipSkillsPane.show,
-.surveyPaneWorking.show,
-.surveyPaneLooking.show {
-  @extend .transition-out;
 }

@@ -1,18 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
+import { isEqual } from 'lodash';
 import Ribbon from './common/RibbonHeader';
 import ListItem from '../../common/ListItem';
 import FormField from '../../common/FormField';
 import MessageBox from '../../common/MessageBox';
-import { isEqual } from 'lodash';
+import { TransitionContainer } from '../../../styles/globalStyles';
 
 import { APP_HOST } from '../../../actions/chat';
 
-const inputOptions = 'small left icon';
-
-const List = styled.div`
-  margin-bottom: 16px !important;
-`;
+const INPUT_OPTIONS = 'small left icon';
 
 export default class Social extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -39,14 +35,14 @@ export default class Social extends React.Component {
           showSave={showSocial}
           showPopUp={showPopUp}
           subSaveClick={subSaveClick}
-          onClick={()=>{toggle('showSocial')}} />
-        <div className={`socialPane ${showSocial ? 'show' : 'hide'}`}>
+          onClick={() => toggle('showSocial')} />
+        <TransitionContainer isExpanded={showSocial}>
           <MessageBox
             type="info"
             hide={!codepen && !twitter && !linkedin ? false : true}
             dismissable={true}
             message="Stay connected with campers on other networks! Let us know where your profiles live." />
-          <List className="ui list">
+          <div style={{ marginBottom: 16 }} className="ui list">
             <ListItem>
               <FormField
                 name="codepen"
@@ -55,7 +51,7 @@ export default class Social extends React.Component {
                 tooltip="CodePen"
                 icon='codepen icon'
                 placeholder="Enter CodePen"
-                inputOptions={inputOptions}
+                inputOptions={INPUT_OPTIONS}
                 onChange={handleInputChange} />
             </ListItem>
             <ListItem>
@@ -69,7 +65,7 @@ export default class Social extends React.Component {
                 placeholder="Enter Twitter"
                 disabled={twitter ? false : true}
                 actionUrl={`${APP_HOST}/connect/twitter`}
-                inputOptions={inputOptions + ' corner labeled'}
+                inputOptions={INPUT_OPTIONS + ' corner labeled'}
                 reactionIcon={<i style={{ cursor: 'pointer' }} className="remove icon" />}
                 actionIcon={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
             </ListItem>
@@ -84,12 +80,12 @@ export default class Social extends React.Component {
                 placeholder="Enter LinkedIn"
                 disabled={linkedin ? false : true}
                 actionUrl={`${APP_HOST}/connect/linkedin`}
-                inputOptions={inputOptions + ' corner labeled'}
+                inputOptions={INPUT_OPTIONS + ' corner labeled'}
                 reactionIcon={<i style={{ cursor: 'pointer' }} className="remove icon" />}
                 actionIcon={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
             </ListItem>
-          </List>
-        </div>
+          </div>
+        </TransitionContainer>
       </div>
     );
   }

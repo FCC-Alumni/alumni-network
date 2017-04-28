@@ -1,4 +1,3 @@
-
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -11,20 +10,19 @@ import { savePreferencesViewState } from '../../actions/views';
 import { ThickPaddedBottom } from '../../styles/globalStyles';
 import { countryCodes } from '../../assets/data/countries';
 import Certifications from './Profile/Certifications';
-import Collaboration from './Profile/Collaboration';
 import { connectScreenSize } from 'react-screen-size';
+import Collaboration from './Profile/Collaboration';
+import { Button } from 'semantic-ui-react';
 import { mapScreenSizeToProps } from '../Navbar';
 import Modal from './Profile/common/SaveModal';
 import Mentorship from './Profile/Mentorship';
-import { Button } from 'semantic-ui-react';
 import styled from 'styled-components';
 import Career from './Profile/Career';
 import isEmpty from 'lodash/isEmpty';
 import Validator from 'validator';
 
 /*
-TODO:
-  - MENTORSHIP: Revisit copy! Some of this info should be moved to the "about us" public page.
+TODO:©
   - PERSONAL INFO: validation to require user to enter country to collect data for D3 map?
   - GENERAL: Refactor validation code, kind of reduntant and could be improved (isPageValid && isSectionValid)
 */
@@ -58,6 +56,7 @@ class Profile extends React.Component {
       projectsPopUp: false,
       personalPopUp: false,
       mentorshipPopUp: false,
+      showBottomButton: false,
       skillsAndInterestsPopUp: false,
     }
     // SHARED ERRORS:
@@ -69,25 +68,30 @@ class Profile extends React.Component {
     this.MENTORSHIP_ERROR = "To complete your mentorship prorgram enrollment, please fill out the section above.";
   }
 
+  componentDidMount() {
+    document.addEventListener('scroll', this.handleScroll)
+  }
+
   componentWillUnmount() {
     this.props.savePreferencesViewState(this.state.viewState);
+    document.removeEventListener('scroll', this.handleScroll);
   }
 
-  saveProjectsList = (items_list) => {
-    var { user } = this.state;
-    user.projects = items_list;
-    this.setState({ user });
+  handleScroll = (e) => {
+    if (e.target.scrollingElement.scrollTop >= 60) {
+      this.setState({ showBottomButton: true });
+    } else {
+      this.setState({ showBottomButton: false });
+    }
   }
 
-  toggleMentorship = (bool) => {
+  toggleMentorship = (bool, id) => {
     var { user } = this.state;
-    user.mentorship.isMentor = bool;
-    this.setState({ user });
-  }
-
-  toggleMenteeship = (bool) => {
-    var { user } = this.state;
-    user.mentorship.isMentee = bool;
+    if (id === 'mentorship') {
+      user.mentorship.isMentor = bool;
+    } else {
+      user.mentorship.isMentee = bool;
+    }
     this.setState({ user });
   }
 
@@ -149,6 +153,12 @@ class Profile extends React.Component {
     this.setState({ user });
   }
 
+  saveProjectsList = (items_list) => {
+    var { user } = this.state;
+    user.projects = items_list;
+    this.setState({ user });
+  }
+
   saveChanges = (modal) => {
     if (this.isPageValid()) {
       updateUser(this.state.user).then(res => {
@@ -171,10 +181,6 @@ class Profile extends React.Component {
     }
   }
 
-  closeModal = () => {
-    this.setState({ modalOpen: false });
-  }
-
   // now saves only section user clicks button for
   handleSubSaveClick = (e) => {
     e.stopPropagation();
@@ -191,10 +197,6 @@ class Profile extends React.Component {
         setTimeout( _ => this.resetPopUp(e.target.id), 1200);
       }).catch(err => console.log(err));
     }
-  }
-
-  resetPopUp = (id) => {
-    this.setState({ [id]: false });
   }
 
   isSectionValid = (section, str) => {
@@ -223,7 +225,7 @@ class Profile extends React.Component {
       errors.codepen = this.CODEPEN_ERROR;
     }
     if (section === 'personal') {
-      if (!Validator.isEmail(email)) {
+      if (email && !Validator.isEmail(email)) {
         errors.email = this.EMAIL_ERROR;
       }
       // these 2 seem reduntant but are needed in case pre-loaded github data
@@ -318,6 +320,14 @@ class Profile extends React.Component {
     }
   }
 
+  closeModal = () => {
+    this.setState({ modalOpen: false });
+  }
+
+  resetPopUp = (id) => {
+    this.setState({ [id]: false });
+  }
+
   clearSocialInput = (site) => {
     var { user } = this.state;
     user.social[site] = '';
@@ -383,6 +393,7 @@ class Profile extends React.Component {
     viewState.showCollaboration = !showAll;
     this.setState({ viewState });
   }
+
   render() {
 
     const {
@@ -487,14 +498,16 @@ class Profile extends React.Component {
             handleInputChange={this.handleInputChange}
             handleRadioChange={this.handleRadioChange}
             showCareer={this.state.viewState.showCareer}
-            handleTenureChange={this.handleTenureChange} />
-          <BottomButton
+            handleTenureChange={this.handleTenureChange}
+            bigBottomMargin={this.state.showBottomButton} />
+       { this.state.showBottomButton &&
+         <BottomButton
             icon="save"
             color="green"
             content="Save"
             floated="right"
             labelPosition="right"
-            onClick={this.saveChanges} />
+            onClick={this.saveChanges} /> }
         </div>
       </ThickPaddedBottom>
     );

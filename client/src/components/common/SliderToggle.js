@@ -16,20 +16,20 @@ class SliderToggle extends React.Component {
     }
   }
 
-  handleClick = () => {
+  handleClick = (id) => {
     if (!this.state.on) {
       this.setState({ style: ON_POSITION, on: true });
-      this.props.saveStateToParent(true);
+      this.props.saveStateToParent(true, id);
     } else {
       this.setState({ style: OFF_POSITION, on: false });
-      this.props.saveStateToParent(false);
+      this.props.saveStateToParent(false, id);
     }
   }
 
   render() {
     return (
       <div className="slider-toggle-container">
-        <div onClick={this.handleClick} className="slider-toggle">
+        <div onClick={() => this.handleClick(this.props.id)} className="slider-toggle">
           <div style={this.state.style} className="toggler" />
         </div>
         <label className="ui label green slider-label">{this.props.label}</label>
@@ -39,9 +39,10 @@ class SliderToggle extends React.Component {
 }
 
 SliderToggle.propTypes = {
+  id: propTypes.string.isRequired,
+  label: propTypes.string.isRequired,
+  defaultOn: propTypes.bool.isRequired,
   saveStateToParent: propTypes.func.isRequired,
-  label: propTypes.string,
-  defaultOn: propTypes.bool.isRequired
 }
 
 export default SliderToggle;

@@ -144,7 +144,7 @@ class UserCard extends React.Component {
           <img src={user.personal.avatarUrl} className="visible content" alt="user avatar"/>
         </div> }
 
-        <Clickable onClick={() => { this.handleClick(user.username) }} className="content">
+        <Clickable onClick={() => this.handleClick(user.username)} className="content">
           <div className="header">
               <span className="user">{user.username}</span>
             { currentUser !== user.username &&

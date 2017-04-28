@@ -46,6 +46,12 @@ export const hoverTransition = () => {
   `;
 }
 
+export const TransitionContainer = styled.div`${
+  props => props.isExpanded
+  ? transitionOut()
+  : transitionIn()
+}`;
+
 export const transitionIn = () => {
   return `
     overflow: hidden;

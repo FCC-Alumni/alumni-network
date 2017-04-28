@@ -1,4 +1,5 @@
 import React from 'react';
+import { isEqual } from 'lodash';
 import { Container } from './RepoList';
 import Ribbon from './common/RibbonHeader';
 import { Dropdown } from 'semantic-ui-react';
@@ -7,10 +8,13 @@ import FormField from '../../common/FormField';
 import { mapScreenSizeToProps } from '../../Navbar';
 import { connectScreenSize } from 'react-screen-size';
 import { countryOptions } from '../../../assets/data/countries';
-import { isEqual } from 'lodash';
+import { TransitionContainer } from '../../../styles/globalStyles';
 
 const INPUT_OPTIONS = 'small left icon';
-const INFO_MESSAGE = 'Don\'t worry, no junkmail. We are asking for your email in order to help you and your fellow community members stay better connected. If you decide to share your email address, please be aware that it will be publicly visible on your profile page.';
+const INFO_MESSAGE = `Don't worry, no junkmail. We are asking for your email in order to
+                      help you and your fellow community members stay better connected.
+                      If you decide to share your email address, please be aware that it
+                      will be publicly visible on your profile page.`;
 
 class PersonalInfo extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -42,8 +46,8 @@ class PersonalInfo extends React.Component {
           showPopUp={showPopUp}
           showSave={showProfile}
           subSaveClick={subSaveClick}
-          onClick={()=>{toggle('showProfile')}} />
-        <div className={`ui form profilePane ${showProfile ? 'show' : 'hide'}`}>
+          onClick={() => toggle('showProfile')} />
+        <TransitionContainer isExpanded={showProfile} className="ui form">
           <Container className="ui list">
             <ListItem>
               <FormField
@@ -107,7 +111,7 @@ class PersonalInfo extends React.Component {
                 </div> }
             </ListItem>
           </Container>
-        </div>
+        </TransitionContainer>
       </div>
     );
   }
