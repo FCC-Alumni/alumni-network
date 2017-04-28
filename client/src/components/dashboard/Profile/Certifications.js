@@ -1,16 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
+import { isEqual } from 'lodash';
 import Ribbon from './common/RibbonHeader';
 import ListItem from '../../common/ListItem';
-import { isEqual } from 'lodash';
-
-const Item = styled.h5`
-  margin-top: 2px !important;
-`;
-
-const List = styled.div`
-  margin: 0 !important;
-`;
+import { TransitionContainer } from '../../../styles/globalStyles';
 
 export default class Certifications extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -27,9 +19,9 @@ export default class Certifications extends React.Component {
     const certificates = certs.map((item, index) => {
       return (
         <ListItem key={index} icon="orange large certificate icon">
-          <Item className="ui header">
+          <h5 style={{ marginTop: 2 }} className="ui header">
             {item}
-          </Item>
+          </h5>
         </ListItem>
       );
     });
@@ -38,10 +30,13 @@ export default class Certifications extends React.Component {
         <Ribbon
           showSave={false}
           content="freeCodeCamp Certifications"
-          onClick={() => { toggle('showFCC')}} />
-        <List className={`ui list fccPane ${showFCC ? 'show' : 'hide'}`}>
+          onClick={() => toggle('showFCC')} />
+        <TransitionContainer
+          isExpanded={showFCC}
+          style={{ margin: 0 }}
+          className="ui list">
           {certificates}
-        </List>
+        </TransitionContainer>
       </div>
     );
   }

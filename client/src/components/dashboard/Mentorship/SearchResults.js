@@ -36,13 +36,13 @@ const SearchResults = ({ privateChat, initiatePrivateChat, currentUser, results,
           <IMG
             src={user.personal.avatarUrl}
             alt={`${username}'s avatar`}
-            onClick={() => { handleClick(user) }}
+            onClick={() => handleClick(user)}
             title={`View ${username}'s profile`} />
         </div>
         <div className="content">
           <Username
             className="header"
-            onClick={() => { handleClick(user) }}
+            onClick={() => handleClick(user)}
             title={`View ${username}'s profile`}>
             {username}
           </Username>
@@ -50,7 +50,7 @@ const SearchResults = ({ privateChat, initiatePrivateChat, currentUser, results,
           <ChatIcon
             className="comments icon"
             title={`Start a chat with ${username}`}
-            onClick={ () => { initiatePrivateChat(username, notifications) }} /> }
+            onClick={() => initiatePrivateChat(username, notifications)} /> }
           <div className="meta">
             <span><strong>{user.personal.displayName}</strong></span>
             <i className="angle double right icon" />

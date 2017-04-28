@@ -66,7 +66,7 @@ const SocialList = ({ username, social, email, contactsOnly, notifications, curr
         text="freeCodeCamp"
         href={`https://freeCodeCamp.com/${username}`} /> }
     { contactsOnly && username !== currentUser &&
-      <StyledItem onClick={ () => { initiatePrivateChat(username, notifications) }} className="item">
+      <StyledItem onClick={() => initiatePrivateChat(username, notifications)} className="item">
         <SocialIcon className="comments icon" />
         <InlineContent className="content">
           <div className="header">Mess Hall Chat</div>

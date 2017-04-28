@@ -1,8 +1,22 @@
 @import 'animations';
-@import 'helperClasses';
 @import 'components/Chat';
 @import 'components/SliderToggle';
 @import 'components/Profile';
+
+#dropdownPreferencesLink,
+#dropdownProfileLink {
+  color: white !important;
+  background: #006400 !important;
+  &:hover {
+    background: #007E00 !important;
+  }
+}
+
+.fcc-alumni-nav {
+  .menu.transition.visible {
+    border: none !important;
+  }
+}
 
 .App {
   text-align: center;
@@ -30,4 +44,8 @@
 
 .free.code.camp.icon {
   margin-right: .3rem !important;
+}
+
+.spacer {
+  padding: 5px;
 }

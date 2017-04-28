@@ -1,3 +1,4 @@
+
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -5,6 +6,7 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { darkGreen } from '../styles/globalStyles';
 import { connectScreenSize } from 'react-screen-size';
+import { Dropdown } from 'semantic-ui-react';
 
 import { APP_HOST } from '../actions/chat';
 
@@ -16,6 +18,17 @@ const MenuRight = styled.div`
   display: flex;
   flex-direction: row;
 `;
+
+const Nav = styled.div`
+  box-shadow: -1px 0 5px black !important;
+  min-height: 60px !important;
+`;
+
+// this combines Semantic's component into styled-components
+// which lets us pass anything we want to it, not just
+// Semantic React's props. Now we can give it an ID and
+// override problematic styles.
+const DropdownLink = styled(Dropdown.Item)``;
 
 class NavBar extends React.Component {
   state = {
@@ -53,6 +66,14 @@ class NavBar extends React.Component {
     }
   }
 
+  navigate = (e) => {
+    if (e.target.id === 'dropdownPreferencesLink') {
+      this.props.history.push('/dashboard/preferences');
+    } else {
+      this.props.history.push(`/dashboard/profile/${this.props.user.username}`);
+    }
+  }
+
   render() {
 
     /* NOTE: the NavBar rendering logic is pretty arbitrarily contrived
@@ -67,7 +88,7 @@ class NavBar extends React.Component {
     TITLE += ' Alumni Network';
 
     const guestNav = (
-      <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
+      <Nav className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
         <NavLink className="item" activeClassName="item active" exact to="/"><Logo src="/images/fcc_high_five_logo.svg" />freeCodeCamp Alumni Network</NavLink>
         <div className="right menu" id={!isDesktop && 'navMenu'}>
           <MenuRight>
@@ -75,17 +96,17 @@ class NavBar extends React.Component {
             <NavLink className="item" activeClassName="item active" exact to="/login">Login</NavLink>
           </MenuRight>
         </div>
-      </div>
+      </Nav>
     );
 
     const userNav = (
       <div>
       { !this.state.nav
-      ? <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
+      ? <Nav className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
           <div className="item" onClick={this.toggleNav}><Logo src="/images/fcc_high_five_logo.svg" />{TITLE}</div>
-        </div>
+        </Nav>
 
-      : <div className={`ui huge fixed stackable inverted borderless ${darkGreen} menu`}>
+      : <Nav className={`ui huge fixed stackable inverted borderless ${darkGreen} menu fcc-alumni-nav`}>
 
       { (isDesktop || (isTablet && this.state.clientWidth > 770))
         ? <NavLink className="item" activeClassName="active item" exact to="/dashboard">
@@ -99,7 +120,16 @@ class NavBar extends React.Component {
             </div>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard">Dashboard</NavLink>
           </div> }
-          <NavLink className="item" activeClassName="active item" exact to="/dashboard/preferences">Profile</NavLink>
+          <Dropdown text="Profile" className="item">
+            <Dropdown.Menu>
+              <DropdownLink onClick={this.navigate} id="dropdownPreferencesLink">
+                Preferences
+              </DropdownLink>
+              <DropdownLink onClick={this.navigate} id="dropdownProfileLink">
+                Public
+              </DropdownLink>
+            </Dropdown.Menu>
+          </Dropdown>
           <NavLink className="item" activeClassName="active item" exact to="/dashboard/community">Community</NavLink>
           <NavLink className="item" activeClassName="active item" exact to="/dashboard/mentorship">Mentorship</NavLink>
           <NavLink className="item" activeClassName="active item" exact to="/dashboard/chat">Mess Hall</NavLink>
@@ -120,7 +150,7 @@ class NavBar extends React.Component {
           <a title={isTablet && 'Logout'} className={isTablet ? 'item right' : 'item'} href={`${APP_HOST}/logout`}>
             {isTablet ? <i className="sign out icon" /> : 'Logout'}
           </a> }
-        </div> }
+        </Nav> }
       </div>
     );
     return (
