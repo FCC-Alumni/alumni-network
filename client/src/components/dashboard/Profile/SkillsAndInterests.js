@@ -4,7 +4,6 @@ import isEmpty from 'lodash/isEmpty';
 import Ribbon from './common/RibbonHeader';
 import MessageBox from '../../common/MessageBox';
 import DropdownMulti from '../../common/DropdownMulti';
-import DividingHeader from '../../common/DividingHeader';
 import { TransitionContainer } from '../../../styles/globalStyles';
 
 import {

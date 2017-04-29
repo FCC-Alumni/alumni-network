@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SocialLinks from './SocialLinks';
 import { connectScreenSize } from 'react-screen-size';
-import { hoverTransition } from '../../../styles/globalStyles';
 import convertMonthToString from '../../../actions/convertMonth';
 import { initiatePrivateChat, clearNotifications } from '../../../actions/chat';
 
@@ -21,13 +20,6 @@ const Clickable = styled.div`
       transition: color 300ms ease-in-out;
     }
   }
-`;
-
-const CenteredWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  padding-top: .7em;
 `;
 
 const SummaryWrapper = styled.div`

@@ -24,7 +24,6 @@ class Mentorship extends React.Component {
       mentorshipSkills,
       toggleMentorship,
       handleInputChange,
-      handleRadioChange,
       screen: { isMobile, isTablet },
     } = this.props;
     return (
@@ -88,7 +87,6 @@ Mentorship.propTypes = {
   subSaveClick: propTypes.func.isRequired,
   showMentorship: propTypes.bool.isRequired,
   toggleMentorship: propTypes.func.isRequired,
-  toggleMenteeship: propTypes.func.isRequired,
   handleInputChange: propTypes.func.isRequired,
   mentorshipSkills: propTypes.string.isRequired,
 }

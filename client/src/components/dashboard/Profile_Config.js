@@ -206,7 +206,7 @@ class Profile extends React.Component {
     const {
       user: {
         social: { codepen },
-        personal: { email, location, displayName, country },
+        personal: { email, location, displayName },
         mentorship: { isMentor, isMentee, mentorshipSkills },
         career: { working, tenure, company, jobSearch },
       }

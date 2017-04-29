@@ -4,9 +4,9 @@ import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
+import { Dropdown } from 'semantic-ui-react';
 import { darkGreen } from '../styles/globalStyles';
 import { connectScreenSize } from 'react-screen-size';
-import { Dropdown } from 'semantic-ui-react';
 
 import { APP_HOST } from '../actions/chat';
 
@@ -23,12 +23,6 @@ const Nav = styled.div`
   box-shadow: -1px 0 5px black !important;
   min-height: 60px !important;
 `;
-
-// this combines Semantic's component into styled-components
-// which lets us pass anything we want to it, not just
-// Semantic React's props. Now we can give it an ID and
-// override problematic styles.
-const DropdownLink = styled(Dropdown.Item)``;
 
 class NavBar extends React.Component {
   state = {
@@ -122,12 +116,12 @@ class NavBar extends React.Component {
           </div> }
           <Dropdown text="Profile" className="item">
             <Dropdown.Menu>
-              <DropdownLink onClick={this.navigate} id="dropdownPreferencesLink">
+              <Dropdown.Item onClick={this.navigate} id="dropdownPreferencesLink">
                 Preferences
-              </DropdownLink>
-              <DropdownLink onClick={this.navigate} id="dropdownProfileLink">
+              </Dropdown.Item>
+              <Dropdown.Item onClick={this.navigate} id="dropdownProfileLink">
                 Public
-              </DropdownLink>
+              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           <NavLink className="item" activeClassName="active item" exact to="/dashboard/community">Community</NavLink>

@@ -1,6 +1,9 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { Popup } from 'semantic-ui-react';
+import { mapScreenSizeToProps } from '../Navbar';
+import { connectScreenSize } from 'react-screen-size';
+import { ErrorLabel } from '../dashboard/Profile/RepoList';
 
 const FormField = ({
   icon,
@@ -22,6 +25,7 @@ const FormField = ({
   removeSocial,
   inputOptions,
   reactionIcon,
+  screen: { isMobile },
 }) => {
   return (
     <div className="inline field">
@@ -60,9 +64,7 @@ const FormField = ({
         {infoMessage}
       </Popup> }
     { errors[name] &&
-      <div className="ui left pointing red basic label">
-        {errors[name]}
-      </div> }
+      <ErrorLabel isMobile={isMobile} error={errors[name]} /> }
     </div>
   )
 }
@@ -82,7 +84,8 @@ FormField.propTypes = {
   reactionIcon: propTypes.object,
   name: propTypes.string.isRequired,
   value: propTypes.string.isRequired,
-  errors: propTypes.object.isRequired
+  screen: propTypes.object.isRequired,
+  errors: propTypes.object.isRequired,
 }
 
 FormField.defaultProps = {
@@ -95,4 +98,4 @@ FormField.defaultProps = {
   actionButton: false
 }
 
-export default FormField;
+export default connectScreenSize(mapScreenSizeToProps)(FormField);
