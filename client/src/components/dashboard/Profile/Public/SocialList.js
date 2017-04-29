@@ -1,14 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import styled from 'styled-components';
-import { hoverTransition, StyledItem as StyledLink } from '../../../../styles/globalStyles';
-
-const ChatIcon = styled.i`
-  ${ hoverTransition() }
-  font-size: 20px !important;
-  margin-left: 4px !important;
-  margin-bottom: 2px !important;
-`;
+import { StyledItem as StyledLink } from '../../../../styles/globalStyles';
 
 export const SocialIcon = styled.i`
   font-size: 22px !important;

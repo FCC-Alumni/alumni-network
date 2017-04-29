@@ -18,7 +18,6 @@ import { defaultUser } from '../../reducers/user';
 import Career from './Profile/Public/CareerRow';
 import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
-import axios from 'axios';
 
 import { scrapeFccStats } from '../../actions/scrape-fcc.js';
 
@@ -63,7 +62,7 @@ class PublicProfile extends React.Component {
     if (!this.props.initialState) {
       this.props.scrapeFccStats(this.props.user.username);
     }
-    
+
     window.addEventListener('resize', this.handleResize);
   }
 

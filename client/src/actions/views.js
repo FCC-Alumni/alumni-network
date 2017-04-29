@@ -1,6 +1,5 @@
 import {
   SAVE_SEARCH_STATE,
-  SAVE_PROFILE_STATS,
   SAVE_PREFERENCES_VIEW_STATE,
 } from './types';
 

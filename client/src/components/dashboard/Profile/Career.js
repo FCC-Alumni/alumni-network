@@ -11,7 +11,6 @@ import { connectScreenSize } from 'react-screen-size';
 import { Container as InnerContainer } from './RepoList';
 import { TransitionContainer } from '../../../styles/globalStyles';
 import { surveyOptions } from '../../../assets/data/dropdownOptions';
-import { transitionIn, transitionOut } from '../../../styles/globalStyles';
 
 const Error = styled.div`
   margin-bottom: 10px !important;

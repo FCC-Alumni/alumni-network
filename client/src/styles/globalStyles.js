@@ -46,29 +46,29 @@ export const hoverTransition = () => {
   `;
 }
 
-export const TransitionContainer = styled.div`${
-  props => props.isExpanded
-  ? transitionOut()
-  : transitionIn()
-}`;
-
 export const transitionIn = () => {
   return `
-    overflow: hidden;
-    opacity: 0.01;
-    max-height: 0;
-    transition:
-      opacity 400ms ease-out,
-      max-height 300ms ease;
+  overflow: hidden;
+  opacity: 0.01;
+  max-height: 0;
+  transition:
+  opacity 400ms ease-out,
+  max-height 300ms ease;
   `;
 }
 
 export const transitionOut = () => {
   return  `
-    opacity: 1.0;
-    max-height: 1000px;
-    transition:
-      opacity 500ms ease-in,
-      max-height 400ms ease-out;
+  opacity: 1.0;
+  max-height: 1000px;
+  transition:
+  opacity 500ms ease-in,
+  max-height 400ms ease-out;
   `;
 }
+
+export const TransitionContainer = styled.div`${
+  props => props.isExpanded
+  ? transitionOut()
+  : transitionIn()
+}`;

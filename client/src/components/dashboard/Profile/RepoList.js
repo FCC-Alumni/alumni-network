@@ -40,6 +40,14 @@ const StyledItem = styled.div`
   }
 `;
 
+export const ErrorLabel = ({ isMobile, error }) => (
+  <div
+    style={{ marginTop: 10 }}
+    className={`ui ${!isMobile ? 'left pointing' : ''} red basic label`}>
+    {error}
+  </div>
+);
+
 class RepoList extends React.Component {
   state = {
     item: '',
@@ -72,7 +80,6 @@ class RepoList extends React.Component {
   }
 
   handleChange = (e) => {
-    console.log(e.target.value)
     this.setState({ item: e.target.value, error: '' });
   }
 
@@ -348,9 +355,7 @@ class RepoList extends React.Component {
             onChange={this.handleLabelChange} />} />
 
       { !isEmpty(error) && !error.repo && !error.namespace &&
-        <div className="ui left pointing red basic label">
-          {error.header}
-        </div> }
+        <ErrorLabel isMobile={isMobile} error={error.header} /> }
 
         <List className="ui middle aligned divided selection list">
           {listItems}
