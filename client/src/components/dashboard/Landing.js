@@ -23,9 +23,9 @@ export default () => (
       </p>
       {image('/images/fcc_portfolio_logo.svg', 'right')}
       <p>
-        You can add information about your goals and interests in our <b>Profile</b> section,
-        view all the members of our community in the <b>Community</b> tab, search for mentors in
-        the <b>Mentorship</b> area, and chat with other users in the <b>Mess Hall</b>.
+        You can add information about your goals and interests in our <strong>Profile</strong> section,
+        view all the members of our community in the <strong>Community</strong> tab, search for mentors in
+        the <strong>Mentorship</strong> area, and chat with other users in the <strong>Mess Hall</strong>.
       </p>
       <p>
         One of the key features of this community is the focus on mentorship. We encourage anyone

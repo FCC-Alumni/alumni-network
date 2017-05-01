@@ -1,14 +1,19 @@
 import React from 'react';
+import { isEmpty } from 'lodash';
+import { indexOf } from 'lodash';
 import Validator from 'validator';
 import propTypes from 'prop-types';
-import isEmpty from 'lodash/isEmpty';
-import indexOf from 'lodash/indexOf';
 import styled from 'styled-components';
 import { Dropdown, Input } from 'semantic-ui-react';
 import { connectScreenSize } from 'react-screen-size';
-import { mapScreenSizeToProps } from '../Community/UserCard';
-import { repoOptions } from '../../../assets/data/dropdownOptions';
-import { validateGithubRepo, searchGithubCommits, validateOtherRepos } from '../../../actions/repoValidations';
+import repoHosts from '../../../../../assets/dropdowns/repoHosts';
+import { mapScreenSizeToProps } from '../../../Community/UserCard';
+
+import {
+  validateGithubRepo,
+  searchGithubCommits,
+  validateOtherRepos
+} from '../../../../../actions/repoValidations';
 
 /*
 TODO:
@@ -51,11 +56,11 @@ export const ErrorLabel = ({ isMobile, error }) => (
 class RepoList extends React.Component {
   state = {
     item: '',
-    items_list: [],
     error: {},
-    label: 'https://github.com/',
     icon: 'github',
-    isLoading: false
+    items_list: [],
+    isLoading: false,
+    label: 'https://github.com/',
   }
 
   componentWillMount() {
@@ -168,15 +173,17 @@ class RepoList extends React.Component {
     if (label === 'https://gitlab.com/') {
       // CHALLENGE!!! anyone up for the challenge of writing a regex that covers all of this?
       // I was unable to, would def clean this up. -Pete
+
       if (
-      repo.endsWith('.git') ||
-      repo.endsWith('.atom') ||
-      repo.endsWith('.') ||
-      repo.startsWith('-') ||
-      namespace.endsWith('.git') ||
-      namespace.endsWith('.atom') ||
-      namespace.startsWith('-') ||
-      namespace.endsWith('.') ||
+      // GitLab naming conventions:
+      repo.slice(-4) === '.git' ||
+      repo.slice(-5) === '.atom' ||
+      repo.slice(-1) === '.' ||
+      repo.slice(0, 1) === '-' ||
+      namespace.slice(-4) === '.git' ||
+      namespace.slice(-5) === '.atom' ||
+      namespace.slice(0, 1) === '-' ||
+      namespace.slice(-1) === '.' ||
       !Validator.matches(item, /[\d\w-.]+\/[\d\w-.]+\/?/)
       ) {
         this.setState({
@@ -196,7 +203,8 @@ class RepoList extends React.Component {
     // BITBUCKET VALIDATIONS:
     if (label === 'https://bitbucket.org/') {
       if (
-        (repo.length === 1 && repo.startsWith('.')) ||
+        // BitBucket naming conventions:
+        (repo.length === 1 && repo.slice(0, 1) === '.') ||
         !Validator.matches(item, /[\d\w-]+\/[\d\w-.]+\/?/)
       ) {
         this.setState({
@@ -216,9 +224,10 @@ class RepoList extends React.Component {
     // GITHUB VALIDATIONS:
     if (label === 'https://github.com/') {
       if (
-        repo.startsWith('.') ||
-        namespace.startsWith('-') ||
-        namespace.endsWith('-') ||
+        // GitHub naming conventions:
+        repo.slice(0, 1) === '.' ||
+        namespace.slice(0, 1) === '-' ||
+        namespace.slice(-1) === '-' ||
         namespace.search(/--/) > -1 ||
         !Validator.matches(item, /[\d\w-.]+\/[\d\w-]+\/?/)
       ) {
@@ -233,26 +242,23 @@ class RepoList extends React.Component {
         });
       } else {
         const { username } = this.props;
-        // test with FreeCodeCamp/FreeCodeCamp repo
-        // const username = 'tommygebru' // <-- control for testing reject() - has not contributed to repo
-        // const username = 'bonham000' // <-- control for testing searchGithubCommits() (bonham000 does not appear in 1st 100 FCC contributors)
+        // first check if user is listed
+        // if yes, setState & continue
         validateGithubRepo(namespace, repo, username)
         .then((res) => {
           const contributors = res.contributorsList;
           let isContributor = false;
-          // first check if user is listed
-          // if yes, resolve and continue
-          for(var contributor of contributors) {
+          for (var contributor of contributors) {
             if (contributor.author.login === username) {
               isContributor = true;
               items_list.push({item, label});
               this.setState({ items_list, item: '', isLoading: false }, () => this.props.saveChanges());
             }
           }
-          // if user is not listed, repo may have > 100 contributors
+          // if user is not listed, repo may have > 100 contributors...
           // then search commit history of repo for commits by user.
-          // prefer to use both checks, becuase this one in "preview"
-          // github warns changes could happen at any time with no notice
+          // prefer to use both checks, becuase this one is in "preview",
+          // github warns changes could happen at any time with no notice.
           if (!isContributor) {
             searchGithubCommits(namespace, repo, username)
             .then((res) => {
@@ -321,10 +327,8 @@ class RepoList extends React.Component {
   }
 
   render() {
-    const { item, isLoading, icon, error } = this.state;
-
     const { isMobile } = this.props.screen;
-
+    const { item, isLoading, icon, error } = this.state;
     const listItems = this.state.items_list.map((el, index) => {
       return (
         <StyledItem key={index} className="item">
@@ -336,10 +340,8 @@ class RepoList extends React.Component {
         </StyledItem>
       );
     });
-
     return (
       <Container>
-
         <Input
           icon={icon}
           value={item}
@@ -349,18 +351,15 @@ class RepoList extends React.Component {
           placeholder="Namespace / Repo"
           fluid={isMobile ? true : false}
           label={<Dropdown
-            options={repoOptions}
+            options={repoHosts}
             className="basic green"
             defaultValue="https://github.com/"
             onChange={this.handleLabelChange} />} />
-
       { !isEmpty(error) && !error.repo && !error.namespace &&
         <ErrorLabel isMobile={isMobile} error={error.header} /> }
-
         <List className="ui middle aligned divided selection list">
           {listItems}
         </List>
-
       { !isEmpty(error) && error.repo && error.namespace &&
         <div className="ui error message">
           <div className="header">{error.header}</div>
@@ -369,7 +368,6 @@ class RepoList extends React.Component {
             <li>{error.repo}</li>
           </ul>
         </div> }
-
       </Container>
     );
   }

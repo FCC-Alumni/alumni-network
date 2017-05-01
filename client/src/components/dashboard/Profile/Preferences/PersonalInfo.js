@@ -1,14 +1,14 @@
 import React from 'react';
 import { isEqual } from 'lodash';
-import { Container } from './RepoList';
+import FormField from './common/FormField';
 import Ribbon from './common/RibbonHeader';
 import { Dropdown } from 'semantic-ui-react';
 import ListItem from '../../common/ListItem';
-import FormField from '../../common/FormField';
-import { mapScreenSizeToProps } from '../../Navbar';
+import { Container } from './common/RepoList';
 import { connectScreenSize } from 'react-screen-size';
-import { countryOptions } from '../../../assets/data/countries';
-import { TransitionContainer } from '../../../styles/globalStyles';
+import { mapScreenSizeToProps } from '../../../Navbar';
+import { countries } from '../../../../assets/dropdowns/countries';
+import { TransitionContainer } from '../../../../styles/globalStyles';
 
 const INPUT_OPTIONS = 'small left icon';
 const INFO_MESSAGE = `Don't worry, no junkmail. We are asking for your email in order to
@@ -89,7 +89,7 @@ class PersonalInfo extends React.Component {
                   search
                   selection
                   value={country}
-                  options={countryOptions}
+                  options={countries}
                   placeholder='Select Country'
                   onChange={handleCountryChange} />
               </div>

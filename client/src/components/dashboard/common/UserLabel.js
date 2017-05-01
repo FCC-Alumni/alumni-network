@@ -13,14 +13,14 @@ export default class UserLabel extends React.Component {
         { showAvatar && <img src={image ? image : '/images/defaultAvatar.gif'} alt="user avatar" /> }
         {username}
         { label && <div className="detail">{label}</div> }
-        {
-          (typeof folder === 'boolean') &&
-          <div
-            onClick={toggleAll}
-            className="detail folderDetail">
-            {folder ? <i className="folder open icon"></i> : <i className="folder icon"></i>}
-          </div>
-        }
+      { (typeof folder === 'boolean') &&
+        <div
+          onClick={toggleAll}
+          className="detail folderDetail">
+      { folder
+        ? <i className="folder open icon" />
+        : <i className="folder icon" /> }
+        </div> }
       </div>
     );
   }
@@ -31,9 +31,9 @@ UserLabel.propTypes = {
   size: propTypes.string,
   label: propTypes.string,
   color: propTypes.string,
+  image: propTypes.string,
   toggleAll: propTypes.func,
   showAvatar: propTypes.bool,
-  image: propTypes.string,
   username: propTypes.string.isRequired,
   folder: propTypes.oneOfType([
     propTypes.string,

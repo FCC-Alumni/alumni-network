@@ -1,4 +1,3 @@
-
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -131,7 +130,7 @@ class NavBar extends React.Component {
         { isDesktop &&
           <div className='menu right'>
             <NavLink className="item" activeClassName="active item" exact to="/dashboard/account">
-              {!isMobile ? <i className="setting icon"></i> : 'Account'}
+              {!isMobile ? <i className="setting icon"/> : 'Account'}
             </NavLink>
             <a className="item" href={`${APP_HOST}/logout`}>Logout</a>
           </div> }

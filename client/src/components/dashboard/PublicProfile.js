@@ -1,13 +1,14 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
-import UserLabel from '../common/UserLabel';
 import SocialList from './Profile/Public/SocialList';
+import UserLabel from '../dashboard/common/UserLabel';
 import { connectScreenSize } from 'react-screen-size';
 import { SubHeader } from './Profile/Public/SkillsRow';
 import LocationSteps from './Profile/Public/LocationSteps';
-import { ThickPaddedBottom, StyledItem } from '../../styles/globalStyles';
+import { scrapeFccStats } from '../../actions/scrape-fcc.js';
 import { initiatePrivateChat, clearNotifications } from '../../actions/chat';
+import { ThickPaddedBottom, StyledItem } from '../../styles/globalStyles';
 import MainHeader from '../dashboard/Profile/Public/ProfileHeader';
 import SkillsAndInterests from './Profile/Public/SkillsRow';
 import TableRow from '../dashboard/Profile/Public/TableRow';
@@ -17,9 +18,8 @@ import Table from '../dashboard/Profile/Public/Table';
 import { defaultUser } from '../../reducers/user';
 import Career from './Profile/Public/CareerRow';
 import styled from 'styled-components';
-import isEmpty from 'lodash/isEmpty';
+import { isEmpty } from 'lodash';
 
-import { scrapeFccStats } from '../../actions/scrape-fcc.js';
 
 // STYLED COMPONENTS:
 const Avatar = styled.img`
@@ -161,7 +161,6 @@ class PublicProfile extends React.Component {
 
     return (
       <ThickPaddedBottom id="public-profile-container">
-
         {/* AVATAR & FCCDATA */}
         <div className="ui celled stackable grid container">
           <div className={`${this.state.isTablet ? 'sixteen' : 'four'} wide center aligned column`}>
@@ -297,7 +296,6 @@ class PublicProfile extends React.Component {
             </div>
           </div> }
         </div> }
-
       </ThickPaddedBottom>
     );
   }

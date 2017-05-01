@@ -4,8 +4,6 @@
 
 /*** *** *** freeCodeCamp Theme *** *** ***/
 
-// REBUILD AS THIS AT SOME POINT - THIS WILL FIX GREEN ISSUES!!!
-
 @pink           : #FF6D58; // Light Red
 @orange         : #FFAD25; // Light Orange
 @yellow         : #FFEE18; // Yellow

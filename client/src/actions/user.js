@@ -1,8 +1,7 @@
 import axios from 'axios';
-import {
-  SAVE_USER,
-  LOGOUT_USER
-} from './types';
+
+export const SAVE_USER = 'SAVE_USER';
+export const LOGOUT_USER = 'LOGOUT_USER';
 
 // we post to avoid browser caching
 export const getUserData = () => {

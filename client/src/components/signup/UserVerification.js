@@ -103,7 +103,7 @@ class UserVerification extends React.Component {
           <p style={{ fontSize: 16 }}>This extension of the freeCodeCamp Community is a network of like-minded individuals, who are serious about coding and about taking their skills to the next level.</p>
           <p style={{ fontSize: 16 }}>While our goal is to be as inclusive as possible, to ensure that this network maintains its integrity as a serious place for serious campers, we do have some requirements that limit who can and cannot join.</p>
           <div style={{ marginTop: 0 }} className="ui compact info message">
-            <div className="header">To join the freeCodeCamp Alumni Network, you must have earned at least one of the following:</div>
+            <div className="header">To join the freeCodeCamp Alumni Network, your profile must be public and you must have earned at least one of the following:</div>
             <ul className="list">
               <li>freeCodeCamp Front End Certification</li>
               <li>freeCodeCamp Data Visualization Certification</li>

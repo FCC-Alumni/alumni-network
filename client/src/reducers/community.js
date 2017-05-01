@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { SAVE_USER } from '../actions/types';
+import { SAVE_USER } from '../actions/user';
 import { POPULATE } from '../actions/community';
 import { NEW_USER_JOINED } from '../actions/onlineStatus';
 import { List } from 'immutable';

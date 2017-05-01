@@ -9,13 +9,13 @@ import { saveUser, getUserData, logoutUser } from '../actions/user';
 import { addFlashMessage, clearFlashMessage } from '../actions/flashMessages';
 
 import { CatchAll } from '../App';
+import Account from './dashboard/Account';
 import Landing from './dashboard/Landing';
 import Community from './dashboard/Community';
 import Mentorship from './dashboard/Mentorship';
+import Preferences from './dashboard/Preferences';
 import Chat from './dashboard/Chat/ChatController';
-import Profile_Config from './dashboard/Profile_Config';
-import Profile_Public from './dashboard/Profile_Public';
-import Account from './dashboard/Account';
+import PublicProfile from './dashboard/PublicProfile';
 
 class AppContainer extends React.Component {
 
@@ -73,8 +73,8 @@ class AppContainer extends React.Component {
         { this.props.username &&
           <Switch>
             <Route exact path={`${url}/`} component={Landing}/>
-            <Route exact path={`${url}/preferences`} component={Profile_Config}/>
-            <Route exact path={`${url}/profile/:username`} component={Profile_Public}/>
+            <Route exact path={`${url}/preferences`} component={Preferences}/>
+            <Route exact path={`${url}/profile/:username`} component={PublicProfile}/>
             <Route exact path={`${url}/community`} component={Community}/>
             <Route exact path={`${url}/mentorship`} component={Mentorship}/>
             <Route exact path={`${url}/chat`} component={Chat}/>

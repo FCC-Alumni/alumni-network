@@ -1,4 +1,4 @@
-import { SAVE_PREFERENCES_VIEW_STATE } from '../actions/types';
+import { SAVE_PREFERENCES_VIEW_STATE } from '../actions/views';
 
 const defaultState = {
   showAll: false,

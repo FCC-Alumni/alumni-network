@@ -1,4 +1,5 @@
-import { ADD_FLASH_MESSAGE, CLEAR_FLASH_MESSAGE } from './types'
+export const ADD_FLASH_MESSAGE = 'ADD_FLASH_MESSAGE';
+export const CLEAR_FLASH_MESSAGE = 'CLEAR_FLASH_MESSAGE';
 
 export function addFlashMessage(message) {
   return {

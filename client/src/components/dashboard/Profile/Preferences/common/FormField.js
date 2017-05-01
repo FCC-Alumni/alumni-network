@@ -1,9 +1,9 @@
 import React from 'react';
 import propTypes from 'prop-types';
+import { ErrorLabel } from './RepoList';
 import { Popup } from 'semantic-ui-react';
-import { mapScreenSizeToProps } from '../Navbar';
 import { connectScreenSize } from 'react-screen-size';
-import { ErrorLabel } from '../dashboard/Profile/RepoList';
+import { mapScreenSizeToProps } from '../../../../Navbar';
 
 const FormField = ({
   icon,

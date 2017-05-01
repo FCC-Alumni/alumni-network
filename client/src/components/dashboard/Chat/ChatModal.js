@@ -25,22 +25,22 @@ export default ({ size, close, open }) => {
 
           <span>All the normal&nbsp;
           <a target="_blank" href="https://www.freecodecamp.com/code-of-conduct">Code of Conduct</a>
-          &nbsp;guidelines for the Free Code Camp Forum and Gitter channels apply here as well.</span>
+          &nbsp;guidelines for the freeCodeCamp Forum and Gitter channels apply here as well.</span>
 
           <br/><br/>
 
-          <i className="student icon mentorIcon"></i> These people are mentors<br/>
-          <i className="star icon onlineIcon" style={{ color: 'rgb(255, 109, 88)' }}></i> These people are currently online
+          <i className="student icon mentorIcon" /> These people are mentors<br/>
+          <i className="star icon onlineIcon" style={{ color: 'rgb(255, 109, 88)' }} /> These people are currently online
 
           <br/><br/>
 
-          <b>Be nice and happy coding!</b>
+          <strong>Be nice and happy coding!</strong>
 
           <br/>
 
         </p>
 
-        <p style={{ fontSize: '14px' }}><b>Note:</b> While we enjoyed building this chat, we encourage you to continue
+        <p style={{ fontSize: '14px' }}><strong>Note:</strong> While we enjoyed building this chat, we encourage you to continue
         more in-depth discussions on other platforms that have more robust features.</p>
 
 

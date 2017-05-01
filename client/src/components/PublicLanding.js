@@ -22,7 +22,7 @@ class About extends React.Component {
       <Container className="ui raised very piled padded text container segment">
         <h1 className="ui header">Welcome to the freeCodeCamp Alumni Network</h1>
         <p>
-          <b>freeCodeCamp</b> has an incredible and vibrant international community. We
+          <strong>freeCodeCamp</strong> has an incredible and vibrant international community. We
           built this app specifically to try and cultivate relationships among experienced campers.
         </p>
         <p>
@@ -33,8 +33,8 @@ class About extends React.Component {
         </p>
         <p>
           Our authentication process verifies the FCC progress of users, and only admits
-          students who have completed at least one FCC Certificate. (<b>Note:</b> you will
-            have to make your FCC profile public for this validation to work.)
+          students who have completed at least one FCC Certificate. (<strong>Note:</strong> You will
+          have to make your FCC profile public for this validation to work.)
         </p>
         <p>
           Our goal is to create a focused community of like-minded individuals who can

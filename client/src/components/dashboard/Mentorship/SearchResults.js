@@ -26,7 +26,14 @@ const IMG = styled.img`
   cursor: pointer;
 `;
 
-const SearchResults = ({ privateChat, initiatePrivateChat, currentUser, results, noResults, handleClick }) => {
+const SearchResults = ({
+  results,
+  noResults,
+  privateChat, 
+  currentUser,
+  handleClick,
+  initiatePrivateChat,
+}) => {
   const listResults = results.map(user => {
     const { username, mentorship: { isMentor, mentorshipSkills }, personal: { bio } } = user;
     const notifications = privateChat.getIn([username, 'notifications']);

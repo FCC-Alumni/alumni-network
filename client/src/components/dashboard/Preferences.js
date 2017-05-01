@@ -1,43 +1,52 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Social from './Profile/Social';
-import UserLabel from '../common/UserLabel';
-import PersonalInfo from './Profile/PersonalInfo';
-import SkillsAndInterests from './Profile/SkillsAndInterests';
+import Social from './Profile/Preferences/Social';
+import UserLabel from '../dashboard/common/UserLabel';
+import PersonalInfo from './Profile/Preferences/PersonalInfo';
+import SkillsAndInterests from './Profile/Preferences/SkillsAndInterests';
 import { saveUser, updateUser, updateUserPartial } from '../../actions/user';
+import Certifications from './Profile/Preferences/Certifications';
+import Collaboration from './Profile/Preferences/Collaboration';
+import { countryCodes } from '../../assets/dropdowns/countries';
 import { savePreferencesViewState } from '../../actions/views';
 import { ThickPaddedBottom } from '../../styles/globalStyles';
-import { countryCodes } from '../../assets/data/countries';
-import Certifications from './Profile/Certifications';
+import Modal from './Profile/Preferences/common/SaveModal';
+import Mentorship from './Profile/Preferences/Mentorship';
 import { connectScreenSize } from 'react-screen-size';
-import Collaboration from './Profile/Collaboration';
-import { Button } from 'semantic-ui-react';
+import Career from './Profile/Preferences/Career';
 import { mapScreenSizeToProps } from '../Navbar';
-import Modal from './Profile/common/SaveModal';
-import Mentorship from './Profile/Mentorship';
+import { Button } from 'semantic-ui-react';
 import styled from 'styled-components';
-import Career from './Profile/Career';
-import isEmpty from 'lodash/isEmpty';
 import Validator from 'validator';
+import { isEmpty } from 'lodash';
 
 /*
-TODO:©
+TODO:
   - PERSONAL INFO: validation to require user to enter country to collect data for D3 map?
   - GENERAL: Refactor validation code, kind of reduntant and could be improved (isPageValid && isSectionValid)
 */
 
 const TopButton = styled(Button)`
-height: 42px !important;
-padding: 10px !important;
-  @media (max-width: 961px) {
+  height: 42px !important;
+  padding: 10px !important;
+  @media (max-width: 959px) {
     margin-top: 10px !important;
+  }
+  @media (min-width: 959px) {
+    float: right !important;
   }
 `;
 
 const BottomButton = styled(Button)`
   right: 0;
   bottom: 35px;
+`;
+
+const Container = styled(ThickPaddedBottom)`
+  @media (max-width: 770px) {
+    padding: 0 10px 50px 10px !important;
+  }
 `;
 
 class Profile extends React.Component {
@@ -408,12 +417,10 @@ class Profile extends React.Component {
       },
     } = this.state;
 
-    const { isDesktop, isMobile } = this.props.screen;
-
-    const mobilePadding = isMobile ? { padding: '0 10px' } : {};
+    const { isDesktop } = this.props.screen;
 
     return (
-      <ThickPaddedBottom style={mobilePadding} className="ui container">
+      <Container className="ui container">
         <Modal
           size="small"
           close={this.closeModal}
@@ -432,9 +439,9 @@ class Profile extends React.Component {
           size="large"
           color="green"
           content="Save"
-          floated={isDesktop && "right"}
           labelPosition="right"
           onClick={this.saveChanges} />
+          {/* floated prop throws invalid propType warning - expects only 'right' or 'left' */}
         <div className="ui raised segment">
           <PersonalInfo
             {...personal}
@@ -509,7 +516,7 @@ class Profile extends React.Component {
             labelPosition="right"
             onClick={this.saveChanges} /> }
         </div>
-      </ThickPaddedBottom>
+      </Container>
     );
   }
 }

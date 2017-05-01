@@ -1,12 +1,12 @@
 import React from 'react';
 import { isEqual } from 'lodash';
-import Ribbon from './common/RibbonHeader';
+import FormField from './common/FormField';
 import ListItem from '../../common/ListItem';
-import FormField from '../../common/FormField';
 import MessageBox from '../../common/MessageBox';
-import { TransitionContainer } from '../../../styles/globalStyles';
+import Ribbon from '../Preferences/common/RibbonHeader';
+import { TransitionContainer } from '../../../../styles/globalStyles';
 
-import { APP_HOST } from '../../../actions/chat';
+import { APP_HOST } from '../../../../actions/chat';
 
 const INPUT_OPTIONS = 'small left icon';
 
