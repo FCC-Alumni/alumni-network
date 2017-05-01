@@ -20,7 +20,7 @@ const SaveModal = ({ size, close, open, warning, isValid }) => {
           <h3 className="ui header">{context.text}</h3>
         { warning &&
           <div>
-          { !warning.startsWith('Nice') &&
+          { !warning.slice(0, 4) === 'Nice' &&
             <h4 className="ui header">
               <i className="small red warning sign icon" />
               But, your profile looks a bit bare...

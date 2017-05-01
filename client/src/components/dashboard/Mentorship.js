@@ -1,16 +1,16 @@
 import React from 'react';
+import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Popup } from 'semantic-ui-react';
 import Filters from './Mentorship/SearchFilters';
-import SearchResults from './Mentorship/SearchResults';
-import { searchTypes } from '../../assets/data/dropdownOptions';
-import { addFlashMessage } from '../../actions/flashMessages';
-import { filterOptions } from '../../assets/data/mapArrays';
-import { saveSearchState } from '../../actions/views';
 import { defaultState } from '../../reducers/search';
-import DropDown from '../common/DropdownMulti';
-import isEmpty from 'lodash/isEmpty';
+import { saveSearchState } from '../../actions/views';
+import SearchResults from './Mentorship/SearchResults';
+import DropDown from '../dashboard/common/DropdownMulti';
+import searchTypes from '../../assets/dropdowns/searchTypes';
+import { addFlashMessage } from '../../actions/flashMessages';
+import filterOptions from '../../assets/helpers/filterOptions';
 
 import {
   initiatePrivateChat,
@@ -43,7 +43,7 @@ const FiltersHeader = ({ onClick, icon }) => {
       <div
         style={cursor}
         className="ui right labeled basic large green icon button"
-        onClick={onClick ? onClick : () => {}}>
+        onClick={onClick && onClick}>
         Search Filters
         <Popup
           wide
@@ -351,7 +351,7 @@ class Mentorship extends React.Component {
                     value={value}
                     onChange={this.handleChange}
                     placeholder="Search Community" />
-                  <i className="search icon"></i>
+                  <i className="search icon" />
                 </div>
               </div>
             </SearchInput>

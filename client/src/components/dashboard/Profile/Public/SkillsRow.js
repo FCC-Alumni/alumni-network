@@ -1,6 +1,6 @@
 import React from 'react';
+import { isEmpty } from 'lodash';
 import styled from 'styled-components';
-import isEmpty from 'lodash/isEmpty';
 
 const Label = styled.div`
   margin: 5px !important;

@@ -1,4 +1,4 @@
-export const filterOptions = [
+export default [
   { name: 'mentorsOnly', label: 'Mentors Only' },
   { name: 'prosOnly', label: 'Professional Developers Only' },
   { name: 'frontendOnly', label: 'Front End Certified' },

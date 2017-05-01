@@ -138,27 +138,28 @@ class ChatController extends React.Component {
     const privateChannels = (
       <div id="privateChatChannels">
         <h3 className='privateChannelsTitle'>Private Chat Channels:</h3>
-        {privateChat.size > 0 ? privateChat.keySeq().map(username => {
-          if (username === conversant) return;
-          const notifications = privateChat.getIn([username, 'notifications']);
-          const style = notifications > 0 ? { marginLeft: '-8px' } : { marginLeft: '8px' };
-          return (
-            <div
-              key={username}
-              className='privateChannel'
-              onClick={this.initiatePrivateChat.bind(this, username, notifications)}>
-              <img src={this.props.community.find(u => u.username === username).personal.avatarUrl} alt="User Avatar"/>
-              {notifications > 0 &&
-                <span className="notifications privateNotifications">{notifications}</span>}
-              <span className="privateUsername" style={style}>{username.slice(0, 25)}</span>
-            </div>
-          );
-        }) :
-          <span>
-            <b>No Private Chats yet!</b><br/>
+      { privateChat.size > 0
+        ? privateChat.keySeq().map(username => {
+            if (username === conversant) return;
+            const notifications = privateChat.getIn([username, 'notifications']);
+            const style = notifications > 0 ? { marginLeft: '-8px' } : { marginLeft: '8px' };
+            return (
+              <div
+                key={username}
+                className='privateChannel'
+                onClick={this.initiatePrivateChat.bind(this, username, notifications)}>
+                <img src={this.props.community.find(u => u.username === username).personal.avatarUrl} alt="User Avatar"/>
+                {notifications > 0 &&
+                  <span className="notifications privateNotifications">{notifications}</span>}
+                <span className="privateUsername" style={style}>{username.slice(0, 25)}</span>
+              </div>
+            );
+          })
+        : <span>
+            <strong>No Private Chats yet!</strong><br/>
             <p className='noChannelsMessage'>Click another user's name to start a chat with them.</p>
-          </span>}
-          <i className="remove icon" id="closePrivateChat" onClick={this.togglePrivateChannels}></i>
+          </span> }
+          <i className="remove icon" id="closePrivateChat" onClick={this.togglePrivateChannels} />
       </div>
     );
 
@@ -168,10 +169,8 @@ class ChatController extends React.Component {
         <div>
           <div className="ui comments">
             <h2 className="ui dividing header" style={ !screen.isDesktop ? { width: '200px' } : null }>
-
-            {conversant ?
-
-              <span style={ !screen.isDesktop ? { fontSize: '16px' } : null }>
+          { conversant
+            ? <span style={ !screen.isDesktop ? { fontSize: '16px' } : null }>
                 <img src={this.props.conversantAvatar} className='privateAvatar' alt={`${conversant}'s Avatar'`} />
                 Private Chat with&nbsp;
                 <span
@@ -179,35 +178,23 @@ class ChatController extends React.Component {
                   onClick={() => this.props.history.replace(`/dashboard/profile/${conversant}`)}>
                    {conversant} </span>
               </span>
-
-              :
-
-              <span style={ !screen.isDesktop ? { fontSize: '16px' } : null }>
+            : <span style={ !screen.isDesktop ? { fontSize: '16px' } : null }>
                 Welcome to the Alumni Mess Hall:
-              </span>
-
-            }
-
+              </span> }
             </h2>
-
-            { totalNotifications ?
-
-              <div onClick={this.togglePrivateChannels} id="privateChatIconWrapper">
-                <i className="comments green icon" id="privateChatIcon"></i>
-                <span className="notifications totalNotifications">{totalNotifications}</span>
-              </div>
-
-              :
-
-              <div onClick={this.togglePrivateChannels}>
-                <i className="comments green icon" id="privateChatIcon"></i>
-              </div> }
-
-            {conversant ?
-              <NavLink to='/dashboard/chat'>
-                <i className="green home icon" id="infoIcon"></i>
-              </NavLink> :
-              <i onClick={this.toggleModal} className="info green circle icon" id="infoIcon"></i>}
+        { totalNotifications
+          ? <div onClick={this.togglePrivateChannels} id="privateChatIconWrapper">
+              <i className="comments green icon" id="privateChatIcon" />
+              <span className="notifications totalNotifications">{totalNotifications}</span>
+            </div>
+          : <div onClick={this.togglePrivateChannels}>
+              <i className="comments green icon" id="privateChatIcon" />
+            </div> }
+        { conversant
+          ? <NavLink to='/dashboard/chat'>
+              <i className="green home icon" id="infoIcon" />
+            </NavLink>
+          : <i onClick={this.toggleModal} className="info green circle icon" id="infoIcon" /> }
 
             {this.state.privateChannels && privateChannels}
 
@@ -245,14 +232,14 @@ class ChatController extends React.Component {
 ChatController.propTypes = {
   user: propTypes.object.isRequired,
   chat: propTypes.object.isRequired,
-  addMessage: propTypes.func.isRequired,
   saveEdit: propTypes.func.isRequired,
+  mentors: propTypes.object.isRequired,
+  addMessage: propTypes.func.isRequired,
   likeMessage: propTypes.func.isRequired,
   deleteMessage: propTypes.func.isRequired,
   broadcastEdit: propTypes.func.isRequired,
+  onlineStatus: propTypes.object.isRequired,
   clearNotifications: propTypes.func.isRequired,
-  mentors: propTypes.object.isRequired,
-  onlineStatus: propTypes.object.isRequired
 };
 
 export const findMentors = (community) => {

@@ -1,19 +1,7 @@
 import React from 'react';
 import ReactEmoji from 'react-emoji';
 import { Popup } from 'semantic-ui-react';
-
-const parseTime = (timestamp) => {
-  let a = new Date(timestamp);
-  let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  let year = a.getFullYear();
-  let month = months[a.getMonth()];
-  let date = a.getDate();
-  let hour = a.getHours();
-  let min = a.getMinutes();
-  let sec = a.getSeconds();
-  let time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
-  return time;
-};
+import parseTime from '../../../assets/helpers/parseTime';
 
 export default ({
   path,
@@ -34,14 +22,14 @@ export default ({
   if (chat.size > 0) {
     return (
       <div className='chatMessage'>
-        {chat.map(msg => {
+        { chat.map(msg => {
           const id = msg.get('id');
-          const timestamp = msg.get('timestamp');
           const text = msg.get('text');
-          const author = msg.get('author');
-          const avatar = msg.get('avatar');
           const likes = msg.get('likes');
+          const author = msg.get('author');
           const edited = msg.get('edited');
+          const avatar = msg.get('avatar');
+          const timestamp = msg.get('timestamp');
           return (
             <div className="comment" key={id} style={{ paddingTop: '12px' }}>
 
@@ -56,39 +44,38 @@ export default ({
               </Popup>
 
               <div className="content">
-
-                { path && author !== user.username ?
-                  <Popup
-                    inverted
-                    position="top left"
-                    trigger={
-                      <span
-                        onClick={initiatePrivateChat.bind(this, author)}
-                        className='author author-link'>
-                        {author}
-                        {mentors.has(author) && <i className="student icon mentorIcon"></i>}
-                        {onlineStatus.has(author) && <i className="star icon onlineIcon"></i>}
-                      </span>}>
-                    Chat with me!
-                  </Popup>
-                    :
-                  <span className='author author-link-inactive'>
-                    {author}
-                    {mentors.has(author) && <i className="student icon mentorIcon"></i>}
-                    {onlineStatus.has(author) && <i className="star icon onlineIcon"></i>}
-                  </span> }
+            { path && author !== user.username
+              ? <Popup
+                  inverted
+                  position="top left"
+                  trigger={
+                    <span
+                      onClick={initiatePrivateChat.bind(this, author)}
+                      className='author author-link'>
+                      {author}
+                      {mentors.has(author) && <i className="student icon mentorIcon" />}
+                      {onlineStatus.has(author) && <i className="star icon onlineIcon" />}
+                    </span>}>
+                  Chat with me!
+                </Popup>
+              : <span className='author author-link-inactive'>
+                  {author}
+                  {mentors.has(author) && <i className="student icon mentorIcon" />}
+                  {onlineStatus.has(author) && <i className="star icon onlineIcon" />}
+                </span> }
 
                 <div className="metadata">
                   <span className="date">at
                     <span className="timeStamp"> {parseTime(timestamp)} </span>
                   </span>
-                  {user.username === author &&
-                    <span className='editButton' onClick={setEdit.bind(this, id)}>edit</span>}
+                { user.username === author &&
+                  <span className='editButton' onClick={setEdit.bind(this, id)}>
+                    edit
+                  </span> }
                 </div>
 
-                {edit === id ?
-
-                <form
+            { edit === id
+              ? <form
                   className="ui form"
                   style={{ marginTop: '10px' }}
                   onSubmit={finishEdit}>
@@ -100,39 +87,42 @@ export default ({
                     value={editText}
                     onChange={saveEdit.bind(this)}
                     placeholder="You should really type something..." />
-                  {editText === text ?
-                  <button style={{ width: '140px', color: 'black' }} className="ui yellow button" onClick={finishEdit}>
+              { editText === text
+                ? <button
+                    onClick={finishEdit}
+                    className="ui yellow button"
+                    style={{ width: '140px', color: 'black' }}>
                     Cancel
-                  </button> :
-                  <button style={{ width: '140px' }} className="ui green button" disabled={!editText} onClick={finishEdit}>
+                  </button>
+                : <button
+                    disabled={!editText}
+                    onClick={finishEdit}
+                    style={{ width: '140px' }}
+                    className="ui green button" >
                     Save Message
-                  </button>}
-                  <button className="ui red button" onClick={deleteMessage.bind(this, id)}>Delete Message</button>
+                  </button> }
+                  <button className="ui red button" onClick={deleteMessage.bind(this, id)}>
+                    Delete Message
+                  </button>
                 </form>
-
-                :
-
-                <div
+              : <div
                   className="text"
                   style={{ marginTop: '4px' }}>
-
                   { ReactEmoji.emojify(text) }
-
-                </div>}
+                </div> }
 
                 <div className="ui feed" style={{ marginTop: '0px' }}>
                   <div className="event">
                     <div className="content">
                       <div className="meta">
-                        {!likes.has(user.username) ?
-                          <a className="like" onClick={like.bind(this, id, user.username, recipient)}>
-                            <i className="like icon"></i> {likes.size} {likes.size === 1 ? 'Like' : 'Likes'}
-                          </a>
-                            :
-                          <a className="like">
-                            <i className="like icon" style={{ color: 'red' }}></i> {likes.size} {likes.size === 1 ? 'Like' : 'Likes'}
-                          </a>}
-                          {edited && <span>edited</span>}
+                    { !likes.has(user.username)
+                      ? <a className="like" onClick={like.bind(this, id, user.username, recipient)}>
+                          <i className="like icon"></i> {likes.size} {likes.size === 1 ? 'Like' : 'Likes'}
+                        </a>
+                      : <a className="like">
+                          <i className="like icon" style={{ color: 'red' }}></i> {likes.size} {likes.size === 1 ? 'Like' : 'Likes'}
+                        </a> }
+                        {edited && <span>edited</span>}
                       </div>
                     </div>
                   </div>
@@ -147,7 +137,7 @@ export default ({
   } else {
     return (
       <div>
-        <b>There are no messages yet... why not add one?</b>
+        <strong>There are no messages yet... why not add one?</strong>
       </div>
     );
   }

@@ -1,7 +1,5 @@
-import {
-  SAVE_SEARCH_STATE,
-  SAVE_PREFERENCES_VIEW_STATE,
-} from './types';
+export const SAVE_SEARCH_STATE = 'SAVE_SEARCH_STATE';
+export const SAVE_PREFERENCES_VIEW_STATE = 'SAVE_PREFERENCES_VIEW_STATE';
 
 export const saveSearchState = (searchState) => {
   return {

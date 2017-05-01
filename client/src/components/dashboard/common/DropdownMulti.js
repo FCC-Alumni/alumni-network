@@ -10,13 +10,13 @@ const DropdownMulti = (props) => (
 );
 
 DropdownMulti.propTypes = {
+  fluid: propTypes.bool,
+  search: propTypes.bool,
+  placeholder: propTypes.string,
+  value: propTypes.array.isRequired,
+  noResultsMessage: propTypes.string,
   options: propTypes.array.isRequired,
   onChange: propTypes.func.isRequired,
-  placeholder: propTypes.string,
-  search: propTypes.bool,
-  noResultsMessage: propTypes.string,
-  fluid: propTypes.bool,
-  value: propTypes.array.isRequired
 }
 
 DropdownMulti.defaultProps = {

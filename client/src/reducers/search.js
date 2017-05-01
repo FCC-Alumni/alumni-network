@@ -1,4 +1,4 @@
-import { SAVE_SEARCH_STATE } from '../actions/types';
+import { SAVE_SEARCH_STATE } from '../actions/views';
 
 export const defaultState = {
   value: '',

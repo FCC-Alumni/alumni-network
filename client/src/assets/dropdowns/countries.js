@@ -1,4 +1,4 @@
-export const countryOptions = [
+export const countries = [
   { text: "---", value: "", key: "", flag: "" },
   { text: "Andorra", value: "ad", key: "ad", flag: "ad" },
   { text: "United Arab Emirates", value: "ae", key: "ae", flag: "ae" },

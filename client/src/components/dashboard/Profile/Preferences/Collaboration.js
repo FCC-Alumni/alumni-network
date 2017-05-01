@@ -1,10 +1,10 @@
 import React from 'react';
 import { isEqual } from 'lodash';
-import RepoList from './RepoList';
-import isEmpty from 'lodash/isEmpty';
+import { isEmpty } from 'lodash';
+import RepoList from './common/RepoList';
 import Ribbon from './common/RibbonHeader';
 import MessageBox from '../../common/MessageBox';
-import { TransitionContainer } from '../../../styles/globalStyles';
+import { TransitionContainer } from '../../../../styles/globalStyles';
 
 export default class Collaboration extends React.Component {
   shouldComponentUpdate(nextProps) {

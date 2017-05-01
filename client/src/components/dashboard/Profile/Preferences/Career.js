@@ -1,16 +1,16 @@
 import React from 'react';
 import { isEqual } from 'lodash';
 import styled from 'styled-components';
+import FormField from './common/FormField';
 import Ribbon from './common/RibbonHeader';
 import { Dropdown } from 'semantic-ui-react';
-import FormField from '../../common/FormField';
+import RadioButton from './common/RadioButton';
 import MessageBox from '../../common/MessageBox';
-import RadioButton from '../../common/RadioButton';
-import { mapScreenSizeToProps } from '../../Navbar';
 import { connectScreenSize } from 'react-screen-size';
-import { Container as InnerContainer } from './RepoList';
-import { TransitionContainer } from '../../../styles/globalStyles';
-import { surveyOptions } from '../../../assets/data/dropdownOptions';
+import { mapScreenSizeToProps } from '../../../Navbar';
+import { Container as InnerContainer } from './common/RepoList';
+import surveyOptions from '../../../../assets/dropdowns/devSurvey';
+import { TransitionContainer } from '../../../../styles/globalStyles';
 
 const Error = styled.div`
   margin-bottom: 10px !important;

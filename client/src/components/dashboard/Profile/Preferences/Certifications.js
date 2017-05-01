@@ -2,7 +2,7 @@ import React from 'react';
 import { isEqual } from 'lodash';
 import Ribbon from './common/RibbonHeader';
 import ListItem from '../../common/ListItem';
-import { TransitionContainer } from '../../../styles/globalStyles';
+import { TransitionContainer } from '../../../../styles/globalStyles';
 
 export default class Certifications extends React.Component {
   shouldComponentUpdate(nextProps) {

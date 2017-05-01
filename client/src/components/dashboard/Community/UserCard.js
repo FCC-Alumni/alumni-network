@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SocialLinks from './SocialLinks';
 import { connectScreenSize } from 'react-screen-size';
-import convertMonthToString from '../../../actions/convertMonth';
+import parseDate from '../../../assets/helpers/parseDate';
 import { initiatePrivateChat, clearNotifications } from '../../../actions/chat';
 
 /*
@@ -67,15 +67,14 @@ class UserCard extends React.Component {
 
   render() {
     const { user, screen: { isMobile, isDesktop }, currentUser, privateChat } = this.props;
-    const joinedOn = user.personal.memberSince.split('-').slice(0, 2);
-    const prettyDate = convertMonthToString(...joinedOn);
     const image = document.getElementsByClassName('avatarImg')[0];
     const notifications = privateChat.getIn([user, 'notifications'])
+    const joinedOn = parseDate(...user.personal.memberSince.split('-').slice(0, 2));
     const imageHeight = image && window.getComputedStyle(image).getPropertyValue('height');
-    // used good ol' fashioned inline styles to control the reveal behavior on mobile
-    // resolutions. For whatever reason, had a hard time overriding semantic-ui's transition
-    // rules using styled-components. Trying to keep use of inline vs. styled-components as
-    // consistent as possible, but in certain I am making concessions were necessary
+    // used inline styles to control the reveal behavior on mobile resolutions.
+    // Had a hard time overriding semantic-ui's transition rules using styled-components.
+    // Trying to keep use of inline vs. styled-components as consistent as possible,
+    // but in certain cases we are making concessions where necessary.
     const IMAGE_STYLE = isDesktop
       ? {}
       : this.state.reveal
@@ -119,15 +118,17 @@ class UserCard extends React.Component {
             <SummaryWrapper>
               <div className="ui horizontal divider">Core Skills</div>
               <div className="ui list">
-              { user.skillsAndInterests.coreSkills.length > 0 ?
-                user.skillsAndInterests.coreSkills.map((item, i) => i < 3 && <div className="item" key={i}>{item}</div>) :
-                'Not defined yet!' }
+              { user.skillsAndInterests.coreSkills.length > 0
+                ? user.skillsAndInterests.coreSkills.map((item, i) => {
+                    return i < 3 && <div className="item" key={i}>{item}</div>})
+                : 'Not defined yet!' }
               </div>
               <div className="ui horizontal divider">Coding Interests</div>
               <div className="ui list">
-              { user.skillsAndInterests.codingInterests.length > 0 ?
-                user.skillsAndInterests.codingInterests.map((item, i) => i < 3 && <div className="item" key={i}>{item}</div>) :
-                'Not defined yet!' }
+              { user.skillsAndInterests.codingInterests.length > 0
+                ? user.skillsAndInterests.codingInterests.map((item, i) => {
+                    return i < 3 && <div className="item" key={i}>{item}</div>})
+                : 'Not defined yet!' }
               </div>
             </SummaryWrapper>
           </div>
@@ -138,17 +139,19 @@ class UserCard extends React.Component {
 
         <Clickable onClick={() => this.handleClick(user.username)} className="content">
           <div className="header">
-              <span className="user">{user.username}</span>
-            { currentUser !== user.username &&
-              <ChatIcon
-                className="comments icon"
-                title={`Start a chat with ${user.username}`}
-                onClick={(e) => { this.initiatePrivateChat(user.username, notifications); e.stopPropagation(); }} /> }
-            { (screen.isDesktop || screen.isMobile) &&
-              <CertLinks
-                username={user.username}
-                fccCerts={user.fccCerts}
-                handleClick={this.handleInnerClick} /> }
+            <span className="user">{user.username}</span>
+          { currentUser !== user.username &&
+            <ChatIcon
+              className="comments icon"
+              title={`Start a chat with ${user.username}`}
+              onClick={(e) => {
+                this.initiatePrivateChat(user.username, notifications);
+                e.stopPropagation(); }} /> }
+          { (isDesktop || isMobile) &&
+            <CertLinks
+              fccCerts={user.fccCerts}
+              username={user.username}
+              handleClick={this.handleInnerClick} /> }
           </div>
           <div className="meta">
             {user.mentorship.isMentor ? 'Mentor' : 'Member'}
@@ -156,21 +159,20 @@ class UserCard extends React.Component {
         </Clickable>
 
         <div className="extra content">
-          { (screen.isDesktop || screen.isMobile) ?
-            <span className="right floated">
-              {`Est. ${prettyDate}`}
-            </span> :
-            <CertLinks
-              username={user.username}
-              fccCerts={user.fccCerts}
-              handleClick={this.handleInnerClick} /> }
+      { (isDesktop || isMobile)
+        ? <span className="right floated">
+            {`Since ${joinedOn}`}
+          </span>
+        : <CertLinks
+            username={user.username}
+            fccCerts={user.fccCerts}
+            handleClick={this.handleInnerClick} /> }
           <span>
             <SocialLinks
               user={user}
               handleClick={this.handleInnerClick} />
           </span>
         </div>
-
       </div>
     );
   }

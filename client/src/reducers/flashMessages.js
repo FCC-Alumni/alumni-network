@@ -1,5 +1,8 @@
-import { ADD_FLASH_MESSAGE, CLEAR_FLASH_MESSAGE } from '../actions/types';
-import findIndex from 'lodash/findIndex';
+import { findIndex } from 'lodash';
+import {
+  ADD_FLASH_MESSAGE,
+  CLEAR_FLASH_MESSAGE
+} from '../actions/flashMessages';
 
 export default (state = [], action) => {
   switch(action.type) {

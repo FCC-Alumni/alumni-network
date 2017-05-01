@@ -1,4 +1,4 @@
-const convertMonthToString = (year, month) => {
+export default (year, month) => {
   switch (month) {
     case '01':
       return 'Jan ' + year;
@@ -28,5 +28,3 @@ const convertMonthToString = (year, month) => {
       return '';
   }
 }
-
-export default convertMonthToString;

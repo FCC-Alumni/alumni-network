@@ -2,11 +2,11 @@ import React from 'react';
 import { isEqual } from 'lodash';
 import propTypes from 'prop-types';
 import Ribbon from './common/RibbonHeader';
+import SliderToggle from './common/SliderToggle';
 import MessageBox from '../../common/MessageBox';
-import { mapScreenSizeToProps } from '../../Navbar';
-import SliderToggle from '../../common/SliderToggle';
 import { connectScreenSize } from 'react-screen-size';
-import { TransitionContainer } from '../../../styles/globalStyles';
+import { mapScreenSizeToProps } from '../../../Navbar';
+import { TransitionContainer } from '../../../../styles/globalStyles';
 
 class Mentorship extends React.Component {
   shouldComponentUpdate(nextProps) {
