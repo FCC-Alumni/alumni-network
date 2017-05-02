@@ -7,9 +7,9 @@ export default (state = Set(), action) => {
   switch (type) {
 
     case POPULATE_ONLINE_USERS:
-    return payload.reduce((state, user) => {
-      return state.add(user);
-    }, state);
+      return payload.reduce((state, user) => {
+        return state.add(user);
+      }, state);
 
     case USER_ONLINE:
       return state.add(payload);

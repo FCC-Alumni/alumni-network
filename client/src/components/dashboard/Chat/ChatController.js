@@ -133,7 +133,7 @@ class ChatController extends React.Component {
   }
   render() {
 
-    const { conversant, privateChat, totalNotifications, screen } = this.props;
+    const { conversant, privateChat, totalNotifications, onlineStatus, screen } = this.props;
 
     const privateChannels = (
       <div id="privateChatChannels">
@@ -142,7 +142,7 @@ class ChatController extends React.Component {
         ? privateChat.keySeq().map(username => {
             if (username === conversant) return;
             const notifications = privateChat.getIn([username, 'notifications']);
-            const style = notifications > 0 ? { marginLeft: '-8px' } : { marginLeft: '8px' };
+            const style = notifications > 0 ? { marginLeft: -8 } : { marginLeft: 8 };
             return (
               <div
                 key={username}
@@ -168,17 +168,20 @@ class ChatController extends React.Component {
         <Modal size="large" open={this.state.modal} close={this.toggleModal} />
         <div>
           <div className="ui comments">
-            <h2 className="ui dividing header" style={ !screen.isDesktop ? { width: '200px' } : null }>
+            <h2 className="ui dividing header" style={ !screen.isDesktop ? { width: 200 } : null }>
           { conversant
-            ? <span style={ !screen.isDesktop ? { fontSize: '16px' } : null }>
+            ? <span style={ !screen.isDesktop ? { fontSize: 16 } : null }>
                 <img src={this.props.conversantAvatar} className='privateAvatar' alt={`${conversant}'s Avatar'`} />
                 Private Chat with&nbsp;
                 <span
                   className='conversant'
                   onClick={() => this.props.history.replace(`/dashboard/profile/${conversant}`)}>
-                   {conversant} </span>
+                  {conversant}
+                </span>
+              { !onlineStatus.has(conversant) &&
+                <span style={{ fontSize: 16, marginLeft: 5 }}>(offline)</span> }
               </span>
-            : <span style={ !screen.isDesktop ? { fontSize: '16px' } : null }>
+            : <span style={ !screen.isDesktop ? { fontSize: 16 } : null }>
                 Welcome to the Alumni Mess Hall:
               </span> }
             </h2>
