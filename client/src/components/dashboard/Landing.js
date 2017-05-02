@@ -10,8 +10,8 @@ const image = (source, position) => (
 
 export default () => (
   <div className="ui main text container" style={{ marginBottom: '25px' }}>
-    <h1 className="ui centered header">Welcome to the freeCodeCamp Alumni App!</h1>
-    <div className="ui segment" style={{ fontSize: '18px', paddingBottom: '35px' }}>
+    <h1 className="ui centered header">Welcome to the freeCodeCamp Alumni Network!</h1>
+    <div className="ui segment" style={{ fontSize: 18, paddingBottom: 35 }}>
       {image('/images/fcc_hands_in_logo.svg', 'left')}
       <p>
         We built this app to try to foster networking and mentorship opportunities among
