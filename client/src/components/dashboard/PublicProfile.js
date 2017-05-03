@@ -56,7 +56,7 @@ class PublicProfile extends React.Component {
     document.body.scrollTop = 0;
     // redirect to community if url user
     // entered does not contain a valid username
-    if (!this.props.user.username) {
+    if (!this.props.loading && !this.props.user.username) {
       this.props.history.push('/dashboard/community');
     }
     if (!this.props.initialState) {
@@ -73,6 +73,11 @@ class PublicProfile extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { initialState } = nextProps;
     if (initialState) this.setState({ ...initialState });
+    if (!nextProps.loading && !nextProps.user.username) {
+      this.props.history.push('/dashboard/community');
+    } else if (!nextProps.loading && !nextProps.initialState) {
+      this.props.scrapeFccStats(nextProps.user.username);
+    }
   }
 
   componentDidUpdate() {
@@ -158,6 +163,12 @@ class PublicProfile extends React.Component {
       this.projectColumnA = user.projects.slice(0, sliceAt);
       this.projectColumnB = user.projects.slice(sliceAt);
     }
+
+    if (this.props.loading) return (
+      <Loader className="ui active inverted dimmer" style={{ marginTop: '100px' }}>
+        <div className="ui text huge loader">Loading</div>
+      </Loader>
+    );
 
     return (
       <ThickPaddedBottom id="public-profile-container">
@@ -308,7 +319,7 @@ PublicProfile.propTypes = {
 
 const findUser = (community, username) => {
   return community ? community.filter(user =>
-    (user.username.toLowerCase() === username.toLowerCase()) && user)[0] : '';
+    (user.username.toLowerCase() === username.toLowerCase()) && user)[0] : null;
 };
 
 const mapStateToProps = ({ community, publicProfileStats, privateChat, user: currentUser }, props) => {
@@ -329,7 +340,8 @@ const mapStateToProps = ({ community, publicProfileStats, privateChat, user: cur
     currentUser: currentUser.username,
     user: user ? user : defaultUser,
     initialState,
-    privateChat
+    privateChat,
+    loading: !community.size, // mock loading state based on community...
   }
 }
 
