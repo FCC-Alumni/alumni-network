@@ -6,6 +6,7 @@ export default (state = Map(), action) => {
   switch (type) {
 
     case POPULATE_USER_STATS:
+      if (!payload.user) return state;
       return state.set(payload.user, payload.stats);
 
     default: return state;
