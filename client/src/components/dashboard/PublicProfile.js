@@ -54,15 +54,11 @@ class PublicProfile extends React.Component {
 
   componentDidMount() {
     document.body.scrollTop = 0;
-    // redirect to community if url user
-    // entered does not contain a valid username
-    if (!this.props.loading && !this.props.user.username) {
-      this.props.history.push('/dashboard/community');
-    }
+    // handles navigation to profile
+    // through built in FCCAN links
     if (!this.props.initialState) {
       this.props.scrapeFccStats(this.props.user.username);
     }
-
     window.addEventListener('resize', this.handleResize);
   }
 
@@ -73,6 +69,8 @@ class PublicProfile extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { initialState } = nextProps;
     if (initialState) this.setState({ ...initialState });
+    // handles manual navigation to profile, i.e. typed url,
+    // if username param is invalid, redirects to community
     if (!nextProps.loading && !nextProps.user.username) {
       this.props.history.push('/dashboard/community');
     } else if (!nextProps.loading && !nextProps.initialState) {
@@ -318,30 +316,31 @@ PublicProfile.propTypes = {
 }
 
 const findUser = (community, username) => {
-  return community ? community.filter(user =>
-    (user.username.toLowerCase() === username.toLowerCase()) && user)[0] : null;
+  return community ? community.filter(user => {
+    return user.username.toLowerCase() === username.toLowerCase() && user;
+  })[0] : null;
 };
 
 const mapStateToProps = ({ community, publicProfileStats, privateChat, user: currentUser }, props) => {
   let username = findUser(community.toJS(), props.match.params.username);
   if (username) username = username.username;
-  let initialState, user = '';
+  let initialState, user;
   try {
     initialState = publicProfileStats.get(username);
   } catch (e) {
-    console.log(e)
+    console.warn('Profile component is waiting on props');
   }
   try {
     user = findUser(community.toJS(), username);
   } catch (e) {
-    console.log(e)
+    console.warn('Profile component is waiting on props');
   }
   return {
     currentUser: currentUser.username,
     user: user ? user : defaultUser,
+    loading: !community.size, // mock loading state based on community...
     initialState,
     privateChat,
-    loading: !community.size, // mock loading state based on community...
   }
 }
 

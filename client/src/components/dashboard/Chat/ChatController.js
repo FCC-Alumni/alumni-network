@@ -251,14 +251,26 @@ export const findMentors = (community) => {
   }));
 };
 
+const findUser = (community, username) =>
+  community.filter(u => u.username.toLowerCase() === username.toLowerCase() && u)[0];
+
 const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, props) => {
-  const { username } = props.match.params;
+  // handle manually typed chat routes, allow case insensitivity.
+  // if user types route for own username, set to null
+  // to render main chat component.
+  const USR_PARAM = props.match.params.username ? props.match.params.username : '';
+  let username = findUser(community.toJS(), USR_PARAM);
+  if (username && username.username !== user.username) {
+    username = username.username;
+  } else {
+    username = null;
+  }
+  /* This is all to account for this component mounting before the parent AppContainer
+  has finished fetching chat history from the server... (i.e. user refreshes on a
+  private chat route. This isn't ideal but the alternative is implement a lot of
+  loading state and conditional rendering in the components for all of the
+  dispatches for chat, community, private chat, etc.) For now this will do: ******/
   if (username) {
-    /* This is all to account for this component mounting before the parent AppContainer
-       has finished fetching chat history from the server... (i.e. user refreshes on a
-       private chat route. This isn't ideal but the alternative is implement a lot of
-       loading state and conditional rendering in the components for all of the
-       dispatches for chat, community, private chat, etc.) For now this will do: ******/
     let chat = List();
     let conversantAvatar = '';
     let totalNotifications = 0;
