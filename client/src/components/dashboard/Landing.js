@@ -14,10 +14,10 @@ export default () => (
     <div className="ui segment" style={{ fontSize: 18, paddingBottom: 35 }}>
       {image('/images/fcc_hands_in_logo.svg', 'left')}
       <p>
-        We built this app to try to foster networking and mentorship opportunities among
+        We built this app to foster networking and mentorship opportunities among
         freeCodeCamp alumni. When we looked at the FCC community we saw that there are
         many opportunities for members to connect with each other, but few that are focused on
-        the professional side. Our community here is intended to be very focused on campers
+        the professional side. Our community is intended to be very focused on campers
         who are looking to level-up their skills, work on professional level projects, or
         focus on career-related goals, such as interviewing.
       </p>
@@ -30,7 +30,7 @@ export default () => (
       <p>
         One of the key features of this community is the focus on mentorship. We encourage anyone
         interested in becoming a mentor to indicate this on their profile and describe the core
-        competencies they could coach others in. Because members must have a FCC certification to
+        competencies they feel comfortable coaching others in. Because members must have an FCC certification to
         join, we feel confident that everyone will have some skills they could help mentor others in.
       </p>
       {image('/images/fcc_learn_logo.svg', 'left')}
@@ -42,7 +42,7 @@ export default () => (
       {image('/images/fcc_high_five_logo.svg', 'right')}
       <p>
         Thanks for joining! We hope this becomes a useful extension to the freeCodeCamp
-        experience for all who join. Our essential goal is here to foster meaningful connections
+        experience for all who join. Our essential goal here is to foster meaningful connections
         among campers and continue to encourage the development of great software.
       </p>
     </div>
