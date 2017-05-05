@@ -149,7 +149,8 @@ router.post('/api/private-chat/clear-notifications', isAuthenticated, (req, res)
         res.sendStatus(200);
       });
     } else {
-      res.sendStatus(404);
+      /* there is no conversation yet */
+      res.end();
     }
   });
 });

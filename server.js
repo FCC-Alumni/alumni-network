@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO_URL, () => console.log('Mongoose connected'))
 
 /*=========== Populating DB with user data =====>
 This will only save users if they don't exist locally yet */
-require('./server/helpers/mockData');
+// require('./server/helpers/mockData');
 
 // initialize Express app and setup routes
 const app = express();

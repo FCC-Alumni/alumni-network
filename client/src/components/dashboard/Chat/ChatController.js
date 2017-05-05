@@ -117,6 +117,7 @@ class ChatController extends React.Component {
     });
   }
   initiatePrivateChat = (recipient, notifcations) => {
+    this.togglePrivateChannels();
     if (!this.props.privateChat.has(recipient)) {
       this.props.initiatePrivateChat(recipient);
     } else if (notifcations) {
@@ -252,24 +253,34 @@ export const findMentors = (community) => {
 };
 
 const findUser = (community, username) =>
-  community.filter(u => u.username.toLowerCase() === username.toLowerCase() && u)[0];
+  community.filter(u => u.username.toLowerCase() === username.toLowerCase() && u).first();
 
 const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, props) => {
-  // handle manually typed chat routes, allow case insensitivity.
-  // if user types route for own username, set to null
-  // to render main chat component.
-  const USR_PARAM = props.match.params.username ? props.match.params.username : '';
-  let username = findUser(community.toJS(), USR_PARAM);
+
+  /* handle manually entered chat routes, allow case insensitivity.
+     if user types route for own username, redirect to global chat. */
+  const USER_PARAM = props.match.params.username ? props.match.params.username : '';
+  let username = findUser(community, USER_PARAM);
+
   if (username && username.username !== user.username) {
     username = username.username;
   } else {
     username = null;
   }
-  /* This is all to account for this component mounting before the parent AppContainer
-  has finished fetching chat history from the server... (i.e. user refreshes on a
-  private chat route. This isn't ideal but the alternative is implement a lot of
+
+  if (USER_PARAM && community.size && !username) props.history.push('/dashboard/chat');
+
+  /* All the following is to account for this component mounting before the parent
+  AppContainer has finished fetching chat history from the server... (i.e. user refreshes
+  on a private chat route. This isn't ideal but the alternative is implement a lot of
   loading state and conditional rendering in the components for all of the
-  dispatches for chat, community, private chat, etc.) For now this will do: ******/
+  dispatches for chat, community, private chat, etc.).
+
+  See also the public profile page for an area where implementing some global
+  loading state would be advantageous...
+
+  For now this will do: ******/
+
   if (username) {
     let chat = List();
     let conversantAvatar = '';
@@ -300,6 +311,7 @@ const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, p
     } catch(e) {
       console.warn('Chat Controller waiting on props...');
     }
+
     return {
       user,
       mentors,

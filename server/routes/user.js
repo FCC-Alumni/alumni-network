@@ -11,7 +11,10 @@ import {
   getBackEndCert,
   getDataVisCert,
 } from '../helpers/getCerts';
-import whitelist from '../helpers/user-whitelist';
+import {
+  whitelist,
+  honoraryMembers,
+} from '../helpers/user-whitelist';
 
 const router = express.Router();
 
@@ -40,7 +43,9 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
   // process FCC verification...
   axios.all([getFrontEndCert(username), getBackEndCert(username), getDataVisCert(username)])
   .then(axios.spread((frontCert, backCert, dataCert) => {
-    if ((frontCert.request._redirectCount +
+    if (username in honoraryMembers) {
+      return true;
+    } else if ((frontCert.request._redirectCount +
       backCert.request._redirectCount +
       dataCert.request._redirectCount) >= 3 ) {
       // NOTE: temporarily set to true to allow anyone in (for development):
