@@ -18,6 +18,8 @@ __[1]__ Lastly, while this _is_, and _always will be_, a completely open source 
 
 __Thanks again!__ We really look forward to your feedback, suggestions, and constructive criticism, and above all, we hope you enjoy the app! Happy networking!
 
+### Join the freeCodeCamp Alumni Network [here](https://beta-fcc-alumni.herokuapp.com/)!
+
 ***
 
 # This is the official home of the freeCodeCamp Alumni Network

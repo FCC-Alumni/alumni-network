@@ -35,5 +35,6 @@ export const honoraryMembers = {
 
    quincylarson: 'He founded freeCodeCamp',
    p1xt: 'Prolific freeCodeCamp community member',
+   tropicalchancer: 'founder of chingu cohorts and FCCAN benefactor',
 
 };
