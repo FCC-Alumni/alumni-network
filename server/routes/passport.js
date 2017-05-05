@@ -9,7 +9,7 @@ import User from '../models/user';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const APP_HOST = 'https://safe-cliffs-78756.herokuapp.com';
+const APP_HOST = process.env.APP_HOST;
 const CLIENT_URL = process.env.NODE_ENV === 'production' ? APP_HOST : 'http://localhost:3000';
 const SERVER_URL = process.env.NODE_ENV === 'production' ? APP_HOST : 'http://localhost:8080';
 
