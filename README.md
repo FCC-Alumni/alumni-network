@@ -11,12 +11,12 @@ A couple of things we'd like to point out before you get started:
   - any cross browser/platform/device issues that we may have missed
   - typos in our copy
   - etc., etc.
-- If you uncover a bug, or have a suggestion or idea, [please report it here](https://github.com/FCC-Alumni/alumni-network/issues/141), and myself (@no-stack-dub-sack) or @bonham000 will check it out reply as soon as we can. For the time being, please do not submit a PR __[1]__.
+- If you uncover a bug, or have a suggestion or idea, [please report it here](https://github.com/FCC-Alumni/alumni-network/issues/141), and myself (@no-stack-dub-sack) or @bonham000 will check it out and reply as soon as we can. For the time being, please do not submit a PR __[1]__.
 
 __[1]__ Lastly, while this _is_, and _always will be_, a completely open source project, we are currently a very small team, and based on how close we are to our first release, we are not prepared to accept contributions from other campers. For now, while we are focused on ironing out the kinks, and without a contributing guide in place, bringing anyone else into the mix and up to speed is too large a challenge. Once we are in production, though, we will welcome contributions with open arms!
 
 
-__Thanks__ again! We really look forward to your feedback, suggestions, and constructive criticism, and above all, we hope you enjoy the app! Happy networking!
+__Thanks again!__ We really look forward to your feedback, suggestions, and constructive criticism, and above all, we hope you enjoy the app! Happy networking!
 
 ***
 
