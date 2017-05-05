@@ -7,7 +7,7 @@ import { addFlashMessage } from './flashMessages';
 
 // define hosts
 const DEV_HOST = 'http://localhost:8080';
-const PROD_HOST = 'https://safe-cliffs-78756.herokuapp.com';
+const PROD_HOST = 'https://beta-fcc-alumni.herokuapp.com';
 export const APP_HOST = process.env.NODE_ENV === 'production' ? PROD_HOST : DEV_HOST;
 
 // setup socket.io connection
