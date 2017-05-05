@@ -35,8 +35,11 @@ const CertLinks = ({ handleClick, fccCerts, username }) => {
 }
 
 CertLinks.propTypes = {
-  fccCerts: propTypes.object,
-  username: propTypes.string.isRequired
+  username: propTypes.string.isRequired,
+  fccCerts: propTypes.oneOfType([
+    propTypes.bool,
+    propTypes.object
+  ]),
 }
 
 export default CertLinks;

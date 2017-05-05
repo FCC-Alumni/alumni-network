@@ -316,13 +316,12 @@ PublicProfile.propTypes = {
 }
 
 const findUser = (community, username) => {
-  return community ? community.filter(user => {
-    return user.username.toLowerCase() === username.toLowerCase() && user;
-  })[0] : null;
+  return community.size ? community.filter(user =>
+    user.username.toLowerCase() === username.toLowerCase() && user).first() : null;
 };
 
 const mapStateToProps = ({ community, publicProfileStats, privateChat, user: currentUser }, props) => {
-  let username = findUser(community.toJS(), props.match.params.username);
+  let username = findUser(community, props.match.params.username);
   if (username) username = username.username;
   let initialState, user;
   try {
@@ -331,7 +330,7 @@ const mapStateToProps = ({ community, publicProfileStats, privateChat, user: cur
     console.warn('Profile component is waiting on props');
   }
   try {
-    user = findUser(community.toJS(), username);
+    user = findUser(community, username);
   } catch (e) {
     console.warn('Profile component is waiting on props');
   }

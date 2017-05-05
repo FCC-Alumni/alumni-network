@@ -258,7 +258,7 @@ const findUser = (community, username) =>
 const mapStateToProps = ({ user, chat, privateChat, community, onlineStatus }, props) => {
 
   /* handle manually entered chat routes, allow case insensitivity.
-     if user types route for own username, redirect to global chat. */
+  if user types route for own username, redirect to global chat. */
   const USER_PARAM = props.match.params.username ? props.match.params.username : '';
   let username = findUser(community, USER_PARAM);
 
