@@ -29,12 +29,12 @@ certifications.
 
 export const honoraryMembers = {
 
-  /* Format:
-   * username: reason for membership (this is just for our record and has no function)
+   /* Format:
+   * username [ALL LOWERCASE LETTERS]: reason for membership (this is just for our record and has no function)
    */
-
    quincylarson: 'He founded freeCodeCamp',
    p1xt: 'Prolific freeCodeCamp community member',
    tropicalchancer: 'founder of chingu cohorts and FCCAN benefactor',
+   imnotarealuser: 'test user. honoraryMembers list works now, but usernames must be all lowercase.',
 
 };

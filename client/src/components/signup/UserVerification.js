@@ -61,6 +61,7 @@ class UserVerification extends React.Component {
       socket.emit('announce-new-user', { user });
       this.props.history.push('/dashboard');
     })
+    // failed verification:
     .catch(err => {
       this.setState({ loading: false });
       this.props.addFlashMessage({
@@ -70,6 +71,7 @@ class UserVerification extends React.Component {
           message: 'Either you have not earned any freeCodeCamp certifications, or you do not have a freeCodeCamp account. Please visit us again when you have resolved these issues.'
         }
       });
+      this.props.history.push('/login');
       deleteUser().then(res => {
         console.log('user deleted');
       }).catch(err => {

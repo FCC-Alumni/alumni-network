@@ -38,55 +38,47 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
   const { mongoId } = req.body;
 
   console.log(`processing verification for ${username}`);
-
   // process FCC verification...
   axios.all([getFrontEndCert(username), getBackEndCert(username), getDataVisCert(username)])
   .then(axios.spread((frontCert, backCert, dataCert) => {
-    if (username in honoraryMembers) {
-      return true;
-    } else if ((frontCert.request._redirectCount +
+    let totalRedirects =
+      frontCert.request._redirectCount +
       backCert.request._redirectCount +
-      dataCert.request._redirectCount) >= 3 ) {
-      // NOTE: temporarily set to true to allow anyone in (for development):
-      return false;
-    } else {
+      dataCert.request._redirectCount;
+    if (username.toLowerCase() in honoraryMembers || totalRedirects < 3) {
       return {
         Front_End: frontCert.request._redirectCount === 0 ? true : false,
         Back_End: backCert.request._redirectCount === 0 ? true : false,
         Data_Visualization: dataCert.request._redirectCount === 0 ? true : false,
       }
+    } else {
+      // NOTE: temporarily set to true to allow anyone in (for development):
+      return false;
     }
   })).then(certs => {
     if (!certs) {
       // user not verified, res with error
       User.findById(mongoId, (err, user) => {
         if (err) throw err;
-
         user.verifiedUser = false;
         user.save();
-
         res.status(401).json({ error: 'User cannot be verified' });
       });
     } else {
       // verified user, proceed
       User.findById(mongoId, (err, user) => {
         if (err) throw err;
-
-        /* we need to overwrite their session username too
-          (only matters for whitelisted users) */
+      /* we need to overwrite their session username too
+        (only matters for whitelisted users) */
         req.user.username = username;
-
         user.username = username;
         user.fccCerts = certs;
         user.verifiedUser = true;
         user.save();
-
         req.user.verifiedUser = true;
         req.user.fccCerts = certs;
-
         res.json({ user });
       });
-
     }
   });
 });
@@ -102,9 +94,7 @@ router.post('/api/update-user', (req, res) => {
       updatedUser.skillsAndInterests = user.skillsAndInterests;
       updatedUser.projects = user.projects;
       updatedUser.social = user.social;
-
       updatedUser.save();
-
       res.json({ updatedUser })
     } else {
       res.status(401).json({ error: 'User could not be saved' });
@@ -114,13 +104,10 @@ router.post('/api/update-user', (req, res) => {
 
 router.post('/api/update-user-partial', (req, res) => {
   const { id, section, sectionData } = req.body;
-
   User.findById(id, (err, updatedUser) => {
     if (!err) {
       updatedUser[section] = sectionData;
-
       updatedUser.save();
-
       res.json({ updatedUser })
     } else {
       res.status(401).json({ error: 'User could not be saved' });
