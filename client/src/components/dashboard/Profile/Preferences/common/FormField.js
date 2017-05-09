@@ -21,6 +21,7 @@ const FormField = ({
   actionUrl,
   actionIcon,
   placeholder,
+  saveChanges,
   infoMessage,
   removeSocial,
   inputOptions,
@@ -47,7 +48,12 @@ const FormField = ({
           inverted
           offset={5}
           position="top center"
-          trigger={<a href={actionUrl}><div style={{ cursor: 'pointer' }} className="ui corner green label">{actionIcon}</div></a>}>
+          trigger={
+            <a onClick={() => saveChanges(false)} href={actionUrl}>
+              <div style={{ cursor: 'pointer' }} className="ui corner green label">
+                {actionIcon}
+              </div>
+            </a>}>
           Sign in to your account to populate this field. We will not utilize your account in any way.
         </Popup> }
       { (inputOptions.indexOf('corner') > -1 && value) &&
@@ -77,6 +83,7 @@ FormField.propTypes = {
   disabled: propTypes.bool,
   onChange: propTypes.func,
   tooltip: propTypes.string,
+  saveChanges: propTypes.func,
   actionUrl: propTypes.string,
   actionIcon: propTypes.object,
   placeholder: propTypes.string,

@@ -1,7 +1,6 @@
 import express from 'express';
 import passport from 'passport';
 import axios from 'axios';
-import _merge from 'lodash/merge';
 import User from '../models/user';
 import Chat from '../models/chat';
 import PrivateChat from '../models/private-chat';

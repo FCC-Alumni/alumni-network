@@ -24,6 +24,7 @@ export default class Social extends React.Component {
       linkedin,
       showPopUp,
       showSocial,
+      saveChanges,
       subSaveClick,
       handleInputChange,
     } = this.props;
@@ -62,6 +63,7 @@ export default class Social extends React.Component {
                 value={twitter}
                 tooltip="Twitter"
                 icon='twitter icon'
+                saveChanges={saveChanges}
                 placeholder="Enter Twitter"
                 disabled={twitter ? false : true}
                 actionUrl={`${APP_HOST}/connect/twitter`}
@@ -77,6 +79,7 @@ export default class Social extends React.Component {
                 value={linkedin}
                 tooltip="LinkedIn"
                 icon='linkedin icon'
+                saveChanges={saveChanges}
                 placeholder="Enter LinkedIn"
                 disabled={linkedin ? false : true}
                 actionUrl={`${APP_HOST}/connect/linkedin`}

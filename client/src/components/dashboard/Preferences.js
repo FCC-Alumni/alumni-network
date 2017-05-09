@@ -491,6 +491,7 @@ class Profile extends React.Component {
             errors={errors}
             toggle={this.toggle}
             clear={this.clearSocialInput}
+            saveChanges={this.saveChanges}
             showPopUp={this.state.socialPopUp}
             subSaveClick={this.handleSubSaveClick}
             handleInputChange={this.handleInputChange}
