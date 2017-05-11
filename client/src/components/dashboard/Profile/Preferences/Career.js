@@ -13,8 +13,7 @@ import surveyOptions from '../../../../assets/dropdowns/devSurvey';
 import { TransitionContainer } from '../../../../styles/globalStyles';
 
 const Error = styled.div`
-  margin-bottom: 10px !important;
-  cursor: pointer;
+  margin-top: 10px !important;
 `;
 
 const OuterTransitionContainer = styled(TransitionContainer)`

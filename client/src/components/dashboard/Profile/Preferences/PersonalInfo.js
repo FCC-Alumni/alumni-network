@@ -11,10 +11,10 @@ import { countries } from '../../../../assets/dropdowns/countries';
 import { TransitionContainer } from '../../../../styles/globalStyles';
 
 const INPUT_OPTIONS = 'small left icon';
-const INFO_MESSAGE = `Don't worry, no junkmail. We are asking for your email in order to
-                      help you and your fellow community members stay better connected.
-                      If you decide to share your email address, please be aware that it
-                      will be publicly visible on your profile page.`;
+const INFO_MESSAGE = `The FCCAN team may or may not send you emails in the
+                      future (nothing for now). If so, we will give you
+                      the option to opt-in to any email-related
+                      features or regular newsletters.`;
 
 class PersonalInfo extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -29,12 +29,14 @@ class PersonalInfo extends React.Component {
       country,
       location,
       showPopUp,
+      isPrivate,
       displayName,
       showProfile,
       subSaveClick,
       handleInputChange,
-      screen: { isMobile, isTablet },
       handleCountryChange,
+      toggleEmailVisibilty,
+      screen: { isMobile, isTablet },
     } = this.props;
     return (
       <div>
@@ -62,15 +64,17 @@ class PersonalInfo extends React.Component {
               <FormField
                 type="email"
                 name="email"
-                value={email}
                 tooltip="Email"
                 errors={errors}
                 icon="mail icon"
+                value={email}
                 placeholder="Enter Email"
+                isPrivate={isPrivate}
                 infoMessage={INFO_MESSAGE}
                 inputOptions={INPUT_OPTIONS}
-                info={!errors.email && true}
-                onChange={handleInputChange} />
+                onChange={handleInputChange}
+                isEmail={!errors.email && true}
+                toggleEmailVisibilty={toggleEmailVisibilty} />
             </ListItem>
             <ListItem>
               <FormField
@@ -79,9 +83,9 @@ class PersonalInfo extends React.Component {
                 name="location"
                 tooltip="Location"
                 icon="marker icon"
+                placeholder="Enter Location"
                 inputOptions={INPUT_OPTIONS}
-                onChange={handleInputChange}
-                placeholder="Enter Location" />
+                onChange={handleInputChange} />
             </ListItem>
             <ListItem>
               <div className="six wide field">

@@ -1,24 +1,34 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import { ErrorLabel } from './RepoList';
 import { Popup } from 'semantic-ui-react';
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../../../../Navbar';
 
+const ErrorLabel = ({ isMobile, error }) => {
+  const margin = isMobile ? { marginTop: 10 } : null;
+  return (
+    <div style={margin}
+      className={`ui ${!isMobile ? 'left pointing' : ''} red basic label`}>
+      {error}
+    </div>
+  )
+};
+
 const FormField = ({
   icon,
-  info,
   type,
   name,
   label,
   clear,
   value,
   errors,
+  isEmail,
   tooltip,
   onChange,
   username,
   disabled,
   actionUrl,
+  isPrivate,
   actionIcon,
   placeholder,
   saveChanges,
@@ -27,6 +37,7 @@ const FormField = ({
   inputOptions,
   reactionIcon,
   screen: { isMobile },
+  toggleEmailVisibilty,
 }) => {
   return (
     <div className="inline field">
@@ -65,10 +76,17 @@ const FormField = ({
           {reactionIcon}
         </div> }
       </div>
-    { info &&
-      <Popup inverted wide="very" trigger={<i className="large red info circle icon" />}>
-        {infoMessage}
-      </Popup> }
+    { isEmail &&
+      <div style={{ display: 'inline-block' }}>
+        <Popup
+          inverted
+          wide
+          content={isPrivate ? 'Email will be hidden' : 'Email will be visible to FCCAN members'}
+          trigger={isPrivate
+            ? <i onClick={toggleEmailVisibilty} className="big green toggle on icon" />
+            : <i onClick={toggleEmailVisibilty} className="big green toggle off icon" /> } />
+        <Popup inverted wide content={infoMessage} trigger={<i className="large red info circle icon" />} />
+      </div> }
     { errors[name] &&
       <ErrorLabel isMobile={isMobile} error={errors[name]} /> }
     </div>
@@ -76,12 +94,13 @@ const FormField = ({
 }
 
 FormField.propTypes = {
-  info: propTypes.bool,
   icon: propTypes.string,
   type: propTypes.string,
+  isEmail: propTypes.bool,
   label: propTypes.string,
   disabled: propTypes.bool,
   onChange: propTypes.func,
+  isPrivate: propTypes.bool,
   tooltip: propTypes.string,
   saveChanges: propTypes.func,
   actionUrl: propTypes.string,
@@ -93,13 +112,14 @@ FormField.propTypes = {
   value: propTypes.string.isRequired,
   screen: propTypes.object.isRequired,
   errors: propTypes.object.isRequired,
+  toggleEmailVisibilty: propTypes.func,
 }
 
 FormField.defaultProps = {
   icon: '',
   label: '',
-  info: false,
   type: 'text',
+  isEmail: false,
   disabled: false,
   inputOptions: '',
   actionButton: false

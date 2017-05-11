@@ -49,7 +49,7 @@ const Container = styled(ThickPaddedBottom)`
   }
 `;
 
-class Profile extends React.Component {
+class Preferences extends React.Component {
   constructor(props) {
     super(props);
     const { user, viewState } = this.props;
@@ -148,10 +148,13 @@ class Profile extends React.Component {
   }
 
   handleInputChange = (e) => {
-    var { user } = this.state;
+    var { user, errors } = this.state;
     var { name, value } = e.target;
+    errors[name] = '';
+
     if (name === 'company') user.career.company = value;
     else if (name === 'codepen') user.social.codepen = value;
+    else if (name === 'email') user.personal.email.email = value;
     else if (name === 'mentorshipSkills' ) {
       if (this.isSectionValid(name, value))
         user.mentorship.mentorshipSkills = value;
@@ -159,12 +162,21 @@ class Profile extends React.Component {
       if (this.isSectionValid(name, value))
         user.personal[name] = value;
     }
-    this.setState({ user });
+
+    this.setState({ user, errors });
   }
 
   saveProjectsList = (items_list) => {
     var { user } = this.state;
     user.projects = items_list;
+    this.setState({ user });
+  }
+
+  toggleEmailVisibilty = () => {
+    var { user } = this.state;
+    if (user.personal.email.private)
+    user.personal.email.private = false;
+    else user.personal.email.private = true;
     this.setState({ user });
   }
 
@@ -215,7 +227,7 @@ class Profile extends React.Component {
     const {
       user: {
         social: { codepen },
-        personal: { email, location, displayName },
+        personal: { email: { email }, location, displayName },
         mentorship: { isMentor, isMentee, mentorshipSkills },
         career: { working, tenure, company, jobSearch },
       }
@@ -223,10 +235,10 @@ class Profile extends React.Component {
 
     // SECTION VALIDATIONS (called on handleSubSaveClick)
     if (section === 'career') {
-      if (working && working === 'no' && !tenure && !jobSearch) {
+      if (working && working === 'no' && (!tenure || !jobSearch)) {
         errors.career = this.CAREER_ERROR;
       }
-      if (working && working === 'yes' && !tenure && !company) {
+      if (working && working === 'yes' && (!tenure || !company)) {
         errors.career = this.CAREER_ERROR;
       }
     }
@@ -282,7 +294,7 @@ class Profile extends React.Component {
         career: { working, tenure, company, jobSearch },
         skillsAndInterests: { codingInterests, coreSkills },
         mentorship: { isMentor, isMentee, mentorshipSkills },
-        personal: { displayName, email, bio, country, location },
+        personal: { displayName, email: { email }, bio, country, location },
       }
     } = this.state;
 
@@ -295,10 +307,10 @@ class Profile extends React.Component {
     if ((isMentee || isMentor) && !mentorshipSkills) {
       errors.mentorshipSkills = this.MENTORSHIP_ERROR;
     }
-    if (working && working === 'yes' && !tenure && !company) {
+    if (working && working === 'yes' && (!tenure || !company)) {
       errors.career = this.CAREER_ERROR;
     }
-    if (working && working === 'no' && !tenure && !jobSearch) {
+    if (working && working === 'no' && (!tenure || !jobSearch)) {
       errors.career = this.CAREER_ERROR;
     }
     if (location && !Validator.isLength(location, { min: 0, max: 25 })) {
@@ -445,14 +457,16 @@ class Profile extends React.Component {
         <div className="ui raised segment">
           <PersonalInfo
             {...personal}
-            errors={errors }
+            errors={errors}
             toggle={this.toggle}
-            username={username}
             country={personal.flag}
+            email={personal.email.email}
+            isPrivate={personal.email.private}
             showPopUp={this.state.personalPopUp}
             subSaveClick={this.handleSubSaveClick}
             handleInputChange={this.handleInputChange}
             showProfile={this.state.viewState.showProfile}
+            toggleEmailVisibilty={this.toggleEmailVisibilty}
             handleCountryChange={this.handleCountryChange} />
           <Certifications
             toggle={this.toggle}
@@ -529,11 +543,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-Profile.propTypes = {
+Preferences.propTypes = {
+  viewState: propTypes.object,
   user: propTypes.object.isRequired,
-  viewState: propTypes.object
 }
 
 export default connectScreenSize(mapScreenSizeToProps)(
-  connect(mapStateToProps, { saveUser, savePreferencesViewState })(Profile)
+  connect(mapStateToProps, { saveUser, savePreferencesViewState })(Preferences)
 );

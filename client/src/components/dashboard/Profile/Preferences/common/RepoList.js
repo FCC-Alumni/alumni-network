@@ -45,7 +45,7 @@ const StyledItem = styled.div`
   }
 `;
 
-export const ErrorLabel = ({ isMobile, error }) => (
+const ErrorLabel = ({ isMobile, error }) => (
   <div
     style={{ marginTop: 10 }}
     className={`ui ${!isMobile ? 'left pointing' : ''} red basic label`}>

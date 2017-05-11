@@ -22,7 +22,7 @@ export default [
   { key: 'machine-learning', text: 'Machine Learning / AI', value: 'Machine Learning / AI' },
   { key: 'mobile-dev', text: 'Mobile Development', value: 'Mobile Development' },
   { key: 'oop', text: 'Object Oriented Programming', value: 'Object Oriented Programming' },
-  { key: 'ood', text: 'Object Oriented Design', value: 'Object Oriented Desig' },
+  { key: 'ood', text: 'Object Oriented Design', value: 'Object Oriented Design' },
   { key: 'qa', text: 'QA / Testing', value: 'QA / Testing' },
   { key: 'robotics', text: 'Robotics', value: 'Robotics' },
   { key: 'scaling', text: 'Scaling', value: 'Scaling' },

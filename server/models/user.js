@@ -11,7 +11,10 @@ const User = new Schema({
     avatarUrl: { type: String, default: '' },
     profileUrl: { type: String, default: '' },
     displayName: { type: String, default: '' },
-    email: { type: String, default: '' },
+    email: {
+      private: { type: Boolean, default: true },
+      email: { type: String, default: '' }
+    },
     location: { type: String, default: '' },
     bio: { type: String, default: '' },
     country: { type: String, default: '' },

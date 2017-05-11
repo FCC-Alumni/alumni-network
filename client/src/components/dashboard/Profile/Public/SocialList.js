@@ -45,10 +45,10 @@ const Item = ({ href, icon, text }) => {
   );
 }
 
-const SocialList = ({ username, social, email, contactsOnly, notifications, currentUser, initiatePrivateChat }) => {
+const SocialList = ({ username, social, email, isPrivate, contactsOnly, notifications, currentUser, initiatePrivateChat }) => {
   return (
     <div className="ui relaxed horizontal list">
-    { email &&
+    { !isPrivate && email &&
       <Item
         icon="mail"
         text={email}
@@ -90,6 +90,7 @@ const SocialList = ({ username, social, email, contactsOnly, notifications, curr
 
 SocialList.propTypes = {
   email: propTypes.string,
+  isPrivate: propTypes.bool,
   contactsOnly: propTypes.bool,
   social: propTypes.object.isRequired,
   username: propTypes.string.isRequired,

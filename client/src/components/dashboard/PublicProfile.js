@@ -269,8 +269,9 @@ class PublicProfile extends React.Component {
                   contactsOnly={true}
                   social={user.social}
                   username={user.username}
-                  email={user.personal.email}
+                  email={user.personal.email.email}
                   currentUser={this.props.currentUser}
+                  isPrivate={user.personal.email.private}
                   initiatePrivateChat={this.initiatePrivateChat}
                   notifications={this.props.privateChat.getIn([user.username, 'notifications'])} />
               </DynamicHeightDiv>

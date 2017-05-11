@@ -116,7 +116,7 @@ class UserVerification extends React.Component {
           <br />
           <button onClick={this.handleSubmit} className="ui positive button">Verify freeCodeCamp Certifications for {this.state.username}</button>
           <p style={{ fontSize: 15, marginTop: 15, marginBottom: 15 }}>
-            <i className="red warning circle icon" /><strong>Note:</strong> If your freeCodeCamp username is not <strong>{this.state.username}</strong>, please send an email to Pete's Computer.
+            <i className="red warning circle icon" /><strong>Note:</strong> If your freeCodeCamp username is not <strong>{this.state.username}</strong>, please <a href="https://github.com/FCC-Alumni/alumni-network/issues/new" target="_blank">open a GitHub issue</a> and tag <strong>@no-stack-dub-sack</strong>.
           </p>
         </div>
       </Container>
