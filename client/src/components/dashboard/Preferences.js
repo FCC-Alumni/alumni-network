@@ -2,6 +2,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Social from './Profile/Preferences/Social';
+import skills from '../../assets/dropdowns/skills';
 import UserLabel from '../dashboard/common/UserLabel';
 import PersonalInfo from './Profile/Preferences/PersonalInfo';
 import SkillsAndInterests from './Profile/Preferences/SkillsAndInterests';
@@ -13,11 +14,13 @@ import { savePreferencesViewState } from '../../actions/views';
 import { ThickPaddedBottom } from '../../styles/globalStyles';
 import Modal from './Profile/Preferences/common/SaveModal';
 import Mentorship from './Profile/Preferences/Mentorship';
+import interests from '../../assets/dropdowns/interests';
 import { connectScreenSize } from 'react-screen-size';
 import Career from './Profile/Preferences/Career';
 import { mapScreenSizeToProps } from '../Navbar';
 import { Button } from 'semantic-ui-react';
 import styled from 'styled-components';
+import { findIndex } from 'lodash';
 import Validator from 'validator';
 import { isEmpty } from 'lodash';
 
@@ -67,6 +70,8 @@ class Preferences extends React.Component {
       mentorshipPopUp: false,
       showBottomButton: false,
       skillsAndInterestsPopUp: false,
+      skillsOptions: [],
+      interestsOptions: []
     }
     // SHARED ERRORS:
     this.EMAIL_ERROR = "Please enter a valid email address."
@@ -78,7 +83,24 @@ class Preferences extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('scroll', this.handleScroll)
+    document.addEventListener('scroll', this.handleScroll);
+    var { user } = this.state;
+    /* add user-added, non-default skills to skillsOptions for
+    correct rendering of multi-select dropdown component... */
+    let skillsOptions = skills;
+    user.skillsAndInterests.coreSkills.forEach(value => {
+      if (findIndex(skillsOptions, { text: value, value }) === -1) {
+        skillsOptions = [{ text: value, value }, ...skillsOptions];
+      }
+    });
+    // ...then add non-default interests
+    let interestsOptions = interests;
+    user.skillsAndInterests.codingInterests.forEach(value => {
+      if (findIndex(interestsOptions, { text: value, value }) === -1) {
+        interestsOptions = [{ text: value, value }, ...interestsOptions];
+      }
+    });
+    this.setState({ skillsOptions, interestsOptions });
   }
 
   componentWillUnmount() {
@@ -104,28 +126,46 @@ class Preferences extends React.Component {
     this.setState({ user });
   }
 
-  handleSkillsChange = (e, data) => {
+  handleSkillsChange = (e, { value }) => {
     var { user } = this.state;
-    user.skillsAndInterests.coreSkills = data.value;
+    user.skillsAndInterests.coreSkills = value;
     this.setState({ user });
   }
 
-  handleInterestsChange = (e, data) => {
+  handleAddSkill = (e, { value }) => {
+    var { user, skillsOptions } = this.state;
+    if (findIndex(skillsOptions, { text: value, value }) === -1) {
+      skillsOptions = [{ text: value, value }, ...skillsOptions];
+    }
+    user.skillsAndInterests.coreSkills.push(value);
+    this.setState({ skillsOptions, user });
+  }
+
+  handleInterestsChange = (e, { value }) => {
     var { user } = this.state;
-    user.skillsAndInterests.codingInterests = data.value;
+    user.skillsAndInterests.codingInterests = value;
     this.setState({ user });
   }
 
-  handleCountryChange = (e, data) => {
+  handleAddInterest = (e, { value }) => {
+    var { user, interestsOptions } = this.state;
+    if (findIndex(interestsOptions, { text: value, value }) === -1) {
+      interestsOptions = [{ text: value, value }, ...interestsOptions];
+    }
+    user.skillsAndInterests.coreSkills.push(value);
+    this.setState({ interestsOptions, user });
+  }
+
+  handleCountryChange = (e, { value }) => {
     var { user } = this.state;
-    user.personal.flag = data.value;
-    user.personal.country = countryCodes[data.value.replace(' ', '_')];
+    user.personal.flag = value;
+    user.personal.country = countryCodes[value.replace(' ', '_')];
     this.setState({ user });
   }
 
-  handleTenureChange = (e, data) => {
+  handleTenureChange = (e, { value }) => {
     var { user } = this.state;
-    user.career.tenure = data.value;
+    user.career.tenure = value;
     this.setState({ user });
   }
 
@@ -249,8 +289,8 @@ class Preferences extends React.Component {
       if (email && !Validator.isEmail(email)) {
         errors.email = this.EMAIL_ERROR;
       }
-      // these 2 seem reduntant but are needed in case pre-loaded github data
-      // breaks validatiion rules - no onChange error since not manually typed
+      /* these 2 seem reduntant but are needed in case pre-loaded github data
+      breaks validatiion rules - no onChange error since not manually typed */
       if (!Validator.isLength(location, { min: 0, max: 25 })) {
         errors.location = this.LOCATION_ERROR;
       }
@@ -373,7 +413,7 @@ class Preferences extends React.Component {
   toggle = (target) => {
     const { viewState } = this.state;
     /* we pass callback to setState to catch state after update
-      in case all the modals are now open or closed */
+    in case all the modals are now open or closed */
     viewState[target] = !viewState[target];
     this.setState({ viewState }, () => {
       if (
@@ -486,9 +526,13 @@ class Preferences extends React.Component {
           <SkillsAndInterests
             toggle={this.toggle}
             {...skillsAndInterests}
+            handleAddSkill={this.handleAddSkill}
             subSaveClick={this.handleSubSaveClick}
+            skillsOptions={this.state.skillsOptions}
+            handleAddInterest={this.handleAddInterest}
             showSkills={this.state.viewState.showSkills}
             handleSkillsChange={this.handleSkillsChange}
+            interestsOptions={this.state.interestsOptions}
             showPopUp={this.state.skillsAndInterestsPopUp}
             handleInterestsChange={this.handleInterestsChange} />
           <Collaboration

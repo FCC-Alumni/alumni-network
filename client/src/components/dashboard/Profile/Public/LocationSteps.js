@@ -43,7 +43,7 @@ const Steps = ({ personal }) => {
         <div className="content">
           <CenterAlignedWrapper>
             <div className="title">
-              {personal.location ? personal.location : <i className="large help icon" />}
+              {personal.location ? personal.location : 'Earth'}
             </div>
           </CenterAlignedWrapper>
         </div>
