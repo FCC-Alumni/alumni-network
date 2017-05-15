@@ -4,8 +4,6 @@ import { isEmpty } from 'lodash';
 import Ribbon from './common/RibbonHeader';
 import MessageBox from '../../common/MessageBox';
 import DropdownMulti from '../../common/DropdownMulti';
-import skills from '../../../../assets/dropdowns/skills';
-import interests from '../../../../assets/dropdowns/interests';
 import { TransitionContainer } from '../../../../styles/globalStyles';
 
 export default class SkillsAndInterests extends React.Component {
@@ -14,14 +12,18 @@ export default class SkillsAndInterests extends React.Component {
   }
   render() {
     const {
+      toggle,
+      showPopUp,
+      coreSkills,
       showSkills,
       subSaveClick,
-      showPopUp,
-      toggle,
+      skillsOptions,
+      handleAddSkill,
+      codingInterests,
+      interestsOptions,
+      handleAddInterest,
       handleSkillsChange,
       handleInterestsChange,
-      coreSkills,
-      codingInterests
     } = this.props;
     return (
       <div>
@@ -41,9 +43,11 @@ export default class SkillsAndInterests extends React.Component {
             message="Enter information about your coding skills below, so other users know your strengths!" />
           <DropdownMulti
             search={true}
-            options={skills}
+            allowAdditions
             value={coreSkills}
+            options={skillsOptions}
             placeholder="Choose Skills"
+            onAddItem={handleAddSkill}
             onChange={handleSkillsChange} />
           <div className="ui horizontal divider">Coding Interests</div>
           <MessageBox
@@ -53,9 +57,11 @@ export default class SkillsAndInterests extends React.Component {
             message="Let other users know what you're into so you can find others with similar interetsts!" />
           <DropdownMulti
             search={true}
-            options={interests}
+            allowAdditions
             value={codingInterests}
+            options={interestsOptions}
             placeholder="Choose Interests"
+            onAddItem={handleAddInterest}
             onChange={handleInterestsChange} />
           <div className="spacer" />
         </TransitionContainer>
