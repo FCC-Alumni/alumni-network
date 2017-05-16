@@ -13,6 +13,7 @@ import { countryCodes } from '../../assets/dropdowns/countries';
 import { savePreferencesViewState } from '../../actions/views';
 import { ThickPaddedBottom } from '../../styles/globalStyles';
 import Modal from './Profile/Preferences/common/SaveModal';
+import swearjar from '../../assets/helpers/swearjar-lite';
 import Mentorship from './Profile/Preferences/Mentorship';
 import interests from '../../assets/dropdowns/interests';
 import { connectScreenSize } from 'react-screen-size';
@@ -70,8 +71,8 @@ class Preferences extends React.Component {
       mentorshipPopUp: false,
       showBottomButton: false,
       skillsAndInterestsPopUp: false,
+      interestsOptions: [],
       skillsOptions: [],
-      interestsOptions: []
     }
     // SHARED ERRORS:
     this.EMAIL_ERROR = "Please enter a valid email address."
@@ -133,12 +134,14 @@ class Preferences extends React.Component {
   }
 
   handleAddSkill = (e, { value }) => {
-    var { user, skillsOptions } = this.state;
-    if (findIndex(skillsOptions, { text: value, value }) === -1) {
-      skillsOptions = [{ text: value, value }, ...skillsOptions];
+    if (!swearjar.profane(value)) {
+      var { user, skillsOptions } = this.state;
+      if (findIndex(skillsOptions, { text: value, value }) === -1) {
+        skillsOptions = [{ text: value, value }, ...skillsOptions];
+      }
+      user.skillsAndInterests.coreSkills.push(value);
+      this.setState({ skillsOptions, user });
     }
-    user.skillsAndInterests.coreSkills.push(value);
-    this.setState({ skillsOptions, user });
   }
 
   handleInterestsChange = (e, { value }) => {
@@ -148,12 +151,14 @@ class Preferences extends React.Component {
   }
 
   handleAddInterest = (e, { value }) => {
-    var { user, interestsOptions } = this.state;
-    if (findIndex(interestsOptions, { text: value, value }) === -1) {
-      interestsOptions = [{ text: value, value }, ...interestsOptions];
+    if (!swearjar.profane(value)) {
+      var { user, interestsOptions } = this.state;
+      if (findIndex(interestsOptions, { text: value, value }) === -1) {
+        interestsOptions = [{ text: value, value }, ...interestsOptions];
+      }
+      user.skillsAndInterests.coreSkills.push(value);
+      this.setState({ interestsOptions, user });
     }
-    user.skillsAndInterests.coreSkills.push(value);
-    this.setState({ interestsOptions, user });
   }
 
   handleCountryChange = (e, { value }) => {
@@ -191,18 +196,16 @@ class Preferences extends React.Component {
     var { user, errors } = this.state;
     var { name, value } = e.target;
     errors[name] = '';
-
-    if (name === 'company') user.career.company = value;
+    if (name === 'company') user.career.company = swearjar.censor(value);
     else if (name === 'codepen') user.social.codepen = value;
     else if (name === 'email') user.personal.email.email = value;
     else if (name === 'mentorshipSkills' ) {
       if (this.isSectionValid(name, value))
-        user.mentorship.mentorshipSkills = value;
+        user.mentorship.mentorshipSkills = swearjar.censor(value);
     } else {
       if (this.isSectionValid(name, value))
-        user.personal[name] = value;
+        user.personal[name] = swearjar.censor(value);
     }
-
     this.setState({ user, errors });
   }
 
