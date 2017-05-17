@@ -2,6 +2,7 @@ import React from 'react';
 import ReactEmoji from 'react-emoji';
 import { Popup } from 'semantic-ui-react';
 import parseTime from '../../../assets/helpers/parseTime';
+import swearjar from '../../../assets/helpers/swearjar-lite';
 
 export default ({
   path,
@@ -108,7 +109,7 @@ export default ({
               : <div
                   className="text"
                   style={{ marginTop: '4px' }}>
-                  { ReactEmoji.emojify(text) }
+                  { ReactEmoji.emojify(swearjar.censor(text)) }
                 </div> }
 
                 <div className="ui feed" style={{ marginTop: '0px' }}>
