@@ -3,23 +3,22 @@ import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SocialList from './Profile/Public/SocialList';
 import UserLabel from '../dashboard/common/UserLabel';
-import { connectScreenSize } from 'react-screen-size';
 import { SubHeader } from './Profile/Public/SkillsRow';
 import LocationSteps from './Profile/Public/LocationSteps';
+import { mentorshipSearchQuery } from '../../actions/search';
 import { scrapeFccStats } from '../../actions/scrape-fcc.js';
+import MainHeader from '../dashboard/Profile/Public/ProfileHeader';
 import { initiatePrivateChat, clearNotifications } from '../../actions/chat';
 import { ThickPaddedBottom, StyledItem } from '../../styles/globalStyles';
-import MainHeader from '../dashboard/Profile/Public/ProfileHeader';
 import SkillsAndInterests from './Profile/Public/SkillsRow';
 import TableRow from '../dashboard/Profile/Public/TableRow';
-import { saveProfileStats } from '../../actions/views';
 import FCCStatTables from './Profile/Public/FCCTables';
 import Table from '../dashboard/Profile/Public/Table';
+import { connectScreenSize } from 'react-screen-size';
 import { defaultUser } from '../../reducers/user';
 import Career from './Profile/Public/CareerRow';
 import styled from 'styled-components';
 import { isEmpty } from 'lodash';
-
 
 // STYLED COMPONENTS:
 const Avatar = styled.img`
@@ -125,13 +124,18 @@ class PublicProfile extends React.Component {
     this.props.history.push(`/dashboard/chat/${recipient}`);
   }
 
+  handleQuery = (query, category) => {
+    // handle click for skills and interests labels:
+    // click => set mentorship search state and redirect
+    this.props.mentorshipSearchQuery({ query, category });
+    this.props.history.push('/dashboard/mentorship');
+  }
+
   render() {
     const {
       user,
       user: {
-        personal: {
-          bio
-        },
+        personal: { bio },
         skillsAndInterests: {
           coreSkills,
           codingInterests
@@ -224,7 +228,9 @@ class PublicProfile extends React.Component {
       { (!isEmpty(coreSkills) || !isEmpty(codingInterests)) &&
         <div className="ui celled stackable center aligned grid container">
           <MainHeader text="Coding Profile" icon="code" />
-          <SkillsAndInterests skillsAndInterests={user.skillsAndInterests} />
+          <SkillsAndInterests
+            handleQuery={this.handleQuery}
+            skillsAndInterests={user.skillsAndInterests} />
         </div> }
 
         {/* CAREER */}
@@ -351,10 +357,10 @@ const mapScreenSizeToProps = (screenSize) => {
 }
 
 const dispatch = {
-  saveProfileStats,
+  scrapeFccStats,
   clearNotifications,
   initiatePrivateChat,
-  scrapeFccStats,
+  mentorshipSearchQuery,
 }
 
 export default connectScreenSize(mapScreenSizeToProps)(

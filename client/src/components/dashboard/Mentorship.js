@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Popup } from 'semantic-ui-react';
 import Filters from './Mentorship/SearchFilters';
 import { defaultState } from '../../reducers/search';
-import { saveSearchState } from '../../actions/views';
+import { saveSearchState } from '../../actions/search';
 import SearchResults from './Mentorship/SearchResults';
 import DropDown from '../dashboard/common/DropdownMulti';
 import searchTypes from '../../assets/dropdowns/searchTypes';
@@ -99,6 +99,9 @@ class Mentorship extends React.Component {
                     through private chat!`
         }
     });
+    if (this.state.value) {
+      this.search(this.state.value);
+    }
   }
 
   componentWillUnmount() {

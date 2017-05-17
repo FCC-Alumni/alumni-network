@@ -1,4 +1,4 @@
-import { SAVE_SEARCH_STATE } from '../actions/views';
+import { SAVE_SEARCH_STATE, SET_SEARCH_STRING } from '../actions/search';
 
 export const defaultState = {
   value: '',
@@ -23,11 +23,31 @@ export const defaultState = {
   }
 }
 
+const defaultSearchCriteria = {
+  mentorshipBio: false,
+  interests: false,
+  location: false,
+  company: false,
+  skills: false,
+  name: false,
+  all: true,
+}
+
 export default (state = defaultState, action) => {
   switch (action.type) {
-
     case SAVE_SEARCH_STATE:
       return action.searchState;
+
+    case SET_SEARCH_STRING:
+      return {
+        ...defaultState,
+        value:  action.params.query,
+        dropdownValue: [action.params.category],
+        searchCriteria: {
+          [action.params.category]: true,
+          ...defaultSearchCriteria
+        }
+      }
 
     default: return state;
 

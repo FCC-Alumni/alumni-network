@@ -3,6 +3,7 @@ import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 
 const Label = styled.div`
+  cursor: pointer;
   margin: 5px !important;
   transition: all 200ms ease-in-out !important;
   &:hover {
@@ -12,6 +13,7 @@ const Label = styled.div`
 `;
 
 const LabelDark = styled.div`
+  cursor: pointer;
   margin: 5px !important;
   color: white !important;
   background: #939393 !important;
@@ -27,7 +29,7 @@ export const SubHeader = styled.div`
   margin-bottom: 5px !important;
 `;
 
-const SkillsRow = ({ skillsAndInterests }) => {
+const SkillsRow = ({ skillsAndInterests, handleQuery }) => {
 
   const { coreSkills, codingInterests } = skillsAndInterests;
 
@@ -38,44 +40,44 @@ const SkillsRow = ({ skillsAndInterests }) => {
         <SubHeader className="ui top attached header">
           Core Skills
         </SubHeader>
-        { coreSkills && coreSkills.map((skill, i) =>
-          i % 2 === 0
-          ? <a
-              key={skill}
-              target="_blank"
-              title="Look up on Wikipedia"
-              href={`https://en.wikipedia.org/w/index.php?search=${skill}`}>
-              <Label className="ui label">{skill}</Label>
-            </a>
-          : <a
-              key={skill}
-              target="_blank"
-              title="Look up on Wikipedia"
-              href={`https://en.wikipedia.org/w/index.php?search=${skill}`}>
-              <LabelDark className="ui label">{skill}</LabelDark>
-            </a> )}
+    { coreSkills && coreSkills.map((skill, i) =>
+      i % 2 === 0
+      ? <Label
+          key={skill}
+          title="Search community for other members with this skill!"
+          className="ui label"
+          onClick={() => handleQuery(skill, 'skills')}>
+            {skill}
+        </Label>
+      : <LabelDark
+          key={skill}
+          title="Search community for other members with this skill!"
+          className="ui label"
+          onClick={() => handleQuery(skill, 'skills')}>
+            {skill}
+        </LabelDark> )}
       </div> }
       { !isEmpty(codingInterests) &&
       <div className={`${ isEmpty(coreSkills) ? 'sixteen' : 'eight' } wide center aligned column`}>
         <SubHeader className="ui top attached header">
           Coding Interests
         </SubHeader>
-        { codingInterests && codingInterests.map((interest, i) =>
-          i % 2 === 0
-          ? <a
-              key={interest}
-              target="_blank"
-              title="Look up on Wikipedia"
-              href={`https://en.wikipedia.org/w/index.php?search=${interest}`}>
-              <Label className="ui label">{interest}</Label>
-            </a>
-          :  <a
-              key={interest}
-              target="_blank"
-              title="Look up on Wikipedia"
-              href={`https://en.wikipedia.org/w/index.php?search=${interest}`}>
-              <LabelDark className="ui label">{interest}</LabelDark>
-            </a> )}
+    { codingInterests && codingInterests.map((interest, i) =>
+      i % 2 === 0
+      ? <Label
+          key={interest}
+          title="Search community for other members with this interest!"
+          className="ui label"
+          onClick={() => handleQuery(interest, 'interests')}>
+            {interest}
+        </Label>
+      : <LabelDark
+          key={interest}
+          title="Search community for other members with this interest!"
+          className="ui label"
+          onClick={() => handleQuery(interest, 'interests')}>
+            {interest}
+        </LabelDark> )}
       </div> }
     </div>
   );
