@@ -20,7 +20,10 @@ dotenv.config();
 
 // initialize mongoDB
 mongoose.Promise = require('bluebird');
-mongoose.connect(process.env.MONGO_URL, () => console.log('Mongoose connected'));
+mongoose.connect(process.env.MONGO_URL).then(
+  (res) => { console.log('Mongoose connected') },
+  (err) => { console.error('Error connecting to MongoDB. Make sure MongoDB is running.') }
+);
 
 // initialize Express app and setup routes
 const app = express();

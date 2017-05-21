@@ -9,8 +9,12 @@ import {
 } from './getCerts';
 
 dotenv.config();
+
 mongoose.Promise = require('bluebird');
-mongoose.connect(process.env.MONGO_URL, () => console.log('Mongoose connected'));
+mongoose.connect(process.env.MONGO_URL).then(
+  (res) => { console.log('Mongoose connected') },
+  (err) => { console.error('Error connecting to MongoDB. Make sure MongoDB is running.') }
+);
 
 const clientID = process.env.NODE_ENV === 'production'
   ? process.env.GITHUB_PROD_ID : process.env.GITHUB_CLIENT_ID;
@@ -141,8 +145,10 @@ const getCertifications = (username) => {
 const logResult = (users, completed) => {
   if (users === fakeUsers.length) {
     console.log(`${users} out of ${fakeUsers.length} total users successfully pre-populated in database`);
+    console.log('Finsished. Press CTRL+C to exit.');
   } else if (completed === fakeUsers.length) {
     console.log(`${completed} mock users exist in database`);
+    console.log('Finsished. Press CTRL+C to exit.');
   };
 };
 
