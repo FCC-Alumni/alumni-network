@@ -79,10 +79,10 @@ const fakeUsers = [
   'Margaret2',
   'sjames1958gm',
   'JLuboff',
-  '0x0936',
+  'no-stack-dub-sack',
+  'bonham000',
   'hkuz',
   'coymeetsworld',
-  'hay-dee',
   'p1xt',
   'bengitter',
   'josh5231',
@@ -145,10 +145,10 @@ const getCertifications = (username) => {
 const logResult = (users, completed) => {
   if (users === fakeUsers.length) {
     console.log(`${users} out of ${fakeUsers.length} total users successfully pre-populated in database`);
-    console.log('Finsished. Press CTRL+C to exit.');
+    mongoose.disconnect();
   } else if (completed === fakeUsers.length) {
     console.log(`${completed} mock users exist in database`);
-    console.log('Finsished. Press CTRL+C to exit.');
+    mongoose.disconnect();
   };
 };
 
