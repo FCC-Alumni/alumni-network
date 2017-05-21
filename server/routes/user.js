@@ -5,6 +5,7 @@ import User from '../models/user';
 import Chat from '../models/chat';
 import PrivateChat from '../models/private-chat';
 import { isAuthenticated } from './passport';
+import { isAllowed } from '../../server';
 import {
   getFrontEndCert,
   getBackEndCert,
@@ -52,8 +53,15 @@ router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
         Data_Visualization: dataCert.request._redirectCount === 0 ? true : false,
       }
     } else {
-      // NOTE: temporarily set to true to allow anyone in (for development):
-      return false;
+      if (isAllowed) {
+        return {
+          Front_End: false,
+          Back_End: false,
+          Data_Visualization: false,
+        }
+      } else {
+        return false;
+      }
     }
   })).then(certs => {
     if (!certs) {

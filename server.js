@@ -11,15 +11,16 @@ import chat from './server/routes/chat';
 import privateChat from './server/routes/private-chat';
 import gitLabRoute from './server/helpers/gitlabRoute';
 
+// ALLOW SIGNUP W/O CERT(S):
+export const isAllowed = false;
+// temporarily set to true to
+// allow anyone in (for dev)
+
 dotenv.config();
 
 // initialize mongoDB
 mongoose.Promise = require('bluebird');
 mongoose.connect(process.env.MONGO_URL, () => console.log('Mongoose connected'));
-
-/*=========== Populating DB with user data =====>
-This will only save users if they don't exist locally yet */
-// require('./server/helpers/mockData');
 
 // initialize Express app and setup routes
 const app = express();

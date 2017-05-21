@@ -8,6 +8,7 @@
     "dev": "nodemon --ignore ./client --exec babel-node -- ./server.js",
     "start": "babel-node ./server.js",
     "deploy": "git push heroku master",
+    "populate-db": "babel-node ./server/helpers/mockData",
     "postinstall": "cd client/ && npm install",
     "heroku-postbuild": "cd client/ && npm install && npm run build"
   },

@@ -1,11 +1,16 @@
-import express from 'express';
 import axios from 'axios';
 import User from '../models/user';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 import {
   getFrontEndCert,
   getBackEndCert,
   getDataVisCert
 } from './getCerts';
+
+dotenv.config();
+mongoose.Promise = require('bluebird');
+mongoose.connect(process.env.MONGO_URL, () => console.log('Mongoose connected'));
 
 const clientID = process.env.NODE_ENV === 'production'
   ? process.env.GITHUB_PROD_ID : process.env.GITHUB_CLIENT_ID;
