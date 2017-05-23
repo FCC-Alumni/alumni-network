@@ -38,6 +38,35 @@ export const CHAT_RECEIVED_UPDATE = 'CHAT_RECEIVED_UPDATE';
 
 import { flashError } from './flashMessages';
 
+/* NOTE: How chat works:
+
+ * There is a common pattern to all of the CRUD actions for chat. Basically,
+ * the database is our single source of truth. For any CRUD action, we POST
+ * to a route which handles that action (e.g. /api/chat-add-message). If and
+ * only if we get a successful response from the server (indicating the database
+ * is up to date with that action), we then broadcast a real-time update via
+ * socketIO and dispatch an action which performs an update to local UI through
+ * Redux. In this way, we only show an update to any user if we have actually
+ * updated the data in the database first.
+
+ * On the backend, we have Express routes to handle these CRUD updates in
+ * the routes/ directory. Separately, the real time updates are handled in
+ * chat/ directory. The real time updates use Redis to store a cache of currently
+ * online users (using their socket connection ID) so we can broadcast updates
+ * to them only if they are online (and broadcast the update to them and no one
+ * else). Then, each connected user listens for socketIO updates in this file to
+ * handle the actions appropriately.
+
+ * Finally, most of the CRUD actions below are shared between global and private-chat
+ * chat. Basically, whatever calls the action provides a reciepient argument
+ * if the chat is private, and this is used to split the action logic appropriately.
+
+ * We use immutableJS data structures to persist our chat data on the client. This means
+ * there is some 'serialization/deserialization' logic that takes place when we are
+ * saving data to the Redux store.
+
+*/
+
 /** PRIVATE CHAT real-time updates: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  */
 
 socket.on('broadcast-private-submission', data => {

@@ -7,6 +7,8 @@ import { isAuthenticated } from './passport';
 
 const router = express.Router();
 
+/* NOTE: See client/src/actions/chat for notes on how chat works */
+
 // populate client with all chats which include this user
 router.get('/api/private-chat/initialize', isAuthenticated, (req, res) => {
   const { username } = req.user;

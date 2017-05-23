@@ -5,6 +5,8 @@ import Chat from '../models/chat';
 
 const router = express.Router();
 
+/* NOTE: See client/src/actions/chat for notes on how chat works */
+
 router.get('/api/chat-history', isAuthenticated, (req, res) => {
   Chat.findOne({}, (err, chat) => {
     if (!err) {

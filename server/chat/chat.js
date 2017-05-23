@@ -1,9 +1,12 @@
 import PrivateChat from '../models/private-chat';
-
 import redis from 'redis';
 import url from 'url';
+
+/* NOTE: See client/src/actions/chat for more notes on how chat works */
+
 /*** we will use Redis to maintain a record of
   currently online users: ***/
+
 const herokuRedis = () => {
   const HerokuRedis = url.parse(process.env.REDISTOGO_URL);
   const redisClient = redis.createClient(HerokuRedis.port, HerokuRedis.hostname);
