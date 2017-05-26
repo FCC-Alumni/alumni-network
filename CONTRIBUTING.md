@@ -4,11 +4,11 @@
 - [Getting Started](#getting-started)
 - [Setting Up freeCodeCamp Alumni Network](#setting-up-freecodecamp-alumni-network)
 - [Running the App](#running-the-app)
-- [If you are not FCC Certified, Please Read!](#if-you-are-not-fcc-certified,-please-read!)
-- [Dev Tools & Other Utilities](#dev-tools-&-other-utilities)
+- [If you are not FCC Certified, Please Read!](#if-you-are-not-fcc-certified-please-read)
+- [Dev Tools & Other Utilities](#dev-tools---other-utilities)
 - [Using the Mongo Shell](#using-the-mongo-shell)
-- [Semantic-UI / Semantic-UI React](#semantic-ui-/-semantic-ui-react)
-- [SASS / Styled-Components](#sass-/-styled-components)
+- [Semantic-UI / Semantic-UI React](#semantic-ui--semantic-ui-react)
+- [SASS / Styled-Components](#sass--styled-components)
 
 ### Prerequisites
 
