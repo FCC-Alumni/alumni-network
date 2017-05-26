@@ -6,7 +6,7 @@ import SliderToggle from './common/SliderToggle';
 import MessageBox from '../../common/MessageBox';
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../../../Navbar';
-import { TransitionContainer } from '../../../../styles/globalStyles';
+import { TransitionContainer } from '../../../../styles/style-utils';
 
 class Mentorship extends React.Component {
   shouldComponentUpdate(nextProps) {

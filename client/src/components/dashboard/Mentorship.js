@@ -22,7 +22,7 @@ import {
   transitionOut,
   extendCenterAlignedWrapper,
   CenterAlignedWrapper as CenteredWrapper,
-} from '../../styles/globalStyles';
+} from '../../styles/style-utils';
 
 const searchApi = {
   match: (regex, string) => {

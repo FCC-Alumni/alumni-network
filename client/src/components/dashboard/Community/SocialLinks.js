@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { hoverTransition } from '../../../styles/globalStyles';
+import { hoverTransition } from '../../../styles/style-utils';
 
 export const Icon = styled.i`
   color: grey;

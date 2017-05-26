@@ -9,7 +9,7 @@ import { mentorshipSearchQuery } from '../../actions/search';
 import { scrapeFccStats } from '../../actions/scrape-fcc.js';
 import MainHeader from '../dashboard/Profile/Public/ProfileHeader';
 import { initiatePrivateChat, clearNotifications } from '../../actions/chat';
-import { ThickPaddedBottom, StyledItem } from '../../styles/globalStyles';
+import { ThickPaddedBottom, StyledItem } from '../../styles/style-utils';
 import SkillsAndInterests from './Profile/Public/SkillsRow';
 import TableRow from '../dashboard/Profile/Public/TableRow';
 import FCCStatTables from './Profile/Public/FCCTables';

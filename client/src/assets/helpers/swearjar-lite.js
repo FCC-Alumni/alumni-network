@@ -1,3 +1,4 @@
+/* eslint-disable */
 import badWords from './offensive-content/prohibited-lang';
 
 // swearjar-node-lite => modified from OG package by no-stack-dub-sack

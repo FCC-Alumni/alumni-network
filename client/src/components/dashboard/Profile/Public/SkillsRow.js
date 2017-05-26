@@ -1,5 +1,6 @@
 import React from 'react';
 import { isEmpty } from 'lodash';
+import propTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Label = styled.div`
@@ -84,7 +85,8 @@ const SkillsRow = ({ skillsAndInterests, handleQuery }) => {
 }
 
 SkillsRow.propTypes = {
-  skillsAndInterests: React.PropTypes.object.isRequired
+  handleQuery: propTypes.func.isRequired,
+  skillsAndInterests: propTypes.object.isRequired
 }
 
 export default SkillsRow;

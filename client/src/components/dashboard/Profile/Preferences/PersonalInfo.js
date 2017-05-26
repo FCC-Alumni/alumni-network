@@ -8,7 +8,7 @@ import { Container } from './common/RepoList';
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../../../Navbar';
 import { countries } from '../../../../assets/dropdowns/countries';
-import { TransitionContainer } from '../../../../styles/globalStyles';
+import { TransitionContainer } from '../../../../styles/style-utils';
 
 const INPUT_OPTIONS = 'small left icon';
 const INFO_MESSAGE = `The FCCAN team may or may not send you emails in the

@@ -4,7 +4,7 @@ import FormField from './common/FormField';
 import ListItem from '../../common/ListItem';
 import MessageBox from '../../common/MessageBox';
 import Ribbon from '../Preferences/common/RibbonHeader';
-import { TransitionContainer } from '../../../../styles/globalStyles';
+import { TransitionContainer } from '../../../../styles/style-utils';
 
 import { APP_HOST } from '../../../../actions/chat';
 

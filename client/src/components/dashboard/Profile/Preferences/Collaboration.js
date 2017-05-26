@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash';
 import RepoList from './common/RepoList';
 import Ribbon from './common/RibbonHeader';
 import MessageBox from '../../common/MessageBox';
-import { TransitionContainer } from '../../../../styles/globalStyles';
+import { TransitionContainer } from '../../../../styles/style-utils';
 
 export default class Collaboration extends React.Component {
   shouldComponentUpdate(nextProps) {

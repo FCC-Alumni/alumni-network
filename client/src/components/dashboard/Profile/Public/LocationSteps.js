@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 import styled from 'styled-components';
 import {
   CenterAlignedWrapper
-} from '../../../../styles/globalStyles';
+} from '../../../../styles/style-utils';
 
 const Flag = styled.a `
   width: 40px;

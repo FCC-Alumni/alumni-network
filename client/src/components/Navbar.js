@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { Dropdown } from 'semantic-ui-react';
-import { darkGreen } from '../styles/globalStyles';
+import { darkGreen } from '../styles/style-utils';
 import { connectScreenSize } from 'react-screen-size';
 
 import { APP_HOST } from '../actions/chat';

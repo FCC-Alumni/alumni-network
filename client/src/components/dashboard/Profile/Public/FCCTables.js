@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 import Table from './Table';
 import styled from 'styled-components';
 import TableRow from './TableRow';
-import { hoverTransition } from '../../../../styles/globalStyles';
+import { hoverTransition } from '../../../../styles/style-utils';
 import { Popup } from 'semantic-ui-react';
 
 const URL = "https://freeCodeCamp.com/";

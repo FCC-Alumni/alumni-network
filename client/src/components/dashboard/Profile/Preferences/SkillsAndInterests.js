@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash';
 import Ribbon from './common/RibbonHeader';
 import MessageBox from '../../common/MessageBox';
 import DropdownMulti from '../../common/DropdownMulti';
-import { TransitionContainer } from '../../../../styles/globalStyles';
+import { TransitionContainer } from '../../../../styles/style-utils';
 
 export default class SkillsAndInterests extends React.Component {
   shouldComponentUpdate(nextProps) {

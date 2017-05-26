@@ -11,7 +11,7 @@ import Certifications from './Profile/Preferences/Certifications';
 import Collaboration from './Profile/Preferences/Collaboration';
 import { countryCodes } from '../../assets/dropdowns/countries';
 import { savePreferencesViewState } from '../../actions/views';
-import { ThickPaddedBottom } from '../../styles/globalStyles';
+import { ThickPaddedBottom } from '../../styles/style-utils';
 import Modal from './Profile/Preferences/common/SaveModal';
 import swearjar from '../../assets/helpers/swearjar-lite';
 import Mentorship from './Profile/Preferences/Mentorship';

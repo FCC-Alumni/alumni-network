@@ -1,7 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import styled from 'styled-components';
-import { StyledItem as StyledLink } from '../../../../styles/globalStyles';
+import { StyledItem as StyledLink } from '../../../../styles/style-utils';
 
 export const SocialIcon = styled.i`
   font-size: 22px !important;

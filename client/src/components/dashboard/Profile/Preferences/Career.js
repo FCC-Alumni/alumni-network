@@ -10,7 +10,7 @@ import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../../../Navbar';
 import { Container as InnerContainer } from './common/RepoList';
 import surveyOptions from '../../../../assets/dropdowns/devSurvey';
-import { TransitionContainer } from '../../../../styles/globalStyles';
+import { TransitionContainer } from '../../../../styles/style-utils';
 
 const Error = styled.div`
   margin-top: 10px !important;

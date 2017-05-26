@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import {
   ThickPaddedBottom,
   hoverTransition
-} from '../../../styles/globalStyles';
+} from '../../../styles/style-utils';
 
 const ResultItem = styled.div`
   width: 45vw !important;
