@@ -287,26 +287,26 @@ Your branch is up-to-date with 'origin/master'.
 nothing to commit, working directory clean
 ```
 
-1.  If you are not on master or your working directory is not clean, resolve
+3.  If you are not on master or your working directory is not clean, resolve
     any outstanding files/commits and checkout master `git checkout master`
 
-2.  Create a branch off of `master` with git: `git checkout -B branch/name-here`
+4.  Create a branch off of `master` with git: `git checkout -B branch/name-here`
     **Note:** Branch naming is important. Use a name like `fix/short-fix-description` 
     or `feature/short-feature-description`. 
 
-3.  Edit your file(s) locally with the editor of your choice
+5.  Edit your file(s) locally with the editor of your choice
 
-4.  Check your `git status` to see unstaged files.
+6.  Check your `git status` to see unstaged files.
 
-5.  Add your edited files: `git add path/to/filename.ext` You can also do: `git
+7.  Add your edited files: `git add path/to/filename.ext` You can also do: `git
     add .` to add all unstaged files. Take care, though, because you can
     accidentally add files you don't want added. Review your `git status` first.
 
-6.  Commit your edits: `git commit -m "Brief Description of Commit"`. Do not add the issue number in the commit message.
+8.  Commit your edits: `git commit -m "Brief Description of Commit"`. Do not add the issue number in the commit message.
 
-7.  Squash your commits, if there are more than one.
+9.  Squash your commits, if there are more than one.
 
-8.  Push your commits to your GitHub Fork: `git push -u origin branch/name-here`
+10.  Push your commits to your GitHub Fork: `git push -u origin branch/name-here`
 
 ### Common Steps
 
