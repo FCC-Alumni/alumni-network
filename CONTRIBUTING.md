@@ -9,6 +9,10 @@
 - [Using the Mongo Shell](#using-the-mongo-shell)
 - [Semantic-UI / Semantic-UI React](#semantic-ui--semantic-ui-react)
 - [SASS / Styled-Components](#sass--styled-components)
+- [Make Changes](#make-changes)
+- [Squash Your Commits](#squash-your-commits)
+- [Creating A Pull Request](#Creating-a-pull-request)
+- [Common Steps](#common-steps)
 
 ### Prerequisites
 
@@ -239,4 +243,91 @@ const Text = styled.span`
 - Our [`hoverTransition`](https://github.com/FCC-Alumni/alumni-network/blob/master/client/src/styles/style-utils.js#L39) function is a great example of a reusable, global style that can be invoked in any styled-component (since all styled-components rely on template literals).  
 - This code might not make sense out of context, however, this is a very powerful concept that's worth pointing out. And after checking out our codebase and the Styled-Components docs, this will all make much more sense!
 
-### This file is a WIP!
+### Make Changes
+This bit is up to you! Find an issue on GitHub that looks like it needs some love, or suggest a new feature that needs implementing and build it! We're excited to see what you come up with!
+
+### Squash Your Commits
+When you make a pull request, all of your changes need to be in one commit.
+
+If you have made more than one commit, then you will need to _squash_ your commits.
+
+To do this, see [Squashing Your Commits](http://forum.freecodecamp.com/t/how-to-squash-multiple-commits-into-one-with-git/13231) (thanks for the guide freeCodeCamp!).
+
+### Creating A Pull Request
+
+#### What is a Pull Request?
+
+A pull request (PR) is a method of submitting proposed changes to the FCCAN
+Repo (or any Repo, for that matter). You will make changes to copies of the
+files which make up FCCAN in a personal fork, then apply to have them
+accepted by FCCAN proper.
+
+#### Need Help?
+
+There are only a few FCCAN issue / GitHub mods for now, so our resources may be stretched a bit thin, but feel free to @mention @no-stack-dub-sack or @bonham000 if you have an issue that you need help with, we will respond as best we can in as timely manner as possible. Otherwise, don't forget &mdash; Google is your best friend!
+
+#### Important: ALWAYS EDIT ON A BRANCH
+
+Take away only one thing from this document: Never, **EVER**
+make edits to the `master` branch. ALWAYS make a new branch BEFORE you edit
+files. This is critical, because if your PR is not accepted, your copy of
+master will be forever sullied and the only way to fix it is to delete your
+fork and re-fork.
+
+##### Editing your Local Fork
+
+1.  Perform the maintenance step of rebasing `master`.
+2.  Ensure you are on the `master` branch using `git status`:
+
+```bash
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+nothing to commit, working directory clean
+```
+
+1.  If you are not on master or your working directory is not clean, resolve
+    any outstanding files/commits and checkout master `git checkout master`
+
+2.  Create a branch off of `master` with git: `git checkout -B branch/name-here`
+    **Note:** Branch naming is important. Use a name like `fix/short-fix-description` 
+    or `feature/short-feature-description`. 
+
+3.  Edit your file(s) locally with the editor of your choice
+
+4.  Check your `git status` to see unstaged files.
+
+5.  Add your edited files: `git add path/to/filename.ext` You can also do: `git
+    add .` to add all unstaged files. Take care, though, because you can
+    accidentally add files you don't want added. Review your `git status` first.
+
+6.  Commit your edits: `git commit -m "Brief Description of Commit"`. Do not add the issue number in the commit message.
+
+7.  Squash your commits, if there are more than one.
+
+8.  Push your commits to your GitHub Fork: `git push -u origin branch/name-here`
+
+### Common Steps
+
+1.  Once the edits have been committed, you will be prompted to create a pull
+    request on your fork's GitHub Page.
+
+2.  By default, all pull requests should be against the FCC main repo, `master`
+    branch.
+
+3.  Submit a pull request from your branch to FCCAN's `master` branch.
+
+4.  The title (also called the subject) of your PR should be descriptive of your
+    changes and succinctly indicates what is being fixed.
+    -   **Do not add the issue number in the PR title or commit message.**
+    -   Examples: `correct typo in preferences page copy`
+
+5.  In the body of your PR include a more detailed summary of the changes you
+    made and why.
+    -   If the PR is meant to fix an existing bug/issue then, at the end of
+        your PR's description, append the keyword `closes` and #xxx (where xxx
+        is the issue number). Example: `closes #124`. This tells GitHub to
+        close the existing issue, if the PR is merged.
+
+6.  Indicate if you have tested on a local copy of the site or not.
