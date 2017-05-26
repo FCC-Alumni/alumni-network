@@ -313,7 +313,7 @@ nothing to commit, working directory clean
 1.  Once the edits have been committed, you will be prompted to create a pull
     request on your fork's GitHub Page.
 
-2.  By default, all pull requests should be against the FCC main repo, `master`
+2.  By default, all pull requests should be against the FCCAN main repo `master`
     branch.
 
 3.  Submit a pull request from your branch to FCCAN's `master` branch.
