@@ -86,7 +86,7 @@ $ sudo mongod
 # now, in your second tab, also in any directory, run:
 $ redis-server
 ```
-- For assistance troubleshooting MongoDB or Redis, please refer to the respective documentation and/or your always friend Google.
+- For assistance troubleshooting MongoDB or Redis, please refer to the respective documentation and/or your trusty friend Google.
 - Once Redis and MongoDB are running, all that's left to do is to launch the servers. However, you may find it helpful to have some mock users populated into the database for development. We've created a utility for just this purpose (**NOTE:** MongoDB must be running for this utility script to work).
 - This is an optional step, and can be completed at any time, however it is recommended for the best development experience.
 ```bash
