@@ -1,6 +1,6 @@
 ## This is the official home of the freeCodeCamp Alumni Network
 
-The freeCodeCamp Alumni Network (FCCAN) is a MERN stack single page web application built as an extenson of the freeCodeCamp community by freeCodeCampers who are passionate about open source software, learning, collaboration, and React. Check us out and come along for the ride! If you are interested in contributing, please read out contributing docs before jumping in. 
+The freeCodeCamp Alumni Network (FCCAN) is a MERN stack single page web application built as an extenson of the freeCodeCamp community by freeCodeCampers who are passionate about open source software, learning, collaboration, and React. Check us out and come along for the ride! If you are interested in contributing, please read out contributing docs before jumping in. Thanks! 
 
 \- FCCAN Team
 
