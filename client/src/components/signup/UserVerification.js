@@ -68,7 +68,9 @@ class UserVerification extends React.Component {
         type: 'error',
         text: {
           header: 'User verification error!',
-          message: 'Either you have not earned any freeCodeCamp certifications, or you do not have a freeCodeCamp account. Please visit us again when you have resolved these issues.'
+          message: `Either you have not earned any freeCodeCamp certifications,
+                    or you do not have a freeCodeCamp account. Please visit us
+                    again when you have resolved these issues.`
         }
       });
       this.props.history.push('/login');
@@ -102,10 +104,20 @@ class UserVerification extends React.Component {
             <img src={this.state.avatarUrl} alt="github avatar"/>
           </div> }
           <h1 style={{ marginTop: 0 }}>{`Welcome ${this.state.displayName}!`}</h1>
-          <p style={{ fontSize: 16 }}>This extension of the freeCodeCamp Community is a network of like-minded individuals, who are serious about coding and about taking their skills to the next level.</p>
-          <p style={{ fontSize: 16 }}>While our goal is to be as inclusive as possible, to ensure that this network maintains its integrity as a serious place for serious campers, we do have some requirements that limit who can and cannot join.</p>
-          <div style={{ marginTop: 0 }} className="ui compact info message">
-            <div className="header">To join the freeCodeCamp Alumni Network, your profile must be public and you must have earned at least one of the following:</div>
+          <p style={{ fontSize: 16 }}>
+            This extension of the freeCodeCamp Community is a network
+            of like-minded individuals, who are serious about coding
+            and about taking their skills to the next level.</p>
+          <p style={{ fontSize: 16 }}>
+            While our goal is to be as inclusive as possible, to
+            ensure that this network maintains its integrity as a
+            serious place for serious campers, we do have some requirements
+            that limit who can and cannot join.</p>
+          <div style={{ marginTop: 0 }} className="ui info message">
+            <div className="header">
+              To join the freeCodeCamp Alumni Network, your freeCodeCamp profile
+              must be public and you must have earned at least one of the following:
+            </div>
             <ul className="list">
               <li>freeCodeCamp Front End Certification</li>
               <li>freeCodeCamp Data Visualization Certification</li>
@@ -113,11 +125,14 @@ class UserVerification extends React.Component {
               <li>freeCodeCamp Full Stack Certification</li>
             </ul>
           </div>
-          <br />
           <button onClick={this.handleSubmit} className="ui positive button">Verify freeCodeCamp Certifications for {this.state.username}</button>
-          <p style={{ fontSize: 15, marginTop: 15, marginBottom: 15 }}>
-            <i className="red warning circle icon" /><strong>Note:</strong> If your freeCodeCamp username is not <strong>{this.state.username}</strong>, please <a href="https://github.com/FCC-Alumni/alumni-network/issues/new" target="_blank">open a GitHub issue</a> and tag <strong>@no-stack-dub-sack</strong>.
-          </p>
+          <div className="ui warning message">
+            <i className="red warning circle icon" style={{ marginRight: 2 }} /><strong>IMPORTANT:</strong> If your freeCodeCamp username
+            is not <strong>{this.state.username}</strong>, the verification process will fail. To address this, please send an email
+            to <a href={`mailto:team@fcc-alumni.com?subject=(FCCAN)%20white%20list%20request:%20${this.state.username}`}>
+            <strong>team@fcc-alumni.com</strong></a> with the subject line "FCCAN white list request: {this.state.username}". We will
+            add you to our white-list and notify you as soon as the issue is resolved.
+          </div>
         </div>
       </Container>
     );
