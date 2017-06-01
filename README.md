@@ -1,6 +1,8 @@
-## This is the official home of the freeCodeCamp Alumni Network
+## The official home of the freeCodeCamp Alumni Network Repo
 
-The freeCodeCamp Alumni Network (FCCAN) is a MERN stack single page web application built as an extenson of the freeCodeCamp community by freeCodeCampers who are passionate about open source software, learning, collaboration, and React. Check us out and come along for the ride! If you are interested in contributing, please read out contributing docs before jumping in. Thanks! 
+![image](https://cloud.githubusercontent.com/assets/18563015/26663127/c353eb04-4656-11e7-916e-e761d12075b6.png)
+
+The [freeCodeCamp Alumni Network](http://fcc-alumni.com)(FCCAN) is a MERN stack single-page web application built as an extenson of the freeCodeCamp community by freeCodeCampers who are passionate about open source software, learning, collaboration, and React. Check us out and come along for the ride! If you are interested in contributing, please read our [contributing guidelines](https://github.com/FCC-Alumni/alumni-network/edit/master/CONTRIBUTING.md) before jumping in. Thanks!
 
 \- FCCAN Team
 
@@ -10,7 +12,10 @@ freeCodeCamp has an incredible and vibrant international community. We built thi
 
 Currently, the [FCC Forum](https://forum.freeCodeCamp.com), [Gitter](https://gitter.im/freeCodeCamp), and other resources provide ample opportunities for campers at any skill level. We wanted to create an environment specifically for more experienced campers who are looking for advanced collaborative projects or mentorship opportunities, as a mentor or mentee.
 
-Our authentication process verifies the FCC progress of users, and only admits students who have completed at least one FCC Certificate (Note: User's will
-have to make their FCC profiles public for this validation to work).
+Our authentication process verifies the FCC progress of users, and only admits students who have completed at least one FCC Certificate (Note: User's will have to make their FCC profiles public for this validation to work).
 
 Our goal is to create a focused community of like-minded individuals who can benefit from each others culminated experience and expertise, whether in new technologies, programming skills, or career advice.
+
+***
+
+This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
