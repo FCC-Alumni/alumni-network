@@ -1,46 +1,36 @@
-import React from 'react';
-import propTypes from 'prop-types';
-import { connect } from 'react-redux';
-import Social from './Profile/Preferences/Social';
-import skills from '../../assets/dropdowns/skills';
-import UserLabel from '../dashboard/common/UserLabel';
-import PersonalInfo from './Profile/Preferences/PersonalInfo';
-import SkillsAndInterests from './Profile/Preferences/SkillsAndInterests';
-import { saveUser, updateUser, updateUserPartial } from '../../actions/user';
+// beginning to alphabetize imports for best practices
+import { Button } from 'semantic-ui-react';
+import Career from './Profile/Preferences/Career';
 import Certifications from './Profile/Preferences/Certifications';
 import Collaboration from './Profile/Preferences/Collaboration';
-import { countryCodes } from '../../assets/dropdowns/countries';
-import { savePreferencesViewState } from '../../actions/views';
-import { ThickPaddedBottom } from '../../styles/style-utils';
-import Modal from './Profile/Preferences/common/SaveModal';
-import swearjar from '../../assets/helpers/swearjar-lite';
-import Mentorship from './Profile/Preferences/Mentorship';
-import interests from '../../assets/dropdowns/interests';
+import { connect } from 'react-redux';
 import { connectScreenSize } from 'react-screen-size';
-import Career from './Profile/Preferences/Career';
-import { mapScreenSizeToProps } from '../Navbar';
-import { Button } from 'semantic-ui-react';
-import styled from 'styled-components';
+import { countryCodes } from '../../assets/dropdowns/countries';
 import { findIndex } from 'lodash';
-import Validator from 'validator';
+import interests from '../../assets/dropdowns/interests';
 import { isEmpty } from 'lodash';
+import { mapScreenSizeToProps } from '../Navbar';
+import Mentorship from './Profile/Preferences/Mentorship';
+import Modal from './Profile/Preferences/common/SaveModal';
+import PersonalInfo from './Profile/Preferences/PersonalInfo';
+import propTypes from 'prop-types';
+import React from 'react';
+import { savePreferencesViewState } from '../../actions/views';
+import { saveUser, updateUser, updateUserPartial } from '../../actions/user';
+import skills from '../../assets/dropdowns/skills';
+import SkillsAndInterests from './Profile/Preferences/SkillsAndInterests';
+import Social from './Profile/Preferences/Social';
+import styled from 'styled-components';
+import swearjar from '../../assets/helpers/swearjar-lite';
+import { ThickPaddedBottom } from '../../styles/style-utils';
+import UserLabel from '../dashboard/common/UserLabel';
+import Validator from 'validator';
 
 /*
 TODO:
   - PERSONAL INFO: validation to require user to enter country to collect data for D3 map?
   - GENERAL: Refactor validation code, kind of reduntant and could be improved (isPageValid && isSectionValid)
 */
-
-const TopButton = styled(Button)`
-  height: 42px !important;
-  padding: 10px !important;
-  @media (max-width: 959px) {
-    margin-top: 10px !important;
-  }
-  @media (min-width: 959px) {
-    float: right !important;
-  }
-`;
 
 const BottomButton = styled(Button)`
   right: 0;
@@ -50,6 +40,17 @@ const BottomButton = styled(Button)`
 const Container = styled(ThickPaddedBottom)`
   @media (max-width: 770px) {
     padding: 0 10px 50px 10px !important;
+  }
+`;
+
+const TopButton = styled(Button)`
+  height: 42px !important;
+  padding: 10px !important;
+  @media (max-width: 959px) {
+    margin-top: 10px !important;
+  }
+  @media (min-width: 959px) {
+    float: right !important;
   }
 `;
 
@@ -133,13 +134,17 @@ class Preferences extends React.Component {
     this.setState({ user });
   }
 
+  // lets user add skill not in dropdown
   handleAddSkill = (e, { value }) => {
     if (!swearjar.profane(value)) {
       var { user, skillsOptions } = this.state;
+      /* if skill not already in dropdown options, temporarily
+      add it to options list so that semantic-ui-react component
+      will display it as choice and add new choice to user object */
       if (findIndex(skillsOptions, { text: value, value }) === -1) {
         skillsOptions = [{ text: value, value }, ...skillsOptions];
+        user.skillsAndInterests.coreSkills.push(value);
       }
-      user.skillsAndInterests.coreSkills.push(value);
       this.setState({ skillsOptions, user });
     }
   }
@@ -150,13 +155,17 @@ class Preferences extends React.Component {
     this.setState({ user });
   }
 
+  // lets user add interest not in dropdown
   handleAddInterest = (e, { value }) => {
     if (!swearjar.profane(value)) {
       var { user, interestsOptions } = this.state;
+      /* if interest not already in dropdown options, temporarily
+      add it to options list so that semantic-ui-react component
+      will display it as choice and add new choice to user object */
       if (findIndex(interestsOptions, { text: value, value }) === -1) {
         interestsOptions = [{ text: value, value }, ...interestsOptions];
+        user.skillsAndInterests.codingInterests.push(value);
       }
-      user.skillsAndInterests.coreSkills.push(value);
       this.setState({ interestsOptions, user });
     }
   }
@@ -199,7 +208,7 @@ class Preferences extends React.Component {
     if (name === 'company') user.career.company = swearjar.censor(value);
     else if (name === 'codepen') user.social.codepen = value;
     else if (name === 'email') user.personal.email.email = value;
-    else if (name === 'mentorshipSkills' ) {
+    else if (name === 'mentorshipSkills') {
       if (this.isSectionValid(name, value))
         user.mentorship.mentorshipSkills = swearjar.censor(value);
     } else {
@@ -223,15 +232,18 @@ class Preferences extends React.Component {
     this.setState({ user });
   }
 
-  saveChanges = (modal) => {
+  saveChanges = (openModal = false) => {
     if (this.isPageValid()) {
       updateUser(this.state.user).then(res => {
         const { updatedUser } = res.data;
         this.props.saveUser(updatedUser);
-        modal && this.setState({ modalOpen: true });
+        openModal && this.setState({ modalOpen: true });
       }).catch(err => console.log(err));
     } else {
-      modal && this.setState({ modalOpen: true }, () => {
+      /* this function is shared. only open success modal
+      when called from profile page "save" buttons. pass
+      in "open modal" to override default argument */
+      openModal && this.setState({ modalOpen: true }, () => {
         var { viewState } = this.state;
         // open sections that have errors if they are closed
         if (this.state.errors.email)
@@ -495,7 +507,7 @@ class Preferences extends React.Component {
           color="green"
           content="Save"
           labelPosition="right"
-          onClick={this.saveChanges} />
+          onClick={() => this.saveChanges('open modal')} />
           {/* floated prop throws invalid propType warning - expects only 'right' or 'left' */}
         <div className="ui raised segment">
           <PersonalInfo
@@ -576,7 +588,7 @@ class Preferences extends React.Component {
             content="Save"
             floated="right"
             labelPosition="right"
-            onClick={this.saveChanges} /> }
+            onClick={() => this.saveChanges('open modal')} /> }
         </div>
       </Container>
     );
@@ -596,5 +608,4 @@ Preferences.propTypes = {
 }
 
 export default connectScreenSize(mapScreenSizeToProps)(
-  connect(mapStateToProps, { saveUser, savePreferencesViewState })(Preferences)
-);
+  connect(mapStateToProps, { saveUser, savePreferencesViewState })(Preferences));

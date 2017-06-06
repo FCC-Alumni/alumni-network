@@ -60,7 +60,7 @@ const FormField = ({
           offset={5}
           position="top center"
           trigger={
-            <a onClick={() => saveChanges(false)} href={actionUrl}>
+            <a onClick={() => saveChanges()} href={actionUrl}>
               <div style={{ cursor: 'pointer' }} className="ui corner green label">
                 {actionIcon}
               </div>
