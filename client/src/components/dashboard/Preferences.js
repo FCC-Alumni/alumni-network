@@ -76,12 +76,12 @@ class Preferences extends React.Component {
       skillsOptions: [],
     }
     // SHARED ERRORS:
-    this.EMAIL_ERROR = "Please enter a valid email address."
-    this.LOCATION_ERROR = "Location must be 25 characters or less.";
-    this.DISPLAY_NAME_ERROR = "Display name must be 40 characters or less.";
-    this.CAREER_ERROR = "Please complete the entire section or clear the form."
-    this.CODEPEN_ERROR = "Please enter your username only, not your profile url.";
-    this.MENTORSHIP_ERROR = "To complete your mentorship prorgram enrollment, please fill out the section above.";
+    this.EMAIL_ERROR = 'Please enter a valid email address.';
+    this.LOCATION_ERROR = 'Location must be 25 characters or less.';
+    this.DISPLAY_NAME_ERROR = 'Display name must be 40 characters or less.';
+    this.CAREER_ERROR = 'Please complete the entire section or clear the form.';
+    this.CODEPEN_ERROR = 'Please enter your username only, not your profile url.';
+    this.MENTORSHIP_ERROR = 'To complete your mentorship prorgram enrollment, please fill out the section above.';
   }
 
   componentDidMount() {
@@ -183,39 +183,52 @@ class Preferences extends React.Component {
     this.setState({ user });
   }
 
-  handleRadioChange = (e) => {
+  handleRadioChange = ({ target: { name, id }}) => {
     var { user } = this.state;
-    if (e.target.name === 'working') {
-      if (e.target.id === 'Yes') {
-        user.career.jobSearch = '';
-        user.career.working = 'yes';
-      } else if (e.target.id === 'No') {
-        user.career.tenure = '';
-        user.career.company = '';
-        user.career.working = 'no';
-      }
-    }
-    if (e.target.name === 'jobSearch') {
-      user.career.jobSearch = e.target.id.replace(/_/g, ' ');
+    switch (name) {
+      case 'isEmployed':
+        if (id === 'Yes') {
+          user.career.jobSearch = '';
+          user.career.working = 'yes';
+        }
+        if (id === 'No') {
+          user.career.tenure = '';
+          user.career.company = '';
+          user.career.working = 'no';
+        }
+        break;
+      default:
+        user.career.jobSearch = id.replace(/_/g, ' ');
+        break;
     }
     this.setState({ user });
   }
 
-  handleInputChange = (e) => {
+  handleInputChange = ({target: { name, value }}) => {
     var { user, errors } = this.state;
-    var { name, value } = e.target;
-    errors[name] = '';
-    if (name === 'company') user.career.company = swearjar.censor(value);
-    else if (name === 'codepen') user.social.codepen = value;
-    else if (name === 'email') user.personal.email.email = value;
-    else if (name === 'mentorshipSkills') {
-      if (this.isSectionValid(name, value))
+    switch (name) {
+      case 'company':
+        // validation happens on save action for these
+        if (this.isFieldValid(name, value))
+        user.career.company = swearjar.censor(value);
+        break;
+      case 'codepen':
+        user.social.codepen = value;
+        break;
+      case 'email':
+        user.personal.email.email = value;
+        break;
+      case 'mentorshipSkills':
+        // these require real-time validations
+        if (this.isFieldValid(name, value))
         user.mentorship.mentorshipSkills = swearjar.censor(value);
-    } else {
-      if (this.isSectionValid(name, value))
+        break;
+      default:
+        if (this.isFieldValid(name, value))
         user.personal[name] = swearjar.censor(value);
+        break;
     }
-    this.setState({ user, errors });
+    this.setState({ user });
   }
 
   saveProjectsList = (items_list) => {
@@ -237,28 +250,34 @@ class Preferences extends React.Component {
       updateUser(this.state.user).then(res => {
         const { updatedUser } = res.data;
         this.props.saveUser(updatedUser);
+        /* this function is shared. only open success modal
+        when called from profile page "save" buttons. pass
+        in "open modal" to override default argument */
         openModal && this.setState({ modalOpen: true });
       }).catch(err => console.log(err));
     } else {
-      /* this function is shared. only open success modal
-      when called from profile page "save" buttons. pass
-      in "open modal" to override default argument */
-      openModal && this.setState({ modalOpen: true }, () => {
-        var { viewState } = this.state;
-        // open sections that have errors if they are closed
-        if (this.state.errors.email)
-          viewState.showProfile = true;
-        if (this.state.errors.career)
-          viewState.showCareer = true;
-        if (this.state.errors.mentorshipSkills)
-          viewState.showMentorship = true;
-        this.setState({ viewState });
-      });
+      /* open error modal and
+      reveal sections with errors */
+      openModal && this.showErrors();
     }
   }
 
-  // now saves only section user clicks button for
+  showErrors = () => {
+    // reveals errors on page => global "save" buttons
+    this.setState({ modalOpen: true }, () => {
+      var { viewState } = this.state;
+      if (this.state.errors.email)
+        viewState.showProfile = true;
+      if (this.state.errors.career)
+        viewState.showCareer = true;
+      if (this.state.errors.mentorshipSkills)
+        viewState.showMentorship = true;
+      this.setState({ viewState });
+    });
+  }
+
   handleSubSaveClick = (e) => {
+    // saves individual sections
     e.stopPropagation();
     e.persist();
     const { user, user: { _id } } = this.state;
@@ -267,7 +286,7 @@ class Preferences extends React.Component {
       updateUserPartial(_id, section, user[section]).then(res => {
         const { updatedUser } = res.data;
         this.props.saveUser(updatedUser);
-        // open "Saved" popup
+        // open "saved" popup
         this.setState({ [e.target.id]: true });
         // close popup 1 second later
         setTimeout( _ => this.resetPopUp(e.target.id), 1200);
@@ -276,6 +295,8 @@ class Preferences extends React.Component {
   }
 
   isSectionValid = (section, str) => {
+    // section validations
+    // (called on handleSubSaveClick)
     this.setState({ errors: {} });
     var errors = {};
 
@@ -284,51 +305,72 @@ class Preferences extends React.Component {
         social: { codepen },
         personal: { email: { email }, location, displayName },
         mentorship: { isMentor, isMentee, mentorshipSkills },
-        career: { working, tenure, company, jobSearch },
       }
     } = this.state;
 
-    // SECTION VALIDATIONS (called on handleSubSaveClick)
-    if (section === 'career') {
-      if (working && working === 'no' && (!tenure || !jobSearch)) {
-        errors.career = this.CAREER_ERROR;
-      }
-      if (working && working === 'yes' && (!tenure || !company)) {
-        errors.career = this.CAREER_ERROR;
-      }
-    }
-    if (section === 'social' && codepen && Validator.isURL(codepen)) {
-      errors.codepen = this.CODEPEN_ERROR;
-    }
-    if (section === 'personal') {
-      if (email && !Validator.isEmail(email)) {
-        errors.email = this.EMAIL_ERROR;
-      }
-      /* these 2 seem reduntant but are needed in case pre-loaded github data
-      breaks validatiion rules - no onChange error since not manually typed */
-      if (!Validator.isLength(location, { min: 0, max: 25 })) {
-        errors.location = this.LOCATION_ERROR;
-      }
-      if (!Validator.isLength(displayName, { min: 0, max: 40 })) {
-        errors.displayName = this.DISPLAY_NAME_ERROR;
-      }
-    }
-    if (section === 'mentorship' && (isMentee || isMentor) && !mentorshipSkills) {
-      errors.mentorshipSkills = this.MENTORSHIP_ERROR;
+    switch (section) {
+      case 'career':
+        if (this.isWorkingError() || this.isNotWorkingError())
+          errors.career = this.CAREER_ERROR;
+        break;
+      case 'social':
+        if (section === 'social' && codepen && Validator.isURL(codepen))
+          errors.codepen = this.CODEPEN_ERROR;
+        break;
+      case 'personal':
+        if (email && !Validator.isEmail(email))
+          errors.email = this.EMAIL_ERROR;
+        /* these 2 seem reduntant with field validations but are
+        needed in case pre-loaded github data breaks validatiion
+        rules - this would not trigger an onChange error */
+        if (!Validator.isLength(location, { min: 0, max: 25 }))
+          errors.location = this.LOCATION_ERROR;
+        if (!Validator.isLength(displayName, { min: 0, max: 40 }))
+          errors.displayName = this.DISPLAY_NAME_ERROR;
+        break;
+      case 'mentorship':
+        if ((isMentee || isMentor) && !mentorshipSkills)
+          errors.mentorshipSkills = this.MENTORSHIP_ERROR;
+        break;
+      default: return;
     }
 
-    // ONCHANGE VALIDATIONS (called on handleInputChange change)
-    if (section === 'location' && !Validator.isLength(str, { min: 0, max: 25 })) {
-      errors.location = this.LOCATION_ERROR;
+    if (isEmpty(errors)) {
+      return true;
+    } else {
+      this.setState({ errors });
+      return false;
     }
-    if (section === 'bio' && !Validator.isLength(str, { min: 0, max: 300 })) {
-      errors.bio = "Bio must be 300 characters or less.";
-    }
-    if (section === 'displayName' && !Validator.isLength(str, { min: 0, max: 40 })) {
-      errors.displayName = "Display name must be 40 characters or less.";
-    }
-    if (section === 'mentorshipSkills' && !Validator.isLength(str, { min: 0, max: 200 })) {
-      errors.mentorshipSkills = "Mentorshio bio must be 200 characters or less.";
+  }
+
+  isFieldValid = (field, str) => {
+    // onChange validations
+    // (called on handleInputChange change)
+    this.setState({ errors: {} });
+    var errors = {};
+
+    switch (field) {
+      case 'location':
+        if (!Validator.isLength(str, { min: 0, max: 25 }))
+          errors.location = this.LOCATION_ERROR;
+        break;
+      case 'bio':
+        if (!Validator.isLength(str, { min: 0, max: 300 }))
+          errors.bio = 'Bio must be 300 characters or less.';
+        break;
+      case 'displayName':
+        if (!Validator.isLength(str, { min: 0, max: 40 }))
+          errors.displayName = this.DISPLAY_NAME_ERROR;
+        break;
+      case 'company':
+        if (!Validator.isLength(str, { min: 0, max: 25 }))
+          errors.company = 'Company must be 25 characters or less.';
+        break;
+      case 'mentorshipSkills':
+        if (!Validator.isLength(str, { min: 0, max: 200 }))
+          errors.mentorshipSkills = 'Mentorshio bio must be 200 characters or less.';
+        break;
+      default: return;
     }
 
     if (isEmpty(errors)) {
@@ -340,16 +382,15 @@ class Preferences extends React.Component {
   }
 
   isPageValid = () => {
+    // page validations
+    // called from global save function
     this.setState({ errors: {} });
     var errors = {};
-    var profileStrength = 0;
 
     const { user: {
         social: { codepen },
-        career: { working, tenure, company, jobSearch },
-        skillsAndInterests: { codingInterests, coreSkills },
         mentorship: { isMentor, isMentee, mentorshipSkills },
-        personal: { displayName, email: { email }, bio, country, location },
+        personal: { displayName, location, email: { email } },
       }
     } = this.state;
 
@@ -362,10 +403,7 @@ class Preferences extends React.Component {
     if ((isMentee || isMentor) && !mentorshipSkills) {
       errors.mentorshipSkills = this.MENTORSHIP_ERROR;
     }
-    if (working && working === 'yes' && (!tenure || !company)) {
-      errors.career = this.CAREER_ERROR;
-    }
-    if (working && working === 'no' && (!tenure || !jobSearch)) {
+    if (this.isWorkingError() || this.isNotWorkingError()) {
       errors.career = this.CAREER_ERROR;
     }
     if (location && !Validator.isLength(location, { min: 0, max: 25 })) {
@@ -375,17 +413,8 @@ class Preferences extends React.Component {
       errors.displayName = this.DISPLAY_NAME_ERROR;
     }
 
-    if (bio) profileStrength++;
-    if (country) profileStrength++;
-    if (location) profileStrength++;
-
-    if (isEmpty(codingInterests) && isEmpty(coreSkills)) {
-      this.setState({ profileWarning: 'Stronger profiles make for a stronger and more effective community — consider telling us about your skills and interests so other members know what you rock at!' });
-    } else if (!working) {
-      this.setState({ profileWarning: 'Stronger profiles make for a stronger and more effective community — consider telling us about where you are in your programming career so other members will know how long you\'ve been coding for!' });
-    } else if (profileStrength < 3) {
-      this.setState({ profileWarning: 'Nice work! Your profile is looking pretty strong. Why not round it off with some information about yourself (bio, region, etc.) so other members can learn more about you?' });
-    }
+    // see below comments
+    this.profileStrenth();
 
     if (isEmpty(errors)) {
       this.setState({ isPageValid: true });
@@ -393,6 +422,67 @@ class Preferences extends React.Component {
     } else {
       this.setState({ errors, isPageValid: false });
       return false;
+    }
+  }
+
+  isNotWorkingError = () => {
+    const { user: {
+      career: { working, tenure, jobSearch }
+    } } = this.state;
+    if (working && working === 'no' && (!tenure || !jobSearch)) {
+      return true;
+    }
+    return false;
+  }
+
+  isWorkingError = () => {
+    const { user: {
+      career: { working, tenure, company }
+    } } = this.state;
+    if (working && working === 'yes' && (!tenure || !company)) {
+      return true;
+    }
+    return false;
+  }
+
+  profileStrenth = () => {
+    /* determine profile strength on save and show
+    gentle warnings about making profile stronger */
+    const { user: {
+        career: { working },
+        personal: { bio, country, location },
+        skillsAndInterests: { codingInterests, coreSkills },
+      }
+    } = this.state;
+
+    var profileStrength = 0;
+
+    if (bio) profileStrength++;
+    if (country) profileStrength++;
+    if (location) profileStrength++;
+
+    if (isEmpty(codingInterests) && isEmpty(coreSkills)) {
+      this.setState({
+        profileWarning:
+          `Stronger profiles make for a stronger and more effective
+           community — consider telling us about your skills and
+           interests so other members know what you rock at!`
+      });
+    } else if (!working) {
+      this.setState({
+        profileWarning:
+          `Stronger profiles make for a stronger and more effective
+           community — consider telling us about where you are in your
+           programming career so other members will know how long you\'ve
+           been coding for!`
+      });
+    } else if (profileStrength < 3) {
+      this.setState({
+        profileWarning:
+          `Nice work! Your profile is looking pretty strong. Why not round
+           it off with some information about yourself (bio, region, etc.)
+           so other members can learn more about you?`
+      });
     }
   }
 

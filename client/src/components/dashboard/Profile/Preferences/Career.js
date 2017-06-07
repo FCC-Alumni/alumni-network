@@ -78,12 +78,12 @@ class Career extends React.Component {
               <label>Are you employed as a software developer?</label>
               <RadioButton
                 label='Yes'
-                name="working"
+                name="isEmployed"
                 onChange={handleRadioChange}
                 checked={working === 'yes' && true} />
               <RadioButton
                 label='No'
-                name="working"
+                name="isEmployed"
                 onChange={handleRadioChange}
                 checked={working === 'no' && true}  />
             </div>
