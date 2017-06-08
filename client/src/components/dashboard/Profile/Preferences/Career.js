@@ -44,7 +44,7 @@ class Career extends React.Component {
       showPopUp,
       clearForm,
       showCareer,
-      subSaveClick,
+      saveSection,
       bigBottomMargin,
       handleInputChange,
       handleRadioChange,
@@ -58,7 +58,7 @@ class Career extends React.Component {
           id="careerPopUp"
           showSave={showCareer}
           showPopUp={showPopUp}
-          subSaveClick={subSaveClick}
+          saveSection={saveSection}
           onClick={() => toggle('showCareer')} />
         <OuterTransitionContainer
           isExpanded={showCareer}

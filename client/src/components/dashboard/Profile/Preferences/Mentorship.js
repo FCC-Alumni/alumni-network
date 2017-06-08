@@ -19,7 +19,7 @@ class Mentorship extends React.Component {
       isMentor,
       isMentee,
       showPopUp,
-      subSaveClick,
+      saveSection,
       showMentorship,
       mentorshipSkills,
       toggleMentorship,
@@ -33,7 +33,7 @@ class Mentorship extends React.Component {
           showPopUp={showPopUp}
           showSave={showMentorship}
           content="Mentorship Program"
-          subSaveClick={subSaveClick}
+          saveSection={saveSection}
           onClick={() => toggle('showMentorship')} />
         <TransitionContainer isExpanded={showMentorship}>
           <MessageBox
@@ -84,7 +84,7 @@ Mentorship.propTypes = {
   toggle: propTypes.func.isRequired,
   isMentor: propTypes.bool.isRequired,
   showPopUp: propTypes.bool.isRequired,
-  subSaveClick: propTypes.func.isRequired,
+  saveSection: propTypes.func.isRequired,
   showMentorship: propTypes.bool.isRequired,
   toggleMentorship: propTypes.func.isRequired,
   handleInputChange: propTypes.func.isRequired,

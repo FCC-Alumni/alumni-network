@@ -32,7 +32,7 @@ class PersonalInfo extends React.Component {
       isPrivate,
       displayName,
       showProfile,
-      subSaveClick,
+      saveSection,
       handleInputChange,
       handleCountryChange,
       toggleEmailVisibilty,
@@ -45,7 +45,7 @@ class PersonalInfo extends React.Component {
           content="Personal Info"
           showPopUp={showPopUp}
           showSave={showProfile}
-          subSaveClick={subSaveClick}
+          saveSection={saveSection}
           onClick={() => toggle('showProfile')} />
         <TransitionContainer isExpanded={showProfile} className="ui form">
           <Container className="ui list">

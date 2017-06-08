@@ -17,7 +17,7 @@ export default class Collaboration extends React.Component {
       username,
       showPopUp,
       saveChanges,
-      subSaveClick,
+      saveSection,
       saveProjectsList,
       showCollaboration,
     } = this.props;
@@ -27,7 +27,7 @@ export default class Collaboration extends React.Component {
           id="projectsPopUp"
           content="Collaboration"
           showPopUp={showPopUp}
-          subSaveClick={subSaveClick}
+          saveSection={saveSection}
           showSave={showCollaboration}
           onClick={() => toggle('showCollaboration')} />
         <TransitionContainer isExpanded={showCollaboration}>

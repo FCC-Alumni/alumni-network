@@ -16,7 +16,7 @@ export default class SkillsAndInterests extends React.Component {
       showPopUp,
       coreSkills,
       showSkills,
-      subSaveClick,
+      saveSection,
       skillsOptions,
       handleAddSkill,
       codingInterests,
@@ -31,7 +31,7 @@ export default class SkillsAndInterests extends React.Component {
           showPopUp={showPopUp}
           showSave={showSkills}
           content="Skills & Interests"
-          subSaveClick={subSaveClick}
+          saveSection={saveSection}
           id="skillsAndInterestsPopUp"
           onClick={() => toggle('showSkills')} />
         <TransitionContainer isExpanded={showSkills}>

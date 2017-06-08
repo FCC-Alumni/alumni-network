@@ -118,15 +118,9 @@ class Preferences extends React.Component {
     }
   }
 
-  toggleMentorship = (bool, id) => {
-    var { user } = this.state;
-    if (id === 'mentorship') {
-      user.mentorship.isMentor = bool;
-    } else {
-      user.mentorship.isMentee = bool;
-    }
-    this.setState({ user });
-  }
+  /**********************
+  HANDLE CHANGE FUNCTIONS
+  **********************/
 
   handleSkillsChange = (e, { value }) => {
     var { user } = this.state;
@@ -231,53 +225,11 @@ class Preferences extends React.Component {
     this.setState({ user });
   }
 
-  saveProjectsList = (items_list) => {
-    var { user } = this.state;
-    user.projects = items_list;
-    this.setState({ user });
-  }
+  /*************
+  SAVE FUNCTIONS
+  *************/
 
-  toggleEmailVisibilty = () => {
-    var { user } = this.state;
-    if (user.personal.email.private)
-    user.personal.email.private = false;
-    else user.personal.email.private = true;
-    this.setState({ user });
-  }
-
-  saveChanges = (openModal = false) => {
-    if (this.isPageValid()) {
-      updateUser(this.state.user).then(res => {
-        const { updatedUser } = res.data;
-        this.props.saveUser(updatedUser);
-        /* this function is shared. only open success modal
-        when called from profile page "save" buttons. pass
-        in "open modal" to override default argument */
-        openModal && this.setState({ modalOpen: true });
-      }).catch(err => console.log(err));
-    } else {
-      /* open error modal and
-      reveal sections with errors */
-      openModal && this.showErrors();
-    }
-  }
-
-  showErrors = () => {
-    // reveals errors on page => global "save" buttons
-    this.setState({ modalOpen: true }, () => {
-      var { viewState } = this.state;
-      if (this.state.errors.email)
-        viewState.showProfile = true;
-      if (this.state.errors.career)
-        viewState.showCareer = true;
-      if (this.state.errors.mentorshipSkills)
-        viewState.showMentorship = true;
-      this.setState({ viewState });
-    });
-  }
-
-  handleSubSaveClick = (e) => {
-    // saves individual sections
+  handleSaveSection = (e) => {
     e.stopPropagation();
     e.persist();
     const { user, user: { _id } } = this.state;
@@ -294,9 +246,72 @@ class Preferences extends React.Component {
     }
   }
 
+  handleSaveAll = (openModal = false) => {
+    if (this.isPageValid()) {
+      // if no errors, determine profile strength
+      this.profileStrenth();
+      // then update user in mongo and update store
+      updateUser(this.state.user).then(res => {
+        const { updatedUser } = res.data;
+        this.props.saveUser(updatedUser);
+        /* this function is shared. only open success modal
+        when called from profile page "save" buttons. pass
+        in "open modal" to override default argument */
+        openModal && this.setState({ modalOpen: true });
+      }).catch(err => console.log(err));
+    } else {
+      /* open error modal and
+      reveal sections with errors */
+      openModal && this.showErrors();
+    }
+  }
+
+  saveProjectsList = (items_list) => {
+    var { user } = this.state;
+    user.projects = items_list;
+    this.setState({ user });
+  }
+
+  /*******************
+  VALIDATIOR FUNCTIONS
+  *******************/
+
+  isFieldValid = (field, str) => {
+    // onChange validations
+    // (called on handleInputChange change)
+    this.setState({ errors: {} });
+    var errors = {};
+
+    switch (field) {
+      case 'location':
+        if (!Validator.isLength(str, { min: 0, max: 25 }))
+          errors.location = this.LOCATION_ERROR;
+        break;
+      case 'bio':
+        if (!Validator.isLength(str, { min: 0, max: 300 }))
+          errors.bio = 'Bio must be 300 characters or less.';
+        break;
+      case 'displayName':
+        if (!Validator.isLength(str, { min: 0, max: 40 }))
+          errors.displayName = this.DISPLAY_NAME_ERROR;
+        break;
+      case 'company':
+        if (!Validator.isLength(str, { min: 0, max: 25 }))
+          errors.company = 'Company must be 25 characters or less.';
+        break;
+      case 'mentorshipSkills':
+        if (!Validator.isLength(str, { min: 0, max: 200 }))
+          errors.mentorshipSkills = 'Mentorshio bio must be 200 characters or less.';
+        break;
+      default: return;
+    }
+
+    return this.setErrors(errors);
+  }
+
   isSectionValid = (section, str) => {
     // section validations
-    // (called on handleSubSaveClick)
+    // (called on handleSaveSection)
     this.setState({ errors: {} });
     var errors = {};
 
@@ -335,50 +350,7 @@ class Preferences extends React.Component {
       default: return;
     }
 
-    if (isEmpty(errors)) {
-      return true;
-    } else {
-      this.setState({ errors });
-      return false;
-    }
-  }
-
-  isFieldValid = (field, str) => {
-    // onChange validations
-    // (called on handleInputChange change)
-    this.setState({ errors: {} });
-    var errors = {};
-
-    switch (field) {
-      case 'location':
-        if (!Validator.isLength(str, { min: 0, max: 25 }))
-          errors.location = this.LOCATION_ERROR;
-        break;
-      case 'bio':
-        if (!Validator.isLength(str, { min: 0, max: 300 }))
-          errors.bio = 'Bio must be 300 characters or less.';
-        break;
-      case 'displayName':
-        if (!Validator.isLength(str, { min: 0, max: 40 }))
-          errors.displayName = this.DISPLAY_NAME_ERROR;
-        break;
-      case 'company':
-        if (!Validator.isLength(str, { min: 0, max: 25 }))
-          errors.company = 'Company must be 25 characters or less.';
-        break;
-      case 'mentorshipSkills':
-        if (!Validator.isLength(str, { min: 0, max: 200 }))
-          errors.mentorshipSkills = 'Mentorshio bio must be 200 characters or less.';
-        break;
-      default: return;
-    }
-
-    if (isEmpty(errors)) {
-      return true;
-    } else {
-      this.setState({ errors });
-      return false;
-    }
+    return this.setErrors(errors);
   }
 
   isPageValid = () => {
@@ -413,36 +385,25 @@ class Preferences extends React.Component {
       errors.displayName = this.DISPLAY_NAME_ERROR;
     }
 
-    // see below comments
-    this.profileStrenth();
-
-    if (isEmpty(errors)) {
-      this.setState({ isPageValid: true });
-      return true;
-    } else {
-      this.setState({ errors, isPageValid: false });
-      return false;
-    }
+    return this.setErrors(errors, 'page validator');
   }
 
-  isNotWorkingError = () => {
-    const { user: {
-      career: { working, tenure, jobSearch }
-    } } = this.state;
-    if (working && working === 'no' && (!tenure || !jobSearch)) {
-      return true;
-    }
-    return false;
-  }
+  /*****************
+  VALIDATION HELPERS
+  *****************/
 
-  isWorkingError = () => {
-    const { user: {
-      career: { working, tenure, company }
-    } } = this.state;
-    if (working && working === 'yes' && (!tenure || !company)) {
-      return true;
-    }
-    return false;
+  showErrors = () => {
+    // reveals errors on page => global "save" buttons
+    this.setState({ modalOpen: true }, () => {
+      var { viewState } = this.state;
+      if (this.state.errors.email)
+        viewState.showProfile = true;
+      if (this.state.errors.career)
+        viewState.showCareer = true;
+      if (this.state.errors.mentorshipSkills)
+        viewState.showMentorship = true;
+      this.setState({ viewState });
+    });
   }
 
   profileStrenth = () => {
@@ -486,6 +447,45 @@ class Preferences extends React.Component {
     }
   }
 
+  setErrors = (errors, isPageValidation = false) => {
+    if (!isPageValidation) {
+      if (isEmpty(errors)) {
+        return true;
+      } else {
+        this.setState({ errors });
+        return false;
+      }
+    } else {
+      if (isEmpty(errors)) {
+        this.setState({ isPageValid: true });
+        return true;
+      } else {
+        this.setState({ errors, isPageValid: false });
+        return false;
+      }
+    }
+  }
+
+  isNotWorkingError = () => {
+    const { user: {
+      career: { working, tenure, jobSearch }
+    } } = this.state;
+    if (working && working === 'no' && (!tenure || !jobSearch)) {
+      return true;
+    }
+    return false;
+  }
+
+  isWorkingError = () => {
+    const { user: {
+      career: { working, tenure, company }
+    } } = this.state;
+    if (working && working === 'yes' && (!tenure || !company)) {
+      return true;
+    }
+    return false;
+  }
+
   closeModal = () => {
     this.setState({ modalOpen: false });
   }
@@ -494,7 +494,30 @@ class Preferences extends React.Component {
     this.setState({ [id]: false });
   }
 
+  /*****************
+  VARIOUS HELPERS
+  *****************/
+
+  toggleMentorship = (bool, id) => {
+    var { user } = this.state;
+    if (id === 'mentorship') {
+      user.mentorship.isMentor = bool;
+    } else {
+      user.mentorship.isMentee = bool;
+    }
+    this.setState({ user });
+  }
+
+  toggleEmailVisibilty = () => {
+    var { user } = this.state;
+    if (user.personal.email.private)
+    user.personal.email.private = false;
+    else user.personal.email.private = true;
+    this.setState({ user });
+  }
+
   clearSocialInput = (site) => {
+    // clear LI / twitter field
     var { user } = this.state;
     user.social[site] = '';
     this.setState({ user }, () => {
@@ -506,6 +529,7 @@ class Preferences extends React.Component {
   }
 
   clearCareerForm = () => {
+    // reset career form
     var { user, errors } = this.state;
     user.career.working = '';
     user.career.tenure = '';
@@ -515,10 +539,10 @@ class Preferences extends React.Component {
     this.setState({ user, errors });
   }
 
-  toggle = (target) => {
+  toggleShowSection = (target) => {
     const { viewState } = this.state;
-    /* we pass callback to setState to catch state after update
-    in case all the modals are now open or closed */
+    /* we pass callback to setState to catch state after
+    update in case all the modals are now open or closed */
     viewState[target] = !viewState[target];
     this.setState({ viewState }, () => {
       if (
@@ -547,7 +571,7 @@ class Preferences extends React.Component {
     });
   }
 
-  toggleAll = () => {
+  toggleShowAllSections = () => {
     var { viewState, viewState: { showAll } } = this.state;
     viewState.showAll = !showAll;
     viewState.showFCC = !showAll;
@@ -588,7 +612,7 @@ class Preferences extends React.Component {
           size="huge"
           username={username}
           image={personal.avatarUrl}
-          toggleAll={this.toggleAll}
+          toggleAll={this.toggleShowAllSections}
           folder={isDesktop ? this.state.viewState.showAll : ''}
           label={!isDesktop ? '' : mentorship.mentor ? 'Mentor' : 'Member'} />
         <TopButton
@@ -597,31 +621,31 @@ class Preferences extends React.Component {
           color="green"
           content="Save"
           labelPosition="right"
-          onClick={() => this.saveChanges('open modal')} />
+          onClick={() => this.handleSaveAll('open modal')} />
           {/* floated prop throws invalid propType warning - expects only 'right' or 'left' */}
         <div className="ui raised segment">
           <PersonalInfo
             {...personal}
             errors={errors}
-            toggle={this.toggle}
             country={personal.flag}
             email={personal.email.email}
+            toggle={this.toggleShowSection}
             isPrivate={personal.email.private}
+            saveSection={this.handleSaveSection}
             showPopUp={this.state.personalPopUp}
-            subSaveClick={this.handleSubSaveClick}
             handleInputChange={this.handleInputChange}
             showProfile={this.state.viewState.showProfile}
             toggleEmailVisibilty={this.toggleEmailVisibilty}
             handleCountryChange={this.handleCountryChange} />
           <Certifications
-            toggle={this.toggle}
+            toggle={this.toggleShowSection}
             fccCerts={this.state.user.fccCerts}
             showFCC={this.state.viewState.showFCC} />
           <Mentorship
             {...mentorship}
-            toggle={this.toggle}
+            toggle={this.toggleShowSection}
             error={errors.mentorshipSkills}
-            subSaveClick={this.handleSubSaveClick}
+            saveSection={this.handleSaveSection}
             showPopUp={this.state.mentorshipPopUp}
             toggleMentorship={this.toggleMentorship}
             toggleMenteeship={this.toggleMenteeship}
@@ -629,10 +653,10 @@ class Preferences extends React.Component {
             handleRadioChange={this.handleRadioChange}
             showMentorship={this.state.viewState.showMentorship} />
           <SkillsAndInterests
-            toggle={this.toggle}
             {...skillsAndInterests}
+            toggle={this.toggleShowSection}
+            saveSection={this.handleSaveSection}
             handleAddSkill={this.handleAddSkill}
-            subSaveClick={this.handleSubSaveClick}
             skillsOptions={this.state.skillsOptions}
             handleAddInterest={this.handleAddInterest}
             showSkills={this.state.viewState.showSkills}
@@ -642,30 +666,30 @@ class Preferences extends React.Component {
             handleInterestsChange={this.handleInterestsChange} />
           <Collaboration
             username={username}
-            toggle={this.toggle}
-            saveChanges={this.saveChanges}
+            toggle={this.toggleShowSection}
+            saveChanges={this.handleSaveAll}
             projects={this.state.user.projects}
             showPopUp={this.state.projectsPopUp}
-            subSaveClick={this.handleSubSaveClick}
+            saveSection={this.handleSaveSection}
             saveProjectsList={this.saveProjectsList}
             showCollaboration={this.state.viewState.showCollaboration} />
           <Social
             {...social}
             errors={errors}
-            toggle={this.toggle}
             clear={this.clearSocialInput}
-            saveChanges={this.saveChanges}
+            toggle={this.toggleShowSection}
+            saveChanges={this.handleSaveAll}
             showPopUp={this.state.socialPopUp}
-            subSaveClick={this.handleSubSaveClick}
+            saveSection={this.handleSaveSection}
             handleInputChange={this.handleInputChange}
             showSocial={this.state.viewState.showSocial} />
           <Career
             {...career}
             errors={errors}
-            toggle={this.toggle}
+            toggle={this.toggleShowSection}
             clearForm={this.clearCareerForm}
             showPopUp={this.state.careerPopUp}
-            subSaveClick={this.handleSubSaveClick}
+            saveSection={this.handleSaveSection}
             handleInputChange={this.handleInputChange}
             handleRadioChange={this.handleRadioChange}
             showCareer={this.state.viewState.showCareer}
@@ -678,7 +702,7 @@ class Preferences extends React.Component {
             content="Save"
             floated="right"
             labelPosition="right"
-            onClick={() => this.saveChanges('open modal')} /> }
+            onClick={() => this.handleSaveAll('open modal')} /> }
         </div>
       </Container>
     );
