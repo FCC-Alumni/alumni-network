@@ -75,12 +75,13 @@ class Preferences extends React.Component {
       interestsOptions: [],
       skillsOptions: [],
     }
-    // SHARED ERRORS:
+    // SHARED VALIDATION ERRORS:
     this.EMAIL_ERROR = 'Please enter a valid email address.';
     this.LOCATION_ERROR = 'Location must be 25 characters or less.';
     this.DISPLAY_NAME_ERROR = 'Display name must be 40 characters or less.';
     this.CAREER_ERROR = 'Please complete the entire section or clear the form.';
     this.CODEPEN_ERROR = 'Please enter your username only, not your profile url.';
+    this.COUNTRY_ERROR = 'Please select your country (so we can make a cool D3 map!).';
     this.MENTORSHIP_ERROR = 'To complete your mentorship prorgram enrollment, please fill out the section above.';
   }
 
@@ -199,7 +200,7 @@ class Preferences extends React.Component {
   }
 
   handleInputChange = ({target: { name, value }}) => {
-    var { user, errors } = this.state;
+    var { user } = this.state;
     switch (name) {
       case 'company':
         // validation happens on save action for these
@@ -277,23 +278,22 @@ class Preferences extends React.Component {
   *******************/
 
   isFieldValid = (field, str) => {
-    // onChange validations
-    // (called on handleInputChange change)
+    // reset errors on change
     this.setState({ errors: {} });
     var errors = {};
-
+    // validations:
     switch (field) {
       case 'location':
         if (!Validator.isLength(str, { min: 0, max: 25 }))
           errors.location = this.LOCATION_ERROR;
         break;
-      case 'bio':
-        if (!Validator.isLength(str, { min: 0, max: 300 }))
-          errors.bio = 'Bio must be 300 characters or less.';
-        break;
       case 'displayName':
         if (!Validator.isLength(str, { min: 0, max: 40 }))
           errors.displayName = this.DISPLAY_NAME_ERROR;
+        break;
+      case 'bio':
+        if (!Validator.isLength(str, { min: 0, max: 300 }))
+          errors.bio = 'Bio must be 300 characters or less.';
         break;
       case 'company':
         if (!Validator.isLength(str, { min: 0, max: 25 }))
@@ -305,102 +305,160 @@ class Preferences extends React.Component {
         break;
       default: return;
     }
-
     return this.setErrors(errors);
   }
 
   isSectionValid = (section, str) => {
-    // section validations
-    // (called on handleSaveSection)
-    this.setState({ errors: {} });
     var errors = {};
-
-    const {
-      user: {
-        social: { codepen },
-        personal: { email: { email }, location, displayName },
-        mentorship: { isMentor, isMentee, mentorshipSkills },
-      }
-    } = this.state;
-
     switch (section) {
       case 'career':
-        if (this.isWorkingError() || this.isNotWorkingError())
+        if (!this.validateCareer())
           errors.career = this.CAREER_ERROR;
         break;
       case 'social':
-        if (section === 'social' && codepen && Validator.isURL(codepen))
+        if (!this.validateCodePen())
           errors.codepen = this.CODEPEN_ERROR;
         break;
       case 'personal':
-        if (email && !Validator.isEmail(email))
+        if (!this.validateEmail())
           errors.email = this.EMAIL_ERROR;
-        /* these 2 seem reduntant with field validations but are
-        needed in case pre-loaded github data breaks validatiion
-        rules - this would not trigger an onChange error */
-        if (!Validator.isLength(location, { min: 0, max: 25 }))
+        if (!this.validateCountry())
+          errors.country = this.COUNTRY_ERROR;
+        if (!this.validateLocation())
           errors.location = this.LOCATION_ERROR;
-        if (!Validator.isLength(displayName, { min: 0, max: 40 }))
+        if (!this.validateDisplayName())
           errors.displayName = this.DISPLAY_NAME_ERROR;
         break;
       case 'mentorship':
-        if ((isMentee || isMentor) && !mentorshipSkills)
+        if (!this.validateMentorship())
           errors.mentorshipSkills = this.MENTORSHIP_ERROR;
         break;
       default: return;
     }
-
+    /* locations & displayName seem reduntant with field validations but
+    are needed in case pre-loaded github data breaks validatiion
+    rules - this would not trigger an onChange error */
     return this.setErrors(errors);
   }
 
   isPageValid = () => {
-    // page validations
-    // called from global save function
-    this.setState({ errors: {} });
     var errors = {};
-
-    const { user: {
-        social: { codepen },
-        mentorship: { isMentor, isMentee, mentorshipSkills },
-        personal: { displayName, location, email: { email } },
-      }
-    } = this.state;
-
-    if (email && !Validator.isEmail(email)) {
+    if (!this.validateEmail())
       errors.email = this.EMAIL_ERROR;
-    }
-    if (codepen && Validator.isURL(codepen)) {
-      errors.codepen = this.CODEPEN_ERROR;
-    }
-    if ((isMentee || isMentor) && !mentorshipSkills) {
-      errors.mentorshipSkills = this.MENTORSHIP_ERROR;
-    }
-    if (this.isWorkingError() || this.isNotWorkingError()) {
+    if (!this.validateCareer())
       errors.career = this.CAREER_ERROR;
-    }
-    if (location && !Validator.isLength(location, { min: 0, max: 25 })) {
+    if (!this.validateCountry())
+      errors.country = this.COUNTRY_ERROR;
+    if (!this.validateCodePen())
+      errors.codepen = this.CODEPEN_ERROR;
+    if (!this.validateLocation())
       errors.location = this.LOCATION_ERROR;
-    }
-    if (displayName && !Validator.isLength(displayName, { min: 0, max: 40 })) {
+    if (!this.validateDisplayName())
       errors.displayName = this.DISPLAY_NAME_ERROR;
-    }
-
+    if (!this.validateMentorship())
+      errors.mentorshipSkills = this.MENTORSHIP_ERROR;
+    /* locations & displayName seem reduntant with field validations but
+    are needed in case pre-loaded github data breaks validatiion
+    rules - this would not trigger an onChange error */
     return this.setErrors(errors, 'page validator');
   }
 
+  validateCountry = () => {
+    const { user: { personal: { country }}} = this.state;
+    if (!country) {
+      return false;
+    }
+    return true;
+  }
+
+  validateCareer = () => {
+    const { user: {
+      career: { working, tenure, company, jobSearch }
+    } } = this.state;
+    if (working && working === 'yes' && (!tenure || !company))
+      return false;
+    if (working && working === 'no' && (!tenure || !jobSearch))
+      return false;
+    return true;
+  }
+
+  validateMentorship = () => {
+    const { user: { mentorship: {
+      isMentor, isMentee, mentorshipSkills
+    }}} = this.state;
+    if ((isMentee || isMentor) && !mentorshipSkills) {
+      return false;
+    }
+    return true;
+  }
+
+  validateDisplayName = () => {
+    const { user: { personal: { displayName }}} = this.state;
+    if (!Validator.isLength(displayName, { min: 0, max: 40 })) {
+      return false;
+    }
+    return true;
+  }
+
+  validateLocation = () => {
+    const { user: { personal: { location }}} = this.state;
+    if (!Validator.isLength(location, { min: 0, max: 25 })) {
+      return false;
+    }
+    return true;
+  }
+
+  validateEmail = () => {
+    const { user: { personal: { email }}} = this.state;
+    if (email.email && !Validator.isEmail(email.email)) {
+      return false;
+    }
+    return true;
+  }
+
+  validateCodePen = () => {
+    const { user: { social: { codepen }}} = this.state;
+    if (Validator.isURL(codepen)) {
+      return false;
+    }
+    return true;
+  }
+
+  setErrors = (errors, isPageValidation = false) => {
+    this.setState({ errors });
+    if (!isPageValidation) {
+      if (isEmpty(errors)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (isEmpty(errors)) {
+        this.setState({ isPageValid: true });
+        return true;
+      } else {
+        this.setState({ errors, isPageValid: false });
+        return false;
+      }
+    }
+  }
+
   /*****************
-  VALIDATION HELPERS
+  HELPERS FUNCTIONS
   *****************/
 
   showErrors = () => {
     // reveals errors on page => global "save" buttons
     this.setState({ modalOpen: true }, () => {
-      var { viewState } = this.state;
-      if (this.state.errors.email)
+      var { viewState, errors } = this.state;
+      if (errors.email || errors.country ||
+            errors.location || errors.displayName)
         viewState.showProfile = true;
-      if (this.state.errors.career)
+      if (errors.codepen)
+        viewState.showSocial = true;
+      if (errors.career)
         viewState.showCareer = true;
-      if (this.state.errors.mentorshipSkills)
+      if (errors.mentorshipSkills)
         viewState.showMentorship = true;
       this.setState({ viewState });
     });
@@ -434,7 +492,7 @@ class Preferences extends React.Component {
         profileWarning:
           `Stronger profiles make for a stronger and more effective
            community — consider telling us about where you are in your
-           programming career so other members will know how long you\'ve
+           programming career so other members will know how long you've
            been coding for!`
       });
     } else if (profileStrength < 3) {
@@ -447,45 +505,6 @@ class Preferences extends React.Component {
     }
   }
 
-  setErrors = (errors, isPageValidation = false) => {
-    if (!isPageValidation) {
-      if (isEmpty(errors)) {
-        return true;
-      } else {
-        this.setState({ errors });
-        return false;
-      }
-    } else {
-      if (isEmpty(errors)) {
-        this.setState({ isPageValid: true });
-        return true;
-      } else {
-        this.setState({ errors, isPageValid: false });
-        return false;
-      }
-    }
-  }
-
-  isNotWorkingError = () => {
-    const { user: {
-      career: { working, tenure, jobSearch }
-    } } = this.state;
-    if (working && working === 'no' && (!tenure || !jobSearch)) {
-      return true;
-    }
-    return false;
-  }
-
-  isWorkingError = () => {
-    const { user: {
-      career: { working, tenure, company }
-    } } = this.state;
-    if (working && working === 'yes' && (!tenure || !company)) {
-      return true;
-    }
-    return false;
-  }
-
   closeModal = () => {
     this.setState({ modalOpen: false });
   }
@@ -493,10 +512,6 @@ class Preferences extends React.Component {
   resetPopUp = (id) => {
     this.setState({ [id]: false });
   }
-
-  /*****************
-  VARIOUS HELPERS
-  *****************/
 
   toggleMentorship = (bool, id) => {
     var { user } = this.state;

@@ -96,6 +96,11 @@ class PersonalInfo extends React.Component {
                   options={countries}
                   placeholder='Select Country'
                   onChange={handleCountryChange} />
+              { errors.country &&
+                <div style={{ marginTop: 5 }}
+                  className={'ui red basic label'}>
+                  {errors.country}
+                </div> }
               </div>
             </ListItem>
             <ListItem>
