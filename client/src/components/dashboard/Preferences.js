@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { connectScreenSize } from 'react-screen-size';
 import { countryCodes } from '../../assets/dropdowns/countries';
 import { findIndex } from 'lodash';
-import interests from '../../assets/dropdowns/interests';
+import interests, { INTERESTS_MAP } from '../../assets/dropdowns/interests';
 import { isEmpty } from 'lodash';
 import { mapScreenSizeToProps } from '../Navbar';
 import Mentorship from './Profile/Preferences/Mentorship';
@@ -17,7 +17,7 @@ import propTypes from 'prop-types';
 import React from 'react';
 import { savePreferencesViewState } from '../../actions/views';
 import { saveUser, updateUser, updateUserPartial } from '../../actions/user';
-import skills from '../../assets/dropdowns/skills';
+import skills, { SKILLS_MAP } from '../../assets/dropdowns/skills';
 import SkillsAndInterests from './Profile/Preferences/SkillsAndInterests';
 import Social from './Profile/Preferences/Social';
 import styled from 'styled-components';
@@ -125,7 +125,13 @@ class Preferences extends React.Component {
 
   handleSkillsChange = (e, { value }) => {
     var { user } = this.state;
-    user.skillsAndInterests.coreSkills = value;
+    user.skillsAndInterests.coreSkills = value
+      /* extra logic here and in sister function
+      to make sure same skills with different cases
+      are not added to the list */
+      .map(el => el.toLowerCase())
+      .filter((el, idx, arr) => arr.indexOf(el) === idx)
+      .map(el => SKILLS_MAP[el]);
     this.setState({ user });
   }
 
@@ -133,11 +139,11 @@ class Preferences extends React.Component {
   handleAddSkill = (e, { value }) => {
     if (!swearjar.profane(value)) {
       var { user, skillsOptions } = this.state;
-      /* if skill not already in dropdown options, temporarily
-      add it to options list so that semantic-ui-react component
+      /* if skill not already in dropdown options, ignoring case,
+      temporarily add it to options list so that semantic-ui-react
       will display it as choice and add new choice to user object */
-      if (findIndex(skillsOptions, { text: value, value }) === -1) {
-        skillsOptions = [{ text: value, value }, ...skillsOptions];
+      if (findIndex(skillsOptions, { key: value.toLowerCase() }) === -1) {
+        skillsOptions = [{ text: value, key: value, value }, ...skillsOptions];
         user.skillsAndInterests.coreSkills.push(value);
       }
       this.setState({ skillsOptions, user });
@@ -146,7 +152,10 @@ class Preferences extends React.Component {
 
   handleInterestsChange = (e, { value }) => {
     var { user } = this.state;
-    user.skillsAndInterests.codingInterests = value;
+    user.skillsAndInterests.codingInterests = value
+      .map(el => el.toLowerCase())
+      .filter((el, idx, arr) => arr.indexOf(el) === idx)
+      .map(el => INTERESTS_MAP[el]);
     this.setState({ user });
   }
 
@@ -157,8 +166,8 @@ class Preferences extends React.Component {
       /* if interest not already in dropdown options, temporarily
       add it to options list so that semantic-ui-react component
       will display it as choice and add new choice to user object */
-      if (findIndex(interestsOptions, { text: value, value }) === -1) {
-        interestsOptions = [{ text: value, value }, ...interestsOptions];
+      if (findIndex(interestsOptions, { key: value.toLowerCase() }) === -1) {
+        interestsOptions = [{ text: value, key: value, value }, ...interestsOptions];
         user.skillsAndInterests.codingInterests.push(value);
       }
       this.setState({ interestsOptions, user });
@@ -313,6 +322,11 @@ class Preferences extends React.Component {
     const { user } = this.state;
     const { email } = this.state.user.personal;
     const { personal, social } = this.state.user;
+
+    if (['skillsAndInterests', 'projects']
+         .indexOf(section) !== -1) {
+      return true;
+    }
 
     switch (section) {
       case 'career':

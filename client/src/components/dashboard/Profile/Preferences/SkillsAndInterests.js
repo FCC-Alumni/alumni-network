@@ -28,10 +28,10 @@ export default class SkillsAndInterests extends React.Component {
     return (
       <div>
         <Ribbon
-          showPopUp={showPopUp}
           showSave={showSkills}
-          content="Skills & Interests"
+          showPopUp={showPopUp}
           saveSection={saveSection}
+          content="Skills & Interests"
           id="skillsAndInterestsPopUp"
           onClick={() => toggle('showSkills')} />
         <TransitionContainer isExpanded={showSkills}>
