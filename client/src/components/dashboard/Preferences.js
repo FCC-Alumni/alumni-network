@@ -25,6 +25,7 @@ import swearjar from '../../assets/helpers/swearjar-lite';
 import { ThickPaddedBottom } from '../../styles/style-utils';
 import UserLabel from '../dashboard/common/UserLabel';
 import Validator from 'validator';
+import __ from '../../assets/helpers/validations';
 
 /*
 TODO:
@@ -82,7 +83,7 @@ class Preferences extends React.Component {
     this.CAREER_ERROR = 'Please complete the entire section or clear the form.';
     this.CODEPEN_ERROR = 'Please enter your username only, not your profile url.';
     this.COUNTRY_ERROR = 'Please select your country (so we can make a cool D3 map!).';
-    this.MENTORSHIP_ERROR = 'To complete your mentorship prorgram enrollment, please fill out the section above.';
+    this.MENTORSHIP_ERROR = 'To complete your mentorship prorgram enrollment, please complete the section above.';
   }
 
   componentDidMount() {
@@ -205,7 +206,7 @@ class Preferences extends React.Component {
       case 'company':
         // validation happens on save action for these
         if (this.isFieldValid(name, value))
-        user.career.company = swearjar.censor(value);
+          user.career.company = swearjar.censor(value);
         break;
       case 'codepen':
         user.social.codepen = value;
@@ -216,11 +217,11 @@ class Preferences extends React.Component {
       case 'mentorshipSkills':
         // these require real-time validations
         if (this.isFieldValid(name, value))
-        user.mentorship.mentorshipSkills = swearjar.censor(value);
+          user.mentorship.mentorshipSkills = swearjar.censor(value);
         break;
       default:
         if (this.isFieldValid(name, value))
-        user.personal[name] = swearjar.censor(value);
+          user.personal[name] = swearjar.censor(value);
         break;
     }
     this.setState({ user });
@@ -284,23 +285,23 @@ class Preferences extends React.Component {
     // validations:
     switch (field) {
       case 'location':
-        if (!Validator.isLength(str, { min: 0, max: 25 }))
+        if (!__.validateTwentyFiveChars(str))
           errors.location = this.LOCATION_ERROR;
         break;
       case 'displayName':
-        if (!Validator.isLength(str, { min: 0, max: 40 }))
+        if (!__.validateDisplayName(str))
           errors.displayName = this.DISPLAY_NAME_ERROR;
         break;
       case 'bio':
-        if (!Validator.isLength(str, { min: 0, max: 300 }))
+        if (!__.validateBio(str))
           errors.bio = 'Bio must be 300 characters or less.';
         break;
       case 'company':
-        if (!Validator.isLength(str, { min: 0, max: 25 }))
+        if (!__.validate25Chars(str))
           errors.company = 'Company must be 25 characters or less.';
         break;
       case 'mentorshipSkills':
-        if (!Validator.isLength(str, { min: 0, max: 200 }))
+        if (!__.validateMentorshipBio(str))
           errors.mentorshipSkills = 'Mentorshio bio must be 200 characters or less.';
         break;
       default: return;
@@ -310,118 +311,65 @@ class Preferences extends React.Component {
 
   isSectionValid = (section, str) => {
     var errors = {};
+    const { user } = this.state;
+    const { email } = this.state.user.personal;
+    const { personal, social } = this.state.user;
+
     switch (section) {
       case 'career':
-        if (!this.validateCareer())
+        if (!__.validateCareer(user.career))
           errors.career = this.CAREER_ERROR;
         break;
       case 'social':
-        if (!this.validateCodePen())
+        if (!__.validateCodePen(social.codepen))
           errors.codepen = this.CODEPEN_ERROR;
         break;
       case 'personal':
-        if (!this.validateEmail())
+        if (!__.validateEmail(email.email))
           errors.email = this.EMAIL_ERROR;
-        if (!this.validateCountry())
+        if (!__.validateCountry(personal.country))
           errors.country = this.COUNTRY_ERROR;
-        if (!this.validateLocation())
+        if (!__.validate25Chars(personal.location))
           errors.location = this.LOCATION_ERROR;
-        if (!this.validateDisplayName())
+        if (!__.validateDisplayName(personal.displayName))
           errors.displayName = this.DISPLAY_NAME_ERROR;
         break;
       case 'mentorship':
-        if (!this.validateMentorship())
+        if (!__.validateMentorshipSection(user.mentorship))
           errors.mentorshipSkills = this.MENTORSHIP_ERROR;
         break;
       default: return;
     }
-    /* locations & displayName seem reduntant with field validations but
-    are needed in case pre-loaded github data breaks validatiion
-    rules - this would not trigger an onChange error */
     return this.setErrors(errors);
   }
 
+  /* locations & displayName validations in isPageValid & in isSectionValid
+  seem reduntant with onChange isFieldValid validations but are needed
+  in case pre-loaded github data breaks validatiion rules - this
+  would not trigger an onChange error */
+
   isPageValid = () => {
     var errors = {};
-    if (!this.validateEmail())
-      errors.email = this.EMAIL_ERROR;
-    if (!this.validateCareer())
+    const { user } = this.state;
+    const { email } = this.state.user.personal;
+    const { personal, social } = this.state.user;
+
+    if (!__.validateCareer(user.career))
       errors.career = this.CAREER_ERROR;
-    if (!this.validateCountry())
-      errors.country = this.COUNTRY_ERROR;
-    if (!this.validateCodePen())
+    if (!__.validateEmail(email.email))
+      errors.email = this.EMAIL_ERROR;
+    if (!__.validateCodePen(social.codepen))
       errors.codepen = this.CODEPEN_ERROR;
-    if (!this.validateLocation())
+    if (!__.validateCountry(personal.country))
+      errors.country = this.COUNTRY_ERROR;
+    if (!__.validate25Chars(personal.location))
       errors.location = this.LOCATION_ERROR;
-    if (!this.validateDisplayName())
+    if (!__.validateDisplayName(personal.displayName))
       errors.displayName = this.DISPLAY_NAME_ERROR;
-    if (!this.validateMentorship())
+    if (!__.validateMentorshipSection(user.mentorship))
       errors.mentorshipSkills = this.MENTORSHIP_ERROR;
-    /* locations & displayName seem reduntant with field validations but
-    are needed in case pre-loaded github data breaks validatiion
-    rules - this would not trigger an onChange error */
+
     return this.setErrors(errors, 'page validator');
-  }
-
-  validateCountry = () => {
-    const { user: { personal: { country }}} = this.state;
-    if (!country) {
-      return false;
-    }
-    return true;
-  }
-
-  validateCareer = () => {
-    const { user: {
-      career: { working, tenure, company, jobSearch }
-    } } = this.state;
-    if (working && working === 'yes' && (!tenure || !company))
-      return false;
-    if (working && working === 'no' && (!tenure || !jobSearch))
-      return false;
-    return true;
-  }
-
-  validateMentorship = () => {
-    const { user: { mentorship: {
-      isMentor, isMentee, mentorshipSkills
-    }}} = this.state;
-    if ((isMentee || isMentor) && !mentorshipSkills) {
-      return false;
-    }
-    return true;
-  }
-
-  validateDisplayName = () => {
-    const { user: { personal: { displayName }}} = this.state;
-    if (!Validator.isLength(displayName, { min: 0, max: 40 })) {
-      return false;
-    }
-    return true;
-  }
-
-  validateLocation = () => {
-    const { user: { personal: { location }}} = this.state;
-    if (!Validator.isLength(location, { min: 0, max: 25 })) {
-      return false;
-    }
-    return true;
-  }
-
-  validateEmail = () => {
-    const { user: { personal: { email }}} = this.state;
-    if (email.email && !Validator.isEmail(email.email)) {
-      return false;
-    }
-    return true;
-  }
-
-  validateCodePen = () => {
-    const { user: { social: { codepen }}} = this.state;
-    if (Validator.isURL(codepen)) {
-      return false;
-    }
-    return true;
   }
 
   setErrors = (errors, isPageValidation = false) => {
@@ -465,41 +413,45 @@ class Preferences extends React.Component {
   }
 
   profileStrenth = () => {
-    /* determine profile strength on save and show
-    gentle warnings about making profile stronger */
-    const { user: {
-        career: { working },
-        personal: { bio, country, location },
-        skillsAndInterests: { codingInterests, coreSkills },
+    const {
+      user: {
+        career,
+        personal,
+        skillsAndInterests: {
+          codingInterests,
+          coreSkills
+        }
       }
     } = this.state;
-
     var profileStrength = 0;
-
-    if (bio) profileStrength++;
-    if (country) profileStrength++;
-    if (location) profileStrength++;
-
+    if (personal.bio) profileStrength++;
+    if (personal.country) profileStrength++;
+    if (personal.location) profileStrength++;
+    /* determine profile strength on save and show
+    gentle warnings about making profile stronger */
     if (isEmpty(codingInterests) && isEmpty(coreSkills)) {
       this.setState({
         profileWarning:
-          `Stronger profiles make for a stronger and more effective
-           community — consider telling us about your skills and
-           interests so other members know what you rock at!`
+          `Stronger profiles make for a stronger and
+           more effective community — consider telling
+           us about your skills and interests so other
+           members know what you rock at!`
       });
-    } else if (!working) {
+    } else if (!career.working) {
       this.setState({
         profileWarning:
-          `Stronger profiles make for a stronger and more effective
-           community — consider telling us about where you are in your
-           programming career so other members will know how long you've
-           been coding for!`
+          `Stronger profiles make for a stronger and
+           more effective community — consider telling
+           us about where you are in your programming
+           career so other members will know how long
+           you've been coding for!`
       });
     } else if (profileStrength < 3) {
       this.setState({
         profileWarning:
-          `Nice work! Your profile is looking pretty strong. Why not round
-           it off with some information about yourself (bio, region, etc.)
+          `Nice work! Your profile is looking pretty
+           strong. Why not round it off with some
+           information about yourself (bio, region, etc.)
            so other members can learn more about you?`
       });
     }
@@ -556,8 +508,9 @@ class Preferences extends React.Component {
 
   toggleShowSection = (target) => {
     const { viewState } = this.state;
-    /* we pass callback to setState to catch state after
-    update in case all the modals are now open or closed */
+    /* we pass callback to setState to catch
+    state after update in case all sections
+    are open or all sections are closed */
     viewState[target] = !viewState[target];
     this.setState({ viewState }, () => {
       if (
