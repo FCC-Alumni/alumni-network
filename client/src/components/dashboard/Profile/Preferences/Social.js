@@ -25,7 +25,7 @@ export default class Social extends React.Component {
       showPopUp,
       showSocial,
       saveChanges,
-      subSaveClick,
+      saveSection,
       handleInputChange,
     } = this.props;
     return (
@@ -35,7 +35,7 @@ export default class Social extends React.Component {
           id="socialPopUp"
           showSave={showSocial}
           showPopUp={showPopUp}
-          subSaveClick={subSaveClick}
+          saveSection={saveSection}
           onClick={() => toggle('showSocial')} />
         <TransitionContainer isExpanded={showSocial}>
           <MessageBox

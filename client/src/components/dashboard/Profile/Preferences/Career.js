@@ -44,7 +44,7 @@ class Career extends React.Component {
       showPopUp,
       clearForm,
       showCareer,
-      subSaveClick,
+      saveSection,
       bigBottomMargin,
       handleInputChange,
       handleRadioChange,
@@ -58,7 +58,7 @@ class Career extends React.Component {
           id="careerPopUp"
           showSave={showCareer}
           showPopUp={showPopUp}
-          subSaveClick={subSaveClick}
+          saveSection={saveSection}
           onClick={() => toggle('showCareer')} />
         <OuterTransitionContainer
           isExpanded={showCareer}
@@ -78,12 +78,12 @@ class Career extends React.Component {
               <label>Are you employed as a software developer?</label>
               <RadioButton
                 label='Yes'
-                name="working"
+                name="isEmployed"
                 onChange={handleRadioChange}
                 checked={working === 'yes' && true} />
               <RadioButton
                 label='No'
-                name="working"
+                name="isEmployed"
                 onChange={handleRadioChange}
                 checked={working === 'no' && true}  />
             </div>

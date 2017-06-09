@@ -32,7 +32,7 @@ class PersonalInfo extends React.Component {
       isPrivate,
       displayName,
       showProfile,
-      subSaveClick,
+      saveSection,
       handleInputChange,
       handleCountryChange,
       toggleEmailVisibilty,
@@ -45,7 +45,7 @@ class PersonalInfo extends React.Component {
           content="Personal Info"
           showPopUp={showPopUp}
           showSave={showProfile}
-          subSaveClick={subSaveClick}
+          saveSection={saveSection}
           onClick={() => toggle('showProfile')} />
         <TransitionContainer isExpanded={showProfile} className="ui form">
           <Container className="ui list">
@@ -96,6 +96,11 @@ class PersonalInfo extends React.Component {
                   options={countries}
                   placeholder='Select Country'
                   onChange={handleCountryChange} />
+              { errors.country &&
+                <div style={{ marginTop: 5 }}
+                  className={'ui red basic label'}>
+                  {errors.country}
+                </div> }
               </div>
             </ListItem>
             <ListItem>

@@ -9,14 +9,14 @@ const Container = styled.div`
   display: table;
 `;
 
-const RibbonHeader = ({ content, onClick, showPopUp, subSaveClick, id, showSave }) => {
+const RibbonHeader = ({ content, onClick, showPopUp, saveSection, id, showSave }) => {
   return (
     <Container>
       <div className="ui green large ribbon label" onClick={onClick}>
         {content}
       { showSave &&
         <div className="detail">
-          <i onClick={subSaveClick} id={id} title="Save Section" className="saveSection save icon" />
+          <i onClick={saveSection} id={id} title="Save Section" className="saveSection save icon" />
         </div> }
       </div>
     { showSave &&

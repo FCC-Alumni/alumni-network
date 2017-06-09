@@ -6,8 +6,9 @@ import Collaboration from './Profile/Preferences/Collaboration';
 import { connect } from 'react-redux';
 import { connectScreenSize } from 'react-screen-size';
 import { countryCodes } from '../../assets/dropdowns/countries';
+import ERROR from '../../assets/helpers/errors';
 import { findIndex } from 'lodash';
-import interests from '../../assets/dropdowns/interests';
+import interests, { INTERESTS_MAP } from '../../assets/dropdowns/interests';
 import { isEmpty } from 'lodash';
 import { mapScreenSizeToProps } from '../Navbar';
 import Mentorship from './Profile/Preferences/Mentorship';
@@ -17,14 +18,14 @@ import propTypes from 'prop-types';
 import React from 'react';
 import { savePreferencesViewState } from '../../actions/views';
 import { saveUser, updateUser, updateUserPartial } from '../../actions/user';
-import skills from '../../assets/dropdowns/skills';
+import skills, { SKILLS_MAP } from '../../assets/dropdowns/skills';
 import SkillsAndInterests from './Profile/Preferences/SkillsAndInterests';
 import Social from './Profile/Preferences/Social';
 import styled from 'styled-components';
 import swearjar from '../../assets/helpers/swearjar-lite';
 import { ThickPaddedBottom } from '../../styles/style-utils';
 import UserLabel from '../dashboard/common/UserLabel';
-import Validator from 'validator';
+import validate from '../../assets/helpers/validations';
 
 /*
 TODO:
@@ -75,13 +76,6 @@ class Preferences extends React.Component {
       interestsOptions: [],
       skillsOptions: [],
     }
-    // SHARED ERRORS:
-    this.EMAIL_ERROR = "Please enter a valid email address."
-    this.LOCATION_ERROR = "Location must be 25 characters or less.";
-    this.DISPLAY_NAME_ERROR = "Display name must be 40 characters or less.";
-    this.CAREER_ERROR = "Please complete the entire section or clear the form."
-    this.CODEPEN_ERROR = "Please enter your username only, not your profile url.";
-    this.MENTORSHIP_ERROR = "To complete your mentorship prorgram enrollment, please fill out the section above.";
   }
 
   componentDidMount() {
@@ -118,19 +112,19 @@ class Preferences extends React.Component {
     }
   }
 
-  toggleMentorship = (bool, id) => {
-    var { user } = this.state;
-    if (id === 'mentorship') {
-      user.mentorship.isMentor = bool;
-    } else {
-      user.mentorship.isMentee = bool;
-    }
-    this.setState({ user });
-  }
+  /**********************
+  HANDLE CHANGE FUNCTIONS
+  **********************/
 
   handleSkillsChange = (e, { value }) => {
+    /* extra logic here and in sister function
+    to make sure same skills with different cases
+    are not added to the list */
     var { user } = this.state;
-    user.skillsAndInterests.coreSkills = value;
+    user.skillsAndInterests.coreSkills = value
+      .map(el => el.toLowerCase())
+      .filter((el, idx, arr) => arr.indexOf(el) === idx)
+      .map(el => SKILLS_MAP[el]);
     this.setState({ user });
   }
 
@@ -138,11 +132,11 @@ class Preferences extends React.Component {
   handleAddSkill = (e, { value }) => {
     if (!swearjar.profane(value)) {
       var { user, skillsOptions } = this.state;
-      /* if skill not already in dropdown options, temporarily
-      add it to options list so that semantic-ui-react component
+      /* if skill not already in dropdown options, ignoring case,
+      temporarily add it to options list so that semantic-ui-react
       will display it as choice and add new choice to user object */
-      if (findIndex(skillsOptions, { text: value, value }) === -1) {
-        skillsOptions = [{ text: value, value }, ...skillsOptions];
+      if (findIndex(skillsOptions, { key: value.toLowerCase() }) === -1) {
+        skillsOptions = [{ text: value, key: value, value }, ...skillsOptions];
         user.skillsAndInterests.coreSkills.push(value);
       }
       this.setState({ skillsOptions, user });
@@ -151,7 +145,10 @@ class Preferences extends React.Component {
 
   handleInterestsChange = (e, { value }) => {
     var { user } = this.state;
-    user.skillsAndInterests.codingInterests = value;
+    user.skillsAndInterests.codingInterests = value
+      .map(el => el.toLowerCase())
+      .filter((el, idx, arr) => arr.indexOf(el) === idx)
+      .map(el => INTERESTS_MAP[el]);
     this.setState({ user });
   }
 
@@ -162,8 +159,8 @@ class Preferences extends React.Component {
       /* if interest not already in dropdown options, temporarily
       add it to options list so that semantic-ui-react component
       will display it as choice and add new choice to user object */
-      if (findIndex(interestsOptions, { text: value, value }) === -1) {
-        interestsOptions = [{ text: value, value }, ...interestsOptions];
+      if (findIndex(interestsOptions, { key: value.toLowerCase() }) === -1) {
+        interestsOptions = [{ text: value, key: value, value }, ...interestsOptions];
         user.skillsAndInterests.codingInterests.push(value);
       }
       this.setState({ interestsOptions, user });
@@ -183,82 +180,59 @@ class Preferences extends React.Component {
     this.setState({ user });
   }
 
-  handleRadioChange = (e) => {
+  handleRadioChange = ({ target: { name, id }}) => {
     var { user } = this.state;
-    if (e.target.name === 'working') {
-      if (e.target.id === 'Yes') {
-        user.career.jobSearch = '';
-        user.career.working = 'yes';
-      } else if (e.target.id === 'No') {
-        user.career.tenure = '';
-        user.career.company = '';
-        user.career.working = 'no';
-      }
-    }
-    if (e.target.name === 'jobSearch') {
-      user.career.jobSearch = e.target.id.replace(/_/g, ' ');
+    switch (name) {
+      case 'isEmployed':
+        if (id === 'Yes') {
+          user.career.jobSearch = '';
+          user.career.working = 'yes';
+        }
+        if (id === 'No') {
+          user.career.tenure = '';
+          user.career.company = '';
+          user.career.working = 'no';
+        }
+        break;
+      default:
+        user.career.jobSearch = id.replace(/_/g, ' ');
+        break;
     }
     this.setState({ user });
   }
 
-  handleInputChange = (e) => {
-    var { user, errors } = this.state;
-    var { name, value } = e.target;
-    errors[name] = '';
-    if (name === 'company') user.career.company = swearjar.censor(value);
-    else if (name === 'codepen') user.social.codepen = value;
-    else if (name === 'email') user.personal.email.email = value;
-    else if (name === 'mentorshipSkills') {
-      if (this.isSectionValid(name, value))
-        user.mentorship.mentorshipSkills = swearjar.censor(value);
-    } else {
-      if (this.isSectionValid(name, value))
-        user.personal[name] = swearjar.censor(value);
-    }
-    this.setState({ user, errors });
-  }
-
-  saveProjectsList = (items_list) => {
+  handleInputChange = ({target: { name, value }}) => {
     var { user } = this.state;
-    user.projects = items_list;
+    switch (name) {
+      case 'company':
+        // validation happens on save action for these
+        if (this.isFieldValid(name, value))
+          user.career.company = swearjar.censor(value);
+        break;
+      case 'codepen':
+        user.social.codepen = value;
+        break;
+      case 'email':
+        user.personal.email.email = value;
+        break;
+      case 'mentorshipSkills':
+        // these require real-time validations
+        if (this.isFieldValid(name, value))
+          user.mentorship.mentorshipSkills = swearjar.censor(value);
+        break;
+      default:
+        if (this.isFieldValid(name, value))
+          user.personal[name] = swearjar.censor(value);
+        break;
+    }
     this.setState({ user });
   }
 
-  toggleEmailVisibilty = () => {
-    var { user } = this.state;
-    if (user.personal.email.private)
-    user.personal.email.private = false;
-    else user.personal.email.private = true;
-    this.setState({ user });
-  }
+  /*************
+  SAVE FUNCTIONS
+  *************/
 
-  saveChanges = (openModal = false) => {
-    if (this.isPageValid()) {
-      updateUser(this.state.user).then(res => {
-        const { updatedUser } = res.data;
-        this.props.saveUser(updatedUser);
-        openModal && this.setState({ modalOpen: true });
-      }).catch(err => console.log(err));
-    } else {
-      /* this function is shared. only open success modal
-      when called from profile page "save" buttons. pass
-      in "open modal" to override default argument */
-      openModal && this.setState({ modalOpen: true }, () => {
-        var { viewState } = this.state;
-        // open sections that have errors if they are closed
-        if (this.state.errors.email)
-          viewState.showProfile = true;
-        if (this.state.errors.career)
-          viewState.showCareer = true;
-        if (this.state.errors.mentorshipSkills)
-          viewState.showMentorship = true;
-        this.setState({ viewState });
-      });
-    }
-  }
-
-  // now saves only section user clicks button for
-  handleSubSaveClick = (e) => {
+  handleSaveSection = (e) => {
     e.stopPropagation();
     e.persist();
     const { user, user: { _id } } = this.state;
@@ -267,132 +241,227 @@ class Preferences extends React.Component {
       updateUserPartial(_id, section, user[section]).then(res => {
         const { updatedUser } = res.data;
         this.props.saveUser(updatedUser);
-        // open "Saved" popup
+        // open "saved" popup
         this.setState({ [e.target.id]: true });
         // close popup 1 second later
-        setTimeout( _ => this.resetPopUp(e.target.id), 1200);
+        setTimeout(() => this.resetPopUp(e.target.id), 1200);
       }).catch(err => console.log(err));
     }
   }
 
-  isSectionValid = (section, str) => {
-    this.setState({ errors: {} });
-    var errors = {};
-
-    const {
-      user: {
-        social: { codepen },
-        personal: { email: { email }, location, displayName },
-        mentorship: { isMentor, isMentee, mentorshipSkills },
-        career: { working, tenure, company, jobSearch },
-      }
-    } = this.state;
-
-    // SECTION VALIDATIONS (called on handleSubSaveClick)
-    if (section === 'career') {
-      if (working && working === 'no' && (!tenure || !jobSearch)) {
-        errors.career = this.CAREER_ERROR;
-      }
-      if (working && working === 'yes' && (!tenure || !company)) {
-        errors.career = this.CAREER_ERROR;
-      }
-    }
-    if (section === 'social' && codepen && Validator.isURL(codepen)) {
-      errors.codepen = this.CODEPEN_ERROR;
-    }
-    if (section === 'personal') {
-      if (email && !Validator.isEmail(email)) {
-        errors.email = this.EMAIL_ERROR;
-      }
-      /* these 2 seem reduntant but are needed in case pre-loaded github data
-      breaks validatiion rules - no onChange error since not manually typed */
-      if (!Validator.isLength(location, { min: 0, max: 25 })) {
-        errors.location = this.LOCATION_ERROR;
-      }
-      if (!Validator.isLength(displayName, { min: 0, max: 40 })) {
-        errors.displayName = this.DISPLAY_NAME_ERROR;
-      }
-    }
-    if (section === 'mentorship' && (isMentee || isMentor) && !mentorshipSkills) {
-      errors.mentorshipSkills = this.MENTORSHIP_ERROR;
-    }
-
-    // ONCHANGE VALIDATIONS (called on handleInputChange change)
-    if (section === 'location' && !Validator.isLength(str, { min: 0, max: 25 })) {
-      errors.location = this.LOCATION_ERROR;
-    }
-    if (section === 'bio' && !Validator.isLength(str, { min: 0, max: 300 })) {
-      errors.bio = "Bio must be 300 characters or less.";
-    }
-    if (section === 'displayName' && !Validator.isLength(str, { min: 0, max: 40 })) {
-      errors.displayName = "Display name must be 40 characters or less.";
-    }
-    if (section === 'mentorshipSkills' && !Validator.isLength(str, { min: 0, max: 200 })) {
-      errors.mentorshipSkills = "Mentorshio bio must be 200 characters or less.";
-    }
-
-    if (isEmpty(errors)) {
-      return true;
+  handleSaveAll = (openModal = false) => {
+    if (this.isPageValid()) {
+      // if no errors, determine profile strength
+      this.profileStrength();
+      // then update user in mongo and update store
+      updateUser(this.state.user).then(res => {
+        const { updatedUser } = res.data;
+        this.props.saveUser(updatedUser);
+        /* this function is shared. only open success modal
+        when called from profile page "save" buttons. pass
+        in "open modal" to override default argument */
+        openModal && this.setState({ modalOpen: true });
+      }).catch(err => console.log(err));
     } else {
-      this.setState({ errors });
-      return false;
+      /* open error modal and
+      reveal sections with errors */
+      openModal && this.showErrors();
     }
   }
 
-  isPageValid = () => {
+  saveProjectsList = (items_list) => {
+    var { user } = this.state;
+    user.projects = items_list;
+    this.setState({ user });
+  }
+
+  /*******************
+  VALIDATIOR FUNCTIONS
+  *******************/
+
+  isFieldValid = (field, str) => {
+    // reset errors on change
     this.setState({ errors: {} });
     var errors = {};
-    var profileStrength = 0;
+    // validations:
+    switch (field) {
+      case 'bio':
+        if (!validate.bio(str))
+          errors.bio = ERROR.BIO;
+        break;
+      case 'company':
+        if (!validate.__25Chars(str))
+          errors.company = ERROR.COMPANY;
+        break;
+      case 'location':
+        if (!validate.__25Chars(str))
+          errors.location = ERROR.LOCATION;
+        break;
+      case 'displayName':
+        if (!validate.displayName(str))
+          errors.displayName = ERROR.DISPLAY_NAME;
+        break;
+      case 'mentorshipSkills':
+        if (!validate.mentorshipBio(str))
+          errors.mentorshipSkills = ERROR.MENTORSHIP_BIO;
+        break;
+      default: return;
+    }
+    return this.setErrors(errors);
+  }
 
-    const { user: {
-        social: { codepen },
-        career: { working, tenure, company, jobSearch },
-        skillsAndInterests: { codingInterests, coreSkills },
-        mentorship: { isMentor, isMentee, mentorshipSkills },
-        personal: { displayName, email: { email }, bio, country, location },
+  isSectionValid = (section, str) => {
+    var errors = {};
+
+    const {
+      personal, social, mentorship, career
+    } = this.state.user;
+
+    if (['skillsAndInterests', 'projects']
+         .indexOf(section) !== -1) {
+      return true;
+    }
+
+    switch (section) {
+      case 'career':
+        if (!validate.career(career))
+          errors.career = ERROR.CAREER;
+        break;
+      case 'social':
+        if (!validate.codePen(social.codepen))
+          errors.codepen = ERROR.CODEPEN;
+        break;
+      case 'personal':
+        if (!validate.email(personal.email.email))
+          errors.email = ERROR.EMAIL;
+        if (!validate.country(personal.country))
+          errors.country = ERROR.COUNTRY;
+        if (!validate.__25Chars(personal.location))
+          errors.location = ERROR.LOCATION;
+        if (!validate.displayName(personal.displayName))
+          errors.displayName = ERROR.DISPLAY_NAME;
+        break;
+      case 'mentorship':
+        if (!validate.mentorshipSection(mentorship))
+          errors.mentorshipSkills = ERROR.MENTORSHIP;
+        break;
+      default: return;
+    }
+    return this.setErrors(errors);
+  }
+
+  /* locations & displayName validations in isPageValid & in isSectionValid
+  seem reduntant with onChange isFieldValid validations but are needed
+  in case pre-loaded github data breaks validatiion rules - this
+  would not trigger an onChange error */
+
+  isPageValid = () => {
+    var errors = {};
+
+    const {
+      personal, social, mentorship, career
+    } = this.state.user;
+
+    if (!validate.career(career))
+      errors.career = ERROR.CAREER;
+    if (!validate.codePen(social.codepen))
+      errors.codepen = ERROR.CODEPEN;
+    if (!validate.country(personal.country))
+      errors.country = ERROR.COUNTRY;
+    if (!validate.email(personal.email.email))
+      errors.email = ERROR.EMAIL;
+    if (!validate.__25Chars(personal.location))
+      errors.location = ERROR.LOCATION;
+    if (!validate.mentorshipSection(mentorship))
+      errors.mentorshipSkills = ERROR.MENTORSHIP;
+    if (!validate.displayName(personal.displayName))
+      errors.displayName = ERROR.DISPLAY_NAME;
+
+    return this.setErrors(errors, 'page validator');
+  }
+
+  setErrors = (errors, isPageValidation = false) => {
+    this.setState({ errors });
+    if (!isPageValidation) {
+      if (isEmpty(errors)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (isEmpty(errors)) {
+        this.setState({ isPageValid: true });
+        return true;
+      } else {
+        this.setState({ errors, isPageValid: false });
+        return false;
+      }
+    }
+  }
+
+  /*****************
+  HELPERS FUNCTIONS
+  *****************/
+
+  showErrors = () => {
+    // reveals errors on page => global "save" buttons
+    this.setState({ modalOpen: true }, () => {
+      var { viewState, errors } = this.state;
+      if (errors.email || errors.country ||
+            errors.location || errors.displayName)
+        viewState.showProfile = true;
+      if (errors.codepen)
+        viewState.showSocial = true;
+      if (errors.career)
+        viewState.showCareer = true;
+      if (errors.mentorshipSkills)
+        viewState.showMentorship = true;
+      this.setState({ viewState });
+    });
+  }
+
+  profileStrength = () => {
+    const {
+      user: {
+        career,
+        personal,
+        skillsAndInterests: {
+          codingInterests,
+          coreSkills
+        }
       }
     } = this.state;
-
-    if (email && !Validator.isEmail(email)) {
-      errors.email = this.EMAIL_ERROR;
-    }
-    if (codepen && Validator.isURL(codepen)) {
-      errors.codepen = this.CODEPEN_ERROR;
-    }
-    if ((isMentee || isMentor) && !mentorshipSkills) {
-      errors.mentorshipSkills = this.MENTORSHIP_ERROR;
-    }
-    if (working && working === 'yes' && (!tenure || !company)) {
-      errors.career = this.CAREER_ERROR;
-    }
-    if (working && working === 'no' && (!tenure || !jobSearch)) {
-      errors.career = this.CAREER_ERROR;
-    }
-    if (location && !Validator.isLength(location, { min: 0, max: 25 })) {
-      errors.location = this.LOCATION_ERROR;
-    }
-    if (displayName && !Validator.isLength(displayName, { min: 0, max: 40 })) {
-      errors.displayName = this.DISPLAY_NAME_ERROR;
-    }
-
-    if (bio) profileStrength++;
-    if (country) profileStrength++;
-    if (location) profileStrength++;
-
+    var profileStrength = 0;
+    if (personal.bio) profileStrength++;
+    if (personal.country) profileStrength++;
+    if (personal.location) profileStrength++;
+    /* determine profile strength on save and show
+    gentle warnings about making profile stronger */
     if (isEmpty(codingInterests) && isEmpty(coreSkills)) {
-      this.setState({ profileWarning: 'Stronger profiles make for a stronger and more effective community — consider telling us about your skills and interests so other members know what you rock at!' });
-    } else if (!working) {
-      this.setState({ profileWarning: 'Stronger profiles make for a stronger and more effective community — consider telling us about where you are in your programming career so other members will know how long you\'ve been coding for!' });
+      this.setState({
+        profileWarning:
+          `Stronger profiles make for a stronger and
+           more effective community — consider telling
+           us about your skills and interests so other
+           members know what you rock at!`
+      });
+    } else if (!career.working) {
+      this.setState({
+        profileWarning:
+          `Stronger profiles make for a stronger and
+           more effective community — consider telling
+           us about where you are in your programming
+           career so other members will know how long
+           you've been coding for!`
+      });
     } else if (profileStrength < 3) {
-      this.setState({ profileWarning: 'Nice work! Your profile is looking pretty strong. Why not round it off with some information about yourself (bio, region, etc.) so other members can learn more about you?' });
-    }
-
-    if (isEmpty(errors)) {
-      this.setState({ isPageValid: true });
-      return true;
-    } else {
-      this.setState({ errors, isPageValid: false });
-      return false;
+      this.setState({
+        profileWarning:
+          `Nice work! Your profile is looking pretty
+           strong. Why not round it off with some
+           information about yourself (bio, region, etc.)
+           so other members can learn more about you?`
+      });
     }
   }
 
@@ -404,7 +473,26 @@ class Preferences extends React.Component {
     this.setState({ [id]: false });
   }
 
+  toggleMentorship = (bool, id) => {
+    var { user } = this.state;
+    if (id === 'mentorship') {
+      user.mentorship.isMentor = bool;
+    } else {
+      user.mentorship.isMentee = bool;
+    }
+    this.setState({ user });
+  }
+
+  toggleEmailVisibilty = () => {
+    var { user } = this.state;
+    if (user.personal.email.private)
+    user.personal.email.private = false;
+    else user.personal.email.private = true;
+    this.setState({ user });
+  }
+
   clearSocialInput = (site) => {
+    // clear LI / twitter field
     var { user } = this.state;
     user.social[site] = '';
     this.setState({ user }, () => {
@@ -416,6 +504,7 @@ class Preferences extends React.Component {
   }
 
   clearCareerForm = () => {
+    // reset career form
     var { user, errors } = this.state;
     user.career.working = '';
     user.career.tenure = '';
@@ -425,10 +514,11 @@ class Preferences extends React.Component {
     this.setState({ user, errors });
   }
 
-  toggle = (target) => {
+  toggleShowSection = (target) => {
     const { viewState } = this.state;
-    /* we pass callback to setState to catch state after update
-    in case all the modals are now open or closed */
+    /* we pass callback to setState to catch
+    state after update in case all sections
+    are open or all sections are closed */
     viewState[target] = !viewState[target];
     this.setState({ viewState }, () => {
       if (
@@ -457,7 +547,7 @@ class Preferences extends React.Component {
     });
   }
 
-  toggleAll = () => {
+  toggleShowAllSections = () => {
     var { viewState, viewState: { showAll } } = this.state;
     viewState.showAll = !showAll;
     viewState.showFCC = !showAll;
@@ -498,7 +588,7 @@ class Preferences extends React.Component {
           size="huge"
           username={username}
           image={personal.avatarUrl}
-          toggleAll={this.toggleAll}
+          toggleAll={this.toggleShowAllSections}
           folder={isDesktop ? this.state.viewState.showAll : ''}
           label={!isDesktop ? '' : mentorship.mentor ? 'Mentor' : 'Member'} />
         <TopButton
@@ -507,31 +597,31 @@ class Preferences extends React.Component {
           color="green"
           content="Save"
           labelPosition="right"
-          onClick={() => this.saveChanges('open modal')} />
+          onClick={() => this.handleSaveAll('open modal')} />
           {/* floated prop throws invalid propType warning - expects only 'right' or 'left' */}
         <div className="ui raised segment">
           <PersonalInfo
             {...personal}
             errors={errors}
-            toggle={this.toggle}
             country={personal.flag}
             email={personal.email.email}
+            toggle={this.toggleShowSection}
             isPrivate={personal.email.private}
+            saveSection={this.handleSaveSection}
             showPopUp={this.state.personalPopUp}
-            subSaveClick={this.handleSubSaveClick}
             handleInputChange={this.handleInputChange}
             showProfile={this.state.viewState.showProfile}
             toggleEmailVisibilty={this.toggleEmailVisibilty}
             handleCountryChange={this.handleCountryChange} />
           <Certifications
-            toggle={this.toggle}
+            toggle={this.toggleShowSection}
             fccCerts={this.state.user.fccCerts}
             showFCC={this.state.viewState.showFCC} />
           <Mentorship
             {...mentorship}
-            toggle={this.toggle}
+            toggle={this.toggleShowSection}
             error={errors.mentorshipSkills}
-            subSaveClick={this.handleSubSaveClick}
+            saveSection={this.handleSaveSection}
             showPopUp={this.state.mentorshipPopUp}
             toggleMentorship={this.toggleMentorship}
             toggleMenteeship={this.toggleMenteeship}
@@ -539,10 +629,10 @@ class Preferences extends React.Component {
             handleRadioChange={this.handleRadioChange}
             showMentorship={this.state.viewState.showMentorship} />
           <SkillsAndInterests
-            toggle={this.toggle}
             {...skillsAndInterests}
+            toggle={this.toggleShowSection}
+            saveSection={this.handleSaveSection}
             handleAddSkill={this.handleAddSkill}
-            subSaveClick={this.handleSubSaveClick}
             skillsOptions={this.state.skillsOptions}
             handleAddInterest={this.handleAddInterest}
             showSkills={this.state.viewState.showSkills}
@@ -552,30 +642,30 @@ class Preferences extends React.Component {
             handleInterestsChange={this.handleInterestsChange} />
           <Collaboration
             username={username}
-            toggle={this.toggle}
-            saveChanges={this.saveChanges}
+            toggle={this.toggleShowSection}
+            saveChanges={this.handleSaveAll}
             projects={this.state.user.projects}
             showPopUp={this.state.projectsPopUp}
-            subSaveClick={this.handleSubSaveClick}
+            saveSection={this.handleSaveSection}
             saveProjectsList={this.saveProjectsList}
             showCollaboration={this.state.viewState.showCollaboration} />
           <Social
             {...social}
             errors={errors}
-            toggle={this.toggle}
             clear={this.clearSocialInput}
-            saveChanges={this.saveChanges}
+            toggle={this.toggleShowSection}
+            saveChanges={this.handleSaveAll}
             showPopUp={this.state.socialPopUp}
-            subSaveClick={this.handleSubSaveClick}
+            saveSection={this.handleSaveSection}
             handleInputChange={this.handleInputChange}
             showSocial={this.state.viewState.showSocial} />
           <Career
             {...career}
             errors={errors}
-            toggle={this.toggle}
+            toggle={this.toggleShowSection}
             clearForm={this.clearCareerForm}
             showPopUp={this.state.careerPopUp}
-            subSaveClick={this.handleSubSaveClick}
+            saveSection={this.handleSaveSection}
             handleInputChange={this.handleInputChange}
             handleRadioChange={this.handleRadioChange}
             showCareer={this.state.viewState.showCareer}
@@ -588,7 +678,7 @@ class Preferences extends React.Component {
             content="Save"
             floated="right"
             labelPosition="right"
-            onClick={() => this.saveChanges('open modal')} /> }
+            onClick={() => this.handleSaveAll('open modal')} /> }
         </div>
       </Container>
     );
