@@ -6,6 +6,7 @@ import Collaboration from './Profile/Preferences/Collaboration';
 import { connect } from 'react-redux';
 import { connectScreenSize } from 'react-screen-size';
 import { countryCodes } from '../../assets/dropdowns/countries';
+import ERROR from '../../assets/helpers/errors';
 import { findIndex } from 'lodash';
 import interests, { INTERESTS_MAP } from '../../assets/dropdowns/interests';
 import { isEmpty } from 'lodash';
@@ -24,7 +25,7 @@ import styled from 'styled-components';
 import swearjar from '../../assets/helpers/swearjar-lite';
 import { ThickPaddedBottom } from '../../styles/style-utils';
 import UserLabel from '../dashboard/common/UserLabel';
-import __ from '../../assets/helpers/validations';
+import validate from '../../assets/helpers/validations';
 
 /*
 TODO:
@@ -75,14 +76,6 @@ class Preferences extends React.Component {
       interestsOptions: [],
       skillsOptions: [],
     }
-    // SHARED VALIDATION ERRORS:
-    this.EMAIL_ERROR = 'Please enter a valid email address.';
-    this.LOCATION_ERROR = 'Location must be 25 characters or less.';
-    this.DISPLAY_NAME_ERROR = 'Display name must be 40 characters or less.';
-    this.CAREER_ERROR = 'Please complete the entire section or clear the form.';
-    this.CODEPEN_ERROR = 'Please enter your username only, not your profile url.';
-    this.COUNTRY_ERROR = 'Please select your country (so we can make a cool D3 map!).';
-    this.MENTORSHIP_ERROR = 'To complete your mentorship prorgram enrollment, please complete the section above.';
   }
 
   componentDidMount() {
@@ -124,11 +117,11 @@ class Preferences extends React.Component {
   **********************/
 
   handleSkillsChange = (e, { value }) => {
+    /* extra logic here and in sister function
+    to make sure same skills with different cases
+    are not added to the list */
     var { user } = this.state;
     user.skillsAndInterests.coreSkills = value
-      /* extra logic here and in sister function
-      to make sure same skills with different cases
-      are not added to the list */
       .map(el => el.toLowerCase())
       .filter((el, idx, arr) => arr.indexOf(el) === idx)
       .map(el => SKILLS_MAP[el]);
@@ -251,7 +244,7 @@ class Preferences extends React.Component {
         // open "saved" popup
         this.setState({ [e.target.id]: true });
         // close popup 1 second later
-        setTimeout( _ => this.resetPopUp(e.target.id), 1200);
+        setTimeout(() => this.resetPopUp(e.target.id), 1200);
       }).catch(err => console.log(err));
     }
   }
@@ -259,7 +252,7 @@ class Preferences extends React.Component {
   handleSaveAll = (openModal = false) => {
     if (this.isPageValid()) {
       // if no errors, determine profile strength
-      this.profileStrenth();
+      this.profileStrength();
       // then update user in mongo and update store
       updateUser(this.state.user).then(res => {
         const { updatedUser } = res.data;
@@ -292,25 +285,25 @@ class Preferences extends React.Component {
     var errors = {};
     // validations:
     switch (field) {
-      case 'location':
-        if (!__.validateTwentyFiveChars(str))
-          errors.location = this.LOCATION_ERROR;
-        break;
-      case 'displayName':
-        if (!__.validateDisplayName(str))
-          errors.displayName = this.DISPLAY_NAME_ERROR;
-        break;
       case 'bio':
-        if (!__.validateBio(str))
-          errors.bio = 'Bio must be 300 characters or less.';
+        if (!validate.bio(str))
+          errors.bio = ERROR.BIO;
         break;
       case 'company':
-        if (!__.validate25Chars(str))
-          errors.company = 'Company must be 25 characters or less.';
+        if (!validate.__25Chars(str))
+          errors.company = ERROR.COMPANY;
+        break;
+      case 'location':
+        if (!validate.__25Chars(str))
+          errors.location = ERROR.LOCATION;
+        break;
+      case 'displayName':
+        if (!validate.displayName(str))
+          errors.displayName = ERROR.DISPLAY_NAME;
         break;
       case 'mentorshipSkills':
-        if (!__.validateMentorshipBio(str))
-          errors.mentorshipSkills = 'Mentorshio bio must be 200 characters or less.';
+        if (!validate.mentorshipBio(str))
+          errors.mentorshipSkills = ERROR.MENTORSHIP_BIO;
         break;
       default: return;
     }
@@ -319,9 +312,10 @@ class Preferences extends React.Component {
 
   isSectionValid = (section, str) => {
     var errors = {};
-    const { user } = this.state;
-    const { email } = this.state.user.personal;
-    const { personal, social } = this.state.user;
+
+    const {
+      personal, social, mentorship, career
+    } = this.state.user;
 
     if (['skillsAndInterests', 'projects']
          .indexOf(section) !== -1) {
@@ -330,26 +324,26 @@ class Preferences extends React.Component {
 
     switch (section) {
       case 'career':
-        if (!__.validateCareer(user.career))
-          errors.career = this.CAREER_ERROR;
+        if (!validate.career(career))
+          errors.career = ERROR.CAREER;
         break;
       case 'social':
-        if (!__.validateCodePen(social.codepen))
-          errors.codepen = this.CODEPEN_ERROR;
+        if (!validate.codePen(social.codepen))
+          errors.codepen = ERROR.CODEPEN;
         break;
       case 'personal':
-        if (!__.validateEmail(email.email))
-          errors.email = this.EMAIL_ERROR;
-        if (!__.validateCountry(personal.country))
-          errors.country = this.COUNTRY_ERROR;
-        if (!__.validate25Chars(personal.location))
-          errors.location = this.LOCATION_ERROR;
-        if (!__.validateDisplayName(personal.displayName))
-          errors.displayName = this.DISPLAY_NAME_ERROR;
+        if (!validate.email(personal.email.email))
+          errors.email = ERROR.EMAIL;
+        if (!validate.country(personal.country))
+          errors.country = ERROR.COUNTRY;
+        if (!validate.__25Chars(personal.location))
+          errors.location = ERROR.LOCATION;
+        if (!validate.displayName(personal.displayName))
+          errors.displayName = ERROR.DISPLAY_NAME;
         break;
       case 'mentorship':
-        if (!__.validateMentorshipSection(user.mentorship))
-          errors.mentorshipSkills = this.MENTORSHIP_ERROR;
+        if (!validate.mentorshipSection(mentorship))
+          errors.mentorshipSkills = ERROR.MENTORSHIP;
         break;
       default: return;
     }
@@ -363,24 +357,25 @@ class Preferences extends React.Component {
 
   isPageValid = () => {
     var errors = {};
-    const { user } = this.state;
-    const { email } = this.state.user.personal;
-    const { personal, social } = this.state.user;
 
-    if (!__.validateCareer(user.career))
-      errors.career = this.CAREER_ERROR;
-    if (!__.validateEmail(email.email))
-      errors.email = this.EMAIL_ERROR;
-    if (!__.validateCodePen(social.codepen))
-      errors.codepen = this.CODEPEN_ERROR;
-    if (!__.validateCountry(personal.country))
-      errors.country = this.COUNTRY_ERROR;
-    if (!__.validate25Chars(personal.location))
-      errors.location = this.LOCATION_ERROR;
-    if (!__.validateDisplayName(personal.displayName))
-      errors.displayName = this.DISPLAY_NAME_ERROR;
-    if (!__.validateMentorshipSection(user.mentorship))
-      errors.mentorshipSkills = this.MENTORSHIP_ERROR;
+    const {
+      personal, social, mentorship, career
+    } = this.state.user;
+
+    if (!validate.career(career))
+      errors.career = ERROR.CAREER;
+    if (!validate.codePen(social.codepen))
+      errors.codepen = ERROR.CODEPEN;
+    if (!validate.country(personal.country))
+      errors.country = ERROR.COUNTRY;
+    if (!validate.email(personal.email.email))
+      errors.email = ERROR.EMAIL;
+    if (!validate.__25Chars(personal.location))
+      errors.location = ERROR.LOCATION;
+    if (!validate.mentorshipSection(mentorship))
+      errors.mentorshipSkills = ERROR.MENTORSHIP;
+    if (!validate.displayName(personal.displayName))
+      errors.displayName = ERROR.DISPLAY_NAME;
 
     return this.setErrors(errors, 'page validator');
   }
@@ -425,7 +420,7 @@ class Preferences extends React.Component {
     });
   }
 
-  profileStrenth = () => {
+  profileStrength = () => {
     const {
       user: {
         career,
