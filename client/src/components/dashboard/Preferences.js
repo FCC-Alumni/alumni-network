@@ -24,7 +24,6 @@ import styled from 'styled-components';
 import swearjar from '../../assets/helpers/swearjar-lite';
 import { ThickPaddedBottom } from '../../styles/style-utils';
 import UserLabel from '../dashboard/common/UserLabel';
-import Validator from 'validator';
 import __ from '../../assets/helpers/validations';
 
 /*
