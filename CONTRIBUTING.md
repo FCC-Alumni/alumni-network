@@ -53,7 +53,7 @@ $ npm run setup
 **Secrets and API keys:**
 - This project utilizes a few APIs, but only one is absolutely crucial for the app to run: GitHub. Since user authentication is based on a `PassportJS` GitHub strategy, you must have a GitHub ID and a GitHub secret for the app to run, otherwise you will be unable to login.
 - To get started, go to your GitHub account, and go to `Settings` > `OAuth Apps` > `Register a new application`.
-- Call your application something like `local-fccan`, give it a homepage of `https://localhost:8080` (this doesn't really matter for now), and **most importantly**, give it an "Authorization callback URL" of `https://localhost:8080/auth/github/callback` (8080 is the port the proxied express server will be running on).
+- Call your application something like `local-fccan`, give it a homepage of `http://localhost:8080` (this doesn't really matter for now), and **most importantly**, give it an "Authorization callback URL" of `http://localhost:8080/auth/github/callback` (8080 is the port the proxied express server will be running on).
 > **_IMPORTANT:_** Make sure there is no trailing slash at the end of your authorization url - you should enter it _**exactly**_ as it is above.
 - Once you've successfully created a new OAuth app, copy the sample `.env` file into your root directory and name it `.env`:
 ```shell
