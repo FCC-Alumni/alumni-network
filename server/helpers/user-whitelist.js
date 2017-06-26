@@ -17,6 +17,9 @@ export const whitelist = {
    * GitHub username: freeCodeCamp username
    */
 
+   Rayhatron: 'rayhatron', // case discrepancy
+   '3dw1nM0535': '3dw1nm0535', // case discrepancy
+
 };
 
 /* ****************************************************
