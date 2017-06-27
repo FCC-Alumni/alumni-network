@@ -119,12 +119,28 @@ class Preferences extends React.Component {
   handleSkillsChange = (e, { value }) => {
     /* extra logic here and in sister function
     to make sure same skills with different cases
-    are not added to the list */
+    are not added to the list (e.g. javascript
+    should automatically map to JavaScript dropdown
+    option). If custom skill, simply add to the list -
+    duplication prevention happens in handleAddSkill */
     var { user } = this.state;
+
+    let CURRENT_MAP = {};
+    value.forEach(el => {
+      CURRENT_MAP[el.toLowerCase()] = el;
+    });
+
     user.skillsAndInterests.coreSkills = value
       .map(el => el.toLowerCase())
       .filter((el, idx, arr) => arr.indexOf(el) === idx)
-      .map(el => SKILLS_MAP[el]);
+      .map(el => {
+        if (SKILLS_MAP[el])
+          return SKILLS_MAP[el];
+        else {
+          return CURRENT_MAP[el];
+        }
+      });
+
     this.setState({ user });
   }
 
@@ -136,7 +152,7 @@ class Preferences extends React.Component {
       temporarily add it to options list so that semantic-ui-react
       will display it as choice and add new choice to user object */
       if (findIndex(skillsOptions, { key: value.toLowerCase() }) === -1) {
-        skillsOptions = [{ text: value, key: value, value }, ...skillsOptions];
+        skillsOptions = [{ text: value, key: value.toLowerCase(), value }, ...skillsOptions];
         user.skillsAndInterests.coreSkills.push(value);
       }
       this.setState({ skillsOptions, user });
@@ -144,11 +160,24 @@ class Preferences extends React.Component {
   }
 
   handleInterestsChange = (e, { value }) => {
+    // see comment in handleSkillsChange
     var { user } = this.state;
+    
+    let CURRENT_MAP = {};
+    value.forEach(el => {
+      CURRENT_MAP[el.toLowerCase()] = el;
+    });
+
     user.skillsAndInterests.codingInterests = value
-      .map(el => el.toLowerCase())
-      .filter((el, idx, arr) => arr.indexOf(el) === idx)
-      .map(el => INTERESTS_MAP[el]);
+    .map(el => el.toLowerCase())
+    .filter((el, idx, arr) => arr.indexOf(el) === idx)
+    .map(el => {
+      if (INTERESTS_MAP[el])
+        return INTERESTS_MAP[el];
+      else {
+        return CURRENT_MAP[el];
+      }
+    });
     this.setState({ user });
   }
 
@@ -156,11 +185,11 @@ class Preferences extends React.Component {
   handleAddInterest = (e, { value }) => {
     if (!swearjar.profane(value)) {
       var { user, interestsOptions } = this.state;
-      /* if interest not already in dropdown options, temporarily
-      add it to options list so that semantic-ui-react component
+      /* if interest not already in dropdown options, ignoring case,
+      temporarily add it to options list so that semantic-ui-react
       will display it as choice and add new choice to user object */
       if (findIndex(interestsOptions, { key: value.toLowerCase() }) === -1) {
-        interestsOptions = [{ text: value, key: value, value }, ...interestsOptions];
+        interestsOptions = [{ text: value, key: value.toLowerCase(), value }, ...interestsOptions];
         user.skillsAndInterests.codingInterests.push(value);
       }
       this.setState({ interestsOptions, user });
