@@ -8,6 +8,7 @@ export const defaultState = {
   showFilters: true,
   disableClear: true,
   mentorsOnly: false,
+  menteesOnly: false,
   backendOnly: false,
   dataVisOnly: false,
   frontendOnly: false,

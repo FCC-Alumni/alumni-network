@@ -113,6 +113,7 @@ class Mentorship extends React.Component {
       !this.state.prosOnly &&
       !this.state.dataVisOnly &&
       !this.state.mentorsOnly &&
+      !this.state.menteesOnly &&
       !this.state.backendOnly &&
       !this.state.frontendOnly) {
       return true;
@@ -161,6 +162,9 @@ class Mentorship extends React.Component {
     // search filters:
     if (this.state.mentorsOnly) {
       community = community.filter(user => user.mentorship.isMentor && user);
+    }
+    if (this.state.menteesOnly) {
+      community = community.filter(user => user.mentorship.isMentee && user);
     }
     if (this.state.prosOnly) {
       community = community.filter(user => user.career.working === 'yes' && user);
