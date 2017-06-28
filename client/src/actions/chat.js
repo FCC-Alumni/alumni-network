@@ -6,7 +6,7 @@ import { store } from '../index';
 import { addFlashMessage } from './flashMessages';
 
 // define hosts
-const DEV_HOST = 'http://localhost:8080';
+const DEV_HOST = '//localhost:8080';
 const PROD_HOST = 'http://www.fcc-alumni.com';
 export const APP_HOST = process.env.NODE_ENV === 'production' ? PROD_HOST : DEV_HOST;
 

@@ -10,8 +10,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const APP_HOST = process.env.APP_HOST;
-const CLIENT_URL = process.env.NODE_ENV === 'production' ? APP_HOST : 'http://localhost:3000';
-const SERVER_URL = process.env.NODE_ENV === 'production' ? APP_HOST : 'http://localhost:8080';
+const CLIENT_URL = process.env.NODE_ENV === 'production' ? APP_HOST : '//localhost:3000';
+const SERVER_URL = process.env.NODE_ENV === 'production' ? APP_HOST : '//localhost:8080';
 
 // authentication middleware using express-session:
 export const isAuthenticated = (req, res, next) => {
