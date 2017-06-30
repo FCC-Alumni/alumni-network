@@ -1,5 +1,5 @@
 export const countries = [
-  { text: "---", value: "", key: "", flag: "" },
+  { text: "---", value: "", key: "" },
   { text: "Andorra", value: "ad", key: "ad", flag: "ad" },
   { text: "United Arab Emirates", value: "ae", key: "ae", flag: "ae" },
   { text: "Afghanistan", value: "af", key: "af", flag: "af" },

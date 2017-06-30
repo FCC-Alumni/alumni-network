@@ -50,3 +50,21 @@
 .spacer {
   padding: 5px;
 }
+
+//TODO: some of this can be cleaned up a bit
+.repo-input {
+  width: 500px;
+}
+.repo-button.basic {
+  margin: 10px 0;
+}
+@media screen and (max-width: 580px) {
+  .repo-input {
+    width: 400px;
+  }
+}
+@media screen and (max-width: 480px) {
+  .repo-input {
+    width: 322px;
+  }
+}

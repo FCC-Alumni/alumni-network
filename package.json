@@ -38,6 +38,9 @@
     "validator": "^7.0.0"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "gulp": "3.9.1",
+    "gulp-run": "1.7.1",
+    "nodemon": "^1.11.0",
+    "prompt": "1.0.0"
   }
 }

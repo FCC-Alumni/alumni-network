@@ -1,10 +1,9 @@
 import React from 'react';
-import { isEmpty } from 'lodash';
-import { indexOf } from 'lodash';
+import { isEmpty, indexOf } from 'lodash';
 import Validator from 'validator';
 import propTypes from 'prop-types';
 import styled from 'styled-components';
-import { Dropdown, Input } from 'semantic-ui-react';
+import { Dropdown, Input, Button } from 'semantic-ui-react';
 import { connectScreenSize } from 'react-screen-size';
 import repoHosts from '../../../../../assets/dropdowns/repoHosts';
 import { mapScreenSizeToProps } from '../../../Community/UserCard';
@@ -18,7 +17,6 @@ import {
 /*
 TODO:
   1) Refactor addItem() code
-  2) Create RegExp's to replace long if statements in addItem()
 */
 
 export const Container = styled.div`
@@ -60,7 +58,7 @@ class RepoList extends React.Component {
     icon: 'github',
     items_list: [],
     isLoading: false,
-    label: 'https://github.com/',
+    label: 'https://github.com/'
   }
 
   componentWillMount() {
@@ -76,6 +74,10 @@ class RepoList extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyPress);
+  }
+
+  componentWillReceiveProps (nextProps) {
+    console.log(nextProps)
   }
 
   handleKeyPress = (e) => {
@@ -171,20 +173,12 @@ class RepoList extends React.Component {
 
     // GITLAB VALIDATIONS:
     if (label === 'https://gitlab.com/') {
-      // CHALLENGE!!! anyone up for the challenge of writing a regex that covers all of this?
-      // I was unable to, would def clean this up. -Pete
 
       if (
-      // GitLab naming conventions:
-      repo.slice(-4) === '.git' ||
-      repo.slice(-5) === '.atom' ||
-      repo.slice(-1) === '.' ||
-      repo.slice(0, 1) === '-' ||
-      namespace.slice(-4) === '.git' ||
-      namespace.slice(-5) === '.atom' ||
-      namespace.slice(0, 1) === '-' ||
-      namespace.slice(-1) === '.' ||
-      !Validator.matches(item, /[\d\w-.]+\/[\d\w-.]+\/?/)
+        // GitLab naming conventions:
+        /(^-)|(\.((git)|(atom))?$)/.test(repo) ||
+        /(^-)|(\.((git)|(atom))?$)/.test(namespace) ||
+        !Validator.matches(item, /[\d\w-.]+\/[\d\w-.]+\/?/)
       ) {
         this.setState({
           error: {
@@ -328,6 +322,7 @@ class RepoList extends React.Component {
 
   render() {
     const { isMobile } = this.props.screen;
+    console.log(isMobile)
     const { item, isLoading, icon, error } = this.state;
     const listItems = this.state.items_list.map((el, index) => {
       return (
@@ -343,18 +338,37 @@ class RepoList extends React.Component {
     return (
       <Container>
         <Input
-          icon={icon}
           value={item}
           loading={isLoading}
           labelPosition="left"
           onChange={this.handleChange}
           placeholder="Namespace / Repo"
           fluid={isMobile ? true : false}
-          label={<Dropdown
-            options={repoHosts}
-            className="basic green"
-            defaultValue="https://github.com/"
-            onChange={this.handleLabelChange} />} />
+          className="repo-input"
+          label={
+            <Dropdown
+              options={repoHosts}
+              className="basic green"
+              defaultValue="https://github.com/"
+              onChange={this.handleLabelChange}
+            />
+          }
+          action={ !isMobile ?
+            <Button
+              className="basic green"
+              onClick={this.addItem.bind(this)}
+              icon={icon}
+              content="Save"/> : null
+          }
+          />
+          {
+            isMobile ?
+              <Button
+              className="basic green repo-button"
+              onClick={this.addItem.bind(this)}
+              icon={icon}
+              content="Save"/> : null
+          }
       { !isEmpty(error) && !error.repo && !error.namespace &&
         <ErrorLabel isMobile={isMobile} error={error.header} /> }
         <List className="ui middle aligned divided selection list">
