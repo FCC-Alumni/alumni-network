@@ -8,7 +8,7 @@ import RadioButton from './common/RadioButton';
 import MessageBox from '../../common/MessageBox';
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../../../Navbar';
-import { Container as InnerContainer } from './common/RepoList';
+import { Container as InnerContainer } from './common/RepoContainer';
 import surveyOptions from '../../../../assets/dropdowns/devSurvey';
 import { TransitionContainer } from '../../../../styles/style-utils';
 

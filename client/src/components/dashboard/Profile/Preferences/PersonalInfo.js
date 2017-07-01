@@ -4,7 +4,7 @@ import FormField from './common/FormField';
 import Ribbon from './common/RibbonHeader';
 import { Dropdown } from 'semantic-ui-react';
 import ListItem from '../../common/ListItem';
-import { Container } from './common/RepoList';
+import { Container } from './common/RepoContainer';
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../../../Navbar';
 import { countries } from '../../../../assets/dropdowns/countries';

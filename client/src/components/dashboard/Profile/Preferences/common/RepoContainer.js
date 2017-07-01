@@ -2,10 +2,11 @@ import React from 'react';
 import { isEmpty, indexOf } from 'lodash';
 import propTypes from 'prop-types';
 import styled from 'styled-components';
-import { Dropdown, Input, Button } from 'semantic-ui-react';
 import { connectScreenSize } from 'react-screen-size';
 import repoHosts from '../../../../../assets/dropdowns/repoHosts';
 import { mapScreenSizeToProps } from '../../../Community/UserCard';
+import RepoListItem from './RepoListItem';
+import RepoInput from './RepoInput';
 
 import {
   validateGithubRepo,
@@ -26,45 +27,7 @@ const List = styled.div`
   margin: 8px 0 0 0 !important;
 `;
 
-const StyledButton = styled(Button)`
-  margin: 10px 0 !important;
-`;
-
-const StyledItem = styled.div`
-  color: black !important;
-  font-weight: bold !important;
-  .icon {
-    color: black !important;
-  }
-  cursor: pointer;
-  &:hover {Styled
-    background: #E0E0E0 !important;
-    .icon {
-      color: #FF4025 !important;
-      transition: color 200ms ease-in-out !important;
-    }
-  }
-`;
-
-const StyledInput = styled(Input)`
-  width: 500px;
-  @media screen and (max-width: 580px) {
-    width: 400px;
-  }
-  @media screen and (max-width: 480px) {
-    width: 100%;
-  }
-`;
-
-const ErrorLabel = ({ isMobile, error }) => (
-  <div
-    style={{ marginTop: 10 }}
-    className={`ui ${!isMobile ? 'left pointing' : ''} red basic label`}>
-    {error}
-  </div>
-);
-
-class RepoList extends React.Component {
+class RepoContainer extends React.Component {
   state = {
     item: '',
     error: {},
@@ -87,6 +50,10 @@ class RepoList extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyPress);
+  }
+
+  componentWillReceiveProps (nextProps) {
+    console.log(nextProps)
   }
 
   handleKeyPress = (e) => {
@@ -336,79 +303,52 @@ class RepoList extends React.Component {
     const { item, isLoading, icon, error } = this.state;
     const listItems = this.state.items_list.map((el, index) => {
       return (
-        <StyledItem key={index} className="item">
-          <div className="right floated content">
-            <a><i onClick={this.removeItem.bind(this, el)} className="remove icon"/></a>
-            <a><i onClick={this.editItem.bind(this, el)} className="edit icon"/></a>
-          </div>
-          <a
-            href={`${el.label}${el.item}`}
-            target="_blank"
-            className="content">{`${el.label}${el.item}`}
-          </a>
-        </StyledItem>
+        <RepoListItem key={index}
+                    el={el}
+                    index={index}
+                    removeItem={this.removeItem.bind(this, el)}
+                    editItem={this.editItem.bind(this, el)}
+                />
       );
     });
     return (
       <Container>
-        <StyledInput
-          value={item}
-          loading={isLoading}
-          labelPosition="left"
-          onChange={this.handleChange}
-          placeholder="Namespace / Repo"
-          fluid={isMobile ? true : false}
-          label={
-            <Dropdown
-              options={repoHosts}
-              className="basic green"
-              defaultValue="https://github.com/"
-              onChange={this.handleLabelChange}
-            />
-          }
-          action={ !isMobile ?
-            <Button
-              className="basic green"
-              onClick={() => this.addItem()}
-              icon={icon}
-              content="Save"/> : null
-          }
-          />
-          {
-            isMobile ?
-              <StyledButton
-                className="basic green"
-                onClick={() => this.addItem()}
-                icon={icon}
-                content="Save"/> : null
-          }
-      { !isEmpty(error) && !error.repo && !error.namespace &&
-        <ErrorLabel isMobile={isMobile} error={error.header} /> }
+        <RepoInput item={item}
+                  isLoading={isLoading}
+                  handleChange={this.handleChange}
+                  isMobile={isMobile}
+                  repoHosts={repoHosts}
+                  handleDropdownChange={this.handleLabelChange}
+                  addItem={this.addItem}
+                  icon={icon}
+                  error={error} />
         <List className="ui middle aligned divided selection list">
           {listItems}
         </List>
-      { !isEmpty(error) && error.repo && error.namespace &&
-        <div className="ui error message">
-          <div className="header">{error.header}</div>
-          <ul className="list">
-            <li>{error.namespace}</li>
-            <li>{error.repo}</li>
-          </ul>
-        </div> }
+        {
+          !isEmpty(error) && error.repo && error.namespace &&
+          <div className="ui error message">
+            <div className="header">{error.header}</div>
+            <ul className="list">
+              <li>{error.namespace}</li>
+              <li>{error.repo}</li>
+            </ul>
+          </div>
+        }
       </Container>
     );
   }
 }
 
-RepoList.propTypes = {
+RepoContainer.propTypes = {
   prePopulateList: propTypes.array,
   username: propTypes.string.isRequired,
   saveChanges: propTypes.func.isRequired,
   saveListToParent: propTypes.func.isRequired,
 }
 
-RepoList.defaultProps = {
+RepoContainer.defaultProps = {
   prePopulateList: []
 }
 
-export default connectScreenSize(mapScreenSizeToProps)(RepoList);
+export default connectScreenSize(mapScreenSizeToProps)(RepoContainer);
