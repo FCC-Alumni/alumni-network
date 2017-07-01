@@ -1,6 +1,5 @@
 import React from 'react';
 import { isEmpty, indexOf } from 'lodash';
-import Validator from 'validator';
 import propTypes from 'prop-types';
 import styled from 'styled-components';
 import { Dropdown, Input, Button } from 'semantic-ui-react';
@@ -27,6 +26,10 @@ const List = styled.div`
   margin: 8px 0 0 0 !important;
 `;
 
+const StyledButton = styled(Button)`
+  margin: 10px 0 !important;
+`;
+
 const StyledItem = styled.div`
   color: black !important;
   font-weight: bold !important;
@@ -40,6 +43,16 @@ const StyledItem = styled.div`
       color: #FF4025 !important;
       transition: color 200ms ease-in-out !important;
     }
+  }
+`;
+
+const StyledInput = styled(Input)`
+  width: 500px;
+  @media screen and (max-width: 580px) {
+    width: 400px;
+  }
+  @media screen and (max-width: 480px) {
+    width: 100%;
   }
 `;
 
@@ -74,10 +87,6 @@ class RepoList extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyPress);
-  }
-
-  componentWillReceiveProps (nextProps) {
-    console.log(nextProps)
   }
 
   handleKeyPress = (e) => {
@@ -121,7 +130,7 @@ class RepoList extends React.Component {
     .catch(err => {
       this.setState({
         error: {
-          header: `Our bad, it seems like we really messed this one up! Try again never. Just kidding, give us a few.`,
+          header: `Our bad, it seems like we really messed this one up! Try again soon.`,
           repo: '',
           namespace: ''
         },
@@ -178,13 +187,15 @@ class RepoList extends React.Component {
         // GitLab naming conventions:
         /(^-)|(\.((git)|(atom))?$)/.test(repo) ||
         /(^-)|(\.((git)|(atom))?$)/.test(namespace) ||
-        !Validator.matches(item, /[\d\w-.]+\/[\d\w-.]+\/?/)
+        !/[\d\w-.]+\/[\d\w-.]+\/?/.test(item)
       ) {
         this.setState({
           error: {
-            header: 'Please enter a valid GitLab repository path: namespace/repo',
-            repo: "Namespace: This value can only contain letters, digits, '_', '-' and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'",
-            namespace: "Repo: This value can only contain letters, digits, '_', '-' and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'"
+            header:    'Please enter a valid GitLab repository path: namespace/repo',
+            repo:      `Namespace: This value can only contain letters, digits, '_', '-'
+                        and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'`,
+            namespace: `Repo: This value can only contain letters, digits, '_', '-'
+                        and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'`
           },
           item: '',
           isLoading: false
@@ -196,16 +207,15 @@ class RepoList extends React.Component {
 
     // BITBUCKET VALIDATIONS:
     if (label === 'https://bitbucket.org/') {
-      if (
-        // BitBucket naming conventions:
-        (repo.length === 1 && repo.slice(0, 1) === '.') ||
-        !Validator.matches(item, /[\d\w-]+\/[\d\w-.]+\/?/)
-      ) {
+      // BitBucket naming conventions:
+      if ((repo.length === 1 && /^\./.test(repo)) || !/[\d\w-]+\/[\d\w-.]+\/?/.test(item)) {
         this.setState({
           error: {
-            header: 'Please enter a valid BitBucket repository path: namespace/repo',
-            repo: 'Repo: This value must contain only ASCII letters, numbers, dashes, underscores and periods.',
-            namespace: 'Namespace: This value must contain only ASCII letters, numbers, dashes and underscores.'
+            header:    'Please enter a valid BitBucket repository path: namespace/repo',
+            repo:      `Repo: This value must contain only ASCII letters, numbers,
+                        dashes, underscores and periods.`,
+            namespace: `Namespace: This value must contain only ASCII letters,
+                        numbers, dashes and underscores.`
           },
           item: '',
           isLoading: false
@@ -219,17 +229,18 @@ class RepoList extends React.Component {
     if (label === 'https://github.com/') {
       if (
         // GitHub naming conventions:
-        repo.slice(0, 1) === '.' ||
-        namespace.slice(0, 1) === '-' ||
-        namespace.slice(-1) === '-' ||
-        namespace.search(/--/) > -1 ||
-        !Validator.matches(item, /[\d\w-.]+\/[\d\w-]+\/?/)
+        /^\./.test(repo) === '.' ||
+        /^-|--|-$/.test(namespace) ||
+        !/[\d\w-.]+\/[\d\w-]+\/?/.test(item)
       ) {
         this.setState({
           error: {
-            header: 'Please enter a valid GitHub repository path: namespace/repo',
-            repo: 'Repo: This value may only contain alphanumeric characters, periods, and hyphens, and cannot begin with a period.',
-            namespace: 'Namespace: This value may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.'
+            header:    'Please enter a valid GitHub repository path: namespace/repo',
+            repo:      `Repo: This value may only contain alphanumeric characters,
+                        periods, and hyphens, and cannot begin with a period.`,
+            namespace: `Namespace: This value may only contain alphanumeric
+                        characters or single hyphens, and cannot begin or
+                        end with a hyphen.`
           },
           item: '',
           isLoading: false
@@ -322,7 +333,6 @@ class RepoList extends React.Component {
 
   render() {
     const { isMobile } = this.props.screen;
-    console.log(isMobile)
     const { item, isLoading, icon, error } = this.state;
     const listItems = this.state.items_list.map((el, index) => {
       return (
@@ -331,20 +341,23 @@ class RepoList extends React.Component {
             <a><i onClick={this.removeItem.bind(this, el)} className="remove icon"/></a>
             <a><i onClick={this.editItem.bind(this, el)} className="edit icon"/></a>
           </div>
-          <a href={`${el.label}${el.item}`} target="_blank" className="content">{`${el.label}${el.item}`}</a>
+          <a
+            href={`${el.label}${el.item}`}
+            target="_blank"
+            className="content">{`${el.label}${el.item}`}
+          </a>
         </StyledItem>
       );
     });
     return (
       <Container>
-        <Input
+        <StyledInput
           value={item}
           loading={isLoading}
           labelPosition="left"
           onChange={this.handleChange}
           placeholder="Namespace / Repo"
           fluid={isMobile ? true : false}
-          className="repo-input"
           label={
             <Dropdown
               options={repoHosts}
@@ -356,18 +369,18 @@ class RepoList extends React.Component {
           action={ !isMobile ?
             <Button
               className="basic green"
-              onClick={this.addItem.bind(this)}
+              onClick={() => this.addItem()}
               icon={icon}
               content="Save"/> : null
           }
           />
           {
             isMobile ?
-              <Button
-              className="basic green repo-button"
-              onClick={this.addItem.bind(this)}
-              icon={icon}
-              content="Save"/> : null
+              <StyledButton
+                className="basic green"
+                onClick={() => this.addItem()}
+                icon={icon}
+                content="Save"/> : null
           }
       { !isEmpty(error) && !error.repo && !error.namespace &&
         <ErrorLabel isMobile={isMobile} error={error.header} /> }

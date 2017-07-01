@@ -15,20 +15,15 @@ export default class Collaboration extends React.Component {
       toggle,
       projects,
       username,
-      showPopUp,
       saveChanges,
-      saveSection,
       saveProjectsList,
-      showCollaboration,
+      showCollaboration
     } = this.props;
     return (
       <div>
         <Ribbon
-          id="projectsPopUp"
           content="Collaboration"
-          showPopUp={showPopUp}
-          saveSection={saveSection}
-          showSave={showCollaboration}
+          showSave={false}
           onClick={() => toggle('showCollaboration')} />
         <TransitionContainer isExpanded={showCollaboration}>
           <MessageBox

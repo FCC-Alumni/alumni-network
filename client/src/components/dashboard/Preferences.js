@@ -162,7 +162,7 @@ class Preferences extends React.Component {
   handleInterestsChange = (e, { value }) => {
     // see comment in handleSkillsChange
     var { user } = this.state;
-    
+
     let CURRENT_MAP = {};
     value.forEach(el => {
       CURRENT_MAP[el.toLowerCase()] = el;
@@ -276,6 +276,16 @@ class Preferences extends React.Component {
         setTimeout(() => this.resetPopUp(e.target.id), 1200);
       }).catch(err => console.log(err));
     }
+  }
+
+  /* separate function for saving this section
+  since it saves on enter / click action */
+  handleSaveCollaboration = (e) => {
+    const { user, user: { _id } } = this.state;
+    updateUserPartial(_id, 'projects', user.projects).then(res => {
+      const { updatedUser } = res.data;
+      this.props.saveUser(updatedUser);
+    }).catch(err => console.log(err));
   }
 
   handleSaveAll = (openModal = false) => {
@@ -672,11 +682,9 @@ class Preferences extends React.Component {
           <Collaboration
             username={username}
             toggle={this.toggleShowSection}
-            saveChanges={this.handleSaveAll}
             projects={this.state.user.projects}
-            showPopUp={this.state.projectsPopUp}
-            saveSection={this.handleSaveSection}
             saveProjectsList={this.saveProjectsList}
+            saveChanges={this.handleSaveCollaboration}
             showCollaboration={this.state.viewState.showCollaboration} />
           <Social
             {...social}
