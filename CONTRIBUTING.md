@@ -251,7 +251,7 @@ When you make a pull request, all of your changes need to be in one commit.
 
 If you have made more than one commit, then you will need to _squash_ your commits.
 
-To do this, see [Squashing Your Commits](http://forum.freecodecamp.com/t/how-to-squash-multiple-commits-into-one-with-git/13231) (thanks for the guide freeCodeCamp!).
+To do this, see [Squashing Your Commits](http://forum.freecodecamp.org/t/how-to-squash-multiple-commits-into-one-with-git/13231) (thanks for the guide freeCodeCamp!).
 
 ### Creating A Pull Request
 

@@ -6,7 +6,7 @@ import TableRow from './TableRow';
 import { hoverTransition } from '../../../../styles/style-utils';
 import { Popup } from 'semantic-ui-react';
 
-const URL = "https://freeCodeCamp.com/";
+const URL = "https://freecodecamp.org/";
 
 const InfoIcon = styled.i `
   font-size: 14px !important;

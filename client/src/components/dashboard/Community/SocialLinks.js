@@ -20,7 +20,7 @@ const IconLinks = ({ user, handleClick }) => {
       <a
         target="_blank"
         onClick={handleClick}
-        href={`https://www.freecodecamp.com/${user.username}`}>
+        href={`https://www.freecodecamp.org/${user.username}`}>
         <Icon className="free code camp icon"/>
       </a>
     {/* will only render the following links if user has entered info for these fields */}

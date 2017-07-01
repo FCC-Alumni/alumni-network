@@ -2,7 +2,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { Icon } from './SocialLinks';
 
-const FCC_URL = "https://freeCodeCamp.com/";
+const FCC_URL = "https://freecodecamp.org/";
 
 const CertLinks = ({ handleClick, fccCerts, username }) => {
   return(

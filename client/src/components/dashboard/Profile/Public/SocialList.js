@@ -57,7 +57,7 @@ const SocialList = ({ username, social, email, isPrivate, contactsOnly, notifica
       <Item
         icon="free code camp"
         text="freeCodeCamp"
-        href={`https://freeCodeCamp.com/${username}`} /> }
+        href={`https://freecodecamp.org/${username}`} /> }
     { contactsOnly && username !== currentUser &&
       <StyledItem onClick={() => initiatePrivateChat(username, notifications)} className="item">
         <SocialIcon className="comments icon" />
