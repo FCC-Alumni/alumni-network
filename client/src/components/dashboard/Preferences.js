@@ -223,6 +223,14 @@ class Preferences extends React.Component {
           user.career.working = 'no';
         }
         break;
+      case 'hasBeenEmployed':
+        if (id === 'Yes') {
+          user.career.hasBeenEmployed = 'yes'
+        }
+        if (id === 'No') {
+          user.career.hasBeenEmployed = 'no'
+        }
+        break;
       default:
         user.career.jobSearch = id.replace(/_/g, ' ');
         break;
@@ -329,7 +337,7 @@ class Preferences extends React.Component {
           errors.bio = ERROR.BIO;
         break;
       case 'company':
-        if (!validate.__25Chars(str))
+        if (!validate.checkCompanyLength(str))
           errors.company = ERROR.COMPANY;
         break;
       case 'location':

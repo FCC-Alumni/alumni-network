@@ -38,6 +38,7 @@ class Career extends React.Component {
       errors,
       toggle,
       tenure,
+      hasBeenEmployed,
       working,
       company,
       jobSearch,
@@ -101,12 +102,35 @@ class Career extends React.Component {
                 errors={errors}
                 value={company}
                 inputOptions="small"
-                placeholder="Enter Company"
+                placeholder="Facebook, Google"
                 onChange={handleInputChange}
-                label="Where are you currently employed?" />
+                label="Enter companies seperated by a comma (max: 3)" />
               <ClearButton onClick={clearForm} />
             </TransitionContainer>
             <TransitionContainer isExpanded={working === 'no'}>
+              <div className='inline fields'>
+                <label>Have you ever been employed as a software developer?</label>
+                <RadioButton
+                  label='Yes'
+                  name="hasBeenEmployed"
+                  onChange={handleRadioChange}
+                  checked={hasBeenEmployed === 'yes'} />
+                <RadioButton
+                  name="hasBeenEmployed"
+                  label="No"
+                  onChange={handleRadioChange}
+                  checked={hasBeenEmployed === 'no'} />
+              </div>
+              {hasBeenEmployed === 'yes' &&
+                <FormField
+                  name="company"
+                  errors={errors}
+                  value={company}
+                  inputOptions="small"
+                  placeholder="Facebook, Google"
+                  onChange={handleInputChange}
+                  label="Enter companies seperated by a comma (max: 3)" />
+              }
               <div className={`${isMobile ? 'grouped' : 'inline'} fields`}>
                 <label>Are you currently looking for full-time employment as a software developer?</label>
                 <RadioButton

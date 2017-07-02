@@ -14,6 +14,11 @@ const CareerRow = ({ career }) => {
         <TableRow
           header="I have been coding for:"
           content={career.tenure} />
+        {career.hasBeenEmployed === 'yes' &&
+          <TableRow
+            header='I have previously worked for:'
+            content={career.company} />
+        }
       </Table>
     : <Table columnWidth="sixteen">
         <TableRow
@@ -23,7 +28,7 @@ const CareerRow = ({ career }) => {
           header="Total Professional Tenure"
           content={career.tenure} />
         <TableRow
-          header="Company"
+          header="Companies"
           content={career.company} />
       </Table>
   return (

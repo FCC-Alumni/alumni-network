@@ -2,7 +2,7 @@ export default {
   BIO: 'Bio must be 300 characters or less.',
   CAREER: 'Please complete the entire section or clear the form.',
   CODEPEN: 'Please enter your username only, not your profile url.',
-  COMPANY: 'Company must be 25 characters or less.',
+  COMPANY: 'You can only add 3 companies or less',
   COUNTRY: 'Please select your country (so we can make a cool D3 map!).',
   DISPLAY_NAME: 'Display name must be 40 characters or less.',
   EMAIL: 'Please enter a valid email address.',

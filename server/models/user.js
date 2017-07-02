@@ -41,6 +41,7 @@ const User = new Schema({
     company: { type: String, default: '' },
     tenure: { type: String, default: '' },
     jobSearch: { type: String, default: '' },
+    hasBeenEmployed: { type: String, default: '' }
   }
 });
 
