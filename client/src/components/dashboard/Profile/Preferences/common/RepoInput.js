@@ -1,7 +1,20 @@
+import { isEmpty } from 'lodash';
+import propTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import { isEmpty } from 'lodash';
-import { Dropdown, Input, Button } from 'semantic-ui-react';
+import { Button, Dropdown, Input } from 'semantic-ui-react';
+
+const ErrorLabel = ({ isMobile, error }) => (
+  <div
+    style={{ marginTop: 10 }}
+    className={`ui ${!isMobile ? 'left pointing' : ''} red basic label`}>
+    {error}
+  </div>
+);
+
+const StyledButton = styled(Button)`
+  margin: 10px 0 !important;
+`;
 
 const StyledInput = styled(Input)`
   width: 500px;
@@ -13,58 +26,60 @@ const StyledInput = styled(Input)`
   }
 `;
 
-const StyledButton = styled(Button)`
-  margin: 10px 0 !important;
-`;
-
-const ErrorLabel = ({ isMobile, error }) => (
-  <div
-    style={{ marginTop: 10 }}
-    className={`ui ${!isMobile ? 'left pointing' : ''} red basic label`}>
-    {error}
-  </div>
-);
-
-const RepoInput = ({item, isLoading, handleChange, isMobile, repoHosts, handleDropdownChange, addItem, icon, error}) => {
+const RepoInput = ({
+  addItem,
+  error,
+  handleChange,
+  handleDropdownChange,
+  icon,
+  item,
+  isMobile,
+  repoHosts,
+}) => {
   return (
     <div>
-        <StyledInput
-            value={item}
-            loading={isLoading}
-            labelPosition="left"
-            onChange={handleChange}
-            placeholder="Namespace / Repo"
-            fluid={isMobile ? true : false}
-            label={
-                <Dropdown
-                options={repoHosts}
-                className="basic green"
-                defaultValue="https://github.com/"
-                onChange={handleDropdownChange}
-                />
-            }
-            action={ !isMobile ?
-                <Button
-                className="basic green"
-                onClick={addItem}
-                icon={icon}
-                content="Save"/> : null
-            }
-            />
-        {
-            isMobile ?
-                <StyledButton
-                    className="basic green"
-                    onClick={addItem}
-                    icon={icon}
-                    content="Save"/>
-                : null
-        }
-        {
-            !isEmpty(error) && !error.repo && !error.namespace &&
-            <ErrorLabel isMobile={isMobile} error={error.header} />
-        }
+      <StyledInput
+        action={ !isMobile
+          ? <Button
+              className="basic green"
+              onClick={addItem}
+              icon={icon}
+              content="Save"/>
+          : null }
+        fluid={isMobile && true}
+        label={
+          <Dropdown
+            options={repoHosts}
+            className="basic green"
+            defaultValue="https://github.com/"
+            onChange={handleDropdownChange} /> }
+        labelPosition="left"
+        onChange={handleChange}
+        placeholder="Namespace / Repo"
+        value={item}
+      />
+  { isMobile
+    ? <StyledButton
+        className="basic green"
+        content="Save"
+        icon={icon}
+        onClick={addItem} />
+    : null }
+    { !isEmpty(error) && !error.repo && !error.namespace &&
+      <ErrorLabel error={error.header} isMobile={isMobile} /> }
     </div>
   );
 };
+
+RepoInput.propTypes = {
+  addItem: propTypes.func.isRequired,
+  error: propTypes.string.isRequired,
+  handleChange: propTypes.func.isRequired,
+  handleDropdownChange: propTypes.func.isRequired,
+  icon: propTypes.string.isRequired,
+  item: propTypes.string.isRequired,
+  isMobile: propTypes.bool.isRequired,
+  repoHosts: propTypes.array.isRequired,
+}
+
 export default RepoInput

@@ -29,7 +29,7 @@ export default class Collaboration extends React.Component {
           <MessageBox
             type="info"
             dismissable={true}
-            hide={!isEmpty(projects) ? true : false}
+            hide={ isEmpty(projects) ? false : true }
             message="Share links to repos for projects that you could use some help with!" />
           <RepoContainer
             username={username}
