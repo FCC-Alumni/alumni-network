@@ -133,7 +133,7 @@ If you are not FCC certified, we have included a workaround setting that can be 
 - In your text editor, open the file `server.js`, located in the project's root directory.
 - On line `~15`, you should see the following `export` statement:
 ```js
-export const isAllowed = false;
+export const isAllowedForDev = false;
 ```
 - Change the boolean to `true`, save your changes and run the server (if it is not already running), and you will now be allowed in to the app.
 - Please be sure to revert this change before making a PR, or you will be asked to make the change before the PR is accepted.

@@ -39,5 +39,6 @@ export const honoraryMembers = {
    p1xt: 'Prolific freeCodeCamp community member',
    tropicalchancer: 'founder of chingu cohorts and FCCAN benefactor',
    imnotarealuser: 'test user. honoraryMembers list works now, but usernames must be all lowercase.',
+   kolmstead: 'testing this locally'
 
 };

@@ -12,7 +12,7 @@ import privateChat from './server/routes/private-chat';
 import gitLabRoute from './server/helpers/gitlabRoute';
 
 // ALLOW SIGNUP W/O CERT(S):
-export const isAllowed = false;
+export const isAllowedForDev = false;
 // temporarily set to true to
 // allow anyone in (for dev)
 
