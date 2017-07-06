@@ -38,6 +38,7 @@ class Mentorship extends React.Component {
         <TransitionContainer isExpanded={showMentorship}>
           <MessageBox
             header="Would you like to be a mentor?"
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
             message="The main goal of this community is to bring together
             programmers of varying degrees of skill, and connect them with
             one another to form meaningful mentor/mentee relationships. If
@@ -49,6 +50,14 @@ class Mentorship extends React.Component {
             it. We encourage all members to be proactive and creative in
             building these relationships!"
             type="info" />
+=======
+            message="The main goal of this community is to bring together programmers of varying degrees of skill,
+            and connect them with one another to form meaningful mentor/mentee relationships. If you are interested
+            in becoming a mentor, please toggle the switch and provide a short description of the core competencies
+            you feel comortable mentoring others in. Your profile will be searchable based on all the criteria
+            provided here for prospective mentees who can contact you via private Giter chat, or your email if you provide
+            it. We encourage all members to be proactive and creative in building these relationships!" />
+>>>>>>> remove chat from codebase
           <SliderToggle
             defaultOn={isMentor ? true : false}
             id="mentorship"

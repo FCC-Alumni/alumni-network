@@ -1,4 +1,11 @@
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
 import { APP_HOST } from '../../actions/chat';
+=======
+import React from 'react';
+import styled from 'styled-components';
+import APP_HOST from '../../assets/helpers/defineHost';
+import { mapScreenSizeToProps } from '../Navbar';
+>>>>>>> remove chat from codebase
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../Navbar';
 import React from 'react';

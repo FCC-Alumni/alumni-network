@@ -10,11 +10,18 @@ import React from 'react';
 import { saveSearchState } from '../../actions/search';
 import SearchResults from './Mentorship/SearchResults';
 import searchTypes from '../../assets/dropdowns/searchTypes';
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
 import styled from 'styled-components';
 
 import {
   CenterAlignedWrapper as CenteredWrapper,
   extendCenterAlignedWrapper,
+=======
+import { addFlashMessage } from '../../actions/flashMessages';
+import filterOptions from '../../assets/helpers/filterOptions';
+
+import {
+>>>>>>> remove chat from codebase
   transitionIn,
   transitionOut,
 } from '../../styles/style-utils';
@@ -135,6 +142,7 @@ class Mentorship extends React.Component {
 
   componentDidMount() {
     this.props.addFlashMessage({
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
       text: {
         header: 'Welcome to Mentorship Search!',
         message: `Utilize our mentorship match engine to identify the right
@@ -143,6 +151,16 @@ class Mentorship extends React.Component {
         match, feel free to reach out through private chat!`
       },
       type: 'info'
+=======
+      type: 'info',
+        text: {
+          header: 'Welcome to Mentorship Search!',
+          message: `Utilize our mentorship match engine to identify the right mentor for you.
+                    Narrow down your results by searching a specific category or by enabling
+                    filters. If you think you've found a good match, feel free to reach out
+                    through a private chat!`
+        }
+>>>>>>> remove chat from codebase
     });
     if (this.state.value) {
       this.search(this.state.value);
@@ -439,7 +457,11 @@ class Mentorship extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
     community: state.community.toJS(),
+=======
+    searchState: state.search,
+>>>>>>> remove chat from codebase
     currentUser: state.user.username,
     searchState: state.search,
   }

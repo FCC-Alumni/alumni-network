@@ -26,7 +26,6 @@
     "axios": "^0.15.3",
     "babel-cli": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
-    "bcrypt": "^1.0.2",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.0",
     "connect-mongo": "^1.3.2",
@@ -39,8 +38,6 @@
     "passport-github2": "^0.1.10",
     "passport-linkedin": "^1.0.0",
     "passport-twitter": "^1.0.4",
-    "redis": "^2.7.1",
-    "socket.io": "^1.7.3",
     "validator": "^7.0.0"
   },
   "devDependencies": {

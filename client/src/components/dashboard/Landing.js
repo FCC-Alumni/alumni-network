@@ -34,11 +34,17 @@ export default () => (
       </p>
       {image('/images/fcc_portfolio_logo.svg', 'right')}
       <p>
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
         {'You can add information about your goals and interests in our '}
         <strong>{'Profile'}</strong>{` section, view all the members of our
         community in the `}<strong>{'Community'}</strong>{` tab, search for
         mentors in the `}<strong>{'Mentorship'}</strong>{` area, and chat
         with other users in the `}<strong>{'Mess Hall'}</strong>{'.'}
+=======
+        You can add information about your goals and interests in our <strong>Profile</strong> section,
+        view all the members of our community in the <strong>Community</strong> tab, search for mentors in
+        the <strong>Mentorship</strong> area, and chat with other users in our Gitter <strong>Mess Hall</strong>.
+>>>>>>> remove chat from codebase
       </p>
       <p>
         {`One of the key features of this community is the focus on mentorship.

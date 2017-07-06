@@ -1,5 +1,4 @@
 import bodyParser from 'body-parser';
-import chat from './server/routes/chat';
 import community from './server/routes/community';
 import dotenv from 'dotenv';
 import express from 'express';
@@ -7,7 +6,6 @@ import gitLabRoute from './server/helpers/gitlabRoute';
 import mongoose from 'mongoose';
 import passportRoute from './server/routes/passport';
 import path from 'path';
-import privateChat from './server/routes/private-chat';
 import user from './server/routes/user';
 
 // ALLOW SIGNUP W/O CERT(S):
@@ -32,8 +30,6 @@ app.use(bodyParser.json());
 app.use(passportRoute);
 app.use(user);
 app.use(community);
-app.use(chat);
-app.use(privateChat);
 app.use(gitLabRoute);
 
 // server main app and statis assets:
@@ -45,7 +41,3 @@ app.get('*', (req, res) => {
 // initialize Express server
 const port = process.env.PORT || 8080;
 const server = app.listen(port, () => console.log(`Express Server is listening on port ${port}`));
-
-// initialize Socket.io chat server
-const io = require('socket.io')(server);
-require('./server/chat/chat.js')(io);

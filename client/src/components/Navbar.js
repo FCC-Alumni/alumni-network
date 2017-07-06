@@ -1,12 +1,22 @@
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
 import { APP_HOST } from '../actions/chat';
+=======
+import APP_HOST from '../assets/helpers/defineHost';
+import React from 'react';
+import propTypes from 'prop-types';
+>>>>>>> remove chat from codebase
 import { connect } from 'react-redux';
 import { connectScreenSize } from 'react-screen-size';
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
 import { darkGreen } from '../styles/style-utils';
 import { Dropdown } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 import propTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+=======
+
+>>>>>>> remove chat from codebase
 
 const Logo = styled.img`
   margin-right: 10px !important;

@@ -1,7 +1,6 @@
 /* eslint-disable */
 import { SAVE_USER } from '../actions/user';
 import { POPULATE } from '../actions/community';
-import { NEW_USER_JOINED } from '../actions/onlineStatus';
 import { List } from 'immutable';
 
 export default (state = List(), action) => {
@@ -18,9 +17,6 @@ export default (state = List(), action) => {
           return user;
         };
       });
-
-    case NEW_USER_JOINED:
-      return state.concat(action.payload);
 
     default: return state;
   }

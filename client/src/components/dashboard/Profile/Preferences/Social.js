@@ -1,4 +1,10 @@
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
 import { APP_HOST } from '../../../../actions/chat';
+=======
+import APP_HOST from '../../../../assets/helpers/defineHost';
+import React from 'react';
+import { isEqual } from 'lodash';
+>>>>>>> remove chat from codebase
 import FormField from './common/FormField';
 import { isEqual } from 'lodash';
 import ListItem from '../../common/ListItem';

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { connectScreenSize } from 'react-screen-size';
 import { isGitterUser } from '../../../actions/user';
 import parseDate from '../../../assets/helpers/parseDate';
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
 import React from 'react';
 import SocialLinks from './SocialLinks';
 import styled from 'styled-components';
@@ -23,6 +24,8 @@ const ChatIcon = styled.i`
     }
   `}
 `;
+=======
+>>>>>>> remove chat from codebase
 
 const Clickable = styled.div`
   cursor: pointer;
@@ -46,8 +49,15 @@ class UserCard extends React.Component {
     reveal: false
   }
 
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
   componentWillMount() {
     this.handleDisableChat();
+=======
+  state = { reveal: false }
+
+  initiatePrivateChat = (recipient) => {
+    this.props.history.push(`chat/${recipient}`);
+>>>>>>> remove chat from codebase
   }
 
   handleClick = (username) => {
@@ -182,6 +192,7 @@ class UserCard extends React.Component {
           className="content"
           onClick={() => this.handleClick(username)}>
           <div className="header">
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
             <span className="user">{username}</span>
             { currentUser !== username &&
             <ChatIconPopup
@@ -190,6 +201,17 @@ class UserCard extends React.Component {
               initiatePrivateChat={this.initiatePrivateChat}
               username={username} /> }
             { (isDesktop || isMobile) &&
+=======
+            <span className="user">{user.username}</span>
+          { currentUser !== user.username &&
+            <ChatIcon
+              className="comments icon"
+              title={`Start a Gitter chat with ${user.username}`}
+              onClick={(e) => {
+                this.initiatePrivateChat(user.username, notifications);
+                e.stopPropagation(); }} /> }
+          { (isDesktop || isMobile) &&
+>>>>>>> remove chat from codebase
             <CertLinks
               fccCerts={user.fccCerts}
               handleClick={this.handleInnerClick}
@@ -229,6 +251,17 @@ export const mapScreenSizeToProps = (screenSize) => {
   }};
 }
 
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
 export default connectScreenSize(mapScreenSizeToProps)(
   connect(state => ({ currentUser: state.user.username }))(UserCard)
+=======
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.user.username,
+  }
+}
+
+export default connectScreenSize(mapScreenSizeToProps)(
+  connect(mapStateToProps)(UserCard)
+>>>>>>> remove chat from codebase
 );

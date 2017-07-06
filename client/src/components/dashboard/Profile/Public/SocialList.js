@@ -62,6 +62,7 @@ const Item = ({ href, icon, text }) => {
   );
 }
 
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
 const SocialList = ({
   contactsOnly,
   currentUser,
@@ -83,6 +84,9 @@ const SocialList = ({
       </InlineContent>
     </StyledItem>
   );
+=======
+const SocialList = ({ username, social, email, isPrivate, initiatePrivateChat, contactsOnly, currentUser }) => {
+>>>>>>> remove chat from codebase
   return (
     <div className="ui relaxed horizontal list">
       { !isPrivate && email &&
@@ -94,6 +98,7 @@ const SocialList = ({
       <Item
         href={`https://freecodecamp.org/${username}`}
         icon="free code camp"
+<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
         text="freeCodeCamp" /> }
       { contactsOnly && username !== currentUser &&
       <Popup
@@ -104,6 +109,17 @@ const SocialList = ({
         inverted
         position="bottom left"
         trigger={ChatIcon} /> }
+=======
+        text="freeCodeCamp"
+        href={`https://freecodecamp.org/${username}`} /> }
+    { contactsOnly && username !== currentUser &&
+      <StyledItem onClick={() => initiatePrivateChat(username)} className="item">
+        <SocialIcon className="comments icon" />
+        <InlineContent className="content">
+          <div className="header">Private Gitter Chat</div>
+        </InlineContent>
+      </StyledItem> }
+>>>>>>> remove chat from codebase
       <Item
         href={`https://github.com/${username}`}
         icon="github"
