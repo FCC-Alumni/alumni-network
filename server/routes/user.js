@@ -1,18 +1,15 @@
-import express from 'express';
-import passport from 'passport';
 import axios from 'axios';
-import User from '../models/user';
 import Chat from '../models/chat';
-import PrivateChat from '../models/private-chat';
+import checkHonoraryMemberList from '../helpers/checkHonoraryMemberList';
+import checkWhiteList from '../helpers/checkWhiteList';
+import express from 'express';
+import handleProcessedUser from '../helpers/handleProcessedUser';
 import { isAuthenticated } from './passport';
-import { isAllowedForDev } from '../../server';
-import {
-  getFrontEndCert,
-  getBackEndCert,
-  getDataVisCert,
-} from '../helpers/getCerts';
-import WhiteListedUser from '../models/whitelisteduser';
-import HonoraryMember from '../models/honorarymember';
+import passport from 'passport';
+import PrivateChat from '../models/private-chat';
+import safeHandler from '../helpers/safeHandler';
+import isCertified from '../helpers/processCerts';
+import User from '../models/user';
 
 const router = express.Router();
 
@@ -31,113 +28,23 @@ router.post('/api/user', (req, res) => {
   }
 });
 
-router.post('/api/verify-credentials', isAuthenticated, (req, res) => {
-  var username, honoraryMember = false, whitelistedUser = false;
-  const { mongoId } = req.body;
-  // if user is whitelisted, use their alternate username:
-  WhiteListedUser.findOne({ githubUsername: req.body.username }, (err, user) => {
-    if (err) throw err;
-    if (user) {
-      username = user.fccUsername;
-      whitelistedUser = true;
-    } else {
-      username = req.body.username;
-    }
-    // if user is honorary member, they will be let in w/o certs:
-    HonoraryMember.findOne({ username: username.toLowerCase() }, (err, user) => {
-      if (err) throw err;
-      if (user) {
-        honoraryMember = true;
-      }
-      // process FCC verification...
-      processVerification(username, honoraryMember, whitelistedUser)
-      .then(certs => {
-        // update user as verified in DB or delete
-        handleProcessedUser(certs, mongoId, req, res, username);
-      });;
-    });
-  });
-});
-
-const processVerification = (username, honoraryMember, whitelistedUser) => {
-  console.log('processing verification for ' +
-    `${honoraryMember ? 'honorary member' : ''}` +
-    `${whitelistedUser ? 'white-listed user' : ''}` + ` ${username}`);
-
-  return axios.all([
-    getFrontEndCert(username),
-    getBackEndCert(username),
-    getDataVisCert(username)
-  ]).then(axios.spread((frontCert, backCert, dataCert) => {
-    let totalRedirects =
-    frontCert.request._redirectCount +
-    backCert.request._redirectCount +
-    dataCert.request._redirectCount;
-    if (honoraryMember || totalRedirects < 3) {
-      return {
-        Front_End: frontCert.request._redirectCount === 0 ? true : false,
-        Back_End: backCert.request._redirectCount === 0 ? true : false,
-        Data_Visualization: dataCert.request._redirectCount === 0 ? true : false,
-      }
-    } else {
-      if (isAllowedForDev) {
-        return {
-          Front_End: false,
-          Back_End: false,
-          Data_Visualization: false,
-        }
-      } else {
-        return false;
-      }
-    }
-  }))
-}
-
-const handleProcessedUser = (certs, mongoId, req, res, username) => {
-  if (!certs) {
-    // user not verified, res with error
-    User.findById(mongoId, (err, user) => {
-      if (err) throw err;
-      user.verifiedUser = false;
-      user.save();
-      res.status(401).json({ error: 'User cannot be verified' });
-    });
-  } else {
-    // verified user, proceed
-    User.findById(mongoId, (err, user) => {
-      if (err) throw err;
-      /* we need to overwrite their session username too
-      (only matters for whitelisted users) */
-      req.user.username = username;
-      user.username = username;
-      user.fccCerts = certs;
-      user.verifiedUser = true;
-      user.save();
-      req.user.verifiedUser = true;
-      req.user.fccCerts = certs;
-      res.json({ user });
-    });
-  }
-}
-
-router.post('/api/update-user', (req, res) => {
-  const { user } = req.body;
-
-  User.findById(user._id, (err, updatedUser) => {
-    if (!err) {
-      updatedUser.personal = user.personal;
-      updatedUser.mentorship = user.mentorship;
-      updatedUser.career = user.career;
-      updatedUser.skillsAndInterests = user.skillsAndInterests;
-      updatedUser.projects = user.projects;
-      updatedUser.social = user.social;
-      updatedUser.save();
-      res.json({ updatedUser })
-    } else {
-      res.status(401).json({ error: 'User could not be saved' });
-    }
-  });
-});
+// pass async cb func through safeHandler for error handling
+router.post('/api/verify-credentials', isAuthenticated,
+  safeHandler(async function initiateVerification(req, res) {
+    const { mongoId } = req.body;
+    // if user is whitelisted, use their alternate username
+    var username = await checkWhiteList(req.body.username);
+    var isWhitelistedUser = !(username === req.body.username);
+    // if user is honorary member, they will be let in w/o certs
+    var isHonoraryMember = await checkHonoraryMemberList(username);
+    // process FCC verification...
+    isCertified(username, isHonoraryMember, isWhitelistedUser)
+    .then(certs => {
+      // update user with certs and correct status in DB
+      handleProcessedUser(certs, mongoId, req, res, username);
+    }).catch(err => res.status(500).send(err.message));
+  })
+);
 
 router.post('/api/update-user-partial', (req, res) => {
   const { id, section, sectionData } = req.body;
@@ -152,10 +59,11 @@ router.post('/api/update-user-partial', (req, res) => {
   });
 });
 
-/* if a user deletes their account we need to remove them from chat and private chats as well
-   because these rely on user data derived from the community in some places. And presumably
-   we can assume if they want to remove their account they want their chat history removed as
-   well. */
+/* if a user deletes their account we need to remove them
+from chat and private chats as well because these rely on
+user data derived from the community in some places. And
+presumably we can assume if they want to remove their
+account they want their chat history removed as well. */
 router.post('/api/delete-user', (req, res) => {
   const { username } = req.user;
   console.log('deleting', username)

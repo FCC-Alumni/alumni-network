@@ -247,7 +247,7 @@ class RepoContainer extends React.Component {
   }
 
   validateGithubRepos = () => {
-    const { username, saveListToParent } = this.props;
+    const { username } = this.props;
     const { item, items_list, label } = this.state;
     const [ namespace, repo ] = item.split('/');
     validateRepo(namespace, repo, username)

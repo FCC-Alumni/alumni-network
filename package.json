@@ -1,6 +1,9 @@
 {
   "name": "free-code-camp-alumni-network",
   "version": "1.0.0",
+  "engines": {
+    "node": "8.1.3"
+  },
   "description": "An app for connecting freeCodeCamp Alumni built on the MERN stack.",
   "main": "server.js",
   "scripts": {

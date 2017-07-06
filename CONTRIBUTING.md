@@ -20,10 +20,11 @@
 | ------------------------------------------- | ------- |
 | [MongoDB](http://www.mongodb.org/downloads) | `~ ^3`  |
 | [Redis](https://redis.io/download)          | `~ ^3.2`|
-| [Node.js](http://nodejs.org)                | `~ ^6`  |
-| npm (comes with Node)                       | `~ ^3`  |
+| [Node.js](http://nodejs.org)*               | `~ ^8`  |
+| npm (comes with Node)                       | `~ ^5`  |
 
-> _Updating to the latest releases is recommended_.
+> _*Node 8 is now a required prerequisite for this project._
+> _Updating to the latest release of other prerequisites is recommended_.
 
 If Node, MongoDB, or Redis are already installed on your machine, run the following commands to validate the versions:
 
@@ -291,8 +292,8 @@ nothing to commit, working directory clean
     any outstanding files/commits and checkout master `git checkout master`
 
 4.  Create a branch off of `master` with git: `git checkout -B branch/name-here`
-    **Note:** Branch naming is important. Use a name like `fix/short-fix-description` 
-    or `feature/short-feature-description`. 
+    **Note:** Branch naming is important. Use a name like `fix/short-fix-description`
+    or `feature/short-feature-description`.
 
 5.  Edit your file(s) locally with the editor of your choice
 
