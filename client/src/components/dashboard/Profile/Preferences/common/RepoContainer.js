@@ -1,23 +1,23 @@
-import React from 'react';
-import { isEmpty, indexOf } from 'lodash';
-import propTypes from 'prop-types';
-import styled from 'styled-components';
 import { connectScreenSize } from 'react-screen-size';
-import repoHosts from '../../../../../assets/dropdowns/repoHosts';
 import { mapScreenSizeToProps } from '../../../Community/UserCard';
-import RepoListItem from './RepoListItem';
+import propTypes from 'prop-types';
+import React from 'react';
+import repoHosts from '../../../../../assets/dropdowns/repoHosts';
 import RepoInput from './RepoInput';
-import { Dimmer, Loader, Segment } from 'semantic-ui-react';
+import RepoListItem from './RepoListItem';
+import styled from 'styled-components';
 
+import { indexOf, isEmpty } from 'lodash';
+import { Dimmer, Loader, Segment } from 'semantic-ui-react';
 import {
-  validateGithubRepo as validateRepo,
   searchGithubCommits,
+  validateGithubRepo as validateRepo,
   validateOtherRepos as validateOther
 } from '../../../../../actions/repoValidations';
 
 /*
 TODO:
-  1) Refactor addItem() code
+  1) Refactor addItem() code - UPDATE - at least partially done
 */
 
 export const Container = styled.div`
@@ -26,9 +26,9 @@ export const Container = styled.div`
 
 class RepoContainer extends React.Component {
   state = {
-    item: '',
     error: {},
     icon: 'github',
+    item: '',
     items_list: [],
     isLoading: false,
     label: 'https://github.com/'
@@ -47,10 +47,6 @@ class RepoContainer extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyPress);
-  }
-
-  componentWillReceiveProps (nextProps) {
-    console.log(nextProps)
   }
 
   addItem = () => {
@@ -89,14 +85,14 @@ class RepoContainer extends React.Component {
     this.setState({ items_list, item: item.item });
   }
 
+  handleChange = (e) => {
+    this.setState({ item: e.target.value, error: '' });
+  }
+
   handleKeyPress = (e) => {
     if (e.keyCode === 13) {
       this.addItem();
     }
-  }
-
-  handleChange = (e) => {
-    this.setState({ item: e.target.value, error: '' });
   }
 
   handleLabelChange = (e) => {
@@ -122,6 +118,25 @@ class RepoContainer extends React.Component {
     return true;
   }
 
+  isValidBitbucketNaming = (item, repo) => {
+    if ((repo.length === 1 && /^\./.test(repo)) || !/[\d\w-]+\/[\d\w-.]+\/?/.test(item)) {
+      this.setState({
+        error: {
+          header:    'Please enter a valid BitBucket repository path: namespace/repo',
+          repo:      `Repo: This value must contain only ASCII letters, numbers,
+                      dashes, underscores and periods.`,
+          namespace: `Namespace: This value must contain only ASCII letters,
+                      numbers, dashes and underscores.`
+        },
+        item: '',
+        isLoading: false
+      });
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   isValidGitlabNaming = (item, namespace, repo) => {
     if (
       /(^-)|(\.((git)|(atom))?$)/.test(repo) ||
@@ -135,25 +150,6 @@ class RepoContainer extends React.Component {
                       and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'`,
           namespace: `Repo: This value can only contain letters, digits, '_', '-'
                       and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'`
-        },
-        item: '',
-        isLoading: false
-      });
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  isValidBitbucketNaming = (item, repo) => {
-    if ((repo.length === 1 && /^\./.test(repo)) || !/[\d\w-]+\/[\d\w-.]+\/?/.test(item)) {
-      this.setState({
-        error: {
-          header:    'Please enter a valid BitBucket repository path: namespace/repo',
-          repo:      `Repo: This value must contain only ASCII letters, numbers,
-                      dashes, underscores and periods.`,
-          namespace: `Namespace: This value must contain only ASCII letters,
-                      numbers, dashes and underscores.`
         },
         item: '',
         isLoading: false
@@ -188,6 +184,11 @@ class RepoContainer extends React.Component {
     return true;
   }
 
+  removeItem = (item) => {
+    const items_list = this.spliceList(item);
+    this.setState({ items_list }, () => this.props.saveChanges(items_list));
+  }
+
   repoAlreadyAdded = (item, items_list, label) => {
     for (var obj of items_list) {
       if (obj.item.toLowerCase() === item.toLowerCase() && obj.label === label) {
@@ -204,10 +205,89 @@ class RepoContainer extends React.Component {
     return false;
   }
 
-  saveRepoList = (items_list) => {
-    this.props.saveChanges();
-    // also save list to parent component for proper rendering
-    this.props.saveListToParent(items_list);
+  spliceList = (item) => {
+    const { items_list } = this.state;
+    const index = indexOf(items_list, item);
+    items_list.splice(index, 1);
+    return items_list;
+  }
+
+  validateGithubRepos = () => {
+    const { username } = this.props;
+    const { item, items_list, label } = this.state;
+    const [ namespace, repo ] = item.split('/');
+    validateRepo(namespace, repo, username)
+    .then((res) => {
+      const contributors = res.contributorsList;
+      let isContributor = false;
+      // first check if user is listed as contributor
+      // if yes, setState & continue
+      for (var contributor of contributors) {
+        if (contributor.author.login === username) {
+          isContributor = true;
+          items_list.push({item, label});
+          this.setState({
+            items_list,
+            item: '',
+            isLoading: false
+          }, () => this.props.saveChanges(items_list));
+        }
+      }
+      // if user is not listed, repo may have > 100 contributors...
+      // then search commit history of repo for commits by user.
+      // prefer to use both checks, becuase this one is in "preview",
+      // github warns changes could happen at any time with no notice.
+      if (!isContributor) {
+        searchGithubCommits(namespace, repo, username)
+        .then((res) => {
+          const commits = res.data.items;
+          if (commits.length > 0) {
+            isContributor = true;
+            items_list.push({item, label});
+            this.setState({
+              items_list,
+              item: '',
+              isLoading: false
+            }, () => this.props.saveChanges(items_list));
+          }
+        })
+        .catch((err) => {
+          console.warn('There was a problem with GitHub\'s API: ' + err.message);
+        });
+      }
+      // if user/repo does not pass either check, reject with error
+      if (!isContributor) {
+        this.setState({
+          item: '',
+          error: {
+            header: 'You must be a contributor to the repo you would like to collaborate on.',
+          },
+          isLoading: false
+        });
+      }
+    })
+    // this should catch on the first axios.get request if repo does not exist
+    // also handle mystery problem here (hopefully)
+    .catch((err) => {
+      err = 'contributors[Symbol.iterator]';
+      if (/\[Symbol.iterator\]/.test(err)) {
+        this.setState({
+          item: '',
+          error: {
+            header: 'There was a problem with GitHub\'s API, please try again.',
+          },
+          isLoading: false
+        });
+      } else {
+        this.setState({
+          item: '',
+          error: {
+            header: 'Repository is private or invalid. Please enter a public, valid GitHub repo.',
+          },
+          isLoading: false
+        });
+      }
+    });
   }
 
   validateOtherRepos = (hostSite) => {
@@ -222,7 +302,7 @@ class RepoContainer extends React.Component {
           items_list,
           item: '',
           isLoading: false
-        }, () => this.saveRepoList(items_list));
+        }, () => this.props.saveChanges(items_list));
       } else {
         this.setState({
           error: {
@@ -246,123 +326,32 @@ class RepoContainer extends React.Component {
     });
   }
 
-  validateGithubRepos = () => {
-    const { username } = this.props;
-    const { item, items_list, label } = this.state;
-    const [ namespace, repo ] = item.split('/');
-    validateRepo(namespace, repo, username)
-    .then((res) => {
-      const contributors = res.contributorsList;
-      let isContributor = false;
-      // first check if user is listed as contributor
-      // if yes, setState & continue
-      for (var contributor of contributors) {
-        if (contributor.author.login === username) {
-          isContributor = true;
-          items_list.push({item, label});
-          this.setState({
-            items_list,
-            item: '',
-            isLoading: false
-          }, () => this.saveRepoList(items_list));
-        }
-      }
-      // if user is not listed, repo may have > 100 contributors...
-      // then search commit history of repo for commits by user.
-      // prefer to use both checks, becuase this one is in "preview",
-      // github warns changes could happen at any time with no notice.
-      if (!isContributor) {
-        searchGithubCommits(namespace, repo, username)
-        .then((res) => {
-          const commits = res.data.items;
-          if (commits.length > 0) {
-            isContributor = true;
-            items_list.push({item, label});
-            this.setState({
-              items_list,
-              item: '',
-              isLoading: false
-            }, () => this.saveRepoList(items_list));
-          }
-        })
-        .catch((err) => {
-          console.warn('There was a problem with GitHub\'s API: ' + err.message);
-        });
-      }
-      // if user/repo does not pass either check, reject with error
-      if (!isContributor) {
-        this.setState({
-          item: '',
-          error: {
-            header: 'You must be a contributor to the repo you would like to collaborate on.',
-          },
-          isLoading: false
-        });
-      }
-    })
-    // this should catch on the first axios.get request if repo does not exist
-    // also handle mystery problem here (hopefully)
-    .catch((err) => {
-      err = 'contributors[Symbol.iterator]';
-      console.log(err, /\[Symbol.iterator\]/.test(err))
-      if (/\[Symbol.iterator\]/.test(err)) {
-        this.setState({
-          item: '',
-          error: {
-            header: 'There was a problem with GitHub\'s API, please try again.',
-          },
-          isLoading: false
-        });
-      } else {
-        this.setState({
-          item: '',
-          error: {
-            header: 'Repository is private or invalid. Please enter a public, valid GitHub repo.',
-          },
-          isLoading: false
-        });
-      }
-    });
-  }
-
-  removeItem = (item) => {
-    const items_list = this.spliceList(item);
-    this.setState({ items_list }, () => this.saveRepoList(items_list));
-  }
-
-  spliceList = (item) => {
-    const { items_list } = this.state;
-    const index = indexOf(items_list, item);
-    items_list.splice(index, 1);
-    return items_list;
-  }
-
   render() {
     const { isMobile } = this.props.screen;
     const { item, isLoading, icon, error } = this.state;
     const listItems = this.state.items_list.map((el, index) => {
       return (
         <RepoListItem
-          key={index}
           el={el}
+          editItem={() => this.editItem(el)}
           index={index}
-          removeItem={this.removeItem.bind(this, el)}
-          editItem={this.editItem.bind(this, el)} />
+          key={index}
+          removeItem={() => this.removeItem(el)} />
       );
     });
     return (
       <Container>
         <RepoInput
-          item={item}
-          handleChange={this.handleChange}
-          isMobile={isMobile}
-          repoHosts={repoHosts}
-          handleDropdownChange={this.handleLabelChange}
           addItem={this.addItem}
+          error={error}
+          handleChange={this.handleChange}
+          handleDropdownChange={this.handleLabelChange}
           icon={icon}
-          error={error} />
-        <Segment style={{ minHeight: 50, marginTop: 5, padding: 0 }} basic>
-          <Dimmer active={isLoading && true}>
+          item={item}
+          isMobile={isMobile}
+          repoHosts={repoHosts} />
+        <Segment basic style={{ minHeight: 50, marginTop: 5, padding: 0 }}>
+          <Dimmer active={isLoading && true} inverted>
             <Loader />
           </Dimmer>
           <div
@@ -387,7 +376,6 @@ class RepoContainer extends React.Component {
 RepoContainer.propTypes = {
   prePopulateList: propTypes.array,
   saveChanges: propTypes.func.isRequired,
-  saveListToParent: propTypes.func.isRequired,
   username: propTypes.string.isRequired,
 }
 

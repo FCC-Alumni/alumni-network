@@ -5,10 +5,10 @@ import checkWhiteList from '../helpers/checkWhiteList';
 import express from 'express';
 import handleProcessedUser from '../helpers/handleProcessedUser';
 import { isAuthenticated } from './passport';
+import isCertified from '../helpers/processCerts';
 import passport from 'passport';
 import PrivateChat from '../models/private-chat';
 import safeHandler from '../helpers/safeHandler';
-import isCertified from '../helpers/processCerts';
 import User from '../models/user';
 
 const router = express.Router();
@@ -89,6 +89,18 @@ router.post('/api/delete-user', (req, res) => {
       });
     } else {
       res.sendStatus(500);
+    }
+  });
+});
+
+router.post('/api/verify-gitter-user', (req, res) => {
+  const { username } = req.body;
+  axios.get(`https://gitter.im/${username}`)
+  .catch((err) => {
+    if (err.response.status === 404) {
+      res.json({ isGitterUser: false });
+    } else {
+      res.json({ isGitterUser: true });
     }
   });
 });

@@ -1,24 +1,24 @@
-import React from 'react';
-import propTypes from 'prop-types';
+import Career from './Profile/Public/CareerRow';
 import { connect } from 'react-redux';
-import SocialList from './Profile/Public/SocialList';
-import UserLabel from '../dashboard/common/UserLabel';
-import { SubHeader } from './Profile/Public/SkillsRow';
-import LocationSteps from './Profile/Public/LocationSteps';
-import { mentorshipSearchQuery } from '../../actions/search';
-import { scrapeFccStats } from '../../actions/scrape-fcc.js';
-import MainHeader from '../dashboard/Profile/Public/ProfileHeader';
-import { initiatePrivateChat, clearNotifications } from '../../actions/chat';
-import { ThickPaddedBottom, StyledItem } from '../../styles/style-utils';
-import SkillsAndInterests from './Profile/Public/SkillsRow';
-import TableRow from '../dashboard/Profile/Public/TableRow';
-import FCCStatTables from './Profile/Public/FCCTables';
-import Table from '../dashboard/Profile/Public/Table';
 import { connectScreenSize } from 'react-screen-size';
 import { defaultUser } from '../../reducers/user';
-import Career from './Profile/Public/CareerRow';
-import styled from 'styled-components';
+import FCCStatTables from './Profile/Public/FCCTables';
 import { isEmpty } from 'lodash';
+import { isGitterUser } from '../../actions/user';
+import LocationSteps from './Profile/Public/LocationSteps';
+import MainHeader from '../dashboard/Profile/Public/ProfileHeader';
+import { mentorshipSearchQuery } from '../../actions/search';
+import propTypes from 'prop-types';
+import React from 'react';
+import { scrapeFccStats } from '../../actions/scrape-fcc.js';
+import SkillsAndInterests from './Profile/Public/SkillsRow';
+import SocialList from './Profile/Public/SocialList';
+import styled from 'styled-components';
+import { SubHeader } from './Profile/Public/SkillsRow';
+import Table from '../dashboard/Profile/Public/Table';
+import TableRow from '../dashboard/Profile/Public/TableRow';
+import UserLabel from '../dashboard/common/UserLabel';
+import { StyledItem, ThickPaddedBottom } from '../../styles/style-utils';
 
 // STYLED COMPONENTS:
 const Avatar = styled.img`
@@ -31,12 +31,12 @@ const Loader = styled.div`
   padding-bottom:  !important;
   z-index: 0 !important;`;
 
+const NoPadding = styled.div`
+  padding: 0 !important;`;
+
 const OneColumnRepoList = styled.div`
   margin-top: 0 !important;
   margin-bottom: 14px !important;`;
-
-const NoPadding = styled.div`
-  padding: 0 !important;`;
 
 const StyledSubHeader = styled(SubHeader)`
   margin-bottom: 0 !important;`;
@@ -47,8 +47,13 @@ class PublicProfile extends React.Component {
     const { initialState } = this.props;
     this.state = {
       ...initialState,
-      isTablet: false
+      isTablet: false,
+      disableChat: false
     }
+  }
+
+  componentWillMount() {
+    this.handleDisableChat();
   }
 
   componentDidMount() {
@@ -61,10 +66,6 @@ class PublicProfile extends React.Component {
     window.addEventListener('resize', this.handleResize);
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
-  }
-
   componentWillReceiveProps(nextProps) {
     const { initialState } = nextProps;
     if (initialState) this.setState({ ...initialState });
@@ -75,6 +76,8 @@ class PublicProfile extends React.Component {
     } else if (!nextProps.loading && !nextProps.initialState) {
       this.props.scrapeFccStats(nextProps.user.username);
     }
+    // cover page fresh
+    this.handleDisableChat();
   }
 
   componentDidUpdate() {
@@ -82,13 +85,29 @@ class PublicProfile extends React.Component {
     // & keep side by side divs equal height to keep ui clean
     const bioDiv = document.getElementById('mentorshipBioDiv');
     const contactDiv = document.getElementById('contactDiv');
-    const bioHeight = bioDiv && window.getComputedStyle(bioDiv).getPropertyValue('height');
-    const contactHeight = contactDiv && window.getComputedStyle(contactDiv).getPropertyValue('height');
+    const bioHeight = bioDiv &&
+      window.getComputedStyle(bioDiv).getPropertyValue('height');
+    const contactHeight = contactDiv &&
+      window.getComputedStyle(contactDiv).getPropertyValue('height');
     if (parseInt(bioHeight, 10) > parseInt(contactHeight, 10)) {
       this.dynamicHeight = bioHeight;
     } else {
       this.dynamicHeight = contactHeight;
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  handleDisableChat = () => {
+    isGitterUser(this.props.user.username)
+    .then(res => {
+      if (!res.data.isGitterUser) {
+        this.setState({ disableChat: true });
+      }
+    })
+    .catch(err => console.error(err));
   }
 
   handleResize = (e) => {
@@ -99,10 +118,25 @@ class PublicProfile extends React.Component {
     }
   }
 
+  handleQuery = (query, category) => {
+    // handle click for skills and interests labels:
+    // click => set mentorship search state and redirect
+    this.props.mentorshipSearchQuery({ query, category });
+    this.props.history.push('/dashboard/mentorship');
+  }
+
+  initiatePrivateChat = (recipient) => {
+    this.props.history.push(`/dashboard/chat/${recipient}`);
+  }
+
   mapRepoList = (array) => {
     return array.map(project => {
       return (
-        <StyledItem href={project.label + project.item} target="_blank" key={project.item} className="item">
+        <StyledItem
+          className="item"
+          href={project.label + project.item}
+          key={project.item}
+          target="_blank">
           <i className={`${project.label.slice(8, -5)} large icon`} />
           <div className="content">
             { project.label + project.item }
@@ -110,25 +144,6 @@ class PublicProfile extends React.Component {
         </StyledItem>
       )
     });
-  }
-
-  initiatePrivateChat = (recipient, notifications) => {
-    if (!this.props.privateChat.has(recipient)) {
-      this.props.initiatePrivateChat(recipient);
-    } else if (notifications) {
-      this.props.clearNotifications({
-        author: this.props.currentUser,
-        recipient
-      });
-    }
-    this.props.history.push(`/dashboard/chat/${recipient}`);
-  }
-
-  handleQuery = (query, category) => {
-    // handle click for skills and interests labels:
-    // click => set mentorship search state and redirect
-    this.props.mentorshipSearchQuery({ query, category });
-    this.props.history.push('/dashboard/mentorship');
   }
 
   render() {
@@ -167,7 +182,9 @@ class PublicProfile extends React.Component {
     }
 
     if (this.props.loading) return (
-      <Loader className="ui active inverted dimmer" style={{ marginTop: '100px' }}>
+      <Loader
+        className="ui active inverted dimmer"
+        style={{ marginTop: '100px' }}>
         <div className="ui text huge loader">Loading</div>
       </Loader>
     );
@@ -176,18 +193,28 @@ class PublicProfile extends React.Component {
       <ThickPaddedBottom id="public-profile-container">
         {/* AVATAR & FCCDATA */}
         <div className="ui celled stackable grid container">
-          <div className={`${this.state.isTablet ? 'sixteen' : 'four'} wide center aligned column`}>
+          <div className={`${this.state.isTablet
+            ? 'sixteen'
+            : 'four'} wide center aligned column`}>
             <Avatar
-              src={user.personal.avatarUrl}
               alt={`${user.username}'s avatar'`}
-              className="ui fluid circular bordered image" />
-            <div className="ui horizontal divider">{user.personal.displayName}</div>
+              className="ui fluid circular bordered image"
+              src={user.personal.avatarUrl} />
+            <div className="ui horizontal divider">
+              {user.personal.displayName}
+            </div>
             <UserLabel
+              label={this.props.isTablet
+                ? ''
+                : user.mentorship.isMentor
+                ? "Mentor"
+                : "Member"}
               showAvatar={false}
-              username={user.username}
-              label={this.props.isTablet ? '' : user.mentorship.isMentor ? "Mentor" : "Member"}/>
+              username={user.username} />
           </div>
-          <div className={`${this.state.isTablet ? 'sixteen' : 'twelve'} wide column`}>
+          <div className={`${this.state.isTablet
+            ? 'sixteen'
+            : 'twelve'} wide column`}>
             <LocationSteps personal={user.personal} />
             <NoBottomMargin className="ui celled stackable grid">
               <NoPadding className="sixteen wide center aligned column">
@@ -197,18 +224,22 @@ class PublicProfile extends React.Component {
               </NoPadding>
               { !this.props.initialState
                 ? <div className="row">{loader}</div>
-                : <FCCStatTables { ...this.state } width="eight" username={user.username} fccCerts={user.fccCerts} /> }
+                : <FCCStatTables
+                    { ...this.state }
+                    fccCerts={user.fccCerts}
+                    username={user.username}
+                    width="eight" /> }
             </NoBottomMargin>
           </div>
         </div>
 
         {/* ABOUT & SOCIAL */}
         <div className="ui celled stackable center aligned grid container">
-          <MainHeader text={`Find Me ${bio && '/ Bio'}`} icon="user icon" />
+          <MainHeader icon="user icon" text={`Find Me ${bio && '/ Bio'}`} />
         { bio &&
           <div className="row">
             <div className="fourteen wide column">
-              <div id="userBio" className="ui segment">
+              <div className="ui segment" id="userBio">
                 <div className="ui horizontal divider">Bio:</div>
                 {bio}
               </div>
@@ -217,9 +248,9 @@ class PublicProfile extends React.Component {
           <NoTopPadding className="sixteen wide column">
             <div className="ui padded segment">
               <SocialList
+                profileUrl={user.personal.profileUrl}
                 social={user.social}
-                username={user.username}
-                profileUrl={user.personal.profileUrl} />
+                username={user.username} />
             </div>
           </NoTopPadding>
         </div>
@@ -227,7 +258,7 @@ class PublicProfile extends React.Component {
         {/* CODING PROFILE */}
       { (!isEmpty(coreSkills) || !isEmpty(codingInterests)) &&
         <div className="ui celled stackable center aligned grid container">
-          <MainHeader text="Coding Profile" icon="code" />
+          <MainHeader icon="code" text="Coding Profile" />
           <SkillsAndInterests
             handleQuery={this.handleQuery}
             skillsAndInterests={user.skillsAndInterests} />
@@ -236,20 +267,20 @@ class PublicProfile extends React.Component {
         {/* CAREER */}
       { !isEmpty(user.career.working) &&
         <div className="ui celled stackable center aligned grid container">
-          <MainHeader text="Career" icon="suitcase" />
+          <MainHeader icon="suitcase" text="Career" />
           <Career career={user.career} />
         </div>
       }
 
         {/* MENTORSHIP */}
         <div className="ui celled stackable center aligned grid container">
-          <MainHeader text="Mentorship" icon="student" />
+          <MainHeader icon="student" text="Mentorship" />
           <Table columnWidth="sixteen">
             <TableRow
-              header="I am a freeCodeCamp Alumni Network Mentor"
               content={ user.mentorship.isMentor
                 ? <i className="large green check mark icon"/>
-                : <i className="large red remove icon"/> } />
+                : <i className="large red remove icon"/> }
+              header="I am a freeCodeCamp Alumni Network Mentor" />
             <TableRow
               header="I am open to being Mentored by other Members"
               content={ user.mentorship.isMentee
@@ -262,24 +293,30 @@ class PublicProfile extends React.Component {
               <SubHeader className="ui top attached header">
                 Mentorship Bio
               </SubHeader>
-              <DynamicHeightDiv id="mentorshipBioDiv" className="ui attached segment">
+              <DynamicHeightDiv
+                className="ui attached segment"
+                id="mentorshipBioDiv">
                 { user.mentorship.mentorshipSkills }
               </DynamicHeightDiv>
             </div> }
-            <div className={`${user.mentorship.mentorshipSkills ? 'eight' : 'sixteen'} wide center aligned column`}>
+            <div className={`${user.mentorship.mentorshipSkills
+              ? 'eight'
+              : 'sixteen'} wide center aligned column`}>
               <SubHeader className="ui top attached header">
                 Contact for Mentorship & Other Requests
               </SubHeader>
-              <DynamicHeightDiv id="contactDiv" className="ui attached segment">
+              <DynamicHeightDiv
+                className="ui attached segment"
+                id="contactDiv">
                 <SocialList
                   contactsOnly={true}
-                  social={user.social}
-                  username={user.username}
-                  email={user.personal.email.email}
                   currentUser={this.props.currentUser}
-                  isPrivate={user.personal.email.private}
+                  disableChat={this.state.disableChat}
+                  email={user.personal.email.email}
                   initiatePrivateChat={this.initiatePrivateChat}
-                  notifications={this.props.privateChat.getIn([user.username, 'notifications'])} />
+                  isPrivate={user.personal.email.private}
+                  social={user.social}
+                  username={user.username} />
               </DynamicHeightDiv>
             </div>
           </div>
@@ -288,11 +325,17 @@ class PublicProfile extends React.Component {
         {/* COLLABORATION */}
       { !isEmpty(user.projects) &&
         <div className="ui celled stackable center aligned grid container">
-          <MainHeader text="Collaboration" icon="users" />
+          <MainHeader icon="users" text="Collaboration" />
           <div className="sixteen wide column">
             <div className="ui segment">
               <i className="large info circle icon" />
-              The following open source projects are projects that {<strong>{ user.username }</strong>} either contributes to or is the owner of. If they are posted here, these projects welcome other open source contributions. Visit the repos, check out the projects, and start collaborating! Please remember to be respectful, and to carefully read any contribution guidelines before opening an issue or making a PR. Happy coding!
+              The following open source projects are projects that
+              {<strong>{ user.username }</strong>} either contributes
+              to or is the owner of. If they are posted here, these projects
+              welcome other open source contributions. Visit the repos, check
+              out the projects, and start collaborating! Please remember to be
+              respectful, and to carefully read any contribution guidelines
+              before opening an issue or making a PR. Happy coding!
             </div>
           </div>
         { user.projects.length <= 3
@@ -319,15 +362,20 @@ class PublicProfile extends React.Component {
 
 PublicProfile.propTypes = {
   user: propTypes.object.isRequired,
-  privateChat: propTypes.object.isRequired,
 }
 
 const findUser = (community, username) => {
-  return community.size ? community.filter(user =>
-    user.username.toLowerCase() === username.toLowerCase() && user).first() : null;
+  return community.size
+    ? community.filter(user =>
+    user.username.toLowerCase() === username.toLowerCase() && user).first()
+    : null;
 };
 
-const mapStateToProps = ({ community, publicProfileStats, privateChat, user: currentUser }, props) => {
+const mapStateToProps = ({
+  community,
+  publicProfileStats,
+  user: currentUser
+}, props) => {
   let username = findUser(community, props.match.params.username);
   if (username) username = username.username;
   let initialState, user;
@@ -346,7 +394,6 @@ const mapStateToProps = ({ community, publicProfileStats, privateChat, user: cur
     user: user ? user : defaultUser,
     loading: !community.size, // mock loading state based on community...
     initialState,
-    privateChat,
   }
 }
 
@@ -357,10 +404,8 @@ const mapScreenSizeToProps = (screenSize) => {
 }
 
 const dispatch = {
-  scrapeFccStats,
-  clearNotifications,
-  initiatePrivateChat,
   mentorshipSearchQuery,
+  scrapeFccStats,
 }
 
 export default connectScreenSize(mapScreenSizeToProps)(

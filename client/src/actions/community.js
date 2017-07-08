@@ -14,6 +14,6 @@ export const populateCommunity = () => {
     return axios.get('/api/community').then(res => {
       const { users } = res.data;
       dispatch(receiveCommunity(users));
-    }).catch(err => console.log(err));
+    }).catch(err => console.error(err));
   }
 };

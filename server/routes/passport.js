@@ -112,7 +112,7 @@ router.get('/connect/twitter/callback',
         res.redirect(`${CLIENT_URL}/dashboard/preferences`);
         console.log('updated user with twitter handle');
       } else {
-        console.log(err);
+        res.staus(500).send(err.message);
       }
     });
 }));
@@ -138,7 +138,7 @@ router.get('/connect/linkedin/callback',
         res.redirect(`${CLIENT_URL}/dashboard/preferences`);
         console.log('updated user with linkedin handle');
       } else {
-        console.log(err);
+        res.staus(500).send(err.message);
       }
     });
 }));

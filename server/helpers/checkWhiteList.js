@@ -11,5 +11,5 @@ export default (githubUsername) => {
         resolve(githubUsername);
       }
     });
-  }).catch(err => console.log(err));
+  }).catch(err => console.error(err));
 }

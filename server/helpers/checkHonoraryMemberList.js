@@ -11,5 +11,5 @@ export default (username) => {
         resolve(false);
       }
     });
-  }).catch(err => console.log(err));
+  }).catch(err => console.error(err));
 }

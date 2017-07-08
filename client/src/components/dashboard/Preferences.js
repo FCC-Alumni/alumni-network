@@ -1,4 +1,3 @@
-// beginning to alphabetize imports for best practices
 import { Button } from 'semantic-ui-react';
 import Career from './Profile/Preferences/Career';
 import Certifications from './Profile/Preferences/Certifications';
@@ -17,7 +16,6 @@ import PersonalInfo from './Profile/Preferences/PersonalInfo';
 import propTypes from 'prop-types';
 import React from 'react';
 import { savePreferencesViewState } from '../../actions/views';
-import { saveUser, updateUser, updateUserPartial } from '../../actions/user';
 import skills, { SKILLS_MAP } from '../../assets/dropdowns/skills';
 import SkillsAndInterests from './Profile/Preferences/SkillsAndInterests';
 import Social from './Profile/Preferences/Social';
@@ -26,11 +24,12 @@ import swearjar from '../../assets/helpers/swearjar-lite';
 import { ThickPaddedBottom } from '../../styles/style-utils';
 import UserLabel from '../dashboard/common/UserLabel';
 import validate from '../../assets/helpers/validations';
+import { saveUser, updateUser, updateUserPartial } from '../../actions/user';
 
 /*
 TODO:
-  - PERSONAL INFO: validation to require user to enter country to collect data for D3 map?
-  - GENERAL: Refactor validation code, kind of reduntant and could be improved (isPageValid && isSectionValid)
+  - PERSONAL INFO: fix country validation so nothing can be saved w/o
+    entering country. For D3 Map.
 */
 
 const BottomButton = styled(Button)`
@@ -282,18 +281,21 @@ class Preferences extends React.Component {
         this.setState({ [e.target.id]: true });
         // close popup 1 second later
         setTimeout(() => this.resetPopUp(e.target.id), 1200);
-      }).catch(err => console.log(err));
+      }).catch(err => console.error(err));
     }
   }
 
   /* separate function for saving this section
   since it saves on enter / click action */
-  handleSaveCollaboration = (e) => {
+  handleSaveCollaboration = (items_list) => {
     const { user, user: { _id } } = this.state;
-    updateUserPartial(_id, 'projects', user.projects).then(res => {
-      const { updatedUser } = res.data;
-      this.props.saveUser(updatedUser);
-    }).catch(err => console.log(err));
+    user.projects = items_list;
+    this.setState({ user }, () => {
+      updateUserPartial(_id, 'projects', user.projects).then(res => {
+        const { updatedUser } = res.data;
+        this.props.saveUser(updatedUser);
+      }).catch(err => console.error(err));
+    });
   }
 
   handleSaveAll = (openModal = false) => {
@@ -308,18 +310,12 @@ class Preferences extends React.Component {
         when called from profile page "save" buttons. pass
         in "open modal" to override default argument */
         openModal && this.setState({ modalOpen: true });
-      }).catch(err => console.log(err));
+      }).catch(err => console.error(err));
     } else {
       /* open error modal and
       reveal sections with errors */
       openModal && this.showErrors();
     }
-  }
-
-  saveProjectsList = (items_list) => {
-    var { user } = this.state;
-    user.projects = items_list;
-    this.setState({ user });
   }
 
   /*******************
@@ -691,7 +687,6 @@ class Preferences extends React.Component {
             username={username}
             toggle={this.toggleShowSection}
             projects={this.state.user.projects}
-            saveProjectsList={this.saveProjectsList}
             saveChanges={this.handleSaveCollaboration}
             showCollaboration={this.state.viewState.showCollaboration} />
           <Social

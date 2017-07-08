@@ -1,11 +1,28 @@
-import React from 'react';
 import CertLinks from './CertLinks';
+import ChatIconPopup from '../common/ChatIconPopup';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import SocialLinks from './SocialLinks';
 import { connectScreenSize } from 'react-screen-size';
+import { isGitterUser } from '../../../actions/user';
 import parseDate from '../../../assets/helpers/parseDate';
-import { initiatePrivateChat, clearNotifications } from '../../../actions/chat';
+import React from 'react';
+import SocialLinks from './SocialLinks';
+import styled from 'styled-components';
+
+const ChatIcon = styled.i`
+  font-size: 16px !important;
+  margin-left: 4px !important;
+  transition: color 200ms ease-in-out !important;
+  &:hover {
+    color: #007E00;
+  }
+  ${props => props.disableChat && `
+    color: lightgrey !important;
+    cursor: default;
+    &:hover {
+      color: lightgrey !important;
+    }
+  `}
+`;
 
 const Clickable = styled.div`
   cursor: pointer;
@@ -18,38 +35,46 @@ const Clickable = styled.div`
 `;
 
 const SummaryWrapper = styled.div`
-  text-align: center !important;
   font-size: 13.5px !important;
   padding: 7px 5px 0 5px;
-`;
-
-const ChatIcon = styled.i`
-  font-size: 16px !important;
-  margin-left: 4px !important;
-  transition: color 200ms ease-in-out !important;
-  &:hover {
-    color: #007E00;
-  }
+  text-align: center !important;
 `;
 
 class UserCard extends React.Component {
+  state = {
+    disableChat: false,
+    reveal: false
+  }
 
-  state = { reveal: false }
-
-  initiatePrivateChat = (recipient, notifications) => {
-    if (!this.props.privateChat.has(recipient)) {
-      this.props.initiatePrivateChat(recipient);
-    } else if (notifications) {
-      this.props.clearNotifications({
-        author: this.props.currentUser,
-        recipient
-      });
-    }
-    this.props.history.push(`chat/${recipient}`);
+  componentWillMount() {
+    this.handleDisableChat();
   }
 
   handleClick = (username) => {
     this.props.history.push(`/dashboard/profile/${username}`)
+  }
+
+  handleDisableChat = () => {
+    isGitterUser(this.props.user.username)
+    .then(res => {
+      if (this.refs.card) {
+        switch (res.data.isGitterUser) {
+          case false:
+            this.setState({ disableChat: true });
+            break;
+          default: return;
+        }
+      }
+    })
+    .catch(err => console.error(err));
+  }
+
+  handleInnerClick = (e) => {
+    e.stopPropagation();
+  }
+
+  initiatePrivateChat = (recipient) => {
+    this.props.history.push(`chat/${recipient}`);
   }
 
   renderSkillsAndInterests = (skillsOrInterests) => {
@@ -57,10 +82,6 @@ class UserCard extends React.Component {
       ? skillsOrInterests.map((item, i) => {
           return i < 3 && <div className="item" key={i}>{item}</div>})
       : 'Not defined yet!';
-  }
-
-  handleInnerClick = (e) => {
-    e.stopPropagation();
   }
 
   reveal = () => {
@@ -71,8 +92,10 @@ class UserCard extends React.Component {
 
     const {
       user,
+      user: {
+        username
+      },
       currentUser,
-      privateChat,
       screen: { isMobile, isDesktop },
       user: {
         skillsAndInterests: {
@@ -82,7 +105,6 @@ class UserCard extends React.Component {
     } = this.props;
 
     const image = document.getElementsByClassName('avatarImg')[0];
-    const notifications = privateChat.getIn([user, 'notifications'])
     const joinedOn = parseDate(...user.personal.memberSince.split('-').slice(0, 2));
     const imageHeight = image && window.getComputedStyle(image).getPropertyValue('height');
     // used inline styles to control the reveal behavior on mobile resolutions.
@@ -117,22 +139,25 @@ class UserCard extends React.Component {
     return (
       <div
         className='ui raised card'
-        style={ !isMobile ? { cursor: 'pointer' } : null }
-        onClick={() => !isMobile && this.handleClick(user.username)}>
+        onClick={() => !isMobile && this.handleClick(username)}
+        ref="card"
+        style={ !isMobile ? { cursor: 'pointer' } : null }>
 
       {/* User Avatar & Reveal */}
       { (isDesktop || isMobile)
       ? <div className={`ui ${isDesktop ? 'slide masked reveal image' : 'image'}`}>
           <img
-            style={IMAGE_STYLE}
+            alt={`${username} avatar`}
+            className={`${isDesktop ? 'visible content' : 'avatarImg'}`}
+            onClick={isMobile && this.reveal}
             src={user.personal.avatarUrl}
-            alt={`${user.username} avatar`}
-            onClick={isMobile && this.reveal}
-            className={`${isDesktop ? 'visible content' : 'avatarImg'}`} />
+            style={IMAGE_STYLE} />
           <div
-            style={CONTENT_STYLE}
+            className={`${(isDesktop || this.state.reveal)
+              ? 'hidden content'
+              : ''}`}
             onClick={isMobile && this.reveal}
-            className={`${(isDesktop || this.state.reveal) ? 'hidden content' : ''}`} >
+            style={CONTENT_STYLE}>
             <SummaryWrapper>
               <div className="ui horizontal divider">Core Skills</div>
               <div className="ui list">
@@ -146,25 +171,29 @@ class UserCard extends React.Component {
           </div>
         </div>
       : <div className="image">
-          <img src={user.personal.avatarUrl} className="visible content" alt="user avatar"/>
+          <img
+            alt="user avatar"
+            className="visible content"
+            src={user.personal.avatarUrl} />
         </div> }
 
         {/********** Username, Status, & Certs **********/}
-        <Clickable onClick={() => this.handleClick(user.username)} className="content">
+        <Clickable
+          className="content"
+          onClick={() => this.handleClick(username)}>
           <div className="header">
-            <span className="user">{user.username}</span>
-          { currentUser !== user.username &&
-            <ChatIcon
-              className="comments icon"
-              title={`Start a chat with ${user.username}`}
-              onClick={(e) => {
-                this.initiatePrivateChat(user.username, notifications);
-                e.stopPropagation(); }} /> }
+            <span className="user">{username}</span>
+          { currentUser !== username &&
+            <ChatIconPopup
+              ChatIcon={ChatIcon}
+              disableChat={this.state.disableChat}
+              initiatePrivateChat={this.initiatePrivateChat}
+              username={username} /> }
           { (isDesktop || isMobile) &&
             <CertLinks
               fccCerts={user.fccCerts}
-              username={user.username}
-              handleClick={this.handleInnerClick} /> }
+              handleClick={this.handleInnerClick}
+              username={username} /> }
           </div>
           <div className="meta">
             {user.mentorship.isMentor ? 'Mentor' : 'Member'}
@@ -178,13 +207,13 @@ class UserCard extends React.Component {
             {`Since ${joinedOn}`}
           </span>
         : <CertLinks
-            username={user.username}
             fccCerts={user.fccCerts}
-            handleClick={this.handleInnerClick} /> }
+            handleClick={this.handleInnerClick}
+            username={username} /> }
           <span>
             <SocialLinks
-              user={user}
-              handleClick={this.handleInnerClick} />
+              handleClick={this.handleInnerClick}
+              user={user} />
           </span>
         </div>
 
@@ -195,24 +224,12 @@ class UserCard extends React.Component {
 
 export const mapScreenSizeToProps = (screenSize) => {
   return { screen: {
-    isTablet: screenSize['small'],
+    isDesktop: screenSize['> medium'],
     isMobile: screenSize['mobile'],
-    isDesktop: screenSize['> medium']
+    isTablet: screenSize['small'],
   }};
 }
 
-const mapStateToProps = (state) => {
-  return {
-    privateChat: state.privateChat,
-    currentUser: state.user.username,
-  }
-}
-
-const dispatch = {
-  clearNotifications,
-  initiatePrivateChat,
-};
-
 export default connectScreenSize(mapScreenSizeToProps)(
-  connect(mapStateToProps, dispatch)(UserCard)
+  connect(state => ({ currentUser: state.user.username }))(UserCard)
 );

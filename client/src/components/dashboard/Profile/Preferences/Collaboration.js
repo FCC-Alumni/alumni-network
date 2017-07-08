@@ -1,10 +1,9 @@
+import MessageBox from '../../common/MessageBox';
 import React from 'react';
-import { isEqual } from 'lodash';
-import { isEmpty } from 'lodash';
 import RepoContainer from './common/RepoContainer';
 import Ribbon from './common/RibbonHeader';
-import MessageBox from '../../common/MessageBox';
 import { TransitionContainer } from '../../../../styles/style-utils';
+import { isEmpty, isEqual } from 'lodash';
 
 export default class Collaboration extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -12,30 +11,29 @@ export default class Collaboration extends React.Component {
   }
   render() {
     const {
-      toggle,
       projects,
-      username,
       saveChanges,
-      saveProjectsList,
-      showCollaboration
+      showCollaboration,
+      toggle,
+      username,
     } = this.props;
     return (
       <div>
         <Ribbon
           content="Collaboration"
-          showSave={false}
-          onClick={() => toggle('showCollaboration')} />
+          onClick={() => toggle('showCollaboration')}
+          showSave={false} />
         <TransitionContainer isExpanded={showCollaboration}>
           <MessageBox
-            type="info"
             dismissable={true}
             hide={ isEmpty(projects) ? false : true }
-            message="Share links to repos for projects that you could use some help with!" />
+            message={`Share links to repos for projects that
+              you could use some help with!`}
+            type="info" />
           <RepoContainer
-            username={username}
             prePopulateList={projects}
             saveChanges={saveChanges}
-            saveListToParent={saveProjectsList} />
+            username={username} />
         </TransitionContainer>
       </div>
     );

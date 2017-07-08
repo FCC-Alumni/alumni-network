@@ -1,12 +1,18 @@
-import React from 'react';
-import propTypes from 'prop-types';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { socket } from '../../actions/chat';
-import { mapScreenSizeToProps } from '../Navbar';
-import { connectScreenSize } from 'react-screen-size';
 import { addFlashMessage } from '../../actions/flashMessages';
-import { getUserData, verifyUser, saveUser, deleteUser } from '../../actions/user';
+import { connect } from 'react-redux';
+import { connectScreenSize } from 'react-screen-size';
+import { mapScreenSizeToProps } from '../Navbar';
+import propTypes from 'prop-types';
+import React from 'react';
+import { socket } from '../../actions/chat';
+import styled from 'styled-components';
+
+import {
+  getUserData,
+  deleteUser,
+  saveUser, 
+  verifyUser,
+} from '../../actions/user';
 
 class UserVerification extends React.Component {
   state = {
@@ -23,11 +29,17 @@ class UserVerification extends React.Component {
         // redirect on subsequent login
         if (user.verifiedUser) {
           this.props.saveUser(user);
+          // TEMPORARY FLASH MESSAGE TO NOTIFY MOVE TO GITTER
+          // CHANGE BACK IN ABOUT A MONTH
           this.props.addFlashMessage({
-            type: 'success',
+            type: 'announcement',
             text: {
-              header: 'Welcome to the freeCodeCamp Alumni Network!',
-              message: 'Welcome back to the app!'
+              header: 'FREECODECAMP ALUMNI NETWORK MOVES TO GITTER!',
+              message: `FCCAN now uses Gitter for both Mess Hall and Private
+                        Chats! If you are not a Gitter user, we recommend that
+                        you sign up with your GitHub account
+                        <a href="https://gitter.im/login" target="_blank">
+                        here</a>.`
             }
           });
           this.props.history.push('/dashboard');

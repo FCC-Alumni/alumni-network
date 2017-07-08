@@ -1,73 +1,24 @@
-import React from 'react';
 import propTypes from 'prop-types';
-import styled from 'styled-components';
-import {
-  ThickPaddedBottom,
-  hoverTransition
-} from '../../../styles/style-utils';
-
-const ResultItem = styled.div`
-  width: 45vw !important;
-`;
-
-const Username = styled.div`
-  ${ hoverTransition() }
-`;
-
-const ChatIcon = styled.i`
-  ${ hoverTransition() }
-  font-size: 20px !important;
-  margin-left: 4px !important;
-  margin-bottom: 2px !important;
-`;
-
-const IMG = styled.img`
-  border-radius: 100% !important;
-  cursor: pointer;
-`;
+import React from 'react';
+import { ThickPaddedBottom } from '../../../styles/style-utils';
+import UserCard from './UserCard';
 
 const SearchResults = ({
-  results,
-  noResults,
-  privateChat, 
   currentUser,
   handleClick,
   initiatePrivateChat,
+  noResults,
+  results,
 }) => {
   const listResults = results.map(user => {
-    const { username, mentorship: { isMentor, mentorshipSkills }, personal: { bio } } = user;
-    const notifications = privateChat.getIn([username, 'notifications']);
     return (
-      <ResultItem key={user._id} className="item">
-        <div className="ui tiny image">
-          <IMG
-            src={user.personal.avatarUrl}
-            alt={`${username}'s avatar`}
-            onClick={() => handleClick(user)}
-            title={`View ${username}'s profile`} />
-        </div>
-        <div className="content">
-          <Username
-            className="header"
-            onClick={() => handleClick(user)}
-            title={`View ${username}'s profile`}>
-            {username}
-          </Username>
-        { currentUser !== username &&
-          <ChatIcon
-            className="comments icon"
-            title={`Start a chat with ${username}`}
-            onClick={() => initiatePrivateChat(username, notifications)} /> }
-          <div className="meta">
-            <span><strong>{user.personal.displayName}</strong></span>
-            <i className="angle double right icon" />
-            <span>{isMentor ? 'Mentor' : 'Member'}</span>
-          </div>
-          <div className="description">
-            { isMentor ? mentorshipSkills : bio ? bio : 'User has not yet created a bio' }
-          </div>
-        </div>
-      </ResultItem>
+      <UserCard
+        currentUser={currentUser}
+        handleClick={handleClick}
+        initiatePrivateChat={initiatePrivateChat}
+        key={user._id} 
+        user={user}
+      />
     );
   });
 
@@ -92,8 +43,9 @@ const SearchResults = ({
 }
 
 SearchResults.propTypes = {
-  initiatePrivateChat: propTypes.func.isRequired,
   currentUser: propTypes.string.isRequired,
+  handleClick: propTypes.func.isRequired,
+  initiatePrivateChat: propTypes.func.isRequired,
   noResults: propTypes.bool.isRequired,
   results: propTypes.array.isRequired,
 }

@@ -1,21 +1,21 @@
-import React from 'react';
-import propTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
-import { socket } from '../actions/chat';
-import { populateCommunity } from '../actions/community';
-import { populateChat, fetchPrivateChat } from '../actions/chat';
-import { saveUser, getUserData, logoutUser } from '../actions/user';
-import { addFlashMessage, clearFlashMessage } from '../actions/flashMessages';
-
-import { CatchAll } from '../App';
 import Account from './dashboard/Account';
-import Landing from './dashboard/Landing';
+import { CatchAll } from '../App';
 import Community from './dashboard/Community';
+import { connect } from 'react-redux';
+import GitterEmbed from './dashboard/GitterEmbed';
+import Landing from './dashboard/Landing';
 import Mentorship from './dashboard/Mentorship';
+import { populateCommunity } from '../actions/community';
 import Preferences from './dashboard/Preferences';
-import Chat from './dashboard/Chat/ChatController';
+import propTypes from 'prop-types';
 import PublicProfile from './dashboard/PublicProfile';
+import React from 'react';
+import { socket } from '../actions/chat';
+
+import { addFlashMessage, clearFlashMessage } from '../actions/flashMessages';
+import { fetchPrivateChat, populateChat } from '../actions/chat';
+import { Route, Switch } from 'react-router-dom';
+import { getUserData, logoutUser, saveUser } from '../actions/user';
 
 class AppContainer extends React.Component {
 
@@ -29,7 +29,8 @@ class AppContainer extends React.Component {
         if (!this.props.chat) this.props.populateChat();
         this.props.fetchPrivateChat(user.username);
 
-        // announce this user is now online, should refresh status if user reloads page:
+        // announce this user is now online
+        // should refresh status if user reloads page:
         socket.emit('user-online', { user: user.username });
 
       } else {
@@ -44,7 +45,7 @@ class AppContainer extends React.Component {
         this.props.history.push('/login');
       }
     }).catch(err => {
-      console.log(err);
+      console.error(err);
       this.props.history.push('/login')
       this.props.logoutUser();
       this.props.addFlashMessage({
@@ -72,15 +73,40 @@ class AppContainer extends React.Component {
       <div id="appContainer">
         { this.props.username &&
           <Switch>
-            <Route exact path={`${url}/`} component={Landing}/>
-            <Route exact path={`${url}/preferences`} component={Preferences}/>
-            <Route exact path={`${url}/profile/:username`} component={PublicProfile}/>
-            <Route exact path={`${url}/community`} component={Community}/>
-            <Route exact path={`${url}/mentorship`} component={Mentorship}/>
-            <Route exact path={`${url}/chat`} component={Chat}/>
-            <Route exact path={`${url}/chat/:username`} component={Chat}/>
-            <Route exact path={`${url}/account`} component={Account}/>
-            <Route component={CatchAll} />
+            <Route
+              component={Landing}
+              exact
+              path={`${url}/`} />
+            <Route
+              component={Preferences}
+              exact
+              path={`${url}/preferences`} />
+            <Route
+              component={PublicProfile}
+              exact
+              path={`${url}/profile/:username`} />
+            <Route
+              component={Community}
+              exact
+              path={`${url}/community`} />
+            <Route
+              component={Mentorship}
+              exact
+              path={`${url}/mentorship`} />
+            <Route
+              component={GitterEmbed}
+              exact
+              path={`${url}/chat`} />
+            <Route
+              component={GitterEmbed}
+              exact
+              path={`${url}/chat/:username`} />
+            <Route
+              component={Account}
+              exact
+              path={`${url}/account`} />
+            <Route
+              component={CatchAll} />
           </Switch> }
       </div>
     );
@@ -88,30 +114,30 @@ class AppContainer extends React.Component {
 };
 
 AppContainer.propTypes = {
-  saveUser: propTypes.func.isRequired,
-  username: propTypes.string.isRequired,
-  populateChat: propTypes.func.isRequired,
   addFlashMessage: propTypes.func.isRequired,
   clearFlashMessage: propTypes.func.isRequired,
+  populateChat: propTypes.func.isRequired,
   populateCommunity: propTypes.func.isRequired,
+  saveUser: propTypes.func.isRequired,
+  username: propTypes.string.isRequired,
 }
 
 const mapStateToProps = (state) => {
   return {
-    username: state.user.username,
     chat: state.chat.size > 0 ? true : false,
-    community: state.privateChat.size > 0 ? true : false,
+    community: state.community.size > 0 ? true : false,
+    username: state.user.username,
   }
 }
 
 const dispatch = {
-  saveUser,
+  addFlashMessage,
+  clearFlashMessage,
+  fetchPrivateChat,
   logoutUser,
   populateChat,
-  addFlashMessage,
-  fetchPrivateChat,
-  clearFlashMessage,
   populateCommunity,
+  saveUser,
 }
 
 export default connect(mapStateToProps, dispatch)(AppContainer);

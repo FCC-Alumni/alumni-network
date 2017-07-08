@@ -73,7 +73,7 @@ const RepoInput = ({
 
 RepoInput.propTypes = {
   addItem: propTypes.func.isRequired,
-  error: propTypes.string.isRequired,
+  error: propTypes.object.isRequired,
   handleChange: propTypes.func.isRequired,
   handleDropdownChange: propTypes.func.isRequired,
   icon: propTypes.string.isRequired,

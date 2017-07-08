@@ -1,12 +1,8 @@
-import React from 'react';
+import { Popup } from 'semantic-ui-react';
 import propTypes from 'prop-types';
+import React from 'react';
 import styled from 'styled-components';
 import { StyledItem as StyledLink } from '../../../../styles/style-utils';
-
-export const SocialIcon = styled.i`
-  font-size: 22px !important;
-  color: black !important;
-`;
 
 const InlineContent = styled.div`
   display: inline-block !important;
@@ -18,9 +14,12 @@ const Link = styled(StyledLink)`
   }
 `;
 
-const StyledItem = styled.div`
+export const SocialIcon = styled.i`
+  font-size: 22px !important;
   color: black !important;
-  font-weight: bold !important;
+`;
+
+const StyledItem = styled.div`
   .icon {
     color: black !important;
   }
@@ -32,6 +31,20 @@ const StyledItem = styled.div`
       transition: color 200ms ease-in-out !important;
     }
   }
+  ${props => props.disableChat && `
+    cursor: default;
+    .header {
+      color: lightgrey !important;
+    }
+    .icon {
+      color: lightgrey !important;
+    }
+    &:hover {
+      .icon {
+        color: lightgrey !important;
+      }
+    }
+  `}
 `;
 
 const Item = ({ href, icon, text }) => {
@@ -45,7 +58,27 @@ const Item = ({ href, icon, text }) => {
   );
 }
 
-const SocialList = ({ username, social, email, isPrivate, contactsOnly, notifications, currentUser, initiatePrivateChat }) => {
+const SocialList = ({
+  contactsOnly,
+  currentUser,
+  disableChat,
+  email,
+  initiatePrivateChat,
+  isPrivate,
+  social,
+  username,
+ }) => {
+  const ChatIcon = (
+    <StyledItem
+      className="item"
+      disableChat={disableChat}
+      onClick={() => !disableChat && initiatePrivateChat(username)}>
+      <SocialIcon className="comments icon" />
+      <InlineContent className="content">
+        <div className="header">Gitter</div>
+      </InlineContent>
+    </StyledItem>
+  );
   return (
     <div className="ui relaxed horizontal list">
     { !isPrivate && email &&
@@ -59,12 +92,14 @@ const SocialList = ({ username, social, email, isPrivate, contactsOnly, notifica
         text="freeCodeCamp"
         href={`https://freecodecamp.org/${username}`} /> }
     { contactsOnly && username !== currentUser &&
-      <StyledItem onClick={() => initiatePrivateChat(username, notifications)} className="item">
-        <SocialIcon className="comments icon" />
-        <InlineContent className="content">
-          <div className="header">Mess Hall Chat</div>
-        </InlineContent>
-      </StyledItem> }
+      <Popup
+        trigger={ChatIcon}
+        flowing
+        inverted
+        position="bottom left"
+        content={disableChat
+          ? `${username} does not have a Gitter account`
+          : `Start a Gitter chat with ${username}`} /> }
       <Item
         icon="github"
         text="GitHub"

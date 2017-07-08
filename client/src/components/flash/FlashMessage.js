@@ -1,5 +1,5 @@
-import React from 'react';
 import propTypes from 'prop-types';
+import React from 'react';
 
 class FlashMessage extends React.Component {
 
@@ -10,22 +10,24 @@ class FlashMessage extends React.Component {
   render() {
     const { type, text } = this.props.message;
     return (
-      <div className={`${type === 'error' ? 'ui error' : 'ui info'} message flashMessage`}>
-        <i onClick={this.handleClick} className="close icon"></i>
+      <div className={`${type === 'error'
+          ? 'ui error'
+          : type === 'announcement'
+          ? 'ui teal'
+          : 'ui info'} message flashMessage`}>
+        <i className="close icon" onClick={this.handleClick} />
         <div className="header">
           {text.header}
         </div>
-        <p>
-          {text.message}
-        </p>
+        <p dangerouslySetInnerHTML={{ __html: text.message }} />
       </div>
     );
   }
 }
 
 FlashMessage.propTypes = {
-  message: propTypes.object.isRequired,
-  clearFlashMessage: propTypes.func.isRequired
+  clearFlashMessage: propTypes.func.isRequired,
+  message: propTypes.object.isRequired
 }
 
 export default FlashMessage;

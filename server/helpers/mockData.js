@@ -198,14 +198,14 @@ const logResult = (users, completed) => {
                 company: data.company ? data.company : '',
               }
             }, ((err, newUser) => {
-              if(err) console.log(err);
+              if(err) console.error(err);
             }));
-          }).catch(err => console.log(err));
+          }).catch(err => console.error(err));
         } else {
           completed++;
           logResult(users, completed);
         };
       });
-    }).catch(err => console.log(err));
+    }).catch(err => console.error(err));
    });
 })();
