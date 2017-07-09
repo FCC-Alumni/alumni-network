@@ -332,8 +332,8 @@ class RepoContainer extends React.Component {
     const listItems = this.state.items_list.map((el, index) => {
       return (
         <RepoListItem
-          el={el}
           editItem={() => this.editItem(el)}
+          el={el}
           index={index}
           key={index}
           removeItem={() => this.removeItem(el)} />
@@ -347,16 +347,16 @@ class RepoContainer extends React.Component {
           handleChange={this.handleChange}
           handleDropdownChange={this.handleLabelChange}
           icon={icon}
-          item={item}
           isMobile={isMobile}
+          item={item}
           repoHosts={repoHosts} />
-        <Segment basic style={{ minHeight: 50, marginTop: 5, padding: 0 }}>
+        <Segment basic style={{ marginTop: 5, minHeight: 50, padding: 0 }}>
           <Dimmer active={isLoading && true} inverted>
             <Loader />
           </Dimmer>
           <div
-            style={{ margin: 0 }}
-            className="ui middle aligned divided selection list">
+            className="ui middle aligned divided selection list"
+            style={{ margin: 0 }}>
             {listItems}
           </div>
         </Segment>

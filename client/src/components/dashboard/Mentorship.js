@@ -4,7 +4,6 @@ import { defaultState } from '../../reducers/search';
 import DropDown from '../dashboard/common/DropdownMulti';
 import filterOptions from '../../assets/helpers/filterOptions';
 import Filters from './Mentorship/SearchFilters';
-import { initiatePrivateChat } from '../../actions/chat';
 import { isEmpty } from 'lodash';
 import { Popup } from 'semantic-ui-react';
 import React from 'react';
@@ -19,11 +18,6 @@ import {
   transitionIn,
   transitionOut,
 } from '../../styles/style-utils';
-
-import {
-  clearNotifications,
-  initiatePrivateChat
-} from '../../actions/chat';
 
 const searchApi = {
   match: (regex, string) => {
@@ -394,7 +388,6 @@ const mapStateToProps = (state) => {
 const dispatch = {
   addFlashMessage,
   saveSearchState,
-  initiatePrivateChat,
 };
 
 export default connect(mapStateToProps, dispatch)(Mentorship);

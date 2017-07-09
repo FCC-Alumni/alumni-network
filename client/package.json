@@ -9,7 +9,7 @@
     "immutable": "^3.8.1",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
-    "node-sass": "^4.5.0",
+    "node-sass": "^4.5.3",
     "npm-run-all": "^4.0.2",
     "prop-types": "^15.5.7",
     "react": "^15.4.2",
@@ -48,7 +48,7 @@
     "eslint-config-react-app": "^1.0.5",
     "eslint-plugin-flowtype": "^2.33.0",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^7.0.1"
   }
 }

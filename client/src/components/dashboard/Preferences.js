@@ -22,7 +22,6 @@ import swearjar from '../../assets/helpers/swearjar-lite';
 import { ThickPaddedBottom } from '../../styles/style-utils';
 import UserLabel from '../dashboard/common/UserLabel';
 import validate from '../../assets/helpers/validations';
-import { saveUser, updateUser, updateUserPartial } from '../../actions/user';
 
 import interests, { INTERESTS_MAP } from '../../assets/dropdowns/interests';
 import { saveUser, updateUser, updateUserPartial } from '../../actions/user';
@@ -61,21 +60,21 @@ class Preferences extends React.Component {
     super(props);
     const { user, viewState } = this.props;
     this.state = {
-      user,
-      viewState,
-      errors: {},
-      modalOpen: false,
-      isPageValid: true,
-      profileWarning: '',
-      socialPopUp: false,
       careerPopUp: false,
-      projectsPopUp: false,
-      personalPopUp: false,
+      errors: {},
+      interestsOptions: [],
+      isPageValid: true,
       mentorshipPopUp: false,
+      modalOpen: false,
+      personalPopUp: false,
+      profileWarning: '',
+      projectsPopUp: false,
       showBottomButton: false,
       skillsAndInterestsPopUp: false,
-      interestsOptions: [],
       skillsOptions: [],
+      socialPopUp: false,
+      user,
+      viewState,
     }
   }
 
@@ -97,7 +96,7 @@ class Preferences extends React.Component {
         interestsOptions = [{ text: value, value }, ...interestsOptions];
       }
     });
-    this.setState({ skillsOptions, interestsOptions });
+    this.setState({ interestsOptions, skillsOptions });
   }
 
   componentWillUnmount() {
@@ -153,7 +152,7 @@ class Preferences extends React.Component {
       temporarily add it to options list so that semantic-ui-react
       will display it as choice and add new choice to user object */
       if (findIndex(skillsOptions, { key: value.toLowerCase() }) === -1) {
-        skillsOptions = [{ text: value, key: value.toLowerCase(), value }, ...skillsOptions];
+        skillsOptions = [{ key: value.toLowerCase(), text: value, value }, ...skillsOptions];
         user.skillsAndInterests.coreSkills.push(value);
       }
       this.setState({ skillsOptions, user });
@@ -190,7 +189,7 @@ class Preferences extends React.Component {
       temporarily add it to options list so that semantic-ui-react
       will display it as choice and add new choice to user object */
       if (findIndex(interestsOptions, { key: value.toLowerCase() }) === -1) {
-        interestsOptions = [{ text: value, key: value.toLowerCase(), value }, ...interestsOptions];
+        interestsOptions = [{ key: value.toLowerCase(), text: value, value }, ...interestsOptions];
         user.skillsAndInterests.codingInterests.push(value);
       }
       this.setState({ interestsOptions, user });
@@ -556,7 +555,7 @@ class Preferences extends React.Component {
     user.career.jobSearch = '';
     user.career.company = '';
     errors.career = '';
-    this.setState({ user, errors });
+    this.setState({ errors, user });
   }
 
   toggleShowSection = (target) => {
@@ -735,9 +734,9 @@ const mapStateToProps = (state) => {
 }
 
 Preferences.propTypes = {
-  viewState: propTypes.object,
   user: propTypes.object.isRequired,
+  viewState: propTypes.object,
 }
 
 export default connectScreenSize(mapScreenSizeToProps)(
-  connect(mapStateToProps, { saveUser, savePreferencesViewState })(Preferences));
+  connect(mapStateToProps, { savePreferencesViewState, saveUser })(Preferences));

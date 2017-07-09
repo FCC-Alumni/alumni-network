@@ -1,5 +1,7 @@
 ---
 extends: react-app
+plugins:
+  - react
 rules:
   sort-imports:
   - error
