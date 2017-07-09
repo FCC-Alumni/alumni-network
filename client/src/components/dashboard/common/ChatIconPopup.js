@@ -1,12 +1,12 @@
-import React from 'react';
 import { Popup } from 'semantic-ui-react';
 import propTypes from 'prop-types';
+import React from 'react';
 
 const ChatIconPopup = ({
   ChatIcon,
   disableChat,
   initiatePrivateChat,
-  username 
+  username
 }) => {
   const chatIcon = (
     <ChatIcon
