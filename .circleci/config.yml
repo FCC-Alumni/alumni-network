@@ -1,0 +1,83 @@
+defaults: &defaults
+  docker:
+    - image: circleci/node:latest
+    # - image: mongo:3
+    # - image: redis:3.2
+
+version: 2
+jobs:
+  server-lint:
+    <<: *defaults
+    working_directory: ~/alumni-network
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            # Find a cache corresponding to this specific package.json checksum
+            # when this file is changed, this key will fail
+            - v2-server-deps-{{ .Branch }}-{{ checksum "package.json" }}
+            # Find the most recent cache used from this branch
+            - v2-server-deps-{{ .Branch }}
+            # Find the most recent cache used from master
+            - v2-server-deps-master
+            # Find the most recent cache used from any Branch
+            - v2-server-deps
+      - run:
+          name: Install dependencies
+          command: npm install --ignore-scripts
+          no_output_timeout: 3m
+      - run:
+          name: Run linter
+          command: npm run lint
+          no_output_timeout: 1m
+      - run:
+          name: Index dependencies
+          command: ls -laR node_modules > deps_checksum
+          no_output_timeout: 30s
+      - save_cache:
+          paths:
+            - node_modules
+          # Save cache for this specific set of packages
+          key: v2-server-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "deps_checksum" }}
+
+  client-lint:
+    <<: *defaults
+    working_directory: ~/alumni-network/client
+    steps:
+      - checkout:
+          path: ~/alumni-network
+      - restore_cache:
+          keys:
+            # Find a cache corresponding to this specific package.json checksum
+            # when this file is changed, this key will fail
+            - v2-client-deps-{{ .Branch }}-{{ checksum "package.json" }}
+            # Find the most recent cache used from this branch
+            - v2-client-deps-{{ .Branch }}
+            # Find the most recent cache used from master
+            - v2-client-deps-master
+            # Find the most recent cache used from any Branch
+            - v2-client-deps
+      - run:
+          name: Install dependencies
+          command: npm install
+          no_output_timeout: 3m
+      - run:
+          name: Run linter
+          command: npm run lint
+          no_output_timeout: 1m
+      - run:
+          name: Index dependencies
+          command: ls -laR node_modules > deps_checksum
+          no_output_timeout: 30s
+      - save_cache:
+          paths:
+            - node_modules
+          # Save cache for this specific set of packages
+          key: v2-client-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "deps_checksum" }}
+
+workflows:
+  version: 2
+  checkout_lint:
+    jobs:
+      - server-lint
+      - client-lint
