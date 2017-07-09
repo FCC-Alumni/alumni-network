@@ -14,8 +14,8 @@ import { socket } from '../actions/chat';
 
 import { addFlashMessage, clearFlashMessage } from '../actions/flashMessages';
 import { fetchPrivateChat, populateChat } from '../actions/chat';
-import { Route, Switch } from 'react-router-dom';
 import { getUserData, logoutUser, saveUser } from '../actions/user';
+import { Route, Switch } from 'react-router-dom';
 
 class AppContainer extends React.Component {
 

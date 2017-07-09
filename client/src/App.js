@@ -1,16 +1,16 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-
-import NavBar from './components/Navbar';
-import HomePage from './components/HomePage';
-import AppContainer from './components/AppContainer';
-import LoginPage from './components/signup/LoginPage';
-import PublicLanding from './components/PublicLanding';
-import UserVerification from './components/signup/UserVerification';
-import FlashMessagesList from './components/flash/FlashMessagesList';
-
 import './styles/App.css';
 import '../node_modules/flag-icon-css/css/flag-icon.css';
+
+import AppContainer from './components/AppContainer';
+import FlashMessagesList from './components/flash/FlashMessagesList';
+import HomePage from './components/HomePage';
+import LoginPage from './components/signup/LoginPage';
+import NavBar from './components/Navbar';
+import PublicLanding from './components/PublicLanding';
+import React from 'react';
+import UserVerification from './components/signup/UserVerification';
+
+import { Route, Switch } from 'react-router-dom';
 
 export const CatchAll = () => (
   <div style={{ textAlign: 'center', marginTop: '125px' }}>

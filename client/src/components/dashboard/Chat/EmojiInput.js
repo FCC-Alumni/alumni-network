@@ -1,7 +1,7 @@
-import React from 'react';
-import propTypes from 'prop-types';
-import EmojiPicker from 'react-emoji-picker';
 import emojiMap from 'react-emoji-picker/lib/emojiMap';
+import EmojiPicker from 'react-emoji-picker';
+import propTypes from 'prop-types';
+import React from 'react';
 
 export default class Emoji extends React.Component {
 

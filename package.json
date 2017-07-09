@@ -8,9 +8,10 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --fix server server.js",
     "dev": "nodemon --ignore ./client --exec babel-node -- ./server.js",
     "start": "babel-node ./server.js",
-    "deploy": "git push heroku master",
+    "deploy": "eslint --fix server server.js && git push heroku master",
     "setup": "npm install && cd client/ && npm install",
     "populate-db": "babel-node ./server/helpers/mockData",
     "postinstall": "cd client/ && npm install",
@@ -41,6 +42,13 @@
     "validator": "^7.0.0"
   },
   "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint": "^3.19.0",
+    "eslint-config-react-app": "^1.0.5",
+    "eslint-plugin-flowtype": "^2.33.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-react": "^7.0.1",
     "nodemon": "^1.11.0"
   }
 }

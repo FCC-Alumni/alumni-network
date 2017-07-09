@@ -1,11 +1,11 @@
-import React from 'react';
-import propTypes from 'prop-types';
+import { clearFlashMessage } from '../../actions/flashMessages';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import { connectScreenSize } from 'react-screen-size';
 import FlashMessage from './FlashMessage';
 import { mapScreenSizeToProps } from '../Navbar';
-import { connectScreenSize } from 'react-screen-size';
-import { clearFlashMessage } from '../../actions/flashMessages';
+import propTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
 
 
 class FlashMessagesList extends React.Component {

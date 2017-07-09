@@ -1,5 +1,5 @@
-import React from 'react';
 import propTypes from 'prop-types';
+import React from 'react';
 import styled from 'styled-components';
 
 class MessageBox extends React.Component {

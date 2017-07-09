@@ -1,9 +1,9 @@
-import React from 'react';
-import { isEqual } from 'lodash';
-import { isEmpty } from 'lodash';
-import Ribbon from './common/RibbonHeader';
-import MessageBox from '../../common/MessageBox';
 import DropdownMulti from '../../common/DropdownMulti';
+import { isEmpty } from 'lodash';
+import { isEqual } from 'lodash';
+import MessageBox from '../../common/MessageBox';
+import React from 'react';
+import Ribbon from './common/RibbonHeader';
 import { TransitionContainer } from '../../../../styles/style-utils';
 
 export default class SkillsAndInterests extends React.Component {

@@ -1,15 +1,14 @@
-
-import { List, Map } from 'immutable';
 import {
-  CHAT_INITIALIZE,
   CHAT_ADD_MESSAGE,
   CHAT_DELETE_MESSAGE,
   CHAT_EDIT_MESSAGE,
+  CHAT_INITIALIZE,
   CHAT_LIKE_MESSAGE,
+  CHAT_RECEIVED_LIKE,
   CHAT_RECEIVED_MESSAGE,
-  CHAT_RECEIVED_UPDATE,
-  CHAT_RECEIVED_LIKE
+  CHAT_RECEIVED_UPDATE
 } from '../actions/chat';
+import { List, Map } from 'immutable';
 
 /*** Chat history is a List. Each entry represents
  * a message and is a Map, within which likes are

@@ -1,14 +1,14 @@
-import React from 'react';
-import { isEqual } from 'lodash';
-import styled from 'styled-components';
-import FormField from './common/FormField';
-import Ribbon from './common/RibbonHeader';
-import { Dropdown } from 'semantic-ui-react';
-import RadioButton from './common/RadioButton';
-import MessageBox from '../../common/MessageBox';
 import { connectScreenSize } from 'react-screen-size';
-import { mapScreenSizeToProps } from '../../../Navbar';
+import { Dropdown } from 'semantic-ui-react';
+import FormField from './common/FormField';
 import { Container as InnerContainer } from './common/RepoContainer';
+import { isEqual } from 'lodash';
+import { mapScreenSizeToProps } from '../../../Navbar';
+import MessageBox from '../../common/MessageBox';
+import RadioButton from './common/RadioButton';
+import React from 'react';
+import Ribbon from './common/RibbonHeader';
+import styled from 'styled-components';
 import surveyOptions from '../../../../assets/dropdowns/devSurvey';
 import { TransitionContainer } from '../../../../styles/style-utils';
 

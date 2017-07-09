@@ -1,14 +1,13 @@
-import { combineReducers } from 'redux';
-
-import user from './reducers/user';
 import chat from './reducers/chat';
-import search from './reducers/search';
+import { combineReducers } from 'redux';
 import community from './reducers/community';
-import privateChat from './reducers/privateChat';
-import onlineStatus from './reducers/onlineStatus';
 import flashMessages from './reducers/flashMessages';
+import onlineStatus from './reducers/onlineStatus';
+import privateChat from './reducers/privateChat';
 import profileViewState from './reducers/preferencesViewState';
 import publicProfileStats from './reducers/publicProfileStats';
+import search from './reducers/search';
+import user from './reducers/user';
 
 export default combineReducers({
   user,

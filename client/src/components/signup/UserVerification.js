@@ -8,8 +8,8 @@ import { socket } from '../../actions/chat';
 import styled from 'styled-components';
 
 import {
-  getUserData,
   deleteUser,
+  getUserData,
   saveUser, 
   verifyUser,
 } from '../../actions/user';

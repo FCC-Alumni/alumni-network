@@ -1,5 +1,5 @@
-import { POPULATE_USER_STATS } from '../actions/scrape-fcc.js';
 import { Map } from 'immutable';
+import { POPULATE_USER_STATS } from '../actions/scrape-fcc.js';
 
 export default (state = Map(), action) => {
   const { type, payload } = action;

@@ -1,6 +1,6 @@
-import React from 'react';
-import propTypes from 'prop-types';
 import { Dropdown } from 'semantic-ui-react';
+import propTypes from 'prop-types';
+import React from 'react';
 
 const DropdownMulti = (props) => (
   <Dropdown

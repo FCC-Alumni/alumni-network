@@ -1,7 +1,7 @@
-import React from 'react';
 import { isEqual } from 'lodash';
-import Ribbon from './common/RibbonHeader';
 import ListItem from '../../common/ListItem';
+import React from 'react';
+import Ribbon from './common/RibbonHeader';
 import { TransitionContainer } from '../../../../styles/style-utils';
 
 export default class Certifications extends React.Component {

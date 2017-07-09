@@ -1,11 +1,12 @@
 import axios from 'axios';
-import User from '../models/user';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import User from '../models/user';
+
 import {
-  getFrontEndCert,
   getBackEndCert,
-  getDataVisCert
+  getDataVisCert,
+  getFrontEndCert
 } from './getCerts';
 
 dotenv.config();

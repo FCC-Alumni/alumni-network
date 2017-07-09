@@ -1,8 +1,8 @@
-import React from 'react';
-import propTypes from 'prop-types';
-import { Popup } from 'semantic-ui-react';
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../../../../Navbar';
+import { Popup } from 'semantic-ui-react';
+import propTypes from 'prop-types';
+import React from 'react';
 
 const ErrorLabel = ({ isMobile, error }) => {
   const margin = isMobile ? { marginTop: 10 } : null;

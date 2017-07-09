@@ -1,0 +1,20 @@
+---
+extends: react-app
+rules:
+  sort-imports:
+  - error
+  - ignoreCase: true
+    ignoreMemberSort: false
+    memberSyntaxSortOrder:
+    - none
+    - all
+    - single
+    - multiple
+  sort-vars:
+  - error
+  - ignoreCase: true
+  sort-keys:
+  - warn
+  - asc
+  - caseSensitive: false
+    natural: true

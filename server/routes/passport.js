@@ -1,12 +1,12 @@
-import express from 'express';
-import passport from 'passport';
-import mongoose from 'mongoose';
-import GitHubStrategy from 'passport-github2'
-import TwitterStrategy from 'passport-twitter';
-import LinkedInStrategy from 'passport-linkedin';
-import Session from 'express-session';
-import User from '../models/user';
 import dotenv from 'dotenv';
+import express from 'express';
+import GitHubStrategy from 'passport-github2'
+import LinkedInStrategy from 'passport-linkedin';
+import mongoose from 'mongoose';
+import passport from 'passport';
+import Session from 'express-session';
+import TwitterStrategy from 'passport-twitter';
+import User from '../models/user';
 dotenv.config();
 
 const APP_HOST = process.env.APP_HOST;

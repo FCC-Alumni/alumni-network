@@ -1,4 +1,4 @@
-import { SAVE_USER, LOGOUT_USER } from '../actions/user';
+import { LOGOUT_USER, SAVE_USER } from '../actions/user';
 
 export const defaultUser = {
   social: {},

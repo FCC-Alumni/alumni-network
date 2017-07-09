@@ -1,15 +1,14 @@
-import express from 'express';
-import path from 'path';
 import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-
-import passportRoute from './server/routes/passport';
-import user from './server/routes/user';
-import community from './server/routes/community';
 import chat from './server/routes/chat';
-import privateChat from './server/routes/private-chat';
+import community from './server/routes/community';
+import dotenv from 'dotenv';
+import express from 'express';
 import gitLabRoute from './server/helpers/gitlabRoute';
+import mongoose from 'mongoose';
+import passportRoute from './server/routes/passport';
+import path from 'path';
+import privateChat from './server/routes/private-chat';
+import user from './server/routes/user';
 
 // ALLOW SIGNUP W/O CERT(S):
 export const isAllowedForDev = false;

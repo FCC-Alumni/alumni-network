@@ -1,10 +1,10 @@
-import React from 'react';
-import propTypes from 'prop-types';
-import Table from './Table';
-import styled from 'styled-components';
-import TableRow from './TableRow';
 import { hoverTransition } from '../../../../styles/style-utils';
 import { Popup } from 'semantic-ui-react';
+import propTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
+import Table from './Table';
+import TableRow from './TableRow';
 
 const URL = "https://freecodecamp.org/";
 

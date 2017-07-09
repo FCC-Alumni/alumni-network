@@ -1,6 +1,6 @@
-import React from 'react';
-import propTypes from 'prop-types';
 import { isEqual } from 'lodash';
+import propTypes from 'prop-types';
+import React from 'react';
 
 export default class UserLabel extends React.Component {
   shouldComponentUpdate(nextProps) {

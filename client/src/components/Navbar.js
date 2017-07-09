@@ -1,13 +1,12 @@
-import React from 'react';
-import propTypes from 'prop-types';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
-import { Dropdown } from 'semantic-ui-react';
-import { darkGreen } from '../styles/style-utils';
-import { connectScreenSize } from 'react-screen-size';
-
 import { APP_HOST } from '../actions/chat';
+import { connect } from 'react-redux';
+import { connectScreenSize } from 'react-screen-size';
+import { darkGreen } from '../styles/style-utils';
+import { Dropdown } from 'semantic-ui-react';
+import { NavLink } from 'react-router-dom';
+import propTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
 
 const Logo = styled.img`
   margin-right: 10px !important;

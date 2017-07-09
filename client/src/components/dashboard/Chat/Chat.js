@@ -1,7 +1,7 @@
+import parseTime from '../../../assets/helpers/parseTime';
+import { Popup } from 'semantic-ui-react';
 import React from 'react';
 import ReactEmoji from 'react-emoji';
-import { Popup } from 'semantic-ui-react';
-import parseTime from '../../../assets/helpers/parseTime';
 import swearjar from '../../../assets/helpers/swearjar-lite';
 
 export default ({

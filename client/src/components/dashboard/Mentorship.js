@@ -20,6 +20,11 @@ import {
   transitionOut,
 } from '../../styles/style-utils';
 
+import {
+  clearNotifications,
+  initiatePrivateChat
+} from '../../actions/chat';
+
 const searchApi = {
   match: (regex, string) => {
     return regex.test(string) ? true : false;
@@ -144,11 +149,11 @@ class Mentorship extends React.Component {
     const { searchCriteria } = this.state;
 
     var
-    matchSkill = [],
-    matchName = false,
-    matchInterest = [],
     matchCompany = false,
+    matchInterest = [],
     matchLocation = false,
+    matchName = false,
+    matchSkill = [],
     mentorshipBio = false,
     { community } = this.props,
     regexArray = searchString && searchString.split(' ').map(escapedRegex => {

@@ -1,9 +1,7 @@
-import React from 'react';
+import { CenterAlignedWrapper } from '../../../../styles/style-utils';
 import propTypes from 'prop-types';
+import React from 'react';
 import styled from 'styled-components';
-import {
-  CenterAlignedWrapper
-} from '../../../../styles/style-utils';
 
 const Flag = styled.a `
   width: 40px;

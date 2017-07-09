@@ -1,6 +1,6 @@
-import React from 'react';
-import propTypes from 'prop-types';
 import { Icon } from './SocialLinks';
+import propTypes from 'prop-types';
+import React from 'react';
 
 const FCC_URL = "https://freecodecamp.org/";
 

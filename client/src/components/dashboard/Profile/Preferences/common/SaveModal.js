@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'semantic-ui-react';
+import { Button, Modal } from 'semantic-ui-react';
 
 const SaveModal = ({ size, close, open, warning, isValid }) => {
 

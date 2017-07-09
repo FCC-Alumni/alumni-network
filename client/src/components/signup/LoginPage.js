@@ -1,8 +1,8 @@
+import { APP_HOST } from '../../actions/chat';
+import { connectScreenSize } from 'react-screen-size';
+import { mapScreenSizeToProps } from '../Navbar';
 import React from 'react';
 import styled from 'styled-components';
-import { APP_HOST } from '../../actions/chat';
-import { mapScreenSizeToProps } from '../Navbar';
-import { connectScreenSize } from 'react-screen-size';
 
 class LoginPage extends React.Component {
   state = { flashMessageCleared: false }

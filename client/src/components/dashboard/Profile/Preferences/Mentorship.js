@@ -1,11 +1,11 @@
-import React from 'react';
+import { connectScreenSize } from 'react-screen-size';
 import { isEqual } from 'lodash';
+import { mapScreenSizeToProps } from '../../../Navbar';
+import MessageBox from '../../common/MessageBox';
 import propTypes from 'prop-types';
+import React from 'react';
 import Ribbon from './common/RibbonHeader';
 import SliderToggle from './common/SliderToggle';
-import MessageBox from '../../common/MessageBox';
-import { connectScreenSize } from 'react-screen-size';
-import { mapScreenSizeToProps } from '../../../Navbar';
 import { TransitionContainer } from '../../../../styles/style-utils';
 
 class Mentorship extends React.Component {

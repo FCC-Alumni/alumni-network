@@ -1,6 +1,6 @@
-import React from 'react';
-import propTypes from 'prop-types';
 import { Checkbox } from 'semantic-ui-react';
+import propTypes from 'prop-types';
+import React from 'react';
 
 const Filters = ({ filterOptions, handleChange, state }) => {
   return(

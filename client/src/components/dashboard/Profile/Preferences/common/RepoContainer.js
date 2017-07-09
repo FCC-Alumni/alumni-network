@@ -7,12 +7,12 @@ import RepoInput from './RepoInput';
 import RepoListItem from './RepoListItem';
 import styled from 'styled-components';
 
-import { indexOf, isEmpty } from 'lodash';
 import { Dimmer, Loader, Segment } from 'semantic-ui-react';
+import { indexOf, isEmpty } from 'lodash';
 import {
   searchGithubCommits,
-  validateGithubRepo as validateRepo,
-  validateOtherRepos as validateOther
+  validateOtherRepos as validateOther,
+  validateGithubRepo as validateRepo
 } from '../../../../../actions/repoValidations';
 
 /*

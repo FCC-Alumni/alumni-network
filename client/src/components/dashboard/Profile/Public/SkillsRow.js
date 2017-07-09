@@ -1,6 +1,6 @@
-import React from 'react';
 import { isEmpty } from 'lodash';
 import propTypes from 'prop-types';
+import React from 'react';
 import styled from 'styled-components';
 
 const Label = styled.div`

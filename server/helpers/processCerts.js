@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { isAllowedForDev } from '../../server';
+
 import {
-  getFrontEndCert,
   getBackEndCert,
   getDataVisCert,
+  getFrontEndCert,
 } from './getCerts';
 
 export default (username, isHonoraryMember, isWhitelistedUser) => {

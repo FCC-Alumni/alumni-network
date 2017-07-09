@@ -1,7 +1,5 @@
+import { CenterAlignedWrapper } from '../../../../styles/style-utils';
 import React from 'react';
-import {
-  CenterAlignedWrapper
-} from '../../../../styles/style-utils';
 
 const Table = ({ children, columnWidth }) => {
   return (

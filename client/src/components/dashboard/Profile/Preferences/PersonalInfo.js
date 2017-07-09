@@ -1,13 +1,13 @@
-import React from 'react';
-import { isEqual } from 'lodash';
-import FormField from './common/FormField';
-import Ribbon from './common/RibbonHeader';
-import { Dropdown } from 'semantic-ui-react';
-import ListItem from '../../common/ListItem';
-import { Container } from './common/RepoContainer';
 import { connectScreenSize } from 'react-screen-size';
-import { mapScreenSizeToProps } from '../../../Navbar';
+import { Container } from './common/RepoContainer';
 import { countries } from '../../../../assets/dropdowns/countries';
+import { Dropdown } from 'semantic-ui-react';
+import FormField from './common/FormField';
+import { isEqual } from 'lodash';
+import ListItem from '../../common/ListItem';
+import { mapScreenSizeToProps } from '../../../Navbar';
+import React from 'react';
+import Ribbon from './common/RibbonHeader';
 import { TransitionContainer } from '../../../../styles/style-utils';
 
 const INPUT_OPTIONS = 'small left icon';

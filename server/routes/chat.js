@@ -1,7 +1,7 @@
-import express from 'express';
 import axios from 'axios';
-import { isAuthenticated } from './passport';
 import Chat from '../models/chat';
+import express from 'express';
+import { isAuthenticated } from './passport';
 
 const router = express.Router();
 
