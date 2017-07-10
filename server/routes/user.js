@@ -46,6 +46,25 @@ router.post('/api/verify-credentials', isAuthenticated,
   })
 );
 
+router.post('/api/update-user', (req, res) => {		
+  const { user } = req.body;		
+		
+  User.findById(user._id, (err, updatedUser) => {		
+    if (!err) {		
+      updatedUser.personal = user.personal;		
+      updatedUser.mentorship = user.mentorship;		
+      updatedUser.career = user.career;		
+      updatedUser.skillsAndInterests = user.skillsAndInterests;		
+      updatedUser.projects = user.projects;		
+      updatedUser.social = user.social;		
+      updatedUser.save();		
+      res.json({ updatedUser })		
+    } else {		
+      res.status(401).json({ error: 'User could not be saved' });		
+    }		
+  });		
+});
+
 router.post('/api/update-user-partial', (req, res) => {
   const { id, section, sectionData } = req.body;
   User.findById(id, (err, updatedUser) => {
