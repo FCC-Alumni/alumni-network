@@ -8,28 +8,28 @@ export const NEW_USER_JOINED = 'NEW_USER_JOINED';
 
 socket.on('populate-online-users', ({ users }) => {
   store.dispatch({
+    payload: Object.keys(users),
     type: POPULATE_ONLINE_USERS,
-    payload: Object.keys(users)
   });
 });
 
 socket.on('new-user-joined', ({ user }) => {
   store.dispatch({
+    payload: user,
     type: NEW_USER_JOINED,
-    payload: user
   });
 });
 
 socket.on('user-online', ({ user }) => {
   store.dispatch({
+    payload: user,
     type: USER_ONLINE,
-    payload: user
   });
 });
 
 socket.on('user-offline', ({ user }) => {
   store.dispatch({
+    payload: user,
     type: USER_OFFLINE,
-    payload: user
   });
 });

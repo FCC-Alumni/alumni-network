@@ -20,14 +20,14 @@ const A = styled.a`
 `;
 
 const FccTables = ({
-  width,
-  fccCerts,
-  username,
-  longestStreak,
-  currentStreak,
   browniePoints,
+  currentStreak,
+  fccCerts,
   firstChallenge,
+  longestStreak,
   totalChallenges,
+  username,
+  width,
 }) => {
   return (
     <div className="row">
@@ -35,7 +35,11 @@ const FccTables = ({
         <TableRow
           icon="desktop"
           header={ fccCerts.Front_End
-            ? <A href={`${URL + username}/front-end-certification`} target="_blank">Frontend Certified</A>
+            ? <A
+                href={`${URL + username}/front-end-certification`}
+                target="_blank">
+                Frontend Certified
+              </A>
             : "Frontend Certified" }
           content={ fccCerts.Front_End
             ? <i className="large green check mark icon"/>
@@ -43,7 +47,11 @@ const FccTables = ({
         <TableRow
           icon="bar chart"
           header={ fccCerts.Data_Visualization
-            ? <A href={`${URL + username}/data-visualization-certification`} target="_blank">Data Visualization Certified</A>
+            ? <A
+                href={`${URL + username}/data-visualization-certification`}
+                target="_blank">
+                Data Visualization Certified
+               </A>
             : "Data Visualization Certified" }
           content={ fccCerts.Data_Visualization
             ? <i className="large green check mark icon"/>
@@ -51,7 +59,11 @@ const FccTables = ({
         <TableRow
           icon="database"
           header={ fccCerts.Back_End
-            ? <A href={`${URL + username}/back-end-certification`} target="_blank">Backend Certified</A>
+            ? <A
+                href={`${URL + username}/back-end-certification`}
+                target="_blank">
+                Backend Certified
+              </A>
             : "Backend Certified" }
           content={ fccCerts.Back_End
             ? <i className="large green check mark icon"/>
@@ -68,40 +80,41 @@ const FccTables = ({
                 position="top center"
                 trigger={<InfoIcon
                   className="info circle icon" />}>
-                  This value includes the total number of all projects, algorithms, and challenges combined.
+                  This value includes the total number of all projects,
+                  algorithms, and challenges combined.
               </Popup>
             </div> } />
       </Table>
       <Table columnWidth={width}>
         <TableRow
-          icon="history"
+          content={firstChallenge}
           header="First Challenge Completed"
-          content={firstChallenge} />
+          icon="history" />
         <TableRow
-          icon="grid layout"
+          content={longestStreak}
           header="Longest Streak Ever"
-          content={longestStreak} />
+          icon="grid layout" />
         <TableRow
-          icon="block layout"
+          content={currentStreak}
           header="Current Streak"
-          content={currentStreak} />
+          icon="block layout" />
         <TableRow
-          icon="thumbs up"
+          content={browniePoints}
           header="Total Brownie Points"
-          content={browniePoints} />
+          icon="thumbs up" />
       </Table>
     </div>
   );
 }
 
 FccTables.propTypes = {
-  width: propTypes.string.isRequired,
-  fccCerts: propTypes.object.isRequired,
-  longestStreak: propTypes.string.isRequired,
-  currentStreak: propTypes.string.isRequired,
   browniePoints: propTypes.string.isRequired,
+  currentStreak: propTypes.string.isRequired,
+  fccCerts: propTypes.object.isRequired,
   firstChallenge: propTypes.string.isRequired,
+  longestStreak: propTypes.string.isRequired,
   totalChallenges: propTypes.number.isRequired,
+  width: propTypes.string.isRequired,
 }
 
 export default FccTables;

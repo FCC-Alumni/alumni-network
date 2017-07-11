@@ -47,8 +47,8 @@ class PublicProfile extends React.Component {
     const { initialState } = this.props;
     this.state = {
       ...initialState,
+      disableChat: false,
       isTablet: false,
-      disableChat: false
     }
   }
 
@@ -121,7 +121,7 @@ class PublicProfile extends React.Component {
   handleQuery = (query, category) => {
     // handle click for skills and interests labels:
     // click => set mentorship search state and redirect
-    this.props.mentorshipSearchQuery({ query, category });
+    this.props.mentorshipSearchQuery({ category, query });
     this.props.history.push('/dashboard/mentorship');
   }
 
@@ -391,9 +391,9 @@ const mapStateToProps = ({
   }
   return {
     currentUser: currentUser.username,
-    user: user ? user : defaultUser,
-    loading: !community.size, // mock loading state based on community...
     initialState,
+    loading: !community.size, // mock loading state based on community...
+    user: user ? user : defaultUser,
   }
 }
 

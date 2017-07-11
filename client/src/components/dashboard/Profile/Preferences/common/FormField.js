@@ -7,37 +7,38 @@ import React from 'react';
 const ErrorLabel = ({ isMobile, error }) => {
   const margin = isMobile ? { marginTop: 10 } : null;
   return (
-    <div style={margin}
-      className={`ui ${!isMobile ? 'left pointing' : ''} red basic label`}>
+    <div
+      className={`ui ${!isMobile ? 'left pointing' : ''} red basic label`}
+      style={margin}>
       {error}
     </div>
   )
 };
 
 const FormField = ({
-  icon,
-  type,
-  name,
-  label,
-  clear,
-  value,
-  errors,
-  isEmail,
-  tooltip,
-  onChange,
-  username,
-  disabled,
-  actionUrl,
-  isPrivate,
   actionIcon,
-  placeholder,
-  saveChanges,
+  actionUrl,
+  clear,
+  disabled,
+  errors,
+  icon,
   infoMessage,
-  removeSocial,
   inputOptions,
+  isEmail,
+  isPrivate,
+  label,
+  name,
+  onChange,
+  placeholder,
   reactionIcon,
+  removeSocial,
+  saveChanges,
   screen: { isMobile },
   toggleEmailVisibilty,
+  tooltip,
+  type,
+  username,
+  value,
 }) => {
   return (
     <div className="inline field">
@@ -45,33 +46,36 @@ const FormField = ({
       <div className={`ui input ${inputOptions}`}>
         { icon &&  <i className={icon} /> }
         <input
-          type={type}
-          name={name}
-          value={value}
-          title={tooltip}
           disabled={disabled}
+          name={name}
           onChange={onChange}
           placeholder={placeholder}
-          readOnly={!onChange && true} />
+          readOnly={!onChange && true}
+          title={tooltip}
+          type={type}
+          value={value} />
       { (inputOptions.indexOf('corner') > -1 && !value) &&
         <Popup
-          wide
           inverted
           offset={5}
           position="top center"
+          wide
           trigger={
-            <a onClick={() => saveChanges()} href={actionUrl}>
-              <div style={{ cursor: 'pointer' }} className="ui corner green label">
+            <a href={actionUrl} onClick={() => saveChanges()}>
+              <div
+                className="ui corner green label"
+                style={{ cursor: 'pointer' }}>
                 {actionIcon}
               </div>
             </a>}>
-          Sign in to your account to populate this field. We will not utilize your account in any way.
+          Sign in to your account to populate this field.
+          We will not utilize your account in any way.
         </Popup> }
       { (inputOptions.indexOf('corner') > -1 && value) &&
         <div
-          style={{ cursor: 'pointer' }}
-          onClick={() => clear(name)}
           className="ui corner red label"
+          onClick={() => clear(name)}
+          style={{ cursor: 'pointer' }}
           title="Remove account">
           {reactionIcon}
         </div> }
@@ -79,13 +83,22 @@ const FormField = ({
     { isEmail &&
       <div style={{ display: 'inline-block' }}>
         <Popup
+          content={isPrivate
+            ? 'Email will be hidden'
+            : 'Email will be visible to FCCAN members'}
           inverted
-          wide
-          content={isPrivate ? 'Email will be hidden' : 'Email will be visible to FCCAN members'}
           trigger={isPrivate
-            ? <i onClick={toggleEmailVisibilty} className="big green toggle on icon" />
-            : <i onClick={toggleEmailVisibilty} className="big green toggle off icon" /> } />
-        <Popup inverted wide content={infoMessage} trigger={<i className="large red info circle icon" />} />
+            ? <i onClick={toggleEmailVisibilty}
+                 className="big green toggle on icon" />
+            : <i onClick={toggleEmailVisibilty}
+                 className="big green toggle off icon" /> }
+          wide
+        />
+        <Popup
+          content={infoMessage}
+          inverted
+          trigger={<i className="large red info circle icon" />}
+          wide />
       </div> }
     { errors[name] &&
       <ErrorLabel isMobile={isMobile} error={errors[name]} /> }
@@ -94,35 +107,35 @@ const FormField = ({
 }
 
 FormField.propTypes = {
-  icon: propTypes.string,
-  type: propTypes.string,
-  isEmail: propTypes.bool,
-  label: propTypes.string,
-  disabled: propTypes.bool,
-  onChange: propTypes.func,
-  isPrivate: propTypes.bool,
-  tooltip: propTypes.string,
-  saveChanges: propTypes.func,
-  actionUrl: propTypes.string,
   actionIcon: propTypes.object,
-  placeholder: propTypes.string,
-  inputOptions: propTypes.string,
-  reactionIcon: propTypes.object,
-  name: propTypes.string.isRequired,
-  value: propTypes.string.isRequired,
-  screen: propTypes.object.isRequired,
+  actionUrl: propTypes.string,
+  disabled: propTypes.bool,
   errors: propTypes.object.isRequired,
+  icon: propTypes.string,
+  inputOptions: propTypes.string,
+  isEmail: propTypes.bool,
+  isPrivate: propTypes.bool,
+  label: propTypes.string,
+  name: propTypes.string.isRequired,
+  onChange: propTypes.func,
+  placeholder: propTypes.string,
+  reactionIcon: propTypes.object,
+  saveChanges: propTypes.func,
+  screen: propTypes.object.isRequired,
   toggleEmailVisibilty: propTypes.func,
+  tooltip: propTypes.string,
+  type: propTypes.string,
+  value: propTypes.string.isRequired,
 }
 
 FormField.defaultProps = {
+  actionButton: false,
+  disabled: false,
   icon: '',
+  inputOptions: '',
+  isEmail: false,
   label: '',
   type: 'text',
-  isEmail: false,
-  disabled: false,
-  inputOptions: '',
-  actionButton: false
 }
 
 export default connectScreenSize(mapScreenSizeToProps)(FormField);

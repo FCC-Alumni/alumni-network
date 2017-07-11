@@ -36,12 +36,12 @@ class AppContainer extends React.Component {
       } else {
         this.props.logoutUser();
         this.props.addFlashMessage({
-          type: 'error',
-            text: {
-              header: 'Access forbidden!',
-              message: 'Please signup and/or login to view this page.'
-            }
-          });
+          text: {
+            header: 'Access forbidden!',
+            message: 'Please signup and/or login to view this page.'
+          },
+          type: 'error'
+        });
         this.props.history.push('/login');
       }
     }).catch(err => {
@@ -49,12 +49,12 @@ class AppContainer extends React.Component {
       this.props.history.push('/login')
       this.props.logoutUser();
       this.props.addFlashMessage({
-        type: 'error',
-          text: {
-            header: 'Something went wrong...',
-            message: 'Please sign in again.'
-          }
-        });
+        text: {
+          header: 'Something went wrong...',
+          message: 'Please sign in again.'
+        },
+        type: 'error'
+      });
     });
   }
 

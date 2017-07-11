@@ -1,7 +1,7 @@
 import React from 'react';
 
 const link = (
-  <a target="_blank" href="https://github.com/FCC-Alumni/alumni-network">open-source on GitHub</a>
+  <a target="_blank" rel="noopener noreferrer" href="https://github.com/FCC-Alumni/alumni-network">open-source on GitHub</a>
 );
 
 const image = (source, position) => (

@@ -12,16 +12,16 @@ class SliderToggle extends React.Component {
 
   componentWillMount() {
     if (this.props.defaultOn) {
-      this.setState({ style: ON_POSITION, on: true });
+      this.setState({ on: true, style: ON_POSITION });
     }
   }
 
   handleClick = (id) => {
     if (!this.state.on) {
-      this.setState({ style: ON_POSITION, on: true });
+      this.setState({ on: true, style: ON_POSITION });
       this.props.saveStateToParent(true, id);
     } else {
-      this.setState({ style: OFF_POSITION, on: false });
+      this.setState({ on: false, style: OFF_POSITION });
       this.props.saveStateToParent(false, id);
     }
   }
@@ -39,9 +39,9 @@ class SliderToggle extends React.Component {
 }
 
 SliderToggle.propTypes = {
+  defaultOn: propTypes.bool.isRequired,
   id: propTypes.string.isRequired,
   label: propTypes.string.isRequired,
-  defaultOn: propTypes.bool.isRequired,
   saveStateToParent: propTypes.func.isRequired,
 }
 

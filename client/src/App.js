@@ -13,7 +13,7 @@ import UserVerification from './components/signup/UserVerification';
 import { Route, Switch } from 'react-router-dom';
 
 export const CatchAll = () => (
-  <div style={{ textAlign: 'center', marginTop: '125px' }}>
+  <div style={{ marginTop: '125px', textAlign: 'center' }}>
     <h1>We couldn't find anything here...</h1>
     <img src="/images/fcc_hands_in_logo.svg" className="App-logo" alt="'hands in' fcc alumni network logo" />
   </div>

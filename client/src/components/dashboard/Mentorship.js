@@ -20,11 +20,11 @@ import {
 } from '../../styles/style-utils';
 
 const searchApi = {
-  match: (regex, string) => {
-    return regex.test(string) ? true : false;
-  },
   filter: (regex, array) => {
     return array.filter(item => regex.test(item) && item);
+  },
+  match: (regex, string) => {
+    return regex.test(string) ? true : false;
   },
   names: (regex, username, name) => {
     return regex.test(username) || regex.test(name) ? true : false;
@@ -85,14 +85,14 @@ class Mentorship extends React.Component {
 
   componentDidMount() {
     this.props.addFlashMessage({
-      type: 'info',
-        text: {
-          header: 'Welcome to Mentorship Search!',
-          message: `Utilize our mentorship match engine to identify the right mentor for you.
-                    Narrow down your results by searching a specific category or by enabling
-                    filters. If you think you've found a good match, feel free to reach out
-                    through private chat!`
-        }
+      text: {
+        header: 'Welcome to Mentorship Search!',
+        message: `Utilize our mentorship match engine to identify the right mentor for you.
+        Narrow down your results by searching a specific category or by enabling
+        filters. If you think you've found a good match, feel free to reach out
+        through private chat!`
+      },
+      type: 'info'
     });
     if (this.state.value) {
       this.search(this.state.value);
@@ -227,7 +227,7 @@ class Mentorship extends React.Component {
       });
     });
 
-    this.setState({ results: community, isLoading: false });
+    this.setState({ isLoading: false, results: community });
   }
 
   handleSliderChange = (e, data) => {
@@ -269,8 +269,8 @@ class Mentorship extends React.Component {
     }
 
     this.setState({
+      dropdownValue: data.value,
       searchCriteria,
-      dropdownValue: data.value
     }, () => this.disableClear());
   }
 
@@ -379,9 +379,9 @@ class Mentorship extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    searchState: state.search,
+    community: state.community.toJS(),
     currentUser: state.user.username,
-    community: state.community.toJS()
+    searchState: state.search,
   }
 }
 

@@ -11,18 +11,18 @@ const DropdownMulti = (props) => (
 
 DropdownMulti.propTypes = {
   fluid: propTypes.bool,
-  search: propTypes.bool,
-  placeholder: propTypes.string,
-  value: propTypes.array.isRequired,
   noResultsMessage: propTypes.string,
-  options: propTypes.array.isRequired,
   onChange: propTypes.func.isRequired,
+  options: propTypes.array.isRequired,
+  placeholder: propTypes.string,
+  search: propTypes.bool,
+  value: propTypes.array.isRequired,
 }
 
 DropdownMulti.defaultProps = {
   fluid: true,
+  noResultsMessage: 'Sorry, no results...',
   search: false,
-  noResultsMessage: 'Sorry, no results...'
 }
 
 export default DropdownMulti;

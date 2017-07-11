@@ -10,13 +10,13 @@ import search from './reducers/search';
 import user from './reducers/user';
 
 export default combineReducers({
-  user,
   chat,
-  search,
   community,
-  privateChat,
-  onlineStatus,
   flashMessages,
+  onlineStatus,
+  privateChat,
   profileViewState,
-  publicProfileStats
+  publicProfileStats,
+  search,
+  user,
 });

@@ -28,25 +28,25 @@ export default class UserLabel extends React.Component {
 
 
 UserLabel.propTypes = {
-  size: propTypes.string,
-  label: propTypes.string,
   color: propTypes.string,
-  image: propTypes.string,
-  toggleAll: propTypes.func,
-  showAvatar: propTypes.bool,
-  username: propTypes.string.isRequired,
   folder: propTypes.oneOfType([
     propTypes.string,
     propTypes.bool
-  ])
+  ]),
+  image: propTypes.string,
+  label: propTypes.string,
+  showAvatar: propTypes.bool,
+  size: propTypes.string,
+  toggleAll: propTypes.func,
+  username: propTypes.string.isRequired,
 }
 
 UserLabel.defaultProps = {
-  label: '',
-  folder: '',
   color: 'green',
-  size: 'medium',
+  folder: '',
+  label: '',
   showAvatar: true,
+  size: 'medium',
 }
 
 // EXAMPLE USAGE (Semantic UI classNames)

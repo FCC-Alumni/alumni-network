@@ -7,6 +7,6 @@ export default {
   DISPLAY_NAME: 'Display name must be 40 characters or less.',
   EMAIL: 'Please enter a valid email address.',
   LOCATION: 'Location must be 25 characters or less.',
-  MENTORSHIP_BIO: 'Mentorship bio must be 200 characters or less.',
   MENTORSHIP: 'To complete your mentorship prorgram enrollment, please complete the section above.',
+  MENTORSHIP_BIO: 'Mentorship bio must be 200 characters or less.',
 };

@@ -1,16 +1,16 @@
 import { LOGOUT_USER, SAVE_USER } from '../actions/user';
 
 export const defaultUser = {
-  social: {},
   career: {},
-  githubId: '',
-  username: '',
-  personal: {},
   fccCerts: {},
-  projects: [],
+  githubId: '',
   mentorship: {},
+  personal: {},
+  projects: [],
+  skillsAndInterests: {},
+  social: {},
+  username: '',
   verifiedUser: false,
-  skillsAndInterests: {}
 };
 
 export default (state = defaultUser, action) => {

@@ -28,9 +28,9 @@ const RibbonHeader = ({ content, onClick, showPopUp, saveSection, id, showSave }
 }
 
 RibbonHeader.propTypes = {
+  content: propTypes.string.isRequired,
   onClick: propTypes.func.isRequired,
   showSave: propTypes.bool.isRequired,
-  content: propTypes.string.isRequired,
 }
 
 export default RibbonHeader;

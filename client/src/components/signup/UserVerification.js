@@ -10,16 +10,16 @@ import styled from 'styled-components';
 import {
   deleteUser,
   getUserData,
-  saveUser, 
+  saveUser,
   verifyUser,
 } from '../../actions/user';
 
 class UserVerification extends React.Component {
   state = {
-    mongoId: '',
-    username: '',
     avatarUrl: '',
     loading: true,
+    mongoId: '',
+    username: '',
   }
 
   componentDidMount() {
@@ -32,7 +32,6 @@ class UserVerification extends React.Component {
           // TEMPORARY FLASH MESSAGE TO NOTIFY MOVE TO GITTER
           // CHANGE BACK IN ABOUT A MONTH
           this.props.addFlashMessage({
-            type: 'announcement',
             text: {
               header: 'FREECODECAMP ALUMNI NETWORK MOVES TO GITTER!',
               message: `FCCAN now uses Gitter for both Mess Hall and Private
@@ -40,14 +39,20 @@ class UserVerification extends React.Component {
                         you sign up with your GitHub account
                         <a href="https://gitter.im/login" target="_blank">
                         here</a>.`
-            }
+            },
+            type: 'announcement',
           });
           this.props.history.push('/dashboard');
           // verification process
         } else if (user.username) {
           const { personal, username, _id } = user;
           const { avatarUrl } = personal;
-          this.setState({ displayName: username, username, avatarUrl, mongoId: _id });
+          this.setState({
+            avatarUrl,
+            displayName:
+            username, mongoId: _id,
+            username
+          });
         }
       } else {
         this.props.history.push('/login');
@@ -64,11 +69,11 @@ class UserVerification extends React.Component {
       const user = res.data.user;
       this.props.saveUser(user);
       this.props.addFlashMessage({
-        type: 'success',
         text: {
           header: 'Welcome to the freeCodeCamp Alumni Network!',
           message: 'Your account is now verified!'
-        }
+        },
+        type: 'success',
       });
       socket.emit('announce-new-user', { user });
       this.props.history.push('/dashboard');
@@ -77,19 +82,21 @@ class UserVerification extends React.Component {
     .catch(err => {
       this.setState({ loading: false });
       this.props.addFlashMessage({
-        type: 'error',
         text: {
           header: 'User verification error!',
           message: `Either you have not earned any freeCodeCamp certifications,
                     or you do not have a freeCodeCamp account. Please visit us
                     again when you have resolved these issues.`
-        }
+        },
+        type: 'error',
       });
       this.props.history.push('/login');
       deleteUser().then(res => {
         console.log('user deleted');
       }).catch(err => {
-        console.log('Some error occurred trying to delete the unverified user...');
+        console.log(
+          'Some error occurred trying to delete the unverified user...'
+        );
       });
     });
   }
@@ -115,7 +122,9 @@ class UserVerification extends React.Component {
           <div className="ui small floated left image">
             <img src={this.state.avatarUrl} alt="github avatar"/>
           </div> }
-          <h1 style={{ marginTop: 0 }}>{`Welcome ${this.state.displayName}!`}</h1>
+          <h1 style={{ marginTop: 0 }}>
+            {`Welcome ${this.state.displayName}!`}
+          </h1>
           <p style={{ fontSize: 16 }}>
             This extension of the freeCodeCamp Community is a network
             of like-minded individuals, who are serious about coding
@@ -127,8 +136,9 @@ class UserVerification extends React.Component {
             that limit who can and cannot join.</p>
           <div style={{ marginTop: 0 }} className="ui info message">
             <div className="header">
-              To join the freeCodeCamp Alumni Network, your freeCodeCamp profile
-              must be public and you must have earned at least one of the following:
+              To join the freeCodeCamp Alumni Network, your freeCodeCamp
+              profile must be public and you must have earned at least
+              one of the following:
             </div>
             <ul className="list">
               <li>freeCodeCamp Front End Certification</li>
@@ -137,7 +147,9 @@ class UserVerification extends React.Component {
               <li>freeCodeCamp Full Stack Certification</li>
             </ul>
           </div>
-          <button onClick={this.handleSubmit} className="ui positive button">Verify freeCodeCamp Certifications for {this.state.username}</button>
+          <button className="ui positive button" onClick={this.handleSubmit}>
+            Verify freeCodeCamp Certifications for {this.state.username}
+          </button>
           <div className="ui warning message">
             <i className="red warning circle icon" style={{ marginRight: 2 }} /><strong>IMPORTANT:</strong> If your freeCodeCamp username
             is not <strong>{this.state.username}</strong>, the verification process will fail. To address this, please send an email
@@ -158,9 +170,9 @@ class UserVerification extends React.Component {
 }
 
 UserVerification.propTypes = {
+  addFlashMessage: propTypes.func.isRequired,
   saveUser: propTypes.func.isRequired,
-  addFlashMessage: propTypes.func.isRequired
 }
 
 export default connectScreenSize(mapScreenSizeToProps)(
-  connect(null, { saveUser, addFlashMessage })(UserVerification));
+  connect(null, { addFlashMessage, saveUser })(UserVerification));

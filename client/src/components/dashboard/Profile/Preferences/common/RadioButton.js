@@ -20,9 +20,9 @@ const RadioButton = ({ onChange, name, label, checked }) => {
 }
 
 RadioButton.propTypes = {
+  checked: propTypes.bool.isRequired,
   label: propTypes.string,
   name: propTypes.string.isRequired,
-  checked: propTypes.bool.isRequired,
   onChange: propTypes.func.isRequired,
 }
 

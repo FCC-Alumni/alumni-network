@@ -2,13 +2,13 @@ import { SAVE_PREFERENCES_VIEW_STATE } from '../actions/views';
 
 const defaultState = {
   showAll: false,
+  showCareer: false,
+  showCollaboration: false,
   showFCC: false,
+  showMentorship: false,
   showProfile: true,
   showSkills: false,
   showSocial: false,
-  showCareer: false,
-  showMentorship: false,
-  showCollaboration: false,
 }
 
 export default (state = defaultState, action) => {

@@ -115,25 +115,25 @@ class UserCard extends React.Component {
       ? {}
       : this.state.reveal
       ? { opacity: 0.01, transition: '.5s' }
-      : { transition: '.5s', opacity: 1 };
+      : { opacity: 1, transition: '.5s' };
 
     const CONTENT_STYLE = isDesktop
       ? {}
       : this.state.reveal && isMobile
       ? {
         height: imageHeight,
-        position: 'absolute',
-        transition: '.5s',
-        opacity: 1,
         left: 0,
-        top: 0
+        opacity: 1,
+        position: 'absolute',
+        top: 0,
+        transition: '.5s',
       }
       : {
-        position: 'absolute',
-        transition: '.5s',
-        opacity: 0.01,
         left: 0,
-        top: 0
+        opacity: 0.01,
+        position: 'absolute',
+        top: 0,
+        transition: '.5s',
       };
 
     return (

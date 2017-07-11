@@ -15,8 +15,8 @@ export default (state = [], action) => {
       } else {
         return [
           {
+            text: action.message.text,
             type: action.message.type,
-            text: action.message.text
           }
         ];
       }

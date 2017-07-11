@@ -18,8 +18,8 @@ const ProfileHeader = ({ text, icon }) => {
 }
 
 ProfileHeader.propTypes = {
-  text: propTypes.string.isRequired,
   icon: propTypes.string.isRequired,
+  text: propTypes.string.isRequired,
 }
 
 export default ProfileHeader;

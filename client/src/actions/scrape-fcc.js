@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from 'axios';
 import htmlToJson from 'html-to-json';
 
@@ -88,15 +89,16 @@ export const scrapeFccStats = (user) => (dispatch) => {
         payload: {
           user,
           stats: {
-            firstChallenge: values[0],
-            totalChallenges: values[1],
-            longestStreak: values[2],
-            currentStreak: values[3],
             browniePoints: values[4],
+            currentStreak: values[3],
+            firstChallenge: values[0],
+            longestStreak: values[2],
+            totalChallenges: values[1],
           }
         }
       })
-    }).catch(err => console.warn('Something went wrong fetching user FCC stats...'));
-
+    }).catch(err => console.warn(
+      'Something went wrong fetching user FCC stats...')
+    );
   });
 }

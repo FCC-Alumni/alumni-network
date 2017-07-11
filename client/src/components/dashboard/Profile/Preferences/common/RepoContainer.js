@@ -28,9 +28,9 @@ class RepoContainer extends React.Component {
   state = {
     error: {},
     icon: 'github',
+    isLoading: false,
     item: '',
     items_list: [],
-    isLoading: false,
     label: 'https://github.com/'
   }
 
@@ -82,11 +82,11 @@ class RepoContainer extends React.Component {
 
   editItem = (item) => {
     const items_list = this.spliceList(item);
-    this.setState({ items_list, item: item.item });
+    this.setState({ item: item.item, items_list });
   }
 
   handleChange = (e) => {
-    this.setState({ item: e.target.value, error: '' });
+    this.setState({ error: '', item: e.target.value });
   }
 
   handleKeyPress = (e) => {
@@ -100,7 +100,7 @@ class RepoContainer extends React.Component {
     if (e.target.innerText === 'https://github.com/') icon = 'github'
     if (e.target.innerText === 'https://gitlab.com/') icon = 'gitlab'
     if (e.target.innerText === 'https://bitbucket.org/') icon = 'bitbucket'
-    this.setState({ label: e.target.innerText, icon });
+    this.setState({ icon, label: e.target.innerText });
   }
 
   isFormatValid = (repo) => {
@@ -110,8 +110,8 @@ class RepoContainer extends React.Component {
           header: `Invalid entry. Plese enter a valid repo
                    in the format: namespace/repo.`,
         },
+        isLoading: false,
         item: '',
-        isLoading: false
       });
       return false;
     }
@@ -123,13 +123,13 @@ class RepoContainer extends React.Component {
       this.setState({
         error: {
           header:    'Please enter a valid BitBucket repository path: namespace/repo',
+          namespace: `Namespace: This value must contain only ASCII letters,
+                      numbers, dashes and underscores.`,
           repo:      `Repo: This value must contain only ASCII letters, numbers,
                       dashes, underscores and periods.`,
-          namespace: `Namespace: This value must contain only ASCII letters,
-                      numbers, dashes and underscores.`
         },
+        isLoading: false,
         item: '',
-        isLoading: false
       });
       return false;
     } else {
@@ -146,13 +146,13 @@ class RepoContainer extends React.Component {
       this.setState({
         error: {
           header:    'Please enter a valid GitLab repository path: namespace/repo',
+          namespace: `Repo: This value can only contain letters, digits, '_', '-'
+                      and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'`,
           repo:      `Namespace: This value can only contain letters, digits, '_', '-'
                       and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'`,
-          namespace: `Repo: This value can only contain letters, digits, '_', '-'
-                      and '.'. Cannot start with '-' or end in '.', '.git' or '.atom'`
         },
-        item: '',
-        isLoading: false
+        isLoading: false,
+        item: ''
       });
       return false;
     } else {
@@ -170,14 +170,14 @@ class RepoContainer extends React.Component {
       this.setState({
         error: {
           header:    'Please enter a valid GitHub repository path: namespace/repo',
-          repo:      `Repo: This value may only contain alphanumeric characters,
-                      periods, and hyphens, and cannot begin with a period.`,
           namespace: `Namespace: This value may only contain alphanumeric
                       characters or single hyphens, and cannot begin or
-                      end with a hyphen.`
+                      end with a hyphen.`,
+          repo:      `Repo: This value may only contain alphanumeric characters,
+                      periods, and hyphens, and cannot begin with a period.`,
         },
-        item: '',
-        isLoading: false
+        isLoading: false,
+        item: ''
       });
       return false;
     }
@@ -196,8 +196,8 @@ class RepoContainer extends React.Component {
           error: {
             header: 'You have already added this repo to your list!',
           },
-          item: '',
-          isLoading: false
+          isLoading: false,
+          item: ''
         });
         return true;
       }
@@ -227,9 +227,9 @@ class RepoContainer extends React.Component {
           isContributor = true;
           items_list.push({item, label});
           this.setState({
-            items_list,
+            isLoading: false,
             item: '',
-            isLoading: false
+            items_list,
           }, () => this.props.saveChanges(items_list));
         }
       }
@@ -245,9 +245,9 @@ class RepoContainer extends React.Component {
             isContributor = true;
             items_list.push({item, label});
             this.setState({
-              items_list,
+              isLoading: false,
               item: '',
-              isLoading: false
+              items_list,
             }, () => this.props.saveChanges(items_list));
           }
         })
@@ -258,11 +258,11 @@ class RepoContainer extends React.Component {
       // if user/repo does not pass either check, reject with error
       if (!isContributor) {
         this.setState({
-          item: '',
           error: {
             header: 'You must be a contributor to the repo you would like to collaborate on.',
           },
-          isLoading: false
+          isLoading: false,
+          item: '',
         });
       }
     })
@@ -272,19 +272,19 @@ class RepoContainer extends React.Component {
       err = 'contributors[Symbol.iterator]';
       if (/\[Symbol.iterator\]/.test(err)) {
         this.setState({
-          item: '',
           error: {
             header: 'There was a problem with GitHub\'s API, please try again.',
           },
-          isLoading: false
+          isLoading: false,
+          item: '',
         });
       } else {
         this.setState({
-          item: '',
           error: {
             header: 'Repository is private or invalid. Please enter a public, valid GitHub repo.',
           },
-          isLoading: false
+          isLoading: false,
+          item: '',
         });
       }
     });
@@ -299,9 +299,9 @@ class RepoContainer extends React.Component {
       if (res) {
         items_list.push({item, label});
         this.setState({
-          items_list,
+          isLoading: false,
           item: '',
-          isLoading: false
+          items_list,
         }, () => this.props.saveChanges(items_list));
       } else {
         this.setState({
@@ -309,8 +309,8 @@ class RepoContainer extends React.Component {
             header: `Repository is private or invalid. Please enter a public,
                      valid ${hostSite} repo.`,
           },
+          isLoading: false,
           item: '',
-          isLoading: false
         });
       }
     })
@@ -320,8 +320,8 @@ class RepoContainer extends React.Component {
           header: `Our bad, it seems like we really messed
                    this one up! Try again soon.`,
         },
+        isLoading: false,
         item: '',
-        isLoading: false
       });
     });
   }

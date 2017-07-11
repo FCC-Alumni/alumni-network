@@ -1,8 +1,8 @@
 export default [
-  { name: 'mentorsOnly', label: 'Mentors Only' },
-  { name: 'menteesOnly', label: 'Mentees Only' },
-  { name: 'prosOnly', label: 'Professional Developers Only' },
-  { name: 'frontendOnly', label: 'Front End Certified' },
-  { name: 'backendOnly', label: 'Back End Certified' },
-  { name: 'dataVisOnly', label: 'Data Visualization Certified' }
+  { label: 'Mentors Only', name: 'mentorsOnly' },
+  { label: 'Mentees Only', name: 'menteesOnly' },
+  { label: 'Professional Developers Only', name: 'prosOnly' },
+  { label: 'Front End Certified', name: 'frontendOnly' },
+  { label: 'Back End Certified', name: 'backendOnly' },
+  { label: 'Data Visualization Certified', name: 'dataVisOnly' }
 ];

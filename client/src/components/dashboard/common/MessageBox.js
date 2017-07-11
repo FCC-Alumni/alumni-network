@@ -28,11 +28,11 @@ class MessageBox extends React.Component {
 }
 
 MessageBox.propTypes = {
-  hide: propTypes.bool,
-  type: propTypes.string,
-  header: propTypes.string,
   dismissable: propTypes.bool,
+  header: propTypes.string,
+  hide: propTypes.bool,
   message: propTypes.string.isRequired,
+  type: propTypes.string,
 }
 
 export default MessageBox;

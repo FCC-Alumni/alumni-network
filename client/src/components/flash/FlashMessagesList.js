@@ -34,8 +34,8 @@ class FlashMessagesList extends React.Component {
 }
 
 FlashMessagesList.propTypes = {
-  messages: propTypes.array.isRequired,
-  clearFlashMessage: propTypes.func.isRequired
+  clearFlashMessage: propTypes.func.isRequired,
+  messages: propTypes.array.isRequired
 }
 
 const mapStateToProps = (state) => {

@@ -13,8 +13,8 @@ const ListItem = ({ icon, children }) => {
 }
 
 ListItem.propTypes = {
+  children: propTypes.node.isRequired,
   icon: propTypes.string,
-  children: propTypes.node.isRequired
 }
 
 ListItem.defaultProps = {

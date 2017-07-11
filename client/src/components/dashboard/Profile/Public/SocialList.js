@@ -124,9 +124,9 @@ const SocialList = ({
 }
 
 SocialList.propTypes = {
+  contactsOnly: propTypes.bool,
   email: propTypes.string,
   isPrivate: propTypes.bool,
-  contactsOnly: propTypes.bool,
   social: propTypes.object.isRequired,
   username: propTypes.string.isRequired,
 }

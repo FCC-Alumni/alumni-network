@@ -1,37 +1,37 @@
 import { SAVE_SEARCH_STATE, SET_SEARCH_STRING } from '../actions/search';
 
 export const defaultState = {
-  value: '',
-  results: [],
-  prosOnly: false,
-  isLoading: false,
-  showFilters: true,
-  disableClear: true,
-  mentorsOnly: false,
-  menteesOnly: false,
   backendOnly: false,
   dataVisOnly: false,
-  frontendOnly: false,
+  disableClear: true,
   dropdownValue: ['all'],
+  frontendOnly: false,
+  isLoading: false,
+  menteesOnly: false,
+  mentorsOnly: false,
+  prosOnly: false,
+  results: [],
   searchCriteria: {
-    mentorshipBio: false,
+    all: true,
+    company: false,
     interests: false,
     location: false,
-    company: false,
-    skills: false,
+    mentorshipBio: false,
     name: false,
-    all: true,
-  }
+    skills: false,
+  },
+  showFilters: true,
+  value: '',
 }
 
 const defaultSearchCriteria = {
-  mentorshipBio: false,
+  all: true,
+  company: false,
   interests: false,
   location: false,
-  company: false,
-  skills: false,
+  mentorshipBio: false,
   name: false,
-  all: true,
+  skills: false,
 }
 
 export default (state = defaultState, action) => {
@@ -42,12 +42,12 @@ export default (state = defaultState, action) => {
     case SET_SEARCH_STRING:
       return {
         ...defaultState,
-        value:  action.params.query,
         dropdownValue: [action.params.category],
         searchCriteria: {
           [action.params.category]: true,
           ...defaultSearchCriteria
-        }
+        },
+        value:  action.params.query,
       }
 
     default: return state;

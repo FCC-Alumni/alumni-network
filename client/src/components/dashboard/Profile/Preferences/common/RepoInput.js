@@ -77,8 +77,8 @@ RepoInput.propTypes = {
   handleChange: propTypes.func.isRequired,
   handleDropdownChange: propTypes.func.isRequired,
   icon: propTypes.string.isRequired,
-  item: propTypes.string.isRequired,
   isMobile: propTypes.bool.isRequired,
+  item: propTypes.string.isRequired,
   repoHosts: propTypes.array.isRequired,
 }
 

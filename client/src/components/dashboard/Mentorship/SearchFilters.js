@@ -25,9 +25,9 @@ const Filters = ({ filterOptions, handleChange, state }) => {
 }
 
 Filters.propTypes = {
-  state: propTypes.object.isRequired,
+  filterOptions: propTypes.array.isRequired,
   handleChange: propTypes.func.isRequired,
-  filterOptions: propTypes.array.isRequired
+  state: propTypes.object.isRequired,
 }
 
 export default Filters;

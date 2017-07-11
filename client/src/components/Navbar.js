@@ -24,8 +24,8 @@ const Nav = styled.div`
 
 class NavBar extends React.Component {
   state = {
-    nav: this.props.screen.isDesktop,
-    clientWidth: ''
+    clientWidth: '',
+    nav: this.props.screen.isDesktop
   }
 
   componentDidMount() {
@@ -160,15 +160,15 @@ const mapStateToProps = (state) => {
 }
 
 NavBar.propTypes = {
+  screen: propTypes.object.isRequired,
   user: propTypes.object.isRequired,
-  screen: propTypes.object.isRequired
 }
 
 export const mapScreenSizeToProps = (screenSize) => {
   return { screen: {
-    isTablet: screenSize['small'],
+    isDesktop: screenSize['> small'],
     isMobile: screenSize['mobile'],
-    isDesktop: screenSize['> small']
+    isTablet: screenSize['small'],
   }};
 }
 

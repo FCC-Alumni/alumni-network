@@ -3,8 +3,8 @@ export const CLEAR_FLASH_MESSAGE = 'CLEAR_FLASH_MESSAGE';
 
 export function addFlashMessage(message) {
   return {
-    type: ADD_FLASH_MESSAGE,
-    message
+    message,
+    type: ADD_FLASH_MESSAGE
   }
 }
 
@@ -17,10 +17,10 @@ export function clearFlashMessage() {
 // helper to generate errors:
 export const flashError = (message) => {
   return {
-    type: 'error',
     text: {
       header: 'There was a problem...',
       message
-    }
+    },
+    type: 'error'
   };
 }

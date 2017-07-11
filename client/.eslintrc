@@ -1,7 +1,9 @@
 ---
-extends: react-app
+extends:
+  - react-app
 plugins:
   - jsx-a11y
+  - react
 rules:
   sort-imports:
   - error
@@ -20,3 +22,4 @@ rules:
   - asc
   - caseSensitive: false
     natural: true
+  jsx-a11y/href-no-hash: 0

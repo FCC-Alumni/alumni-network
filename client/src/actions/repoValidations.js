@@ -18,10 +18,10 @@ export function searchGithubCommits(owner, repo, user) {
     headers:  { 'Accept' : 'application/vnd.github.cloak-preview' }
   });
 }
-  
+
 //GITLAB && BITBUCKET:
 export function validateOtherRepos(repo_path, host_site) {
-  return axios.post('/api/verify-other-repos', { repo_path, host_site })
+  return axios.post('/api/verify-other-repos', { host_site, repo_path })
   .then((res) => {
     if (res.data.validPublicRepo === 'true') {
       return true;
@@ -30,5 +30,3 @@ export function validateOtherRepos(repo_path, host_site) {
     }
   });
 }
-
-  

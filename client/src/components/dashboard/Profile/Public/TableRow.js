@@ -18,17 +18,17 @@ const TableRow = ({ icon, content, header }) => {
 }
 
 TableRow.propTypes = {
-  icon: propTypes.string.isRequired,
-  header: propTypes.oneOfType([
-    propTypes.string,
-    propTypes.element,
-  ]),
   content: propTypes.oneOfType([
     propTypes.string,
     propTypes.object,
     propTypes.element,
     propTypes.number,
-  ])
+  ]),
+  header: propTypes.oneOfType([
+    propTypes.string,
+    propTypes.element,
+  ]),
+  icon: propTypes.string.isRequired
 }
 
 TableRow.defaultProps = {

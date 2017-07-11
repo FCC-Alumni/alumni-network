@@ -4,10 +4,12 @@ import { Button, Modal } from 'semantic-ui-react';
 const SaveModal = ({ size, close, open, warning, isValid }) => {
 
   const context = {
+    buttonColor: isValid ? 'green' : 'red',
     header: isValid ? 'Success' : 'Error(s)',
     headerColor: isValid ? '#007E00' : '#FF4025',
-    text: isValid ? 'Your profile has been successfully updated!' : 'Please review the page, correct any errors, and then try again.',
-    buttonColor: isValid ? 'green' : 'red'
+    text: isValid
+      ? 'Your profile has been successfully updated!'
+      : 'Please review the page, correct any errors, and then try again.',
   }
 
   return (

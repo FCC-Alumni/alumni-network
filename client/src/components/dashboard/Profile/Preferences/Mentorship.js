@@ -15,16 +15,16 @@ class Mentorship extends React.Component {
   render() {
     const {
       error,
-      toggle,
-      isMentor,
-      isMentee,
-      showPopUp,
-      saveSection,
-      showMentorship,
-      mentorshipSkills,
-      toggleMentorship,
       handleInputChange,
+      isMentee,
+      isMentor,
+      mentorshipSkills,
+      saveSection,
       screen: { isMobile, isTablet },
+      showMentorship,
+      showPopUp,
+      toggle,
+      toggleMentorship,
     } = this.props;
     return (
       <div>
@@ -79,16 +79,16 @@ class Mentorship extends React.Component {
 
 Mentorship.propTypes = {
   error: propTypes.string,
+  handleInputChange: propTypes.func.isRequired,
+  isMentor: propTypes.bool.isRequired,
   isMobile: propTypes.bool,
   isTablet: propTypes.bool,
-  toggle: propTypes.func.isRequired,
-  isMentor: propTypes.bool.isRequired,
-  showPopUp: propTypes.bool.isRequired,
+  mentorshipSkills: propTypes.string.isRequired,
   saveSection: propTypes.func.isRequired,
   showMentorship: propTypes.bool.isRequired,
+  showPopUp: propTypes.bool.isRequired,
+  toggle: propTypes.func.isRequired,
   toggleMentorship: propTypes.func.isRequired,
-  handleInputChange: propTypes.func.isRequired,
-  mentorshipSkills: propTypes.string.isRequired,
 }
 
 Mentorship.defaultProps = {
