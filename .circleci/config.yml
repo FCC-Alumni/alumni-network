@@ -15,13 +15,11 @@ jobs:
           keys:
             # Find a cache corresponding to this specific package.json checksum
             # when this file is changed, this key will fail
-            - v2-server-deps-{{ .Branch }}-{{ checksum "package.json" }}
+            - v3-server-deps-{{ .Branch }}-{{ checksum "package.json" }}
             # Find the most recent cache used from this branch
-            - v2-server-deps-{{ .Branch }}
+            - v3-server-deps-{{ .Branch }}
             # Find the most recent cache used from master
-            - v2-server-deps-master
-            # Find the most recent cache used from any Branch
-            - v2-server-deps
+            - v3-server-deps-master
       - run:
           name: Install dependencies
           command: npm install --ignore-scripts
@@ -38,7 +36,7 @@ jobs:
           paths:
             - node_modules
           # Save cache for this specific set of packages
-          key: v2-server-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "deps_checksum" }}
+          key: v3-server-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "deps_checksum" }}
 
   client-lint:
     <<: *defaults
@@ -50,13 +48,11 @@ jobs:
           keys:
             # Find a cache corresponding to this specific package.json checksum
             # when this file is changed, this key will fail
-            - v2-client-deps-{{ .Branch }}-{{ checksum "package.json" }}
+            - v3-client-deps-{{ .Branch }}-{{ checksum "package.json" }}
             # Find the most recent cache used from this branch
-            - v2-client-deps-{{ .Branch }}
+            - v3-client-deps-{{ .Branch }}
             # Find the most recent cache used from master
-            - v2-client-deps-master
-            # Find the most recent cache used from any Branch
-            - v2-client-deps
+            - v3-client-deps-master
       - run:
           name: Install dependencies
           command: npm install
@@ -73,7 +69,7 @@ jobs:
           paths:
             - node_modules
           # Save cache for this specific set of packages
-          key: v2-client-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "deps_checksum" }}
+          key: v3-client-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "deps_checksum" }}
 
 workflows:
   version: 2
