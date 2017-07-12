@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.15.3",
     "flag-icon-css": "^2.8.0",
+    "fs-extra": "^3.0.1",
     "html-to-json": "^0.6.0",
     "immutable": "^3.8.1",
     "jquery": "^3.2.1",
@@ -65,7 +66,6 @@
     "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "0.10.0",
     "filesize": "3.3.0",
-    "fs-extra": "0.30.0",
     "gzip-size": "3.0.0",
     "html-webpack-plugin": "2.24.0",
     "http-proxy-middleware": "0.17.3",
