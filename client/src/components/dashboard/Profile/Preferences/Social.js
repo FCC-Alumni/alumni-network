@@ -16,75 +16,84 @@ export default class Social extends React.Component {
   render() {
     const {
       clear,
-      toggle,
-      errors,
-      twitter,
       codepen,
+      errors,
+      handleInputChange,
       linkedin,
-      showPopUp,
-      showSocial,
       saveChanges,
       saveSection,
-      handleInputChange,
+      showPopUp,
+      showSocial,
+      toggle,
+      twitter,
     } = this.props;
+    const removeIcon = (
+      <i className="remove icon" style={{ cursor: 'pointer' }} />
+    );
+    const checkmarkIcon = (
+      <i className="check mark icon" style={{ cursor: 'pointer' }} />
+    );
     return (
       <div>
         <Ribbon
           content="Social"
           id="socialPopUp"
-          showSave={showSocial}
-          showPopUp={showPopUp}
+          onClick={() => toggle('showSocial')}
           saveSection={saveSection}
-          onClick={() => toggle('showSocial')} />
+          showPopUp={showPopUp}
+          showSave={showSocial} />
         <TransitionContainer isExpanded={showSocial}>
           <MessageBox
-            type="info"
-            hide={!codepen && !twitter && !linkedin ? false : true}
             dismissable={true}
-            message="Stay connected with campers on other networks! Let us know where your profiles live." />
-          <div style={{ marginBottom: 16 }} className="ui list">
+            hide={!codepen && !twitter && !linkedin ? false : true}
+            message="Stay connected with campers on other
+            networks! Let us know where your profiles live."
+            type="info" />
+          <div
+            className="ui list"
+            style={{ marginBottom: 16 }}>
             <ListItem>
               <FormField
-                name="codepen"
-                value={codepen}
                 errors={errors}
-                tooltip="CodePen"
                 icon='codepen icon'
-                placeholder="Enter CodePen"
                 inputOptions={INPUT_OPTIONS}
-                onChange={handleInputChange} />
+                name="codepen"
+                onChange={handleInputChange}
+                placeholder="Enter CodePen"
+                tooltip="CodePen"
+                value={codepen} />
             </ListItem>
             <ListItem>
               <FormField
-                clear={clear}
-                name="twitter"
-                errors={errors}
-                value={twitter}
-                tooltip="Twitter"
-                icon='twitter icon'
-                saveChanges={saveChanges}
-                placeholder="Enter Twitter"
-                disabled={twitter ? false : true}
+                actionIcon={checkmarkIcon}
                 actionUrl={`${APP_HOST}/connect/twitter`}
+                clear={clear}
+                disabled={twitter ? false : true}
+                errors={errors}
+                icon='twitter icon'
                 inputOptions={INPUT_OPTIONS + ' corner labeled'}
-                reactionIcon={<i style={{ cursor: 'pointer' }} className="remove icon" />}
-                actionIcon={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
+                name="twitter"
+                placeholder="Enter Twitter"
+                reactionIcon={removeIcon}
+                saveChanges={saveChanges}
+                tooltip="Twitter"
+                value={twitter} />
             </ListItem>
             <ListItem>
               <FormField
-                clear={clear}
-                errors={errors}
-                name="linkedin"
-                value={linkedin}
-                tooltip="LinkedIn"
-                icon='linkedin icon'
-                saveChanges={saveChanges}
-                placeholder="Enter LinkedIn"
-                disabled={linkedin ? false : true}
+                actionIcon={checkmarkIcon}
                 actionUrl={`${APP_HOST}/connect/linkedin`}
+                clear={clear}
+                disabled={linkedin ? false : true}
+                errors={errors}
+                icon='linkedin icon'
                 inputOptions={INPUT_OPTIONS + ' corner labeled'}
-                reactionIcon={<i style={{ cursor: 'pointer' }} className="remove icon" />}
-                actionIcon={<i style={{ cursor: 'pointer' }} className="check mark icon" />} />
+                name="linkedin"
+                placeholder="Enter LinkedIn"
+                reactionIcon={removeIcon}
+                saveChanges={saveChanges}
+                tooltip="LinkedIn"
+                value={linkedin} />
             </ListItem>
           </div>
         </TransitionContainer>

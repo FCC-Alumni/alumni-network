@@ -6,8 +6,8 @@ import { Button, Dropdown, Input } from 'semantic-ui-react';
 
 const ErrorLabel = ({ isMobile, error }) => (
   <div
-    style={{ marginTop: 10 }}
-    className={`ui ${!isMobile ? 'left pointing' : ''} red basic label`}>
+    className={`ui ${!isMobile ? 'left pointing' : ''} red basic label`}
+    style={{ marginTop: 10 }}>
     {error}
   </div>
 );
@@ -42,30 +42,29 @@ const RepoInput = ({
         action={ !isMobile
           ? <Button
               className="basic green"
-              onClick={addItem}
+              content="Save"
               icon={icon}
-              content="Save"/>
+              onClick={addItem} />
           : null }
         fluid={isMobile && true}
         label={
           <Dropdown
-            options={repoHosts}
             className="basic green"
             defaultValue="https://github.com/"
-            onChange={handleDropdownChange} /> }
+            onChange={handleDropdownChange}
+            options={repoHosts} /> }
         labelPosition="left"
         onChange={handleChange}
         placeholder="Namespace / Repo"
-        value={item}
-      />
-  { isMobile
+        value={item} />
+      { isMobile
     ? <StyledButton
         className="basic green"
         content="Save"
         icon={icon}
         onClick={addItem} />
     : null }
-    { !isEmpty(error) && !error.repo && !error.namespace &&
+      { !isEmpty(error) && !error.repo && !error.namespace &&
       <ErrorLabel error={error.header} isMobile={isMobile} /> }
     </div>
   );

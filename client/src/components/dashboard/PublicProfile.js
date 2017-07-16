@@ -11,13 +11,12 @@ import { mentorshipSearchQuery } from '../../actions/search';
 import propTypes from 'prop-types';
 import React from 'react';
 import { scrapeFccStats } from '../../actions/scrape-fcc.js';
-import SkillsAndInterests from './Profile/Public/SkillsRow';
 import SocialList from './Profile/Public/SocialList';
 import styled from 'styled-components';
-import { SubHeader } from './Profile/Public/SkillsRow';
 import Table from '../dashboard/Profile/Public/Table';
 import TableRow from '../dashboard/Profile/Public/TableRow';
 import UserLabel from '../dashboard/common/UserLabel';
+import SkillsAndInterests, { SubHeader } from './Profile/Public/SkillsRow';
 import { StyledItem, ThickPaddedBottom } from '../../styles/style-utils';
 
 // STYLED COMPONENTS:
@@ -136,7 +135,8 @@ class PublicProfile extends React.Component {
           className="item"
           href={project.label + project.item}
           key={project.item}
-          target="_blank">
+          rel="noreferrer noopener"
+          target="_blank" >
           <i className={`${project.label.slice(8, -5)} large icon`} />
           <div className="content">
             { project.label + project.item }
@@ -160,7 +160,7 @@ class PublicProfile extends React.Component {
 
     const loader = (
       <Loader className="ui active inverted dimmer">
-        <div className="ui text huge loader">Loading</div>
+        <div className="ui text huge loader">{'Loading'}</div>
       </Loader>
     );
 
@@ -185,7 +185,7 @@ class PublicProfile extends React.Component {
       <Loader
         className="ui active inverted dimmer"
         style={{ marginTop: '100px' }}>
-        <div className="ui text huge loader">Loading</div>
+        <div className="ui text huge loader">{'Loading'}</div>
       </Loader>
     );
 
@@ -219,16 +219,16 @@ class PublicProfile extends React.Component {
             <NoBottomMargin className="ui celled stackable grid">
               <NoPadding className="sixteen wide center aligned column">
                 <StyledSubHeader className="ui top attached header">
-                  freeCodeCamp Profile <i className="free code camp icon" />
+                  {'freeCodeCamp Profile '}<i className="free code camp icon" />
                 </StyledSubHeader>
               </NoPadding>
-              { !this.props.initialState
-                ? <div className="row">{loader}</div>
-                : <FCCStatTables
-                    { ...this.state }
-                    fccCerts={user.fccCerts}
-                    username={user.username}
-                    width="eight" /> }
+            { !this.props.initialState
+            ? <div className="row">{loader}</div>
+            : <FCCStatTables
+                { ...this.state }
+                fccCerts={user.fccCerts}
+                username={user.username}
+                width="eight" /> }
             </NoBottomMargin>
           </div>
         </div>
@@ -236,11 +236,13 @@ class PublicProfile extends React.Component {
         {/* ABOUT & SOCIAL */}
         <div className="ui celled stackable center aligned grid container">
           <MainHeader icon="user icon" text={`Find Me ${bio && '/ Bio'}`} />
-        { bio &&
+          { bio &&
           <div className="row">
             <div className="fourteen wide column">
               <div className="ui segment" id="userBio">
-                <div className="ui horizontal divider">Bio:</div>
+                <div className="ui horizontal divider">
+                  {'Bio:'}
+                </div>
                 {bio}
               </div>
             </div>
@@ -256,7 +258,7 @@ class PublicProfile extends React.Component {
         </div>
 
         {/* CODING PROFILE */}
-      { (!isEmpty(coreSkills) || !isEmpty(codingInterests)) &&
+        { (!isEmpty(coreSkills) || !isEmpty(codingInterests)) &&
         <div className="ui celled stackable center aligned grid container">
           <MainHeader icon="code" text="Coding Profile" />
           <SkillsAndInterests
@@ -265,12 +267,11 @@ class PublicProfile extends React.Component {
         </div> }
 
         {/* CAREER */}
-      { !isEmpty(user.career.working) &&
+        { !isEmpty(user.career.working) &&
         <div className="ui celled stackable center aligned grid container">
           <MainHeader icon="suitcase" text="Career" />
           <Career career={user.career} />
-        </div>
-      }
+        </div> }
 
         {/* MENTORSHIP */}
         <div className="ui celled stackable center aligned grid container">
@@ -278,20 +279,20 @@ class PublicProfile extends React.Component {
           <Table columnWidth="sixteen">
             <TableRow
               content={ user.mentorship.isMentor
-                ? <i className="large green check mark icon"/>
-                : <i className="large red remove icon"/> }
+                ? <i className="large green check mark icon" />
+                : <i className="large red remove icon" /> }
               header="I am a freeCodeCamp Alumni Network Mentor" />
             <TableRow
-              header="I am open to being Mentored by other Members"
               content={ user.mentorship.isMentee
-                ? <i className="large green check mark icon"/>
-                : <i className="large red remove icon"/> } />
+                ? <i className="large green check mark icon" />
+                : <i className="large red remove icon" /> }
+              header="I am open to being Mentored by other Members" />
           </Table>
           <div className="row">
-          { user.mentorship.mentorshipSkills &&
+            { user.mentorship.mentorshipSkills &&
             <div className="eight wide center aligned column">
               <SubHeader className="ui top attached header">
-                Mentorship Bio
+                {'Mentorship Bio'}
               </SubHeader>
               <DynamicHeightDiv
                 className="ui attached segment"
@@ -303,7 +304,7 @@ class PublicProfile extends React.Component {
               ? 'eight'
               : 'sixteen'} wide center aligned column`}>
               <SubHeader className="ui top attached header">
-                Contact for Mentorship & Other Requests
+                {'Contact for Mentorship & Other Requests'}
               </SubHeader>
               <DynamicHeightDiv
                 className="ui attached segment"
@@ -323,22 +324,22 @@ class PublicProfile extends React.Component {
         </div>
 
         {/* COLLABORATION */}
-      { !isEmpty(user.projects) &&
+        { !isEmpty(user.projects) &&
         <div className="ui celled stackable center aligned grid container">
           <MainHeader icon="users" text="Collaboration" />
           <div className="sixteen wide column">
             <div className="ui segment">
               <i className="large info circle icon" />
-              The following open source projects are projects that
-              {<strong>{ user.username }</strong>} either contributes
+              {'The following open source projects are projects that '}
+              <strong>{ user.username }</strong>{` either contributes
               to or is the owner of. If they are posted here, these projects
               welcome other open source contributions. Visit the repos, check
               out the projects, and start collaborating! Please remember to be
               respectful, and to carefully read any contribution guidelines
-              before opening an issue or making a PR. Happy coding!
+              before opening an issue or making a PR. Happy coding!`}
             </div>
           </div>
-        { user.projects.length <= 3
+          { user.projects.length <= 3
         ? <OneColumnRepoList className="ui middle aligned selection list">
             { this.mapRepoList(user.projects) }
           </OneColumnRepoList>

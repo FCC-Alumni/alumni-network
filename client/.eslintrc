@@ -1,25 +1,53 @@
 ---
 extends:
   - react-app
-plugins:
-  - jsx-a11y
-  - react
+plugins: [jsx-a11y, react, import]
 rules:
+  max-len:
+    - warn
+    - 85
+    - 2
+    - ignoreUrls: true
+      ignoreTemplateLiterals: true
+      ignoreStrings: true
+      ignoreComments: true
+  no-console: [error, {allow: [warn, error]}]
   sort-imports:
-  - error
-  - ignoreCase: true
-    ignoreMemberSort: false
-    memberSyntaxSortOrder:
-    - none
-    - all
-    - single
-    - multiple
-  sort-vars:
-  - error
-  - ignoreCase: true
-  sort-keys:
-  - warn
-  - asc
-  - caseSensitive: false
-    natural: true
-  jsx-a11y/href-no-hash: 0
+    - error
+    - ignoreCase: true
+      ignoreMemberSort: false
+      memberSyntaxSortOrder: [none, all, single, multiple]
+  sort-keys: [warn, asc, {caseSensitive: false, natural: true}]
+  sort-vars: [error, {ignoreCase: true}]
+  ############################
+  # disable unresolveable rule
+  jsx-a11y/href-no-hash: off
+  #####################
+  # eslint-plugin-react
+  react/jsx-closing-bracket-location:
+    - error
+    - after-props
+  react/jsx-closing-tag-location: 2
+  react/jsx-equals-spacing: [2, never]
+  react/jsx-no-bind:
+    - error
+    - ignoreRefs: true
+      allowArrowFunctions: true
+      allowBind: false
+  react/jsx-no-literals: 2
+  react/jsx-no-target-blank: 2
+  react/jsx-pascal-case: 2
+  react/jsx-sort-props: error
+  react/jsx-tag-spacing:
+    - 2
+    - closingSlash: never
+      beforeSelfClosing: always
+      afterOpening: never
+  react/jsx-wrap-multilines: 2
+  react/no-array-index-key: 2
+  react/self-closing-comp: 2
+  ######################
+  # eslint-plugin-import
+  import/newline-after-import: 2
+  import/no-duplicates: 2
+  import/named: 2

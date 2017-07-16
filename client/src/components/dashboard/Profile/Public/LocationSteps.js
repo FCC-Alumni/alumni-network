@@ -13,9 +13,9 @@ const Steps = ({ personal }) => {
   return(
     <div className="ui tablet stackable attached steps">
       <div className="step">
-        <i className="world icon"/>
+        <i className="world icon" />
         <div className="content">
-          <div className="title">Country</div>
+          <div className="title">{'Country'}</div>
         </div>
       </div>
       <div className="step">
@@ -23,18 +23,19 @@ const Steps = ({ personal }) => {
           <CenterAlignedWrapper>
             { personal.country
             ? <Flag
-              target="_blank"
+              className={`flag-icon-background flag-icon-${personal.flag && personal.flag.replace(' ', '-')}`}
               href={`https://wikipedia.org/wiki/${personal.country && personal.country.replace(' ', '_')}`}
-              className={`flag-icon-background flag-icon-${personal.flag && personal.flag.replace(' ', '-')}`} />
+              rel="noreferrer noopener"
+              target="_blank"  />
             : <div className="title"><i className="large help icon" /></div> }
           </CenterAlignedWrapper>
           <div className="description">{personal.country && personal.country}</div>
         </div>
       </div>
       <div className="step">
-        <i className="marker icon"/>
+        <i className="marker icon" />
         <div className="content">
-          <div className="title">Location</div>
+          <div className="title">{'Location'}</div>
         </div>
       </div>
       <div className="step">

@@ -20,8 +20,8 @@ client.on('error', (err) => console.log(`Redis Error: ${err}`));
 client.on('ready', () => console.log('Redis connected'));
 
 client.set('online-users', JSON.stringify({
+  byID: {},
   byName: {},
-  byID: {}
 }));
 
 // all real-time chat events:
@@ -64,7 +64,7 @@ module.exports = (io) => {
       socket.broadcast.emit('broadcast-update', data);
     });
     socket.on('like-message', ({ messageId, liker }) => {
-      socket.broadcast.emit('broadcast-like', { messageId, liker });
+      socket.broadcast.emit('broadcast-like', { liker, messageId });
     });
     socket.on('delete-message', id => {
       socket.broadcast.emit('broadcast-deletion', id);

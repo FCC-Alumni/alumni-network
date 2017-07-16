@@ -16,25 +16,25 @@ export default class Certifications extends React.Component {
         certs.push(cert.replace(/_/g, ' ') + ' Certified');
       }
     }
-    const certificates = certs.map((item, index) => {
+    const certificates = certs.map(item => {
       return (
-        <ListItem key={index} icon="orange large certificate icon">
-          <h5 style={{ marginTop: 2 }} className="ui header">
+        <ListItem icon="orange large certificate icon" key={item.slice(0, 3)}>
+          <h5 className="ui header" style={{ marginTop: 2 }}>
             {item}
           </h5>
         </ListItem>
       );
     });
     return (
-      <div>
+      <div> 
         <Ribbon
-          showSave={false}
           content="freeCodeCamp Certifications"
-          onClick={() => toggle('showFCC')} />
+          onClick={() => toggle('showFCC')}
+          showSave={false} />
         <TransitionContainer
+          className="ui list"
           isExpanded={showFCC}
-          style={{ margin: 0 }}
-          className="ui list">
+          style={{ margin: 0 }}>
           {certificates}
         </TransitionContainer>
       </div>

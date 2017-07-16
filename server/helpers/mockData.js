@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from 'axios';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
@@ -118,14 +119,18 @@ const mentorshipSkillsList = [];
 })();
 
 const getCertifications = (username) => {
-  return axios.all([getFrontEndCert(username), getBackEndCert(username), getDataVisCert(username)])
-  .then(axios.spread((frontCert, backCert, dataCert) => {
+  return axios.all([
+    getFrontEndCert(username),
+    getBackEndCert(username),
+    getDataVisCert(username)
+  ])
+.then(axios.spread((frontCert, backCert, dataCert) => {
 
     if (username === 'QuincyLarson' || username === 'P1xt') {
       return {
-        Front_End: true,
         Back_End: true,
-        Data_Visualization: true
+        Data_Visualization: true,
+        Front_End: true,
       };
     };
 
@@ -135,9 +140,9 @@ const getCertifications = (username) => {
       return false;
     } else {
       return {
-        Front_End: frontCert.request._redirectCount === 0 ? true : false,
         Back_End: backCert.request._redirectCount === 0 ? true : false,
         Data_Visualization: dataCert.request._redirectCount === 0 ? true : false,
+        Front_End: frontCert.request._redirectCount === 0 ? true : false,
       }
     }
   }));

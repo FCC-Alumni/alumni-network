@@ -68,7 +68,7 @@ class UserCard extends React.Component {
     } = this.props;
 
     return (
-      <Card ref="card" className="item">
+      <Card className="item" ref="card">
         <div className="ui tiny image">
           <IMG
             alt={`${username}'s avatar`}
@@ -83,7 +83,7 @@ class UserCard extends React.Component {
             title={`View ${username}'s profile`}>
             {username}
           </Username>
-        { currentUser !== username &&
+          { currentUser !== username &&
           <ChatIconPopup
             ChatIcon={ChatIcon}
             disableChat={this.state.disableChat}

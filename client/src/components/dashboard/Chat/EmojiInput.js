@@ -1,3 +1,4 @@
+/* eslint-disable */
 import emojiMap from 'react-emoji-picker/lib/emojiMap';
 import EmojiPicker from 'react-emoji-picker';
 import propTypes from 'prop-types';

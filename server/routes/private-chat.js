@@ -1,7 +1,5 @@
-import axios from 'axios';
 import express from 'express';
 import { isAuthenticated } from './passport';
-import passport from 'passport';
 import PrivateChat from '../models/private-chat';
 import User from '../models/user';
 

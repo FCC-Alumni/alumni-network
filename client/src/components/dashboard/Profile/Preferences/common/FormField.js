@@ -40,6 +40,15 @@ const FormField = ({
   username,
   value,
 }) => {
+  const cornerLabel = (
+    <a href={actionUrl} onClick={() => saveChanges()}>
+      <div
+        className="ui corner green label"
+        style={{ cursor: 'pointer' }}>
+        {actionIcon}
+      </div>
+    </a>
+  );
   return (
     <div className="inline field">
       { label && <label>{label}</label> }
@@ -54,24 +63,17 @@ const FormField = ({
           title={tooltip}
           type={type}
           value={value} />
-      { (inputOptions.indexOf('corner') > -1 && !value) &&
+        { (inputOptions.indexOf('corner') > -1 && !value) &&
         <Popup
           inverted
           offset={5}
           position="top center"
-          wide
-          trigger={
-            <a href={actionUrl} onClick={() => saveChanges()}>
-              <div
-                className="ui corner green label"
-                style={{ cursor: 'pointer' }}>
-                {actionIcon}
-              </div>
-            </a>}>
-          Sign in to your account to populate this field.
-          We will not utilize your account in any way.
+          trigger={cornerLabel}
+          wide>
+          {`Sign in to your account to populate this field.
+          We will not utilize your account in any way.`}
         </Popup> }
-      { (inputOptions.indexOf('corner') > -1 && value) &&
+        { (inputOptions.indexOf('corner') > -1 && value) &&
         <div
           className="ui corner red label"
           onClick={() => clear(name)}
@@ -80,7 +82,7 @@ const FormField = ({
           {reactionIcon}
         </div> }
       </div>
-    { isEmail &&
+      { isEmail &&
       <div style={{ display: 'inline-block' }}>
         <Popup
           content={isPrivate
@@ -88,20 +90,19 @@ const FormField = ({
             : 'Email will be visible to FCCAN members'}
           inverted
           trigger={isPrivate
-            ? <i onClick={toggleEmailVisibilty}
-                 className="big green toggle on icon" />
-            : <i onClick={toggleEmailVisibilty}
-                 className="big green toggle off icon" /> }
-          wide
-        />
+            ? <i className="big green toggle on icon"
+                 onClick={toggleEmailVisibilty} />
+            : <i className="big green toggle off icon"
+                 onClick={toggleEmailVisibilty} /> }
+          wide />
         <Popup
           content={infoMessage}
           inverted
           trigger={<i className="large red info circle icon" />}
           wide />
       </div> }
-    { errors[name] &&
-      <ErrorLabel isMobile={isMobile} error={errors[name]} /> }
+      { errors[name] &&
+      <ErrorLabel error={errors[name]} isMobile={isMobile} /> }
     </div>
   )
 }

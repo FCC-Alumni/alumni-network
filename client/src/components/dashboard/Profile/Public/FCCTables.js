@@ -29,61 +29,62 @@ const FccTables = ({
   username,
   width,
 }) => {
+  const removeIcon = (
+    <i className="large red remove icon" />
+  );
+  const checkmarkIcon = (
+    <i className="large green check mark icon" />
+  );
   return (
     <div className="row">
       <Table columnWidth={width}>
         <TableRow
-          icon="desktop"
-          header={ fccCerts.Front_End
+          content={fccCerts.Front_End ? checkmarkIcon : removeIcon }
+          header={fccCerts.Front_End
             ? <A
                 href={`${URL + username}/front-end-certification`}
+                rel="noreferrer noopener"
                 target="_blank">
-                Frontend Certified
+                {'Frontend Certified'}
               </A>
             : "Frontend Certified" }
-          content={ fccCerts.Front_End
-            ? <i className="large green check mark icon"/>
-            : <i className="large red remove icon"/> } />
+          icon="desktop" />
         <TableRow
-          icon="bar chart"
-          header={ fccCerts.Data_Visualization
+          content={fccCerts.Data_Visualization ? checkmarkIcon : removeIcon }
+          header={fccCerts.Data_Visualization
             ? <A
                 href={`${URL + username}/data-visualization-certification`}
+                rel="noreferrer noopener"
                 target="_blank">
-                Data Visualization Certified
-               </A>
+              {'Data Visualization Certified'}
+              </A>
             : "Data Visualization Certified" }
-          content={ fccCerts.Data_Visualization
-            ? <i className="large green check mark icon"/>
-            : <i className="large red remove icon"/> } />
+          icon="bar chart" />
         <TableRow
-          icon="database"
-          header={ fccCerts.Back_End
+          content={fccCerts.Back_End ? checkmarkIcon : removeIcon }
+          header={fccCerts.Back_End
             ? <A
                 href={`${URL + username}/back-end-certification`}
+                rel="noreferrer noopener"
                 target="_blank">
-                Backend Certified
+                {'Backend Certified'}
               </A>
             : "Backend Certified" }
-          content={ fccCerts.Back_End
-            ? <i className="large green check mark icon"/>
-            : <i className="large red remove icon"/> } />
+          icon="database" />
         <TableRow
-          icon="tasks"
-          header="Total Challenges Completed"
           content={
             <div>
               {totalChallenges}
               <Popup
+                content="This value includes the total number of
+                all projects, algorithms, and challenges combined."
                 inverted
-                wide
                 position="top center"
-                trigger={<InfoIcon
-                  className="info circle icon" />}>
-                  This value includes the total number of all projects,
-                  algorithms, and challenges combined.
-              </Popup>
-            </div> } />
+                trigger={<InfoIcon className="info circle icon" />}
+                wide />
+            </div> }
+          header="Total Challenges Completed"
+          icon="tasks" />
       </Table>
       <Table columnWidth={width}>
         <TableRow

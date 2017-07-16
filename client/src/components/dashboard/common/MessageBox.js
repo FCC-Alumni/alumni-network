@@ -19,7 +19,8 @@ class MessageBox extends React.Component {
     `;
     return (
       <Message className={`ui ${type} message`}>
-        { dismissable && <i onClick={this.handleClick} className="close icon" /> }
+        { dismissable &&
+          <i className="close icon" onClick={this.handleClick} /> }
         <div className="header">{header}</div>
         {message}
       </Message>

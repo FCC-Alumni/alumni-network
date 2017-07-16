@@ -1,3 +1,4 @@
+/* eslint-disable */
 import parseTime from '../../../assets/helpers/parseTime';
 import { Popup } from 'semantic-ui-react';
 import React from 'react';

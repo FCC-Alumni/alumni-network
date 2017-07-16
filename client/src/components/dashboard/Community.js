@@ -27,8 +27,7 @@ class Community extends React.Component {
               <UserCard
                 history={this.props.history}
                 key={user._id}
-                user={user}
-              />
+                user={user} />
             );
           })}
         </div>

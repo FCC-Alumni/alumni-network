@@ -7,11 +7,11 @@ const RadioButton = ({ onChange, name, label, checked }) => {
       <div className="field">
         <div className="ui radio checkbox">
           <input
-            onChange={onChange}
-            type="radio"
+            checked={checked}
             id={label.replace(/\s/g, '_')}
             name={name}
-            checked={checked} />
+            onChange={onChange}
+            type="radio" />
           <label>{label}</label>
         </div>
       </div>

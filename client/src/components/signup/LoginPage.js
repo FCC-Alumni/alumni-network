@@ -5,13 +5,21 @@ import React from 'react';
 import styled from 'styled-components';
 
 class LoginPage extends React.Component {
-  state = { flashMessageCleared: false }
-  componentDidMount = () => document.addEventListener('click', this.handleClick);
-  componentWillUnmount = () => document.removeEventListener('click', this.handleClick);
+  state = {
+    flashMessageCleared: false
+  }
+  componentDidMount = () => {
+    document.addEventListener('click', this.handleClick);
+  }
+  componentWillUnmount = () => {
+    document.removeEventListener('click', this.handleClick);
+  }
   // 'close' is className of close icon in flash message
-  handleClick = (e) => e.target.classList.contains('close')
-    ? this.setState({ flashMessageCleared: true })
-    : this.setState({ flashMessageCleared: false });
+  handleClick = (e) => {
+    e.target.classList.contains('close')
+      ? this.setState({ flashMessageCleared: true })
+      : this.setState({ flashMessageCleared: false });
+  }
   render() {
     const { flashMessageCleared } = this.state;
     const { isTablet, isMobile, isDesktop } = this.props.screen;
@@ -23,22 +31,33 @@ class LoginPage extends React.Component {
     `;
     return (
       <Container className={`ui center aligned grid ${isDesktop && 'container'}`}>
-        <div className={`${isMobile ? 'twelve' : isTablet ? 'ten' : 'six'} wide column`}>
+        <div className={`${isMobile
+            ? 'twelve'
+            : isTablet
+            ? 'ten'
+            : 'six'} wide column`}>
           <div className="ui segment">
             <h2 className="ui green image header">
-              { !isMobile && <i className="huge github icon"/> }
-              <div className="content">Login with GitHub</div>
+              { !isMobile && <i className="huge github icon" /> }
+              <div className="content">
+                {'Login with GitHub'}
+              </div>
             </h2>
             <div className="ui segment">
-              <a className="ui green button" href={`${APP_HOST}/auth/github`}>Login</a>
+              <a className="ui green button" href={`${APP_HOST}/auth/github`}>
+                {'Login'}
+              </a>
             </div>
             <div className="ui info message">
-              <div className="header">Joining the freeCodeCamp Alumni Network requires both freeCodeCamp and GitHub credentials.</div>
+              <div className="header">
+                {`Joining the freeCodeCamp Alumni Network requires
+                both freeCodeCamp and GitHub credentials.`}
+              </div>
             </div>
           </div>
-        { isDesktop &&
+          { isDesktop &&
           <div className="center aligned segment">
-            <i id="arrow-bounce" className="massive green arrow up icon"/>
+            <i className="massive green arrow up icon" id="arrow-bounce" />
           </div> }
         </div>
       </Container>

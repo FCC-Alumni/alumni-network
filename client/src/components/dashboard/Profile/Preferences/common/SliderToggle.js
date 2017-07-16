@@ -29,10 +29,16 @@ class SliderToggle extends React.Component {
   render() {
     return (
       <div className="slider-toggle-container">
-        <div onClick={() => this.handleClick(this.props.id)} className="slider-toggle">
-          <div style={this.state.style} className="toggler" />
+        <div
+          className="slider-toggle"
+          onClick={() => this.handleClick(this.props.id)}>
+          <div
+            className="toggler"
+            style={this.state.style} />
         </div>
-        <label className="ui label green slider-label">{this.props.label}</label>
+        <label className="ui label green slider-label">
+          {this.props.label}
+        </label>
       </div>
     );
   }

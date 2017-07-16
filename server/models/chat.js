@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
 
+const Schema = mongoose.Schema;
 const Chat = new Schema({
   history: [{
     id: String,

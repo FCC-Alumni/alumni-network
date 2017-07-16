@@ -7,6 +7,7 @@ import passport from 'passport';
 import Session from 'express-session';
 import TwitterStrategy from 'passport-twitter';
 import User from '../models/user';
+
 dotenv.config();
 
 const APP_HOST = process.env.APP_HOST;
@@ -26,6 +27,7 @@ const router = express.Router();
 
 // use MongoStore to persist sessions
 var MongoStore = require('connect-mongo')(Session);
+
 router.use(Session({
     resave: false,
     saveUninitialized: false,

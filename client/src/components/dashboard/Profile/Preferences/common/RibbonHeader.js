@@ -9,21 +9,35 @@ const Container = styled.div`
   display: table;
 `;
 
-const RibbonHeader = ({ content, onClick, showPopUp, saveSection, id, showSave }) => {
+const RibbonHeader = ({
+  content,
+  id,
+  onClick,
+  saveSection,
+  showPopUp,
+  showSave
+}) => {
   return (
     <Container>
       <div className="ui green large ribbon label" onClick={onClick}>
         {content}
-      { showSave &&
+        { showSave &&
         <div className="detail">
-          <i onClick={saveSection} id={id} title="Save Section" className="saveSection save icon" />
+          <i
+            className="saveSection save icon"
+            id={id}
+            onClick={saveSection}
+            title="Save Section" />
         </div> }
       </div>
-    { showSave &&
-      <div className={`ui left pointing basic green label savedPopUp ${showPopUp ? 'show' : 'hide'}`}>
-        Saved
+      { showSave &&
+      <div
+        className={`ui left pointing basic green label savedPopUp ${showPopUp
+          ? 'show'
+          : 'hide'}`}>
+        {'Saved'}
       </div> }
-  </Container>
+    </Container>
   );
 }
 

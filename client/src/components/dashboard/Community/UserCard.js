@@ -80,7 +80,7 @@ class UserCard extends React.Component {
   renderSkillsAndInterests = (skillsOrInterests) => {
     return skillsOrInterests.length > 0
       ? skillsOrInterests.map((item, i) => {
-          return i < 3 && <div className="item" key={i}>{item}</div>})
+          return i < 3 && <div className="item" key={item}>{item}</div>})
       : 'Not defined yet!';
   }
 
@@ -143,7 +143,7 @@ class UserCard extends React.Component {
         ref="card"
         style={ !isMobile ? { cursor: 'pointer' } : null }>
 
-      {/* User Avatar & Reveal */}
+        {/* User Avatar & Reveal */}
       { (isDesktop || isMobile)
       ? <div className={`ui ${isDesktop ? 'slide masked reveal image' : 'image'}`}>
           <img
@@ -159,11 +159,11 @@ class UserCard extends React.Component {
             onClick={isMobile && this.reveal}
             style={CONTENT_STYLE}>
             <SummaryWrapper>
-              <div className="ui horizontal divider">Core Skills</div>
+              <div className="ui horizontal divider">{'Core Skills'}</div>
               <div className="ui list">
                 {this.renderSkillsAndInterests(coreSkills)}
               </div>
-              <div className="ui horizontal divider">Coding Interests</div>
+              <div className="ui horizontal divider">{'Coding Interests'}</div>
               <div className="ui list">
                 {this.renderSkillsAndInterests(codingInterests)}
               </div>
@@ -183,13 +183,13 @@ class UserCard extends React.Component {
           onClick={() => this.handleClick(username)}>
           <div className="header">
             <span className="user">{username}</span>
-          { currentUser !== username &&
+            { currentUser !== username &&
             <ChatIconPopup
               ChatIcon={ChatIcon}
               disableChat={this.state.disableChat}
               initiatePrivateChat={this.initiatePrivateChat}
               username={username} /> }
-          { (isDesktop || isMobile) &&
+            { (isDesktop || isMobile) &&
             <CertLinks
               fccCerts={user.fccCerts}
               handleClick={this.handleInnerClick}
@@ -202,7 +202,7 @@ class UserCard extends React.Component {
 
         {/**** User Meta Content ****/}
         <div className="extra content">
-      { (isDesktop || isMobile)
+          { (isDesktop || isMobile)
         ? <span className="right floated">
             {`Since ${joinedOn}`}
           </span>
@@ -216,7 +216,6 @@ class UserCard extends React.Component {
               user={user} />
           </span>
         </div>
-
       </div>
     );
   }

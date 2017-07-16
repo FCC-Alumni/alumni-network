@@ -9,9 +9,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --fix server server.js",
+    "lint-all": "eslint --fix server server.js && cd client/ && eslint --fix src/",
     "dev": "nodemon --ignore ./client --exec babel-node -- ./server.js",
     "start": "babel-node ./server.js",
-    "deploy": "eslint --fix server server.js && git push heroku master",
+    "deploy": "git push heroku master",
     "setup": "npm install && cd client/ && npm install",
     "populate-db": "babel-node ./server/helpers/mockData",
     "postinstall": "cd client/ && npm install",

@@ -19,15 +19,16 @@ const StyledItem = styled.div`
 
 const RepoListItem = ({el, removeItem, editItem, index}) => {
   return (
-    <StyledItem key={index} className="item">
+    <StyledItem className="item" key={index}>
       <div className="right floated content">
-        <a><i onClick={removeItem} className="remove icon"/></a>
-        <a><i onClick={editItem} className="edit icon"/></a>
+        <a><i className="remove icon" onClick={removeItem} /></a>
+        <a><i className="edit icon" onClick={editItem} /></a>
       </div>
       <a
+        className="content"
         href={`${el.label}${el.item}`}
-        target="_blank"
-        className="content">
+        rel="noreferrer noopener"
+        target="_blank" >
         {`${el.label}${el.item}`}
       </a>
     </StyledItem>

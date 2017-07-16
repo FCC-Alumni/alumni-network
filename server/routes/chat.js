@@ -1,4 +1,3 @@
-import axios from 'axios';
 import Chat from '../models/chat';
 import express from 'express';
 import { isAuthenticated } from './passport';
@@ -21,24 +20,24 @@ router.get('/api/chat-history', isAuthenticated, (req, res) => {
     } else {
       res.status(500);
     }
-  })
+  });
 });
 
 router.post('/api/chat-add-message', isAuthenticated, (req, res) => {
   const message = req.body;
   Chat.findOne({}, (err, chat) => {
-    if (err) res.sendStatus(500);
+    if (err) {res.sendStatus(500);}
     if (!chat) {
       const newChat = new Chat({});
       newChat.history.push(message);
       newChat.save(e => {
-        if (e) res.sendStatus(500);
+        if (e) {res.sendStatus(500);}
         res.sendStatus(200);
       });
     } else {
       chat.history.push(message);
       chat.save(e => {
-        if (e) res.sendStatus(500);
+        if (e) {res.sendStatus(500);}
         res.sendStatus(200);
       });
     }
@@ -48,7 +47,7 @@ router.post('/api/chat-add-message', isAuthenticated, (req, res) => {
 router.post('/api/chat-edit-message', isAuthenticated, (req, res) => {
   const { id, text } = req.body;
   Chat.findOne({}, (err, chat) => {
-    if (err) res.sendStatus(500);
+    if (err) {res.sendStatus(500);}
     if (chat) {
       chat.history = chat.history.map(m => {
         if (m.id === id) {
@@ -58,7 +57,7 @@ router.post('/api/chat-edit-message', isAuthenticated, (req, res) => {
         return m;
       });
       chat.save(e => {
-        if (e) res.sendStatus(500);
+        if (e) {res.sendStatus(500);}
         res.sendStatus(200);
       });
     } else {
@@ -70,14 +69,14 @@ router.post('/api/chat-edit-message', isAuthenticated, (req, res) => {
 router.post('/api/chat-like-message', isAuthenticated, (req, res ) => {
   const { id, liker } = req.body;
   Chat.findOne({}, (err, chat) => {
-    if (err) res.sendStatus(500);
+    if (err) {res.sendStatus(500);}
     if (chat) {
       chat.history = chat.history.map(m => {
-        if (m.id === id) m.likes.push(liker);
+        if (m.id === id) {m.likes.push(liker);}
         return m;
       });
       chat.save(e => {
-        if (e) res.sendStatus(500);
+        if (e) {res.sendStatus(500);}
         res.sendStatus(200);
       });
     } else {
@@ -89,13 +88,13 @@ router.post('/api/chat-like-message', isAuthenticated, (req, res ) => {
 router.post('/api/chat-delete-message', isAuthenticated, (req, res) => {
   const { id } = req.body;
   Chat.findOne({}, (err, chat) => {
-    if (err) res.sendStatus(500);
+    if (err) {res.sendStatus(500);}
     if (chat) {
       chat.history = chat.history.filter(m => {
         return (m.id !== id);
       });
       chat.save(e => {
-        if (e) res.sendStatus(500);
+        if (e) {res.sendStatus(500);}
         res.sendStatus(200);
       });
     } else {

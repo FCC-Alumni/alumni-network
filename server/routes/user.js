@@ -6,7 +6,6 @@ import express from 'express';
 import handleProcessedUser from '../helpers/handleProcessedUser';
 import { isAuthenticated } from './passport';
 import isCertified from '../helpers/processCerts';
-import passport from 'passport';
 import PrivateChat from '../models/private-chat';
 import safeHandler from '../helpers/safeHandler';
 import User from '../models/user';
@@ -18,7 +17,7 @@ router.post('/api/user', (req, res) => {
   if (req.user) {
     User.findOne({ username: req.user.username }, (err, user) => {
       if (!err) {
-        res.send(user)
+        res.send(user);
       } else {
         res.sendStatus(401);
       }
@@ -46,23 +45,23 @@ router.post('/api/verify-credentials', isAuthenticated,
   })
 );
 
-router.post('/api/update-user', (req, res) => {		
-  const { user } = req.body;		
-		
-  User.findById(user._id, (err, updatedUser) => {		
-    if (!err) {		
-      updatedUser.personal = user.personal;		
-      updatedUser.mentorship = user.mentorship;		
-      updatedUser.career = user.career;		
-      updatedUser.skillsAndInterests = user.skillsAndInterests;		
-      updatedUser.projects = user.projects;		
-      updatedUser.social = user.social;		
-      updatedUser.save();		
-      res.json({ updatedUser })		
-    } else {		
-      res.status(401).json({ error: 'User could not be saved' });		
-    }		
-  });		
+router.post('/api/update-user', (req, res) => {
+  const { user } = req.body;
+
+  User.findById(user._id, (err, updatedUser) => {
+    if (!err) {
+      updatedUser.personal = user.personal;
+      updatedUser.mentorship = user.mentorship;
+      updatedUser.career = user.career;
+      updatedUser.skillsAndInterests = user.skillsAndInterests;
+      updatedUser.projects = user.projects;
+      updatedUser.social = user.social;
+      updatedUser.save();
+      res.json({ updatedUser });
+    } else {
+      res.status(401).json({ error: 'User could not be saved' });
+    }
+  });
 });
 
 router.post('/api/update-user-partial', (req, res) => {
@@ -71,7 +70,7 @@ router.post('/api/update-user-partial', (req, res) => {
     if (!err) {
       updatedUser[section] = sectionData;
       updatedUser.save();
-      res.json({ updatedUser })
+      res.json({ updatedUser });
     } else {
       res.status(401).json({ error: 'User could not be saved' });
     }
@@ -85,7 +84,7 @@ presumably we can assume if they want to remove their
 account they want their chat history removed as well. */
 router.post('/api/delete-user', (req, res) => {
   const { username } = req.user;
-  console.log('deleting', username)
+  console.log('deleting', username);
   User.findByIdAndRemove(req.user._id, (err, user) => {
     if (!err) {
       console.log(`${username} deleted`);
@@ -103,7 +102,7 @@ router.post('/api/delete-user', (req, res) => {
             console.log(`${username}'s Private Chat deleted`);
             req.session.destroy();
             res.sendStatus(200);
-          };
+          }
         });
       });
     } else {

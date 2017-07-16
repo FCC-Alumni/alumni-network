@@ -1,10 +1,9 @@
 import DropdownMulti from '../../common/DropdownMulti';
-import { isEmpty } from 'lodash';
-import { isEqual } from 'lodash';
 import MessageBox from '../../common/MessageBox';
 import React from 'react';
 import Ribbon from './common/RibbonHeader';
 import { TransitionContainer } from '../../../../styles/style-utils';
+import { isEmpty, isEqual } from 'lodash';
 
 export default class SkillsAndInterests extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -12,57 +11,61 @@ export default class SkillsAndInterests extends React.Component {
   }
   render() {
     const {
-      toggle,
-      showPopUp,
-      coreSkills,
-      showSkills,
-      saveSection,
-      skillsOptions,
-      handleAddSkill,
       codingInterests,
-      interestsOptions,
+      coreSkills,
       handleAddInterest,
-      handleSkillsChange,
+      handleAddSkill,
       handleInterestsChange,
+      handleSkillsChange,
+      interestsOptions,
+      saveSection,
+      showPopUp,
+      showSkills,
+      skillsOptions,
+      toggle,
     } = this.props;
     return (
       <div>
         <Ribbon
-          showSave={showSkills}
-          showPopUp={showPopUp}
-          saveSection={saveSection}
           content="Skills & Interests"
           id="skillsAndInterestsPopUp"
-          onClick={() => toggle('showSkills')} />
+          onClick={() => toggle('showSkills')}
+          saveSection={saveSection}
+          showPopUp={showPopUp}
+          showSave={showSkills} />
         <TransitionContainer isExpanded={showSkills}>
-          <div className="ui horizontal divider">Core Skills</div>
+          <div className="ui horizontal divider">{'Core Skills'}</div>
           <MessageBox
-            type="info"
             dismissable={true}
             hide={!isEmpty(coreSkills) ? true : false}
-            message="Enter information about your coding skills below, so other users know your strengths!" />
+            message="Enter information about your coding
+            skills below, so other users know your strengths!"
+            type="info" />
           <DropdownMulti
-            search={true}
             allowAdditions
-            value={coreSkills}
+            onAddItem={handleAddSkill}
+            onChange={handleSkillsChange}
             options={skillsOptions}
             placeholder="Choose Skills"
-            onAddItem={handleAddSkill}
-            onChange={handleSkillsChange} />
-          <div className="ui horizontal divider">Coding Interests</div>
+            search={true}
+            value={coreSkills} />
+          <div className="ui horizontal divider">
+            {'Coding Interests'}
+          </div>
           <MessageBox
-            type="info"
             dismissable={true}
             hide={!isEmpty(codingInterests) ? true : false}
-            message="Let other users know what you're into so you can find others with similar interetsts!" />
+            message="Let other users know what you're into so
+            you can find others with similar interetsts!"
+            type="info" />
           <DropdownMulti
-            search={true}
             allowAdditions
-            value={codingInterests}
+            onAddItem={handleAddInterest}
+            onChange={handleInterestsChange}
             options={interestsOptions}
             placeholder="Choose Interests"
-            onAddItem={handleAddInterest}
-            onChange={handleInterestsChange} />
+            search={true}
+            value={codingInterests} />
           <div className="spacer" />
         </TransitionContainer>
       </div>

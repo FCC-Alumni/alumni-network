@@ -49,7 +49,11 @@ const StyledItem = styled.div`
 
 const Item = ({ href, icon, text }) => {
   return (
-    <Link href={href} target="_blank" className="item">
+    <Link
+      className="item"
+      href={href} 
+      rel="noreferrer noopener"
+      target="_blank" >
       <SocialIcon className={`${icon} icon`} />
       <InlineContent className="content">
         <div className="header">{text}</div>
@@ -75,50 +79,50 @@ const SocialList = ({
       onClick={() => !disableChat && initiatePrivateChat(username)}>
       <SocialIcon className="comments icon" />
       <InlineContent className="content">
-        <div className="header">Gitter</div>
+        <div className="header">{'Gitter'}</div>
       </InlineContent>
     </StyledItem>
   );
   return (
     <div className="ui relaxed horizontal list">
-    { !isPrivate && email &&
+      { !isPrivate && email &&
       <Item
+        href={`mailto:${email}?subject=fCC%20Alumni%20Network%20/%20Contact%20Request`}
         icon="mail"
-        text={email}
-        href={`mailto:${email}?subject=fCC%20Alumni%20Network%20/%20Contact%20Request`} /> }
-    { !contactsOnly &&
+        text={email} /> }
+      { !contactsOnly &&
       <Item
+        href={`https://freecodecamp.org/${username}`}
         icon="free code camp"
-        text="freeCodeCamp"
-        href={`https://freecodecamp.org/${username}`} /> }
-    { contactsOnly && username !== currentUser &&
+        text="freeCodeCamp" /> }
+      { contactsOnly && username !== currentUser &&
       <Popup
-        trigger={ChatIcon}
+        content={disableChat
+          ? `${username} does not have a Gitter account`
+          : `Start a Gitter chat with ${username}`}
         flowing
         inverted
         position="bottom left"
-        content={disableChat
-          ? `${username} does not have a Gitter account`
-          : `Start a Gitter chat with ${username}`} /> }
+        trigger={ChatIcon} /> }
       <Item
+        href={`https://github.com/${username}`}
         icon="github"
-        text="GitHub"
-        href={`https://github.com/${username}`} />
-    { social.codepen && !contactsOnly &&
+        text="GitHub" />
+      { social.codepen && !contactsOnly &&
       <Item
+        href={`https://codepen.io/${social.codepen}`}
         icon="codepen"
-        text="Codepen"
-        href={`https://codepen.io/${social.codepen}`} /> }
-    { social.twitter &&
+        text="Codepen" /> }
+      { social.twitter &&
       <Item
+        href={`https://twitter.com/${social.twitter}`}
         icon="twitter"
-        text="Twitter"
-        href={`https://twitter.com/${social.twitter}`} /> }
-    { social.linkedin &&
+        text="Twitter" /> }
+      { social.linkedin &&
       <Item
+        href={`https://www.linkedin.com/search/results/index/?keywords=${encodeURIComponent(social.linkedin)}&origin=GLOBAL_SEARCH_HEADER`}
         icon="linkedin"
-        text="LinkedIn"
-        href={`https://www.linkedin.com/search/results/index/?keywords=${encodeURIComponent(social.linkedin)}&origin=GLOBAL_SEARCH_HEADER`} /> }
+        text="LinkedIn" /> }
     </div>
   );
 }

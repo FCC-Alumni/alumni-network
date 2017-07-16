@@ -24,7 +24,7 @@ export default ({ size, close, open }) => {
           <br/><br/>
 
           <span>All the normal&nbsp;
-          <a target="_blank" href="https://www.freecodecamp.org/code-of-conduct">Code of Conduct</a>
+          <a rel="noreferrer noopener" target="_blank"  href="https://www.freecodecamp.org/code-of-conduct">Code of Conduct</a>
           &nbsp;guidelines for the freeCodeCamp Forum and Gitter channels apply here as well.</span>
 
           <br/><br/>

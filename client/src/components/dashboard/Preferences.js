@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 import { connectScreenSize } from 'react-screen-size';
 import { countryCodes } from '../../assets/dropdowns/countries';
 import ERROR from '../../assets/helpers/errors';
-import { findIndex } from 'lodash';
-import { isEmpty } from 'lodash';
 import { mapScreenSizeToProps } from '../Navbar';
 import Mentorship from './Profile/Preferences/Mentorship';
 import Modal from './Profile/Preferences/common/SaveModal';
@@ -23,6 +21,7 @@ import { ThickPaddedBottom } from '../../styles/style-utils';
 import UserLabel from '../dashboard/common/UserLabel';
 import validate from '../../assets/helpers/validations';
 
+import { findIndex, isEmpty } from 'lodash';
 import interests, { INTERESTS_MAP } from '../../assets/dropdowns/interests';
 import { saveUser, updateUser, updateUserPartial } from '../../actions/user';
 import skills, { SKILLS_MAP } from '../../assets/dropdowns/skills';
@@ -152,7 +151,10 @@ class Preferences extends React.Component {
       temporarily add it to options list so that semantic-ui-react
       will display it as choice and add new choice to user object */
       if (findIndex(skillsOptions, { key: value.toLowerCase() }) === -1) {
-        skillsOptions = [{ key: value.toLowerCase(), text: value, value }, ...skillsOptions];
+        skillsOptions = [
+          { key: value.toLowerCase(), text: value, value },
+          ...skillsOptions
+        ];
         user.skillsAndInterests.coreSkills.push(value);
       }
       this.setState({ skillsOptions, user });
@@ -189,7 +191,10 @@ class Preferences extends React.Component {
       temporarily add it to options list so that semantic-ui-react
       will display it as choice and add new choice to user object */
       if (findIndex(interestsOptions, { key: value.toLowerCase() }) === -1) {
-        interestsOptions = [{ key: value.toLowerCase(), text: value, value }, ...interestsOptions];
+        interestsOptions = [
+          { key: value.toLowerCase(), text: value, value },
+          ...interestsOptions
+        ];
         user.skillsAndInterests.codingInterests.push(value);
       }
       this.setState({ interestsOptions, user });
@@ -197,10 +202,11 @@ class Preferences extends React.Component {
   }
 
   handleCountryChange = (e, { value }) => {
-    var { user } = this.state;
+    var { user, errors } = this.state;
+    delete errors.country;
     user.personal.flag = value;
     user.personal.country = countryCodes[value.replace(' ', '_')];
-    this.setState({ user });
+    this.setState({ errors, user });
   }
 
   handleTenureChange = (e, { value }) => {
@@ -609,12 +615,12 @@ class Preferences extends React.Component {
     const {
       errors,
       user: {
-        social,
         career,
-        personal,
-        username,
         mentorship,
+        personal,
         skillsAndInterests,
+        social,
+        username,
       },
     } = this.state;
 
@@ -623,101 +629,100 @@ class Preferences extends React.Component {
     return (
       <Container className="ui container">
         <Modal
-          size="small"
           close={this.closeModal}
-          open={this.state.modalOpen}
           isValid={this.state.isPageValid}
+          open={this.state.modalOpen}
+          size="small"
           warning={this.state.isPageValid && this.state.profileWarning} />
         <UserLabel
-          size="huge"
-          username={username}
-          image={personal.avatarUrl}
-          toggleAll={this.toggleShowAllSections}
           folder={isDesktop ? this.state.viewState.showAll : ''}
-          label={!isDesktop ? '' : mentorship.mentor ? 'Mentor' : 'Member'} />
+          image={personal.avatarUrl}
+          label={!isDesktop ? '' : mentorship.mentor ? 'Mentor' : 'Member'}
+          size="huge"
+          toggleAll={this.toggleShowAllSections}
+          username={username} />
         <TopButton
-          icon="save"
-          size="large"
           color="green"
           content="Save"
+          icon="save"
           labelPosition="right"
-          onClick={() => this.handleSaveAll('open modal')} />
-          {/* floated prop throws invalid propType warning - expects only 'right' or 'left' */}
+          onClick={() => this.handleSaveAll('open modal')}
+          size="large" />
         <div className="ui raised segment">
           <PersonalInfo
             {...personal}
-            errors={errors}
             country={personal.flag}
             email={personal.email.email}
-            toggle={this.toggleShowSection}
+            errors={errors}
+            handleCountryChange={this.handleCountryChange}
+            handleInputChange={this.handleInputChange}
             isPrivate={personal.email.private}
             saveSection={this.handleSaveSection}
             showPopUp={this.state.personalPopUp}
-            handleInputChange={this.handleInputChange}
             showProfile={this.state.viewState.showProfile}
-            toggleEmailVisibilty={this.toggleEmailVisibilty}
-            handleCountryChange={this.handleCountryChange} />
-          <Certifications
             toggle={this.toggleShowSection}
+            toggleEmailVisibilty={this.toggleEmailVisibilty} />
+          <Certifications
             fccCerts={this.state.user.fccCerts}
-            showFCC={this.state.viewState.showFCC} />
+            showFCC={this.state.viewState.showFCC}
+            toggle={this.toggleShowSection} />
           <Mentorship
             {...mentorship}
-            toggle={this.toggleShowSection}
             error={errors.mentorshipSkills}
-            saveSection={this.handleSaveSection}
-            showPopUp={this.state.mentorshipPopUp}
-            toggleMentorship={this.toggleMentorship}
-            toggleMenteeship={this.toggleMenteeship}
             handleInputChange={this.handleInputChange}
             handleRadioChange={this.handleRadioChange}
-            showMentorship={this.state.viewState.showMentorship} />
+            saveSection={this.handleSaveSection}
+            showMentorship={this.state.viewState.showMentorship}
+            showPopUp={this.state.mentorshipPopUp}
+            toggle={this.toggleShowSection}
+            toggleMenteeship={this.toggleMenteeship}
+            toggleMentorship={this.toggleMentorship} />
           <SkillsAndInterests
             {...skillsAndInterests}
-            toggle={this.toggleShowSection}
-            saveSection={this.handleSaveSection}
-            handleAddSkill={this.handleAddSkill}
-            skillsOptions={this.state.skillsOptions}
             handleAddInterest={this.handleAddInterest}
-            showSkills={this.state.viewState.showSkills}
+            handleAddSkill={this.handleAddSkill}
+            handleInterestsChange={this.handleInterestsChange}
             handleSkillsChange={this.handleSkillsChange}
             interestsOptions={this.state.interestsOptions}
+            saveSection={this.handleSaveSection}
             showPopUp={this.state.skillsAndInterestsPopUp}
-            handleInterestsChange={this.handleInterestsChange} />
+            showSkills={this.state.viewState.showSkills}
+            skillsOptions={this.state.skillsOptions}
+            toggle={this.toggleShowSection} />
           <Collaboration
-            username={username}
-            toggle={this.toggleShowSection}
             projects={this.state.user.projects}
             saveChanges={this.handleSaveCollaboration}
-            showCollaboration={this.state.viewState.showCollaboration} />
+            showCollaboration={this.state.viewState.showCollaboration}
+            toggle={this.toggleShowSection}
+            username={username} />
           <Social
             {...social}
-            errors={errors}
             clear={this.clearSocialInput}
-            toggle={this.toggleShowSection}
-            saveChanges={this.handleSaveAll}
-            showPopUp={this.state.socialPopUp}
-            saveSection={this.handleSaveSection}
+            errors={errors}
             handleInputChange={this.handleInputChange}
-            showSocial={this.state.viewState.showSocial} />
+            saveChanges={this.handleSaveAll}
+            saveSection={this.handleSaveSection}
+            showPopUp={this.state.socialPopUp}
+            showSocial={this.state.viewState.showSocial}
+            toggle={this.toggleShowSection} />
           <Career
             {...career}
-            errors={errors}
-            toggle={this.toggleShowSection}
+            bigBottomMargin={this.state.showBottomButton}
             clearForm={this.clearCareerForm}
-            showPopUp={this.state.careerPopUp}
-            saveSection={this.handleSaveSection}
+            errors={errors}
             handleInputChange={this.handleInputChange}
             handleRadioChange={this.handleRadioChange}
-            showCareer={this.state.viewState.showCareer}
             handleTenureChange={this.handleTenureChange}
-            bigBottomMargin={this.state.showBottomButton} />
-       { this.state.showBottomButton &&
-         <BottomButton
-            icon="save"
+            saveSection={this.handleSaveSection}
+            showCareer={this.state.viewState.showCareer}
+            showPopUp={this.state.careerPopUp}
+            toggle={this.toggleShowSection} />
+          { this.state.showBottomButton &&
+          <BottomButton
             color="green"
             content="Save"
             floated="right"
+            icon="save"
             labelPosition="right"
             onClick={() => this.handleSaveAll('open modal')} /> }
         </div>

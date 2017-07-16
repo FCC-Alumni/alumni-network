@@ -7,17 +7,27 @@ export default class UserLabel extends React.Component {
     return !isEqual(this.props, nextProps);
   }
   render() {
-    const { color, size, image, username, label, folder, toggleAll, showAvatar } = this.props;
+    const {
+      color,
+      folder,
+      image,
+      label,
+      showAvatar,
+      size,
+      toggleAll,
+      username,
+    } = this.props;
     return (
       <div className={`ui image label ${color} ${size}`}>
-        { showAvatar && <img src={image ? image : '/images/defaultAvatar.gif'} alt="user avatar" /> }
+        { showAvatar &&
+          <img
+            alt="user avatar"
+            src={image ? image : '/images/defaultAvatar.gif'} /> }
         {username}
         { label && <div className="detail">{label}</div> }
-      { (typeof folder === 'boolean') &&
-        <div
-          onClick={toggleAll}
-          className="detail folderDetail">
-      { folder
+        { (typeof folder === 'boolean') &&
+        <div className="detail folderDetail" onClick={toggleAll}>
+          { folder
         ? <i className="folder open icon" />
         : <i className="folder icon" /> }
         </div> }

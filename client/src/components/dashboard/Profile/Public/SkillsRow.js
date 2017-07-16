@@ -37,47 +37,51 @@ const SkillsRow = ({ skillsAndInterests, handleQuery }) => {
   return (
     <div className="row">
       { !isEmpty(coreSkills) &&
-      <div className={`${ isEmpty(codingInterests) ? 'sixteen' : 'eight' } wide center aligned column`}>
+      <div className={`${ isEmpty(codingInterests)
+          ? 'sixteen'
+          : 'eight' } wide center aligned column`}>
         <SubHeader className="ui top attached header">
-          Core Skills
+          {'Core Skills'}
         </SubHeader>
-    { coreSkills && coreSkills.map((skill, i) =>
+        { coreSkills && coreSkills.map((skill, i) =>
       i % 2 === 0
       ? <Label
-          key={skill}
-          title="Search community for other members with this skill!"
           className="ui label"
-          onClick={() => handleQuery(skill, 'skills')}>
-            {skill}
+          key={skill}
+          onClick={() => handleQuery(skill, 'skills')}
+          title="Search community for other members with this skill!">
+          {skill}
         </Label>
       : <LabelDark
-          key={skill}
-          title="Search community for other members with this skill!"
           className="ui label"
-          onClick={() => handleQuery(skill, 'skills')}>
-            {skill}
+          key={skill}
+          onClick={() => handleQuery(skill, 'skills')}
+          title="Search community for other members with this skill!">
+          {skill}
         </LabelDark> )}
       </div> }
       { !isEmpty(codingInterests) &&
-      <div className={`${ isEmpty(coreSkills) ? 'sixteen' : 'eight' } wide center aligned column`}>
+      <div className={`${ isEmpty(coreSkills)
+          ? 'sixteen'
+          : 'eight' } wide center aligned column`}>
         <SubHeader className="ui top attached header">
-          Coding Interests
+          {'Coding Interests'}
         </SubHeader>
-    { codingInterests && codingInterests.map((interest, i) =>
+        { codingInterests && codingInterests.map((interest, i) =>
       i % 2 === 0
       ? <Label
-          key={interest}
-          title="Search community for other members with this interest!"
           className="ui label"
-          onClick={() => handleQuery(interest, 'interests')}>
-            {interest}
+          key={interest}
+          onClick={() => handleQuery(interest, 'interests')}
+          title="Search community for other members with this interest!">
+          {interest}
         </Label>
       : <LabelDark
-          key={interest}
-          title="Search community for other members with this interest!"
           className="ui label"
-          onClick={() => handleQuery(interest, 'interests')}>
-            {interest}
+          key={interest}
+          onClick={() => handleQuery(interest, 'interests')}
+          title="Search community for other members with this interest!">
+          {interest}
         </LabelDark> )}
       </div> }
     </div>

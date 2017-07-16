@@ -26,8 +26,7 @@ GH username as well if this is the case). For now it is
 still unlikely that we will encounter this problem. */
 
 /* TODO:
-  - these styles are a little wonky. Kind of forces things
-    a bit. Not ideal for mobile. This could be improved.
+  -
 */
 
 const GitterEmbed = ({ match: { params: { username }}}) => {

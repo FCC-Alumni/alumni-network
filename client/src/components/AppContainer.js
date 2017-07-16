@@ -10,10 +10,9 @@ import Preferences from './dashboard/Preferences';
 import propTypes from 'prop-types';
 import PublicProfile from './dashboard/PublicProfile';
 import React from 'react';
-import { socket } from '../actions/chat';
 
 import { addFlashMessage, clearFlashMessage } from '../actions/flashMessages';
-import { fetchPrivateChat, populateChat } from '../actions/chat';
+import { fetchPrivateChat, populateChat, socket } from '../actions/chat';
 import { getUserData, logoutUser, saveUser } from '../actions/user';
 import { Route, Switch } from 'react-router-dom';
 

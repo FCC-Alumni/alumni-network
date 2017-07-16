@@ -10,11 +10,11 @@ const Filters = ({ filterOptions, handleChange, state }) => {
           return (
             <div key={radio.name}>
               <Checkbox
-                slider
-                name={radio.name}
+                checked={state[radio.name]}
                 label={radio.label}
+                name={radio.name}
                 onChange={handleChange}
-                checked={state[radio.name]} />
+                slider />
               <div className="spacer" />
             </div>
           );

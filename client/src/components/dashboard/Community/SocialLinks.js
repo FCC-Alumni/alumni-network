@@ -12,38 +12,46 @@ const IconLinks = ({ user, handleClick }) => {
   return(
     <div>
       <a
-        target="_blank"
+        href={user.personal.profileUrl}
         onClick={handleClick}
-        href={user.personal.profileUrl}>
-        <Icon className="github icon"/>
+        rel="noreferrer noopener"
+        target="_blank" >
+        <Icon className="github icon" />
       </a>
       <a
-        target="_blank"
+        href={`https://www.freecodecamp.org/${user.username}`}
         onClick={handleClick}
-        href={`https://www.freecodecamp.org/${user.username}`}>
-        <Icon className="free code camp icon"/>
+        rel="noreferrer noopener"
+        target="_blank" >
+        <Icon className="free code camp icon" />
       </a>
-    {/* will only render the following links if user has entered info for these fields */}
-    { social.codepen &&
+      {
+      /* will only render the following links if
+      user has entered info for these fields */
+    }
+      { social.codepen &&
       <a
-        target="_blank"
+        href={`https://www.codepen.io/${social.codepen}`}
         onClick={handleClick}
-        href={`https://www.codepen.io/${social.codepen}`}>
-        <Icon className="codepen icon"/>
+        rel="noreferrer noopener"
+        target="_blank" >
+        <Icon className="codepen icon" />
       </a> }
-    { social.linkedin &&
+      { social.linkedin &&
       <a
-        target="_blank"
+        href={`https://www.linkedin.com/search/results/index/?keywords=${encodeURIComponent(social.linkedin)}&origin=GLOBAL_SEARCH_HEADER`}
         onClick={handleClick}
-        href={`https://www.linkedin.com/search/results/index/?keywords=${encodeURIComponent(social.linkedin)}&origin=GLOBAL_SEARCH_HEADER`}>
-        <Icon className="linkedin icon"/>
+        rel="noreferrer noopener"
+        target="_blank" >
+        <Icon className="linkedin icon" />
       </a> }
-    { social.twitter &&
+      { social.twitter &&
       <a
-        target="_blank"
+        href={`https://www.twitter.com/${social.twitter}`}
         onClick={handleClick}
-        href={`https://www.twitter.com/${social.twitter}`}>
-        <Icon className="twitter icon"/>
+        rel="noreferrer noopener"
+        target="_blank" >
+        <Icon className="twitter icon" />
       </a> }
     </div>
   );

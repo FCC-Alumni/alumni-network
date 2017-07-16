@@ -8,26 +8,35 @@ const CertLinks = ({ handleClick, fccCerts, username }) => {
   return(
     <div className="right floated">
       <span>
-      { fccCerts.Front_End &&
+        { fccCerts.Front_End &&
         <a
-          target="_blank"
+          href={`${FCC_URL + username}/front-end-certification`}
           onClick={handleClick}
-          href={`${FCC_URL + username}/front-end-certification`}>
-          <Icon title="Frontend Certified" className="desktop small icon" />
+          rel="noreferrer noopener"
+          target="_blank" >
+          <Icon
+            className="desktop small icon"
+            title="Frontend Certified" />
         </a> }
-      { fccCerts.Data_Visualization &&
+        { fccCerts.Data_Visualization &&
         <a
-          target="_blank"
+          href={`${FCC_URL + username}/data-visualization-certification`}
           onClick={handleClick}
-          href={`${FCC_URL + username}/data-visualization-certification`}>
-          <Icon title="Data Visualization Certified" className="bar chart small icon" />
+          rel="noreferrer noopener"
+          target="_blank" >
+          <Icon
+            className="bar chart small icon"
+            title="Data Visualization Certified" />
         </a> }
-      { fccCerts.Back_End &&
+        { fccCerts.Back_End &&
         <a
-          target="_blank"
+          href={`${FCC_URL + username}/back-end-certification`}
           onClick={handleClick}
-          href={`${FCC_URL + username}/back-end-certification`}>
-          <Icon title="Backend Certified" className="database small icon" />
+          rel="noreferrer noopener"
+          target="_blank" >
+          <Icon
+            className="database small icon"
+            title="Backend Certified" />
         </a> }
       </span>
     </div>

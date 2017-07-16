@@ -119,7 +119,10 @@ class RepoContainer extends React.Component {
   }
 
   isValidBitbucketNaming = (item, repo) => {
-    if ((repo.length === 1 && /^\./.test(repo)) || !/[\d\w-]+\/[\d\w-.]+\/?/.test(item)) {
+    if (
+      (repo.length === 1 && /^\./.test(repo)) ||
+      !/[\d\w-]+\/[\d\w-.]+\/?/.test(item)
+    ) {
       this.setState({
         error: {
           header:    'Please enter a valid BitBucket repository path: namespace/repo',
@@ -329,13 +332,14 @@ class RepoContainer extends React.Component {
   render() {
     const { isMobile } = this.props.screen;
     const { item, isLoading, icon, error } = this.state;
-    const listItems = this.state.items_list.map((el, index) => {
+    const listItems = this.state.items_list.map((el, i) => {
+      var key = i + el.item.slice(0,3);
       return (
         <RepoListItem
           editItem={() => this.editItem(el)}
           el={el}
-          index={index}
-          key={index}
+          index={key}
+          key={key}
           removeItem={() => this.removeItem(el)} />
       );
     });
@@ -360,7 +364,7 @@ class RepoContainer extends React.Component {
             {listItems}
           </div>
         </Segment>
-      { !isEmpty(error) && error.repo && error.namespace &&
+        { !isEmpty(error) && error.repo && error.namespace &&
         <div className="ui error message">
           <div className="header">{error.header}</div>
           <ul className="list">

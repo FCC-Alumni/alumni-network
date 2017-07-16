@@ -1,22 +1,24 @@
 ---
 extends: react-app
 plugins:
+  - import
   - jsx-a11y
 rules:
+  array-callback-return: 0
+  max-len:
+    - warn
+    - 85
+    - 2
+    - ignoreUrls: true
+      ignoreTemplateLiterals: true
+      ignoreStrings: true
+      ignoreComments: true
   sort-imports:
-  - error
-  - ignoreCase: true
-    ignoreMemberSort: false
-    memberSyntaxSortOrder:
-    - none
-    - all
-    - single
-    - multiple
-  sort-vars:
-  - error
-  - ignoreCase: true
-  sort-keys:
-  - warn
-  - asc
-  - caseSensitive: false
-    natural: true
+    - error
+    - ignoreCase: true
+      ignoreMemberSort: false
+      memberSyntaxSortOrder: [none, all, single, multiple]
+  import/newline-after-import: 2
+  import/no-duplicates: 2
+  import/named: 2
+  jsx-a11y/href-no-hash: off

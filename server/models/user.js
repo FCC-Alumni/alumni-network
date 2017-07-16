@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
 
+const Schema = mongoose.Schema;
 // Any change to the schema must be reflected in passportLogin && mockData
 const User = new Schema({
   githubId: { type: String, default: '' },

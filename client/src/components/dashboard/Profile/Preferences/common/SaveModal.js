@@ -14,29 +14,29 @@ const SaveModal = ({ size, close, open, warning, isValid }) => {
 
   return (
     <div>
-      <Modal size={size} open={open} onClose={close}>
+      <Modal onClose={close}open={open} size={size}>
         <Modal.Header style={{ background: context.headerColor, color: 'white'}}>
           { context.header }
         </Modal.Header>
         <Modal.Content>
           <h3 className="ui header">{context.text}</h3>
-        { warning &&
+          { warning &&
           <div>
-          { !warning.slice(0, 4) === 'Nice' &&
+            { !warning.slice(0, 4) === 'Nice' &&
             <h4 className="ui header">
               <i className="small red warning sign icon" />
-              But, your profile looks a bit bare...
+              {'But, your profile looks a bit bare...'}
             </h4> }
             <p>{warning}</p>
           </div> }
         </Modal.Content>
         <Modal.Actions>
           <Button
+            color={context.buttonColor}
             content='Ok'
-            onClick={close}
             icon='checkmark'
             labelPosition='right'
-            color={context.buttonColor} />
+            onClick={close} />
         </Modal.Actions>
       </Modal>
     </div>

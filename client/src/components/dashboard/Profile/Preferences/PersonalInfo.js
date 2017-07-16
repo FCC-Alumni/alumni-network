@@ -23,94 +23,99 @@ class PersonalInfo extends React.Component {
   render() {
     const {
       bio,
+      country,
+      displayName,
       email,
       errors,
-      toggle,
-      country,
-      location,
-      showPopUp,
-      isPrivate,
-      displayName,
-      showProfile,
-      saveSection,
-      handleInputChange,
       handleCountryChange,
-      toggleEmailVisibilty,
+      handleInputChange,
+      isPrivate,
+      location,
+      saveSection,
       screen: { isMobile, isTablet },
+      showPopUp,
+      showProfile,
+      toggle,
+      toggleEmailVisibilty,
     } = this.props;
     return (
       <div>
         <Ribbon
-          id="personalPopUp"
           content="Personal Info"
-          showPopUp={showPopUp}
-          showSave={showProfile}
+          id="personalPopUp"
+          onClick={() => toggle('showProfile')}
           saveSection={saveSection}
-          onClick={() => toggle('showProfile')} />
-        <TransitionContainer isExpanded={showProfile} className="ui form">
+          showPopUp={showPopUp}
+          showSave={showProfile} />
+        <TransitionContainer className="ui form" isExpanded={showProfile}>
           <Container className="ui list">
             <ListItem>
               <FormField
                 errors={errors}
                 icon='user icon'
-                name="displayName"
-                value={displayName}
-                tooltip="Display Name"
                 inputOptions={INPUT_OPTIONS}
+                name="displayName"
                 onChange={handleInputChange}
-                placeholder="Enter Display Name" />
+                placeholder="Enter Display Name"
+                tooltip="Display Name"
+                value={displayName} />
             </ListItem>
             <ListItem>
               <FormField
-                type="email"
-                name="email"
-                tooltip="Email"
                 errors={errors}
                 icon="mail icon"
-                value={email}
-                placeholder="Enter Email"
-                isPrivate={isPrivate}
                 infoMessage={INFO_MESSAGE}
                 inputOptions={INPUT_OPTIONS}
-                onChange={handleInputChange}
                 isEmail={!errors.email && true}
-                toggleEmailVisibilty={toggleEmailVisibilty} />
+                isPrivate={isPrivate}
+                name="email"
+                onChange={handleInputChange}
+                placeholder="Enter Email"
+                toggleEmailVisibilty={toggleEmailVisibilty}
+                tooltip="Email"
+                type="email"
+                value={email} />
             </ListItem>
             <ListItem>
               <FormField
                 errors={errors}
-                value={location}
-                name="location"
-                tooltip="Location"
                 icon="marker icon"
-                placeholder="Enter Location"
                 inputOptions={INPUT_OPTIONS}
-                onChange={handleInputChange} />
+                name="location"
+                onChange={handleInputChange}
+                placeholder="Enter Location"
+                tooltip="Location"
+                value={location} />
             </ListItem>
             <ListItem>
               <div className="six wide field">
                 <Dropdown
-                  search
-                  selection
-                  value={country}
+                  onChange={handleCountryChange}
                   options={countries}
                   placeholder='Select Country'
-                  onChange={handleCountryChange} />
-              { errors.country &&
-                <div style={{ marginTop: 5 }}
-                  className={'ui red basic label'}>
+                  search
+                  selection
+                  value={country} />
+                { errors.country &&
+                <div
+                  className={'ui red basic label'}
+                  style={{ marginTop: 5 }}>
                   {errors.country}
                 </div> }
               </div>
             </ListItem>
             <ListItem>
-              <div className={`${isMobile ? 'fluid' : isTablet ? 'eight wide' : 'six wide' } field`}>
+              <div className={`${isMobile
+                  ? 'fluid' 
+                  : isTablet
+                  ? 'eight wide'
+                  : 'six wide' } field`}>
                 <textarea
-                  rows="3"
                   name='bio'
-                  value={bio}
                   onChange={handleInputChange}
-                  placeholder="Enter a short bio here" />
+                  placeholder="Enter a short bio here"
+                  rows="3"
+                  value={bio} />
               </div>
               { errors.bio &&
                 <div className="ui red basic label">

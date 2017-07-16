@@ -16,9 +16,8 @@ const SearchResults = ({
         currentUser={currentUser}
         handleClick={handleClick}
         initiatePrivateChat={initiatePrivateChat}
-        key={user._id} 
-        user={user}
-      />
+        key={user._id}
+        user={user} />
     );
   });
 
@@ -29,7 +28,7 @@ const SearchResults = ({
       </div>
       <div className="middle aligned content">
         <div className="header">
-          Sorry, no results.
+          {'Sorry, no results.'}
         </div>
       </div>
     </div>

@@ -26,8 +26,7 @@ const ChatIconPopup = ({
       flowing
       inverted
       position="bottom left"
-      trigger={chatIcon}
-    />
+      trigger={chatIcon} />
   );
 }
 

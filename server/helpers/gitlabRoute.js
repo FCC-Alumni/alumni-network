@@ -1,5 +1,5 @@
 import axios from 'axios';
-import express from 'express'
+import express from 'express';
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router.post('/api/verify-other-repos', (req, res) => {
     }
   })
   .catch((err) => {
-    if (err) res.json({ validPublicRepo: 'false' });
+    if (err) {res.json({ validPublicRepo: 'false' });}
   });
 
 });
