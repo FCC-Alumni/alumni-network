@@ -76,7 +76,7 @@
     "test": "node scripts/test.js --env=jsdom",
     "lint": "eslint --fix src/"
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "http://backend:8080",
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
