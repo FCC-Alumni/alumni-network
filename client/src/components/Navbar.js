@@ -1,4 +1,4 @@
-import { APP_HOST } from '../actions/chat';
+import APP_HOST from '../assets/helpers/defineHost';
 import { connect } from 'react-redux';
 import { connectScreenSize } from 'react-screen-size';
 import { darkGreen } from '../styles/style-utils';

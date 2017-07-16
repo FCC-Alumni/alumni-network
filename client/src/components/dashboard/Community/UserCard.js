@@ -107,10 +107,10 @@ class UserCard extends React.Component {
     const image = document.getElementsByClassName('avatarImg')[0];
     const joinedOn = parseDate(...user.personal.memberSince.split('-').slice(0, 2));
     const imageHeight = image && window.getComputedStyle(image).getPropertyValue('height');
-    // used inline styles to control the reveal behavior on mobile resolutions.
-    // Had a hard time overriding semantic-ui's transition rules using styled-components.
-    // Trying to keep use of inline vs. styled-components as consistent as possible,
-    // but in certain cases we are making concessions where necessary.
+    /* used inline styles to control the reveal behavior on mobile resolutions.
+    Had a hard time overriding semantic-ui's transition rules using styled-components.
+    Trying to keep use of inline vs. styled-components as consistent as possible,
+    but in certain cases we are making concessions where necessary. */
     const IMAGE_STYLE = isDesktop
       ? {}
       : this.state.reveal

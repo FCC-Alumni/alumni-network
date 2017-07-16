@@ -1,4 +1,4 @@
-import { APP_HOST } from '../../actions/chat';
+import APP_HOST from '../../assets/helpers/defineHost';
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../Navbar';
 import React from 'react';

@@ -1,4 +1,4 @@
-import { APP_HOST } from '../../../../actions/chat';
+import APP_HOST from '../../../../assets/helpers/defineHost';
 import FormField from './common/FormField';
 import { isEqual } from 'lodash';
 import ListItem from '../../common/ListItem';

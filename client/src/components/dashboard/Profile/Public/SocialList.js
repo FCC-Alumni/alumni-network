@@ -51,7 +51,7 @@ const Item = ({ href, icon, text }) => {
   return (
     <Link
       className="item"
-      href={href} 
+      href={href}
       rel="noreferrer noopener"
       target="_blank" >
       <SocialIcon className={`${icon} icon`} />

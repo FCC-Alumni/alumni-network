@@ -4,7 +4,6 @@ import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../Navbar';
 import propTypes from 'prop-types';
 import React from 'react';
-import { socket } from '../../actions/chat';
 import styled from 'styled-components';
 
 import {
@@ -74,7 +73,6 @@ class UserVerification extends React.Component {
         },
         type: 'success',
       });
-      socket.emit('announce-new-user', { user });
       this.props.history.push('/dashboard');
     })
     // failed verification:

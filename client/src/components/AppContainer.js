@@ -12,7 +12,6 @@ import PublicProfile from './dashboard/PublicProfile';
 import React from 'react';
 
 import { addFlashMessage, clearFlashMessage } from '../actions/flashMessages';
-import { fetchPrivateChat, populateChat, socket } from '../actions/chat';
 import { getUserData, logoutUser, saveUser } from '../actions/user';
 import { Route, Switch } from 'react-router-dom';
 
@@ -23,15 +22,8 @@ class AppContainer extends React.Component {
       if (user) {
         // fetch user, community, and chat data when dashboard loads:
         this.props.saveUser(user);
-        // only fetch chat and community if none exists
+        // only fetch community if none exists
         if (!this.props.community) this.props.populateCommunity();
-        if (!this.props.chat) this.props.populateChat();
-        this.props.fetchPrivateChat(user.username);
-
-        // announce this user is now online
-        // should refresh status if user reloads page:
-        socket.emit('user-online', { user: user.username });
-
       } else {
         this.props.logoutUser();
         this.props.addFlashMessage({
@@ -115,7 +107,6 @@ class AppContainer extends React.Component {
 AppContainer.propTypes = {
   addFlashMessage: propTypes.func.isRequired,
   clearFlashMessage: propTypes.func.isRequired,
-  populateChat: propTypes.func.isRequired,
   populateCommunity: propTypes.func.isRequired,
   saveUser: propTypes.func.isRequired,
   username: propTypes.string.isRequired,
@@ -123,7 +114,6 @@ AppContainer.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    chat: state.chat.size > 0 ? true : false,
     community: state.community.size > 0 ? true : false,
     username: state.user.username,
   }
@@ -132,9 +122,7 @@ const mapStateToProps = (state) => {
 const dispatch = {
   addFlashMessage,
   clearFlashMessage,
-  fetchPrivateChat,
   logoutUser,
-  populateChat,
   populateCommunity,
   saveUser,
 }

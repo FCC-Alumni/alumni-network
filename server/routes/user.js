@@ -1,12 +1,10 @@
 import axios from 'axios';
-import Chat from '../models/chat';
 import checkHonoraryMemberList from '../helpers/checkHonoraryMemberList';
 import checkWhiteList from '../helpers/checkWhiteList';
 import express from 'express';
 import handleProcessedUser from '../helpers/handleProcessedUser';
 import { isAuthenticated } from './passport';
 import isCertified from '../helpers/processCerts';
-import PrivateChat from '../models/private-chat';
 import safeHandler from '../helpers/safeHandler';
 import User from '../models/user';
 
@@ -77,34 +75,12 @@ router.post('/api/update-user-partial', (req, res) => {
   });
 });
 
-/* if a user deletes their account we need to remove them
-from chat and private chats as well because these rely on
-user data derived from the community in some places. And
-presumably we can assume if they want to remove their
-account they want their chat history removed as well. */
 router.post('/api/delete-user', (req, res) => {
   const { username } = req.user;
   console.log('deleting', username);
   User.findByIdAndRemove(req.user._id, (err, user) => {
     if (!err) {
       console.log(`${username} deleted`);
-      Chat.findOne({}, (err, chat) => {
-        if (!err) {
-          if (chat) {
-            console.log(`${username} removed from Global Chat`);
-            chat.history = chat.history.filter(m => m.author !== username);
-            chat.markModified('history');
-            chat.save();
-          }
-        }
-        PrivateChat.remove({ members: username }, (err, history) => {
-          if (!err) {
-            console.log(`${username}'s Private Chat deleted`);
-            req.session.destroy();
-            res.sendStatus(200);
-          }
-        });
-      });
     } else {
       res.sendStatus(500);
     }

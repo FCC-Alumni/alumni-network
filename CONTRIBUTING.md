@@ -20,10 +20,10 @@
 | ------------------------------------------- | -------     |
 | [Node.js](http://nodejs.org)*               | `~ ^8`      |
 | npm (comes with Node)                       | `~ ^5`      |
-| docker                                      | `>=17.04.0` |
+| Docker**                                    | `>=17.04.0` |
 
 > _*Node 8 is now a required prerequisite for this project._
-> _Updating to the latest release of other prerequisites is recommended_.
+> _Updating to the latest release of other prerequisites is recommended._
 
 If Node or Docker are already installed on your machine, run the following commands to validate the versions:
 
@@ -32,6 +32,10 @@ $ node -v
 $ docker -v
 ```
 If your versions are lower than the prerequisite versions, you should update.
+
+> _**If you are running an older OS (Mac, Windows, or Linux), the latest version of Docker may not be available to you.
+You may have to install Docker Toolbox instead, which should still run this application. If you are unable to successfully
+run the app using Docker Toolbox, please [open an issue](https://github.com/FCC-Alumni/alumni-network/issues/new)._
 
 ### Getting Started
 > **_IMPORTANT:_** If you have never contributed to an open source project before, are unfamiliar with the git workflow, or need assistance with creating a local copy of the freeCodeCamp Alumni Network (FCCAN) repo, branching, branch naming conventions, etc., please see the Getting Started guide [here](https://github.com/FCC-Alumni/alumni-network/blob/master/GETTING_STARTED.md).
@@ -48,7 +52,7 @@ $ npm run setup
 - Please note that this may take several minutes. All of the server side dependencies are installed at the root level, while all of the client's dependencies are installed in `alumni-network/client`.
 - All dependencies are installed in a Docker container to prevent issues with non-Linux systems.
 - Should you ever need to install dependencies, please be sure to install them in the appropriate directory.
-- before installing new dependencies you should start a shell session in docker with `docker run -it -v "$PWD":/app/ -w /app/ node:8.1.3 bash`
+- Before installing new dependencies you should start a shell session in docker with `docker run -it -v "$PWD":/app/ -w /app/ node:8.1.3 bash`
 - `npm setup` can also be run again should you ever need to clear or fix either `node_modules` folder.
 
 **Secrets and API keys:**
@@ -78,7 +82,7 @@ GITHUB_SECRET=<Enter the secret for your GitHub application here>
 
 ### Running the App
 - In a terminal run `npm run dev`
-- This will set up mongo, redis, and both the backend and frontend servers, as well as populate the database.
+- This will set up mongo, and both the backend and frontend servers, as well as populate the database.
 - If all of this worked, your app should be up and running! Open a new browser window (we recommend using Chrome), and navigate to http://localhost:3000.
 
 ### If you are not FCC Certified, Please Read!
@@ -125,8 +129,6 @@ $ show collections
 # see all entries of a particular collection
 # ex:
 $ db.users.find({})
-# or
-$ db.privateChat.find({})
 #
 # these searches can be refined further:
 $ db.users.find({ username: "no-stack-dub-sack" })
