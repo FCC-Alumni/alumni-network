@@ -11,19 +11,7 @@ import { mentorshipSearchQuery } from '../../actions/search';
 import propTypes from 'prop-types';
 import React from 'react';
 import { scrapeFccStats } from '../../actions/scrape-fcc.js';
-<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
 import SocialList from './Profile/Public/SocialList';
-=======
-import MainHeader from '../dashboard/Profile/Public/ProfileHeader';
-import { ThickPaddedBottom, StyledItem } from '../../styles/style-utils';
-import SkillsAndInterests from './Profile/Public/SkillsRow';
-import TableRow from '../dashboard/Profile/Public/TableRow';
-import FCCStatTables from './Profile/Public/FCCTables';
-import Table from '../dashboard/Profile/Public/Table';
-import { connectScreenSize } from 'react-screen-size';
-import { defaultUser } from '../../reducers/user';
-import Career from './Profile/Public/CareerRow';
->>>>>>> remove chat from codebase
 import styled from 'styled-components';
 import Table from '../dashboard/Profile/Public/Table';
 import TableRow from '../dashboard/Profile/Public/TableRow';
@@ -158,20 +146,6 @@ class PublicProfile extends React.Component {
     });
   }
 
-<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
-=======
-  initiatePrivateChat = (recipient) => {
-    this.props.history.push(`/dashboard/chat/${recipient}`);
-  }
-
-  handleQuery = (query, category) => {
-    // handle click for skills and interests labels:
-    // click => set mentorship search state and redirect
-    this.props.mentorshipSearchQuery({ query, category });
-    this.props.history.push('/dashboard/mentorship');
-  }
-
->>>>>>> remove chat from codebase
   render() {
     const {
       user,
@@ -338,17 +312,12 @@ class PublicProfile extends React.Component {
                 <SocialList
                   contactsOnly={true}
                   currentUser={this.props.currentUser}
-<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
                   disableChat={this.state.disableChat}
                   email={user.personal.email.email}
                   initiatePrivateChat={this.initiatePrivateChat}
                   isPrivate={user.personal.email.private}
                   social={user.social}
                   username={user.username} />
-=======
-                  isPrivate={user.personal.email.private}
-                  initiatePrivateChat={this.initiatePrivateChat} />
->>>>>>> remove chat from codebase
               </DynamicHeightDiv>
             </div>
           </div>
@@ -403,15 +372,11 @@ const findUser = (community, username) => {
     : null;
 };
 
-<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
 const mapStateToProps = ({
   community,
   publicProfileStats,
   user: currentUser
 }, props) => {
-=======
-const mapStateToProps = ({ community, publicProfileStats, user: currentUser }, props) => {
->>>>>>> remove chat from codebase
   let username = findUser(community, props.match.params.username);
   if (username) username = username.username;
   let initialState, user;
@@ -428,11 +393,8 @@ const mapStateToProps = ({ community, publicProfileStats, user: currentUser }, p
   return {
     currentUser: currentUser.username,
     initialState,
-<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
     loading: !community.size, // mock loading state based on community...
     user: user ? user : defaultUser,
-=======
->>>>>>> remove chat from codebase
   }
 }
 
@@ -443,10 +405,6 @@ const mapScreenSizeToProps = (screenSize) => {
 }
 
 const dispatch = {
-<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
-=======
-  scrapeFccStats,
->>>>>>> remove chat from codebase
   mentorshipSearchQuery,
   scrapeFccStats,
 }

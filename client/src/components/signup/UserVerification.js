@@ -1,15 +1,9 @@
 import { addFlashMessage } from '../../actions/flashMessages';
 import { connect } from 'react-redux';
-<<<<<<< 0f5c92c7cb73056e3aedd0a775f3d72099ddb2e4
-=======
-import styled from 'styled-components';
-import { mapScreenSizeToProps } from '../Navbar';
->>>>>>> remove chat from codebase
 import { connectScreenSize } from 'react-screen-size';
 import { mapScreenSizeToProps } from '../Navbar';
 import propTypes from 'prop-types';
 import React from 'react';
-import { socket } from '../../actions/chat';
 import styled from 'styled-components';
 
 import {
