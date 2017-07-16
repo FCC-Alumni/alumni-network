@@ -104,13 +104,6 @@ const SocialList = ({
         inverted
         position="bottom left"
         trigger={ChatIcon} /> }
-    { contactsOnly && username !== currentUser &&
-      <StyledItem onClick={() => initiatePrivateChat(username)} className="item">
-        <SocialIcon className="comments icon" />
-        <InlineContent className="content">
-          <div className="header">Private Gitter Chat</div>
-        </InlineContent>
-      </StyledItem> }
       <Item
         href={`https://github.com/${username}`}
         icon="github"
