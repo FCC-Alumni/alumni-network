@@ -1,6 +1,7 @@
 {
   "name": "free-code-camp-alumni-network",
   "version": "1.0.0",
+  "repository": "FCC-Alumni/alumni-network",
   "engines": {
     "node": "8.1.3"
   },
@@ -10,12 +11,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --fix server server.js",
     "lint-all": "eslint --fix server server.js && cd client/ && eslint --fix src/",
-    "dev": "nodemon --ignore ./client --exec babel-node -- ./server.js",
-    "start": "babel-node ./server.js",
+    "devstart": "nodemon --ignore ./client --exec babel-node -- ./server.js",
     "deploy": "git push heroku master",
-    "setup": "npm install && cd client/ && npm install",
+    "setup": "./setup.sh",
+    "dev": "docker-compose up",
+    "start": "babel-node ./server.js",
     "populate-db": "babel-node ./server/helpers/mockData",
-    "postinstall": "cd client/ && npm install",
     "heroku-postbuild": "cd client/ && npm install && npm run build"
   },
   "keywords": [],

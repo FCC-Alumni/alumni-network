@@ -1,0 +1,64 @@
+version: "3"
+services:
+  mongo:
+    image: mongo:3
+    ports:
+      - "27017:27017"
+    restart: always
+  redis:
+    image: redis:3.2
+    ports:
+      - "6379:6379"
+    restart: always
+  waitMongo:
+    image: willwill/wait-for-it
+    command: mongo:27017 -- echo "mongo is up"
+    depends_on:
+      - mongo
+  waitRedis:
+    image: willwill/wait-for-it
+    command: redis:6379 -- echo "mongo is up"
+    depends_on:
+      - redis
+  populate:
+    image: node:8
+    volumes:
+      - ./:/usr/src/app
+    working_dir: /usr/src/app
+    command: npm run populate-db
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/alumninetwork
+    depends_on:
+      - waitMongo
+  backend:
+    image: node:8
+    command: npm run devstart
+    volumes:
+      - ./:/usr/src/app
+    working_dir: /usr/src/app
+    env_file: .env
+    environment:
+      - REDISTOGO_URL=redis://redis@redis:6379
+      - MONGO_URL=mongodb://mongo:27017/alumninetwork
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - waitMongo
+      - waitRedis
+      - populate
+  frontend:
+    image: node:8
+    command: npm start
+    volumes:
+      - ./:/usr/src/app
+    working_dir: /usr/src/app/client
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+      - waitMongo
+      - waitRedis

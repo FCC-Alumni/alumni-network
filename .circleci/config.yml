@@ -13,8 +13,9 @@ jobs:
       - checkout
       - restore_cache:
           keys:
+            # Find a cache corresponding to this specific yarn.lock checksum
+            - v3-server-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
             # Find a cache corresponding to this specific package.json checksum
-            # when this file is changed, this key will fail
             - v3-server-deps-{{ .Branch }}-{{ checksum "package.json" }}
             # Find the most recent cache used from this branch
             - v3-server-deps-{{ .Branch }}
@@ -22,21 +23,17 @@ jobs:
             - v3-server-deps-master
       - run:
           name: Install dependencies
-          command: npm install --ignore-scripts
+          command: yarn
           no_output_timeout: 3m
       - run:
           name: Run linter
           command: npm run lint
           no_output_timeout: 1m
-      - run:
-          name: Index dependencies
-          command: ls -laR node_modules > deps_checksum
-          no_output_timeout: 30s
       - save_cache:
           paths:
             - node_modules
           # Save cache for this specific set of packages
-          key: v3-server-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "deps_checksum" }}
+          key: v3-server-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
 
   client-lint:
     <<: *defaults
@@ -46,8 +43,9 @@ jobs:
           path: ~/alumni-network
       - restore_cache:
           keys:
+            # Find a cache corresponding to this specific yarn.lock checksum
+            - v3-client-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
             # Find a cache corresponding to this specific package.json checksum
-            # when this file is changed, this key will fail
             - v3-client-deps-{{ .Branch }}-{{ checksum "package.json" }}
             # Find the most recent cache used from this branch
             - v3-client-deps-{{ .Branch }}
@@ -55,21 +53,17 @@ jobs:
             - v3-client-deps-master
       - run:
           name: Install dependencies
-          command: npm install
+          command: yarn
           no_output_timeout: 3m
       - run:
           name: Run linter
           command: npm run lint
           no_output_timeout: 1m
-      - run:
-          name: Index dependencies
-          command: ls -laR node_modules > deps_checksum
-          no_output_timeout: 30s
       - save_cache:
           paths:
             - node_modules
           # Save cache for this specific set of packages
-          key: v3-client-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "deps_checksum" }}
+          key: v3-client-deps-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
 
 workflows:
   version: 2

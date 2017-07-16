@@ -1,0 +1,3 @@
+cmd: npm run lint
+name: lint
+sh: true

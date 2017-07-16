@@ -16,22 +16,20 @@
 
 ### Prerequisites
 
-| Prerequisite                                | Version |
-| ------------------------------------------- | ------- |
-| [MongoDB](http://www.mongodb.org/downloads) | `~ ^3`  |
-| [Redis](https://redis.io/download)          | `~ ^3.2`|
-| [Node.js](http://nodejs.org)*               | `~ ^8`  |
-| npm (comes with Node)                       | `~ ^5`  |
+| Prerequisite                                | Version     |
+| ------------------------------------------- | -------     |
+| [Node.js](http://nodejs.org)*               | `~ ^8`      |
+| npm (comes with Node)                       | `~ ^5`      |
+| docker                                      | `>=17.04.0` |
 
 > _*Node 8 is now a required prerequisite for this project._
 > _Updating to the latest release of other prerequisites is recommended_.
 
-If Node, MongoDB, or Redis are already installed on your machine, run the following commands to validate the versions:
+If Node or Docker are already installed on your machine, run the following commands to validate the versions:
 
 ```shell
 $ node -v
-$ mongo --version
-$ redis-server --version
+$ docker -v
 ```
 If your versions are lower than the prerequisite versions, you should update.
 
@@ -48,8 +46,10 @@ If your versions are lower than the prerequisite versions, you should update.
 $ npm run setup
 ```
 - Please note that this may take several minutes. All of the server side dependencies are installed at the root level, while all of the client's dependencies are installed in `alumni-network/client`.
+- All dependencies are installed in a Docker container to prevent issues with non-Linux systems.
 - Should you ever need to install dependencies, please be sure to install them in the appropriate directory.
-- `npm install` can also be run in each independently in each directory should you ever need to clear either `node_modules` folder.
+- before installing new dependencies you should start a shell session in docker with `docker run -it -v "$PWD":/app/ -w /app/ node:8.1.3 bash`
+- `npm setup` can also be run again should you ever need to clear or fix either `node_modules` folder.
 
 **Secrets and API keys:**
 - This project utilizes a few APIs, but only one is absolutely crucial for the app to run: GitHub. Since user authentication is based on a `PassportJS` GitHub strategy, you must have a GitHub ID and a GitHub secret for the app to run, otherwise you will be unable to login.
@@ -64,6 +64,7 @@ $ cp sample.env .env
 - Add the GitHub Client ID and GitHub Client Secret keys that you generated, when you created a new OAuth app earlier, to their respective environment variables in the `.env` file.
 - A session secret is also required for `PassportJS` authentication to work. Your session secret can be anything you want, but for best practices, try to make it at least somewhat complex and only something you will remember.
 - Do not wrap your environment variable keys in quotes or leave a space after the `=` sign. The first few lines of your file should look something like this:
+
 ```
 MONGO_URL=mongodb://127.0.0.1:27017/alumninetwork
 
@@ -74,58 +75,11 @@ GITHUB_SECRET=<Enter the secret for your GitHub application here>
 ```
 - LinkedIn and Twitter API keys are optional and are only required if you will be developing against the features that utilize these APIs.
 
-**Populating the Database and Running the App:**
-- To run the app, you will need a minimum of 4 terminal/command prompt tabs for each of the following processes, which must be running for the app to work: `create-react-app` dev-server, NodeJS server, MongoDB, and Redis.
-- First, launch MongoDB and Redis:
-```bash
-# in your first tab, in any directory, run:
-$ mongod
-# if you are a mac user and get an error, you may need to run:
-$ sudo mongod
-# and enter your password
-#
-# now, in your second tab, also in any directory, run:
-$ redis-server
-```
-- For assistance troubleshooting MongoDB or Redis, please refer to the respective documentation and/or your trusty friend Google.
-- Once Redis and MongoDB are running, all that's left to do is to launch the servers. However, you may find it helpful to have some mock users populated into the database for development. We've created a utility for just this purpose (**NOTE:** MongoDB must be running for this utility script to work).
-- This is an optional step, and can be completed at any time, however it is recommended for the best development experience.
-```bash
-# in another tab, in the project's root directory, run:
-$ npm run populate-db
-# if this is successful, you should see a success message in the command prompt console
-# if you get an error, please make sure mongo is running and try again
-```
-- Finally, launch the dev servers:
-```shell
-# in your third tab, in the project's root directory, run:
-$ npm run dev
-# this will start the NodeJS server
-#
-# in your fourth tab, from the project's root directory
-# change directories to alumni-network/client
-$ cd client
-# and run
-$ npm start
-# this will start the CRA dev-server
-```
-- If all of this worked, your app should be up and running! If you are not navigated there automatically, open a new browser window (we recommend using Chrome), and navigate to http://localhost:3000.
-
-> _**BONUS:**_ In addition to the 4 tabs required to run the app's various servers and databases, we recommend utilizing at least 2 other command prompt/terminal tabs. One for interacting with MongoDB (which you can do by running `$ mongo` from the command line), and another for general navigation, additional commands, and for managing the project's Git workflow.
 
 ### Running the App
-> _**SUMMARY:**_ To summarize the previous section, and for running FCCAN each time after initial setup, the commands are:
-```shell
-# Tab 1: Run MongoDb
-$ mongod
-# Tab 2: Run Redis
-$ redis-server
-# Tab 3: Run NodeJS Server
-$ npm run dev
-# Tab 4: Run CRA dev-server
-$ cd client
-$ npm start
-```
+- In a terminal run `npm run dev`
+- This will set up mongo, redis, and both the backend and frontend servers, as well as populate the database.
+- If all of this worked, your app should be up and running! Open a new browser window (we recommend using Chrome), and navigate to http://localhost:3000.
 
 ### If you are not FCC Certified, Please Read!
 > **_NOTE:_** Our registration process requires that users have a GitHub account, a freeCodeCamp account, and at least one FCC certification to join. However, we do not want this limitation to prevent potential contributors from gaining access to the application for development.
@@ -157,7 +111,7 @@ $ make install
 > _**NOTE:**_ For more complete documentation, please see the Mongo Shell documentation [here](https://docs.mongodb.com/manual/reference/mongo-shell/).
 - While working on this project, you may find it helpful to interact with MongoDB from Mongo's built in Mongo Shell. You can access this shell by using the following command from your command prompt/terminal:
 ```shell
-$ mongo
+$ docker exec -it alumninetwork_mongo_1 /usr/bin/mongo
 ```
 - Here are some helpful commands and tips to get you started:
 ```shell
@@ -232,6 +186,7 @@ Consistency is fantastic! However, this project isn't. At least from a CSS stand
 - The Styled-Components [documentation](https://github.com/styled-components/styled-components/blob/master/docs/README.md) is excellent, however their [repo landing page]((https://github.com/styled-components/styled-components)) provides a very thorough introduction and is probably the best place to start.
 - For, some more advanced concepts, see the [Tips & Tricks](https://github.com/styled-components/styled-components/blob/master/docs/tips-and-tricks.md) doc, which covers some syntax you'll see throughout this project, like utilizing props for making conditional changes, and global styles (examples of both can be seen in the [`style-utils`](https://github.com/FCC-Alumni/alumni-network/blob/master/client/src/styles/style-utils.js) file).
 - Here's a basic example of the global style concept, which utilizes functions that return CSS which are invoked using the `${}` template literal syntax, e.g.:
+
 ```js
 import styled from 'styled-components';
 import { thisFunctionReturnsCSS } from './style-utils';
@@ -271,9 +226,24 @@ There are only a few FCCAN issue / GitHub mods for now, so our resources may be 
 
 Take away only one thing from this document: Never, **EVER**
 make edits to the `master` branch. ALWAYS make a new branch BEFORE you edit
-files. This is critical, because if your PR is not accepted, your copy of
-master will be forever sullied and the only way to fix it is to delete your
-fork and re-fork.
+files. If your `master` branch _does_ get out of sync, you can bring it back in line with master by doing the following:
+
+```bash
+# adds the main repo as a remote on your machine. Only needs to be done once.
+git remote add upstream git@github.com:FCC-Alumni/alumni-network.git
+
+# checkout master if you haven't already
+git checkout master
+
+# fetch the latest upstream code
+git fetch --all
+
+# resets your current branch to match latest upstream code
+git reset --hard upstream/master
+
+# overwrite master on your fork in GitHub with the code you just reset
+git push --force
+```
 
 ##### Editing your Local Fork
 
