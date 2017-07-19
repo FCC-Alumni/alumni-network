@@ -26,9 +26,8 @@ router.post('/api/user', (req, res) => {
 });
 
 // pass async cb func through safeHandler for error handling
-router.post('/api/verify-credentials', isAuthenticated,
+router.post('/api/verify-credentials/:id', isAuthenticated,
   safeHandler(async function initiateVerification(req, res) {
-    const { mongoId } = req.body;
     // if user is whitelisted, use their alternate username
     var username = await checkWhiteList(req.body.username);
     var isWhitelistedUser = !(username === req.body.username);
@@ -38,15 +37,14 @@ router.post('/api/verify-credentials', isAuthenticated,
     isCertified(username, isHonoraryMember, isWhitelistedUser)
     .then(certs => {
       // update user with certs and correct status in DB
-      handleProcessedUser(certs, mongoId, req, res, username);
+      handleProcessedUser(certs, req.params.id, req, res, username);
     }).catch(err => res.status(500).send(err.message));
   })
 );
 
-router.post('/api/update-user', (req, res) => {
+router.put('/api/update-user/:id', (req, res) => {
   const { user } = req.body;
-
-  User.findById(user._id, (err, updatedUser) => {
+  User.findById(req.params.id, (err, updatedUser) => {
     if (!err) {
       updatedUser.personal = user.personal;
       updatedUser.mentorship = user.mentorship;
@@ -62,9 +60,9 @@ router.post('/api/update-user', (req, res) => {
   });
 });
 
-router.post('/api/update-user-partial', (req, res) => {
-  const { id, section, sectionData } = req.body;
-  User.findById(id, (err, updatedUser) => {
+router.put('/api/update-user-partial/:id', (req, res) => {
+  const { section, sectionData } = req.body;
+  User.findById(req.params.id, (err, updatedUser) => {
     if (!err) {
       updatedUser[section] = sectionData;
       updatedUser.save();
@@ -81,15 +79,15 @@ router.post('/api/delete-user', (req, res) => {
   User.findByIdAndRemove(req.user._id, (err, user) => {
     if (!err) {
       console.log(`${username} deleted`);
+      res.sendStatus(200);
     } else {
       res.sendStatus(500);
     }
   });
 });
 
-router.post('/api/verify-gitter-user', (req, res) => {
-  const { username } = req.body;
-  axios.get(`https://gitter.im/${username}`)
+router.get('/api/verify-gitter-user/:username', (req, res) => {
+  axios.get(`https://gitter.im/${req.params.username}`)
   .catch((err) => {
     if (err.response.status === 404) {
       res.json({ isGitterUser: false });

@@ -15,7 +15,7 @@ export const getUserData = () => {
 }
 
 export const isGitterUser = (username) => {
-  return axios.post('/api/verify-gitter-user', { username });
+  return axios.get(`/api/verify-gitter-user/${username}`);
 }
 
 export const logoutUser = () => {
@@ -32,13 +32,13 @@ export const saveUser = (user) => {
 }
 
 export const updateUser = (user) => {
-  return axios.post('/api/update-user', { user });
+  return axios.put(`/api/update-user/${user._id}`, { user });
 }
 
-export const updateUserPartial = (id, section, sectionData) => {
-  return axios.post('/api/update-user-partial', { id, section, sectionData });
+export const updateUserPartial = (mongoId, section, sectionData) => {
+  return axios.put(`/api/update-user-partial/${mongoId}`, { section, sectionData });
 }
 
 export const verifyUser = (username, mongoId) => {
-  return axios.post('/api/verify-credentials', { mongoId, username });
+  return axios.post(`/api/verify-credentials/${mongoId}`, { username });
 }
