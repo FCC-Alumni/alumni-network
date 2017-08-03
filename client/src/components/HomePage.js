@@ -11,7 +11,7 @@ class HomePage extends React.Component {
         <h2>{'Welcome to the freeCodeCamp Alumni Network'}</h2>
         <div className="container">
           <div style={{ fontSize: 16 }}>
-            {'An extension ofF the freeCodeCamp community'}
+            {'An extension of the freeCodeCamp community'}
           </div>
         </div>
       </div>
