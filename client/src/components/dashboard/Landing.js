@@ -50,7 +50,7 @@ export default () => (
       </p>
       {image('/images/fcc_learn_logo.svg', 'left')}
       <p>
-        {`Like freeCodeCamp, this project is completely ${link}. We strongly
+        {`Like freeCodeCamp, this project is completely`} {link} {`. We strongly
         encourage members to contribute to the repository if they find bugs or
         think of new features. The current app has a strong base but we
         think there is a lot of space for improvement!`}
