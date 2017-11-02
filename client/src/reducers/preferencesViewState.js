@@ -28,7 +28,8 @@ export default (state = defaultState, action) => {
       }
       return action.preferencesView;
 
-    default: return state;
+    default:
+      return state;
 
   }
 }

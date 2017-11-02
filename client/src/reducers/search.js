@@ -47,10 +47,11 @@ export default (state = defaultState, action) => {
           [action.params.category]: true,
           ...defaultSearchCriteria
         },
-        value:  action.params.query,
+        value: action.params.query
       }
 
-    default: return state;
+    default:
+      return state;
 
   }
 }

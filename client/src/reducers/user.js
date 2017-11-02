@@ -22,6 +22,7 @@ export default (state = defaultUser, action) => {
     case LOGOUT_USER:
       return defaultUser;
 
-    default: return state;
+    default:
+      return state;
   }
 }

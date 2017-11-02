@@ -18,6 +18,7 @@ export default (state = List(), action) => {
         };
       });
 
-    default: return state;
+    default:
+      return state;
   }
 }

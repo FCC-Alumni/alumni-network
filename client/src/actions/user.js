@@ -14,7 +14,7 @@ export const getUserData = () => {
     .catch(err => null);
 }
 
-export const isGitterUser = (username) => {
+export const isGitterUser = username => {
   return axios.get(`/api/verify-gitter-user/${username}`);
 }
 
@@ -24,14 +24,14 @@ export const logoutUser = () => {
   }
 }
 
-export const saveUser = (user) => {
+export const saveUser = user => {
   return {
     type: SAVE_USER,
     user: user
   }
 }
 
-export const updateUser = (user) => {
+export const updateUser = user => {
   return axios.put(`/api/update-user/${user._id}`, { user });
 }
 

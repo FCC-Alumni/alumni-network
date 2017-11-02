@@ -24,6 +24,7 @@ export default (state = [], action) => {
     case CLEAR_FLASH_MESSAGE:
       return []
 
-    default: return state;
+    default:
+      return state;
   }
 }

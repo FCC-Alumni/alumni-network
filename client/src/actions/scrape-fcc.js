@@ -5,7 +5,7 @@ import htmlToJson from 'html-to-json';
 export const POPULATE_USER_STATS = 'POPULATE_USER_STATS';
 
 /* helper function to scrape user FCC stats while we design a better solution: */
-export const scrapeFccStats = (user) => (dispatch) => {
+export const scrapeFccStats = user => dispatch => {
   axios.get(`https://www.freecodecamp.org/${user}`).then(html => {
 
     // FIRST CHALLENGE COMPLETED

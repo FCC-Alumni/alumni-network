@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const POPULATE = 'POPULATE';
 
-const receiveCommunity = (users) => {
+const receiveCommunity = users => {
   return {
     type: POPULATE,
     users

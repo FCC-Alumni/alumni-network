@@ -166,12 +166,12 @@ const mapStateToProps = (state) => ({
   user: state.user.username
 });
 
-const dispatchProps = {
+const dispatch = {
   addFlashMessage,
   clearFlashMessage,
   logoutUser
 };
 
 export default connectScreenSize(mapScreenSizeToProps)(
-  connect(mapStateToProps, dispatchProps)(Account)
+  connect(mapStateToProps, dispatch)(Account)
 );

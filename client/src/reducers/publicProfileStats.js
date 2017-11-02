@@ -9,6 +9,7 @@ export default (state = Map(), action) => {
       if (!payload.user) return state;
       return state.set(payload.user, payload.stats);
 
-    default: return state;
+    default:
+      return state;
   }
 }
